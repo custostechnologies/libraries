@@ -5,8 +5,10 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
+	<RootNamespace>spgsWebTools.XrmHelpers</RootNamespace>
+
     <!-- NuGet Metadata Settings -->
-    <packageId>spgsWebTools.XrmLibrary</packageId>
+    <packageId>spgsWebTools.XrmHelpers</packageId>
     <Version>1.0.0</Version>
     <Authors>Matthew Thomas</Authors>
     <Company>St. Paul's Grammar School</Company>

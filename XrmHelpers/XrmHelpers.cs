@@ -50,7 +50,6 @@ public class XrmHelpers
         QueryByAttribute query = new(entityName)
         {
             ColumnSet = new ColumnSet(columnSet),
-            //PagingInfo 
             PageInfo = new PagingInfo() { Count = returnCount, PageNumber = pageNum }
         };
 
