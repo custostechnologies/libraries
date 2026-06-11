@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\mattt\\src\\spgs\\spgswebtools_nuget_packages\\XrmLibrary\\XrmLibrary.csproj",
-        "projectName": "XrmLibrary",
+        "projectName": "spgsWebTools.XrmLibrary",
         "projectPath": "C:\\Users\\mattt\\src\\spgs\\spgswebtools_nuget_packages\\XrmLibrary\\XrmLibrary.csproj",
         "packagesPath": "C:\\Users\\mattt\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\mattt\\src\\spgs\\spgswebtools_nuget_packages\\XrmLibrary\\obj\\",
@@ -51,6 +51,12 @@
         "net10.0": {
           "framework": "net10.0",
           "targetAlias": "net10.0",
+          "dependencies": {
+            "Microsoft.PowerPlatform.Dataverse.Client": {
+              "target": "Package",
+              "version": "[1.2.10, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
