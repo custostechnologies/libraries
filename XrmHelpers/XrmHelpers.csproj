@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 
-	<RootNamespace>spgsWebTools.XrmHelpers</RootNamespace>
+	  <RootNamespace>spgsWebTools.XrmHelpers</RootNamespace>
 
     <!-- NuGet Metadata Settings -->
     <packageId>spgsWebTools.XrmHelpers</packageId>

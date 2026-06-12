@@ -5,8 +5,6 @@ namespace spgsWebTools.XrmHelpers;
 
 public class XrmHelpers
 {
-    //public record AttributeContainer<T>(string AttributeName, Type Value);
-
     public static T? GetValue<T>(string attributeName, Entity target, Entity entity)
     {
         if (target.Contains(attributeName))
@@ -74,6 +72,8 @@ public class XrmHelpers
 
         service.Update(targetEntity);
     }
+
+    /* TO BE MOVED TO A SEPARATE UTILITIES PACKAGE */
 
     /* helper to calculate new hash using a standard BKDR hashing algorithm */
     /* mirrors hashing implementation in Power Query                        */
