@@ -4,11 +4,18 @@
     <ProjectReference Include="..\XrmHelpers\XrmHelpers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="10.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.9" />
+  </ItemGroup>
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>cc4b9a05-c60d-4e45-9702-d3bee8ebddc1</UserSecretsId>
   </PropertyGroup>
 
 </Project>

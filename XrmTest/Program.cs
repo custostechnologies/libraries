@@ -3,17 +3,22 @@ using spgsWebTools.XrmHelpers;
 using System.Configuration;
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Extensions.Configuration;
+using Microsoft.VisualBasic;
 
 namespace XrmLocalTest
 {
     public class Program
     {
-        static readonly string? _clientId = ConfigurationManager.AppSettings["ClientId"];
-        static readonly string? _clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
-        static readonly string? _instanceUri = ConfigurationManager.AppSettings["InstanceUri"];
 
         static void Main(string[] args)
         {
+            IConfigurationRoot _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+
+            string? _clientId = _config["appSettings:ClientId"];
+            string? _clientSecret = _config["appSettings:ClientSecret"];
+            string? _instanceUri = _config["appSettings:InstanceUri"];
+
             string connectionString = $@"
                 AuthType=ClientSecret;
                 Url={_instanceUri};
@@ -41,7 +46,7 @@ namespace XrmLocalTest
             }
 
             Console.WriteLine("Press a key to continue...");
-            Console.ReadLine();
+            Console.ReadKey();
             serviceClient.Dispose();
         }
     }
