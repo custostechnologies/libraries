@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <RepositoryUrl>https://github.com/stpaulsgrammar/spgswebtools_nuget_packages</RepositoryUrl>
 
 	  <RootNamespace>spgsWebTools.XrmHelpers</RootNamespace>
 
