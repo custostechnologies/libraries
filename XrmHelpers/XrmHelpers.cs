@@ -53,7 +53,11 @@ public class XrmHelpers
 
         // add query parameters
         query.AddAttributeValue(targetAttributeName, targetAttributeValue);
-        query.AddOrder(orderAttributeName, ascending ? OrderType.Ascending : OrderType.Descending);
+
+        if (orderAttributeName != null && orderAttributeName != "")
+        {
+            query.AddOrder(orderAttributeName, ascending ? OrderType.Ascending : OrderType.Descending);   
+        }
 
         // send query request
         Microsoft.Xrm.Sdk.EntityCollection queryResults = service.RetrieveMultiple(query);

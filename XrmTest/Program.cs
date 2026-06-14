@@ -5,6 +5,9 @@ using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using Microsoft.Xrm.Sdk;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace XrmLocalTest
 {
@@ -14,6 +17,12 @@ namespace XrmLocalTest
         static void Main(string[] args)
         {
             IConfigurationRoot _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+
+            var serialiserOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            };
 
             string? _clientId = _config["appSettings:ClientId"];
             string? _clientSecret = _config["appSettings:ClientSecret"];
@@ -44,6 +53,25 @@ namespace XrmLocalTest
                 Console.WriteLine("Connection Failed:");
                 Console.WriteLine(serviceClient.LastError);    
             }
+
+            // test GetMultipleRecords
+            EntityCollection testCollection = XrmHelpers.GetMultipleRecords<EntityCollection>(
+                "mthomas_coreuser",
+                "Matthew Thomas",
+                "mthomas_userdisplayname",
+                ["mthomas_userdisplayname", "mthomas_staffid"],
+                1,
+                1,
+                "",
+                false,
+                serviceClient
+            );
+            Console.WriteLine($"Number of records found: {testCollection.TotalRecordCount}");
+            foreach (Entity entity in testCollection.Entities)
+            {
+                Console.WriteLine($"UDN: {entity.GetAttributeValue<string>("mthomas_userdisplayname")}");
+            }
+            Console.WriteLine($"Serialised JSON: {JsonSerializer.Serialize(testCollection.Entities, serialiserOptions)}");
 
             Console.WriteLine("Press a key to continue...");
             Console.ReadKey();
