@@ -65,7 +65,7 @@ public class XrmHelpers
         return queryResults;
     }
 
-    public static void UpdateTargetAttributes<T>(string tableName, EntityReference targetRef, Dictionary<string, object> attributeDictionary, IOrganizationService service)
+    public static void UpdateTargetAttributes(string tableName, EntityReference targetRef, Dictionary<string, object> attributeDictionary, IOrganizationService service)
     {
         var targetEntity = new Entity(tableName, targetRef.Id);
 

@@ -8,6 +8,7 @@ using Microsoft.VisualBasic;
 using Microsoft.Xrm.Sdk;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Collections.Generic;
 
 namespace XrmLocalTest
 {
@@ -72,6 +73,41 @@ namespace XrmLocalTest
                 Console.WriteLine($"UDN: {entity.GetAttributeValue<string>("mthomas_userdisplayname")}");
             }
             Console.WriteLine($"Serialised JSON: {JsonSerializer.Serialize(testCollection.Entities, serialiserOptions)}");
+
+            Console.WriteLine($"Existing Staff ID: {testCollection.Entities[0].GetAttributeValue<int>("mthomas_staffid")}");
+
+            Guid coreUserGuid = testCollection.Entities[0].Id;
+
+            // test UpdateTargetAttributes
+
+            // instantiate test dictionary
+            Dictionary<string, object> testDictionary = new Dictionary<string, object>
+            {
+                { "mthomas_staffid", 283224 }
+            };
+
+            EntityReference testReference = testCollection.Entities[0].ToEntityReference();
+
+            XrmHelpers.UpdateTargetAttributes(
+                "mthomas_coreuser",
+                testReference,
+                testDictionary,
+                serviceClient
+            );
+
+            EntityCollection testCollectionAfterUpdate = XrmHelpers.GetMultipleRecords<EntityCollection>(
+                "mthomas_coreuser",
+                "Matthew Thomas",
+                "mthomas_userdisplayname",
+                ["mthomas_userdisplayname", "mthomas_staffid"],
+                1,
+                1,
+                "",
+                false,
+                serviceClient
+            );
+
+            Console.WriteLine($"Updated Staff ID: {testCollectionAfterUpdate.Entities[0].GetAttributeValue<int>("mthomas_staffid")}");
 
             Console.WriteLine("Press a key to continue...");
             Console.ReadKey();
