@@ -14,14 +14,22 @@ public class XrmHelpers
 {
     public static T? GetValue<T>(string attributeName, Entity target, Entity entity)
     {
-        if (target.Contains(attributeName))
+        try
         {
-            return target.GetAttributeValue<T>(attributeName);
-        }
+            if (target.Contains(attributeName))
+            {
+                return target.GetAttributeValue<T>(attributeName);
+            }
 
-        if (entity != null && entity.Contains(attributeName))
+            if (entity != null && entity.Contains(attributeName))
+            {
+                return entity.GetAttributeValue<T>(attributeName);
+            }
+        }
+        catch (Exception ex)
         {
-            return entity.GetAttributeValue<T>(attributeName);
+            Console.WriteLine("Error: {0}, attributeName: {1}", ex, attributeName);
+            throw;
         }
 
         return default;
@@ -30,13 +38,21 @@ public class XrmHelpers
     /* overloaded helper to retrieve value from one entity */
     public static T? GetValue<T>(string attributeName, Entity entity)
     {
-        if (entity != null && entity.Contains(attributeName))
+        try
         {
-            return entity.GetAttributeValue<T>(attributeName);
+            if (entity != null && entity.Contains(attributeName))
+            {
+                return entity.GetAttributeValue<T>(attributeName);
+            }
+            else
+            {
+                return default;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            return default;
+            Console.WriteLine("Exception occurred in GetValue<T>(attributeName, Entity): {0}", ex);
+            throw;
         }
     }
 
@@ -52,37 +68,53 @@ public class XrmHelpers
         bool ascending,
         IOrganizationService service)
     {
-        // define table query
-        QueryByAttribute query = new(entityName)
+        try
         {
-            ColumnSet = new ColumnSet(columnSet),
-            PageInfo = new PagingInfo() { Count = returnCount, PageNumber = pageNum }
-        };
+            // define table query
+            QueryByAttribute query = new(entityName)
+            {
+                ColumnSet = new ColumnSet(columnSet),
+                PageInfo = new PagingInfo() { Count = returnCount, PageNumber = pageNum }
+            };
 
-        // add query parameters
-        query.AddAttributeValue(targetAttributeName, targetAttributeValue);
+            // add query parameters
+            query.AddAttributeValue(targetAttributeName, targetAttributeValue);
 
-        if (orderAttributeName != null && orderAttributeName != "")
-        {
-            query.AddOrder(orderAttributeName, ascending ? OrderType.Ascending : OrderType.Descending);
+            if (orderAttributeName != null && orderAttributeName != "")
+            {
+                query.AddOrder(orderAttributeName, ascending ? OrderType.Ascending : OrderType.Descending);
+            }
+
+            // send query request
+            Microsoft.Xrm.Sdk.EntityCollection queryResults = service.RetrieveMultiple(query);
+
+            return queryResults;
         }
-
-        // send query request
-        Microsoft.Xrm.Sdk.EntityCollection queryResults = service.RetrieveMultiple(query);
-
-        return queryResults;
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in GetMultipleRecords: {0}", ex);
+            throw;
+        }
     }
 
     public static void UpdateTargetAttributes(string tableName, EntityReference targetRef, Dictionary<string, object> attributeDictionary, IOrganizationService service)
     {
-        var targetEntity = new Entity(tableName, targetRef.Id);
-
-        foreach (var field in attributeDictionary)
+        try
         {
-            targetEntity[field.Key] = field.Value;
-        }
+            var targetEntity = new Entity(tableName, targetRef.Id);
 
-        service.Update(targetEntity);
+            foreach (var field in attributeDictionary)
+            {
+                targetEntity[field.Key] = field.Value;
+            }
+
+            service.Update(targetEntity);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in UpdateTargetAttributes: {0}", ex);
+            throw;
+        }
     }
 
     /* helper to calculate new hash using a standard BKDR hashing algorithm */
@@ -90,63 +122,103 @@ public class XrmHelpers
     /* takes a concatenated string (with '|' separator), converts each      */
     /* char to its corresponding integer, adds padding and then calculates  */
     /* the hash                                                             */
-    public static string ComputeBKDRHashKey(string plaintext)
+    public static long ComputeBKDRHashKey(string plaintext)
     {
 
         long seed = 1313;
         long modulo = 2147483647;
         long state = 0;
 
-        for (int i = 0; i < plaintext.Length; i++)
+        try
         {
-            // convert character to 3-digit integer
-            int charInt = plaintext[i];
+            for (int i = 0; i < plaintext.Length; i++)
+            {
+                // convert character to 3-digit integer
+                int charInt = plaintext[i];
 
-            // convert integer into a string with padding
-            string paddedStr = charInt.ToString("D3");
+                // convert integer into a string with padding
+                string paddedStr = charInt.ToString("D3");
 
-            // parse to long
-            long current = long.Parse(paddedStr);
+                // parse to long
+                long current = long.Parse(paddedStr);
 
-            // caculate state
-            state = (state + (current * seed)) % modulo;
+                // caculate state
+                state = (state + (current * seed)) % modulo;
+            }
+
+            return state;
         }
-
-        return state.ToString();
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in ComputeBKDRHashKey: {0}", ex);
+            throw;
+        }
     }
 
     public static void SetDeltaAttribute<T>(Entity target, string attributeName, T newValue, T oldValue)
     {
-        if (!EqualityComparer<T>.Default.Equals(newValue, oldValue))
+        try
         {
-            target[attributeName] = newValue;
+            if (!EqualityComparer<T>.Default.Equals(newValue, oldValue))
+            {
+                target[attributeName] = newValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in SetDeltaAttribute: {0}", ex);
+            throw;
         }
     }
 
     public static void SetDeltaOptionSet(Entity target, string attributeName, OptionSetValue newValue, OptionSetValue oldValue)
     {
-        if (oldValue == null || newValue == null || oldValue.Value != newValue.Value)
+        try
         {
-            target[attributeName] = newValue;
+            if (oldValue == null || newValue == null || oldValue.Value != newValue.Value)
+            {
+                target[attributeName] = newValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in SetDeltaOptionSet: {0}", ex);
+            throw;
         }
     }
 
     public static void SetDeltaLookup(Entity target, string attributeName, EntityReference newValue, EntityReference oldValue)
     {
-        if (oldValue == null || newValue == null || oldValue.Id != newValue.Id || oldValue.LogicalName != newValue.LogicalName)
+        try
         {
-            target[attributeName] = newValue;
+            if (oldValue == null || newValue == null || oldValue.Id != newValue.Id || oldValue.LogicalName != newValue.LogicalName)
+            {
+                target[attributeName] = newValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in SetDeltaLookup: {0}", ex);
+            throw;
         }
     }
 
     public static void SetDeltaDateTime(Entity target, string attributeName, DateTime? newValue, DateTime? oldValue)
     {
-        DateTime? newUtcDateTime = newValue?.ToUniversalTime();
-        DateTime? oldUtcDateTime = oldValue?.ToUniversalTime();
-
-        if (newUtcDateTime != oldUtcDateTime)
+        try
         {
-            target[attributeName] = newValue;
+            DateTime? newUtcDateTime = newValue?.ToUniversalTime();
+            DateTime? oldUtcDateTime = oldValue?.ToUniversalTime();
+
+            if (newUtcDateTime != oldUtcDateTime)
+            {
+                target[attributeName] = newValue;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Exception occurred in SetDeltaDateTime: {0}", ex);
+            throw;
         }
     }
 
