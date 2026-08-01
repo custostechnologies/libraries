@@ -391,6 +391,59 @@ public class XrmHelpers
         return objectId;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ServiceInitialiser
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="debug"></param>
+        /// <returns></returns>
+        public static ITracingService InitTracingService(System.IServiceProvider provider, bool debug)
+        {
+            var tracingService = (ITracingService)provider.GetService(typeof(ITracingService));
+
+            if (debug) tracingService.Trace("Tracing service initialised");
+
+            return tracingService;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="provider"></param>
+        /// <param name="tracer"></param>
+        /// <param name="debug"></param>
+        /// <returns></returns>
+        public static IOrganizationServiceFactory InitServiceFactory(System.IServiceProvider provider, ITracingService tracer, bool debug)
+        {
+            var orgServiceFactory = (IOrganizationServiceFactory)provider.GetService(typeof(IOrganizationServiceFactory));
+
+            if (debug) tracer.Trace("Organisation service factory initialised");
+
+            return orgServiceFactory;
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="factory"></param>
+        /// <param name="tracer"></param>
+        /// <param name="debug"></param>
+        /// <returns></returns>
+        public static IOrganizationService InitOrganisationService(IPluginExecutionContext context, IOrganizationServiceFactory factory, ITracingService tracer, bool debug)
+        {
+            IOrganizationService service = factory.CreateOrganizationService(context.UserId);
+
+            if (debug) tracer.Trace("Organisation service factory initialised");
+
+            return service;
+        }
+    }
+
     /*public static string CheckGroupMembership(string azureId, string groupId, string bearerToken)
     {
         
