@@ -444,6 +444,63 @@ public class XrmHelpers
         }
     }
 
+    public class OptionSetResolver
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static int ResolveCampusKey(string code)
+        {
+            int key;
+
+            switch (code)
+            {
+                case "PK":
+                    key = 384810000;
+                    break;
+                case "J":
+                    key = 384810001;
+                    break;
+                case "S":
+                    key = 384810002;
+                    break;
+                case "B":
+                    key = 384810003;
+                    break;
+                default:
+                    key = 384810004;
+                    break;
+            }
+
+            return key;
+        }
+
+        /* helper to resolve Synergetic gender code to an OptionSet key value */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public static int ResolveGenderKey(string code)
+        {
+            if (code == "M")
+            {
+                return 384810001;
+            }
+            else if (code == "F")
+            {
+                return 384810000;
+            }
+            else
+            {
+                return 384810004;
+            }
+        }
+    }
+
     /*public static string CheckGroupMembership(string azureId, string groupId, string bearerToken)
     {
         
