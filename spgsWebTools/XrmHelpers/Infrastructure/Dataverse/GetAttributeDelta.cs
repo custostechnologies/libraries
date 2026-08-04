@@ -3,47 +3,50 @@ using Microsoft.Xrm.Sdk;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
-    public static T? GetValue<T>(string attributeName, Entity target, Entity entity)
+    public class GetAttributeDelta
     {
-        try
+        public static T? Execute<T>(string attributeName, Entity target, Entity entity)
         {
-            if (target.Contains(attributeName))
+            try
             {
-                return target.GetAttributeValue<T>(attributeName);
+                if (target.Contains(attributeName))
+                {
+                    return target.GetAttributeValue<T>(attributeName);
+                }
+
+                if (entity != null && entity.Contains(attributeName))
+                {
+                    return entity.GetAttributeValue<T>(attributeName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: {0}, attributeName: {1}", ex, attributeName);
+                throw;
             }
 
-            if (entity != null && entity.Contains(attributeName))
-            {
-                return entity.GetAttributeValue<T>(attributeName);
-            }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: {0}, attributeName: {1}", ex, attributeName);
-            throw;
+            return default;
         }
 
-        return default;
-    }
-
-    /* overloaded helper to retrieve value from one entity */
-    public static T? GetValue<T>(string attributeName, Entity entity)
-    {
-        try
+        /* overloaded helper to retrieve value from one entity */
+        public static T? Execute<T>(string attributeName, Entity entity)
         {
-            if (entity != null && entity.Contains(attributeName))
+            try
             {
-                return entity.GetAttributeValue<T>(attributeName);
+                if (entity != null && entity.Contains(attributeName))
+                {
+                    return entity.GetAttributeValue<T>(attributeName);
+                }
+                else
+                {
+                    return default;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return default;
+                Console.WriteLine("Exception occurred in GetValue<T>(attributeName, Entity): {0}", ex);
+                throw;
             }
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Exception occurred in GetValue<T>(attributeName, Entity): {0}", ex);
-            throw;
         }
     }
 }

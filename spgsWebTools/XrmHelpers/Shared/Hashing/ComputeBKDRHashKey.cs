@@ -1,40 +1,43 @@
 namespace spgsWebTool.Shared.Hashing
 {
-    /* helper to calculate new hash using a standard BKDR hashing algorithm */
-    /* mirrors hashing implementation in Power Query                        */
-    /* takes a concatenated string (with '|' separator), converts each      */
-    /* char to its corresponding integer, adds padding and then calculates  */
-    /* the hash                                                             */
-    public static long ComputeBKDRHashKey(string plaintext)
+    public class GetBKDRHashKey
     {
-
-        long seed = 1313;
-        long modulo = 2147483647;
-        long state = 0;
-
-        try
+        /* helper to calculate new hash using a standard BKDR hashing algorithm */
+        /* mirrors hashing implementation in Power Query                        */
+        /* takes a concatenated string (with '|' separator), converts each      */
+        /* char to its corresponding integer, adds padding and then calculates  */
+        /* the hash                                                             */
+        public static long Calculate(string plaintext)
         {
-            for (int i = 0; i < plaintext.Length; i++)
+
+            long seed = 1313;
+            long modulo = 2147483647;
+            long state = 0;
+
+            try
             {
-                // convert character to 3-digit integer
-                int charInt = plaintext[i];
+                for (int i = 0; i < plaintext.Length; i++)
+                {
+                    // convert character to 3-digit integer
+                    int charInt = plaintext[i];
 
-                // convert integer into a string with padding
-                string paddedStr = charInt.ToString("D3");
+                    // convert integer into a string with padding
+                    string paddedStr = charInt.ToString("D3");
 
-                // parse to long
-                long current = long.Parse(paddedStr);
+                    // parse to long
+                    long current = long.Parse(paddedStr);
 
-                // caculate state
-                state = (state + (current * seed)) % modulo;
+                    // caculate state
+                    state = (state + (current * seed)) % modulo;
+                }
+
+                return state;
             }
-
-            return state;
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Exception occurred in ComputeBKDRHashKey: {0}", ex);
-            throw;
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occurred in ComputeBKDRHashKey: {0}", ex);
+                throw;
+            }
         }
     }
 }
