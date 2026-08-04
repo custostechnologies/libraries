@@ -1,6 +1,7 @@
+using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Shared.Utilities;
 
-namespace spgsWebTools.XrmHelpers.Domain.Enums
+namespace spgsWebTools.XrmHelpers.Domain.Resolvers
 {
     public class GenderResolver
     {

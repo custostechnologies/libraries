@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.Shared.XrmHelpers.Initialisers
+namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
 {
     public class XrmServiceFactory
     {
