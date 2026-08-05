@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Initialisers;
-using spgsWebTools.XrmHelpers.Domain.Resolvers;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.AssignmentChangeDetection.Factories
@@ -68,14 +68,16 @@ namespace spgsWebTools.AssignmentChangeDetection.Factories
 
             snap.LongEncodedHash = _cdService.GenerateHash(snap);
 
-            Console.WriteLine("Calculating job assignment status and status reason");
+            _tracer.Trace("Calculating job assignment status and status reason");
 
-            var (status, statusReason) = StatusResolver.Calculate(snap);
+            Status status = (Status)snap.IsActive;
 
-            Console.WriteLine("Calulated status: {0} and statusReason: {1}", status, statusReason);
+            StatusReason statusReason = status == Status.Active ? StatusReason.Active : StatusReason.Inactive; 
 
-            snap.Status = status;
-            snap.StatusReason = statusReason;
+            _tracer.Trace("Calulated status: {0} and statusReason: {1}", status, statusReason);
+
+            snap.Status = new OptionSetValue((int)status);
+            snap.StatusReason = new OptionSetValue((int)statusReason);
 
             return snap;
         }
