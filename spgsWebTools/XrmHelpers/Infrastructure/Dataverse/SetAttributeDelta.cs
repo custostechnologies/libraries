@@ -5,6 +5,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class SetAttributeDelta
     {
+        public static void Execute<T>(Entity target, string attributeName, T value)
+        {
+            try
+            {
+                target[attributeName] = value;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Exception occurred in SetAttributeDelta: {0}", ex);
+                throw;
+            }
+        }
         public static void Execute<T>(Entity target, string attributeName, T newValue, T oldValue)
         {
             try

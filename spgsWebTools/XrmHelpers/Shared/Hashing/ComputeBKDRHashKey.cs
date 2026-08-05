@@ -1,4 +1,4 @@
-namespace spgsWebTool.Shared.Hashing
+namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {
     public class GetBKDRHashKey
     {
