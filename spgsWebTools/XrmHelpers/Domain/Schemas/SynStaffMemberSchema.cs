@@ -38,7 +38,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStaffMemberFields.Surname,
                 SynStaffMemberFields.SurnamePrevious,
                 SynStaffMemberFields.SourceOfTruthId,
-                SynStaffMemberFields.EncodedHash
+                SynStaffMemberFields.EncodedHash,
+                SynStaffMemberFields.PlaintextHash
             );
 
         /// <summary>

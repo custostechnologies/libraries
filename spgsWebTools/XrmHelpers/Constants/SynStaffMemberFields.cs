@@ -30,6 +30,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Status = "statecode";
         public const string StatusReason = "statuscode";
         public const string EncodedHash = "pgrowth_encodedhash";
+        public const string PlaintextHash = "pgrowth_plaintexthash";
         public const string LastSuccessfulSync = "pgrowth_lastsuccessfulsync";
     }
 }
