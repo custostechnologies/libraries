@@ -6,24 +6,30 @@ using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-    internal class AssignmentSyncEventService
+    internal class SyncEvent
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
         private readonly AttributeCollection _attributes;
+        private readonly string _targetEntityName;
+        private readonly string _sourceEntityName;
+        private readonly string _syncEntityName;
         private readonly bool _syncAll;
-        public AssignmentSyncEventService(
-            IOrganizationService service, 
-            ITracingService tracer, 
+        public SyncEvent(
+            IOrganizationService service,
+            ITracingService tracer,
             string targetEntityLogicalName,
             string sourceEntityLogicalName,
             string syncEntityLogicalName,
-            AttributeCollection attributes, 
+            AttributeCollection attributes,
             bool syncAll
         )
         {
             _service = service;
             _tracer = tracer;
+            _targetEntityName = targetEntityLogicalName;
+            _sourceEntityName = sourceEntityLogicalName;
+            _syncEntityName = syncEntityLogicalName;
             _attributes = attributes;
             _syncAll = syncAll;
         }
@@ -31,12 +37,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                var syncEvent = new Entity(CREATE_ENTITY_LOGICAL_NAME);
+                var syncEvent = new Entity(_syncEntityName);
 
-                syncEvent["pgrowth_sourceentity"] = SOURCE_ENTITY_LOGICAL_NAME;
-                syncEvent["pgrowth_targetentity"] = TARGET_ENTITY_LOGICAL_NAME;
+                syncEvent["pgrowth_sourceentity"] = _sourceEntityName;
+                syncEvent["pgrowth_targetentity"] = _targetEntityName;
                 syncEvent["pgrowth_message"] = "update";
-                syncEvent["statecode"] = new OptionSetValue((int)Status.Active);
+                syncEvent["statecode"] = new OptionSetValue((int)Domain.Enums.Status.Active);
                 syncEvent["statuscode"] = new OptionSetValue((int)SyncEventStatusReason.Pending);
                 syncEvent["pgrowth_sourcerecordid"] = synMirrorId;
                 syncEvent["pgrowth_updatedattributes"] = string.Join(
