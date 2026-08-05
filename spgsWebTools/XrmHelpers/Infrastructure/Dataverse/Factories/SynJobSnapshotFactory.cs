@@ -32,11 +32,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <returns></returns>
         public JobPositionSnapshot Build(Entity target, Entity preImage, Guid sourceRecordId)
         {
-            _tracer.Trace("Initialising JobBKDRHashService in JobAssignmentSnapshot.Build");
+            _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
 
             JobBKDRHashService _hashService = new JobBKDRHashService(_tracer);
 
-            _tracer.Trace("Creating job snapshot in JobAssignmentSnapshot.Build");
+            _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
             var snap = new JobPositionSnapshot
             {
@@ -92,11 +92,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <returns></returns>
         public JobPositionSnapshot Build(Entity target, Guid sourceRecordId)
         {
-            _tracer.Trace("Initialising JobBKDRHashService in JobAssignmentSnapshot.Build");
+            _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
 
             JobBKDRHashService _hashService = new JobBKDRHashService(_tracer);
 
-            _tracer.Trace("Creating job snapshot in JobAssignmentSnapshot.Build");
+            _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
             var snap = new JobPositionSnapshot
             {
