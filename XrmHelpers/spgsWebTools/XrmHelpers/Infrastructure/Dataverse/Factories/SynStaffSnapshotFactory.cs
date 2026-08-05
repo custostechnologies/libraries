@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Schemas;
@@ -25,6 +26,16 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
             _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for synMirrorId: {0}", synMirrorId.ToString());
 
             var syn = _synStaffQuery.GetEntityById(synMirrorId, 1, SynStaffMemberSchema.SyncColumns);
+
+            _tracer.Trace("In SynStaffMemberFactory.Build, syn query entity returned: {0}",
+                JsonSerializer.Serialize<Entity>(
+                    syn,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }
+                )
+            );
 
             _tracer.Trace("SynStaffMemberQueryService.RetrieveEntity complete, with Id: {0}", syn.Id.ToString());
 
@@ -70,6 +81,16 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, syn),
                 StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, syn)
             };
+
+            _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
+                JsonSerializer.Serialize<StaffMemberSnapshot>(
+                    synStaffMember,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }
+                )
+            );
 
             return synStaffMember;
         }
