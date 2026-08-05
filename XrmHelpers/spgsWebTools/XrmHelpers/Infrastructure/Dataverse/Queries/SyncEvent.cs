@@ -2,22 +2,24 @@ using System;
 using System.Linq;
 using Microsoft.Xrm.Sdk;
 using System.IdentityModel.Protocols.WSTrust;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using Enum = spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-    internal class SyncEvent
+    public class SyncEvent
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        private readonly AttributeCollection _attributes;
-        private readonly string _targetEntityName;
-        private readonly string _sourceEntityName;
-        private readonly string _syncEntityName;
-        private readonly bool _syncAll;
         public SyncEvent(
             IOrganizationService service,
-            ITracingService tracer,
+            ITracingService tracer
+        )
+        {
+            _service = service;
+            _tracer = tracer;
+        }
+        public Entity Build(
+            string synMirrorId,
             string targetEntityLogicalName,
             string sourceEntityLogicalName,
             string syncEntityLogicalName,
@@ -25,43 +27,46 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             bool syncAll
         )
         {
-            _service = service;
-            _tracer = tracer;
-            _targetEntityName = targetEntityLogicalName;
-            _sourceEntityName = sourceEntityLogicalName;
-            _syncEntityName = syncEntityLogicalName;
-            _attributes = attributes;
-            _syncAll = syncAll;
-        }
-        public bool Create(string synMirrorId)
-        {
             try
             {
-                var syncEvent = new Entity(_syncEntityName);
+                var syncEvent = new Entity(syncEntityLogicalName);
 
-                syncEvent["pgrowth_sourceentity"] = _sourceEntityName;
-                syncEvent["pgrowth_targetentity"] = _targetEntityName;
+                syncEvent["pgrowth_sourceentity"] = sourceEntityLogicalName;
+                syncEvent["pgrowth_targetentity"] = targetEntityLogicalName;
                 syncEvent["pgrowth_message"] = "update";
-                syncEvent["statecode"] = new OptionSetValue((int)Domain.Enums.Status.Active);
-                syncEvent["statuscode"] = new OptionSetValue((int)SyncEventStatusReason.Pending);
+                syncEvent["statecode"] = new OptionSetValue((int)Enum.Status.Active);
+                syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Pending);
                 syncEvent["pgrowth_sourcerecordid"] = synMirrorId;
                 syncEvent["pgrowth_updatedattributes"] = string.Join(
                     ",",
-                    _attributes.Keys.Select(key => key)
+                    attributes.Keys.Select(key => key)
                 );
-                syncEvent["pgrowth_syncallattributes"] = _syncAll;
+                syncEvent["pgrowth_syncallattributes"] = syncAll;
 
-                _tracer.Trace("Creating sync event");
-
-                _service.Create(syncEvent);
-
-                _tracer.Trace("Sync event created");
-
-                return true;
+                return syncEvent;
             }
             catch (Exception ex)
             {
                 _tracer.Trace("Error constructing User Sync Event: {0}", ex);
+                throw;
+            }
+        }
+        public void Create(Entity syncEvent, bool failed)
+        {
+            syncEvent["statecode"] = failed 
+                ? Enum.Status.Active 
+                : Enum.Status.Inactive;
+            syncEvent["statuscode"] = failed 
+                ? Enum.SyncEventStatusReason.Error
+                : Enum.SyncEventStatusReason.Complete;
+            try
+            {
+                _tracer.Trace("Creating sync event");
+                _service.Create(syncEvent);
+                _tracer.Trace("Sync event created");
+            }  catch (Exception)
+            {
+                _tracer.Trace("Failed to create SyncEvent.");
                 throw;
             }
         }
