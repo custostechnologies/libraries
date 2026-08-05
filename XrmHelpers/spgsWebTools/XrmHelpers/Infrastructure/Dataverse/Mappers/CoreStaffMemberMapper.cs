@@ -1,10 +1,5 @@
-using System;
-using System.CodeDom;
-using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Schemas;
 using spgsWebTools.XrmHelpers.Constants;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
@@ -12,9 +7,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public static class CoreStaffMemberMapper
     {
         private const string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        private static CoreStaffMember? _coreDto;
-        private static Entity? _updateEntity;
-        private static ITracingService? _tracer;
         public static Entity ToCreateEntity(this CoreStaffMember core, ITracingService tracer)
         {
             var entity = core.ToEntity(true);

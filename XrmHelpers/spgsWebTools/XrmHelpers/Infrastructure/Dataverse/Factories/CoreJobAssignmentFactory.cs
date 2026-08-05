@@ -12,7 +12,6 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        private bool _resolutionFailed = false;
         private CoreJobAssignments? _coreAssignmentQuery;
         private CoreJobPositions? _corePositionQuery;
         private CoreStaffMembers? _coreStaffQuery;
