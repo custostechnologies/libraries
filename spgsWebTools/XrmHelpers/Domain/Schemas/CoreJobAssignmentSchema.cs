@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             CoreJobAssignmentFields.CoreJobAssignmentId,
             CoreJobAssignmentFields.Name,
             CoreJobAssignmentFields.SourceOfTruthId,
-            CoreJobAssignmentFields.StaffJobPositionSeq,
+            CoreJobAssignmentFields.StaffJobPositionsSeq,
 
             // Job Position
             CoreJobAssignmentFields.CoreJobPosition,
@@ -34,7 +34,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             CoreJobAssignmentFields.AssignmentFte,
             CoreJobAssignmentFields.FteRequired,
             CoreJobAssignmentFields.StartDate,
-            CoreJobAssignmentFields.EndDate
+            CoreJobAssignmentFields.EndDate,
+
+            CoreJobAssignmentFields.LastSync
         );
     }
 }

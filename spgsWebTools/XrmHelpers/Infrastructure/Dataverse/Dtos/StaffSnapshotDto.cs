@@ -8,7 +8,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class SynStaffMember
+    public class StaffMemberSnapshot
     {
         // identity
 
@@ -147,6 +147,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         /// <summary>
         /// 
         /// </summary>
-        public long EncodedHash { get; set; }
+        public long LongEncodedHash { get; set; }
     }
 }

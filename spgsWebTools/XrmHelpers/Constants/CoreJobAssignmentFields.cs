@@ -6,7 +6,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string CoreJobAssignmentId = "mthomas_corejobassignmentid";
         public const string Name = "mthomas_name";
         public const string SourceOfTruthId = "pgrowth_sourceoftruthid";
-        public const string StaffJobPositionSeq = "mthomas_staffjobpositionseq";
+        public const string StaffJobPositionsSeq = "mthomas_StaffJobPositionsSeq";
 
         // job position
         public const string CoreJobPosition = "pgrowth_corejobposition";
@@ -28,6 +28,8 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string FteRequired = "mthomas_fterequired";
         public const string StartDate = "mthomas_startdate";
         public const string EndDate = "mthomas_enddate";
+
+        public const string LastSync = "pgrowth_lastsync";
 
     }
 }

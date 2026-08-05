@@ -1,5 +1,4 @@
 using Microsoft.Xrm.Sdk.Query;
-using System.Collections.Generic;
 using spgsWebTools.XrmHelpers.Constants;
 
 namespace spgsWebTools.XrmHelpers.Domain.Schemas
@@ -14,6 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.Id,
             SynJobPositionFields.RecordTitle,
             SynJobPositionFields.StaffId,
+            SynJobPositionFields.SourceOfTruthId,
 
             // Staff Job Position
             SynJobPositionFields.StaffJobPositionActiveFlag,
@@ -40,6 +40,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
         {
             SynJobPositionFields.Id,
             SynJobPositionFields.RecordTitle,
+            SynJobPositionFields.SourceOfTruthId,
             SynJobPositionFields.StaffId,
             SynJobPositionFields.StaffJobPositionActiveFlag,
             SynJobPositionFields.StaffJobPositionCode,

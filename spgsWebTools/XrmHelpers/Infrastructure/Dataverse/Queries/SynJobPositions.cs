@@ -26,7 +26,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         /// </summary>
         /// <param name="synEntityId"></param>
         /// <returns></returns>
-        public Entity GetMetadataById(
+        public Entity GetEntityById(
             Guid synEntityId,
             int topCount,
             ColumnSet colSet

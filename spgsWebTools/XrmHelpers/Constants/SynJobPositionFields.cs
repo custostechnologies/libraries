@@ -6,6 +6,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Id = "pgrowth_synergetic_vstaffjobpositionsid";
         public const string RecordTitle = "pgrowth_recordtitle";
         public const string StaffId = "pgrowth_staffid";
+        public const string SourceOfTruthId = "pgrowth_sourceoftruthid";
 
         // Job Position
         public const string JobPositionActiveFlag = "pgrowth_jobpositionactiveflag";
