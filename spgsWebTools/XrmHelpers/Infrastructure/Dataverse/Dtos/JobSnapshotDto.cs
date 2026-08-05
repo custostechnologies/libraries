@@ -36,6 +36,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 
         // sync
         public string? PlaintextHash { get; set; }
-        public long? LongEncodedHash { get; set; }
+        public int EncodedHash { get; set; }
     }
 }

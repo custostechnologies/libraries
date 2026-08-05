@@ -29,7 +29,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SourceOfTruthId = "pgrowth_sourceoftruthid";
         public const string Status = "statecode";
         public const string StatusReason = "statuscode";
-        public const string LongEncodedHash = "pgrowth_encodedhash";
+        public const string EncodedHash = "pgrowth_encodedhash";
         public const string LastSuccessfulSync = "pgrowth_lastsuccessfulsync";
     }
 }

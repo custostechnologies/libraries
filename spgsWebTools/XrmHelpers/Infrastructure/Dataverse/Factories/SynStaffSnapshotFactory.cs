@@ -18,18 +18,15 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
             _service = service;
             _tracer = tracer;
         }
-        public StaffMemberSnapshot Build(Guid synMirrorId)
+        public StaffMemberSnapshot Build(Entity target, Entity preImage)
         {
-            // retrieve synergetic staff member
-            _synStaffQuery = new SynStaffMembers(_service, _tracer);
 
-            _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for synMirrorId: {0}", synMirrorId.ToString());
+            _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
 
-            var syn = _synStaffQuery.GetEntityById(synMirrorId, 1, SynStaffMemberSchema.SyncColumns);
 
-            _tracer.Trace("In SynStaffMemberFactory.Build, syn query entity returned: {0}",
+            _tracer.Trace("In SynStaffMemberFactory.Build, TARGET is: {0}",
                 JsonSerializer.Serialize<Entity>(
-                    syn,
+                    target,
                     new JsonSerializerOptions
                     {
                         WriteIndented = true
@@ -37,49 +34,57 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 )
             );
 
-            _tracer.Trace("SynStaffMemberQueryService.RetrieveEntity complete, with Id: {0}", syn.Id.ToString());
+            _tracer.Trace("In SynStaffMemberFactory.Build, PREIMAGE is: {0}",
+                JsonSerializer.Serialize<Entity>(
+                    preImage,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }
+                )
+            );
 
             var synStaffMember = new StaffMemberSnapshot()
             {
                 // retrieve string values
-                StaffCampus = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCampus, syn),
-                StaffCategory = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCategory, syn),
-                SchoolStaffCode = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SchoolStaffCode, syn),
-                StaffDepartment = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffDepartment, syn),
-                Gender = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Gender, syn),
-                Given1 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given1, syn),
-                Given2 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given2, syn),
-                NameInternal = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NameInternal, syn),
-                Surname = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Surname, syn),
-                NetworkLogin = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NetworkLogin, syn),
-                MaidenName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.MaidenName, syn),
-                StaffPreferredName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffPreferredName, syn),
-                Email = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Email, syn),
-                SurnamePrevious = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SurnamePrevious, syn),
-                SubSchool = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SubSchool, syn),
-                CommunityGuid = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CommunityGuid, syn),
-                OccupEmail = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupEmail, syn),
-                OccupPhone = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupPhone, syn),
+                StaffCampus = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCampus, target, preImage),
+                StaffCategory = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCategory, target, preImage),
+                SchoolStaffCode = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SchoolStaffCode, target, preImage),
+                StaffDepartment = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffDepartment, target, preImage),
+                Gender = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Gender, target, preImage),
+                Given1 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given1, target, preImage),
+                Given2 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given2, target, preImage),
+                NameInternal = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NameInternal, target, preImage),
+                Surname = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Surname, target, preImage),
+                NetworkLogin = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NetworkLogin, target, preImage),
+                MaidenName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.MaidenName, target, preImage),
+                StaffPreferredName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffPreferredName, target, preImage),
+                Email = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Email, target, preImage),
+                SurnamePrevious = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SurnamePrevious, target, preImage),
+                SubSchool = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SubSchool, target, preImage),
+                CommunityGuid = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CommunityGuid, target, preImage),
+                OccupEmail = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupEmail, target, preImage),
+                OccupPhone = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupPhone, target, preImage),
 
                 // retrieve integer values
-                StaffId = GetAttributeDelta.Execute<int>(SynStaffMemberFields.StaffId, syn),
-                CampusKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CampusKey, syn),
-                GenderKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.GenderKey, syn),
+                StaffId = GetAttributeDelta.Execute<int>(SynStaffMemberFields.StaffId, target, preImage),
+                CampusKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CampusKey, target, preImage),
+                GenderKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.GenderKey, target, preImage),
 
                 // retrieve boolean values
-                ActiveFlag = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.ActiveFlag, syn),
+                ActiveFlag = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.ActiveFlag, target, preImage),
 
                 // retrieve date times values accounting for null values
-                LeavingDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.LeavingDate, syn),
-                StartDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.StartDate, syn),
+                LeavingDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.LeavingDate, target, preImage),
+                StartDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.StartDate, target, preImage),
 
                 // retrieve source of truth id
-                SourceOfTruthId = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, syn),
-                SynMirrorId = synMirrorId,
+                SourceOfTruthId = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, target, preImage),
 
+                SynMirrorId = preImage.Id,
                 // status
-                Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, syn),
-                StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, syn)
+                Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, target, preImage),
+                StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, target, preImage)
             };
 
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
