@@ -37,7 +37,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStaffMemberFields.OccupPhone,
                 SynStaffMemberFields.Surname,
                 SynStaffMemberFields.SurnamePrevious,
-                SynStaffMemberFields.SourceOfTruthId
+                SynStaffMemberFields.SourceOfTruthId,
+                SynStaffMemberFields.EncodedHash
             );
 
         /// <summary>

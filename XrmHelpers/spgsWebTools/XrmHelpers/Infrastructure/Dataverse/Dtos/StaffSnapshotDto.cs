@@ -147,6 +147,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         /// <summary>
         /// 
         /// </summary>
-        public long LongEncodedHash { get; set; }
+        public int EncodedHash { get; set; }
     }
 }

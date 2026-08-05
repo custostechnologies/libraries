@@ -68,7 +68,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 JsonSerializer.Serialize(snap)
             );
 
-            snap.LongEncodedHash = _hashService.Generate(snap);
+            snap.EncodedHash = _hashService.Generate(snap);
 
             _tracer.Trace("Calculating job assignment status and status reason");
 
@@ -128,7 +128,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 JsonSerializer.Serialize(snap)
             );
 
-            snap.LongEncodedHash = _hashService.Generate(snap);
+            snap.EncodedHash = _hashService.Generate(snap);
 
             _tracer.Trace("Calculating job assignment status and status reason");
 
@@ -161,7 +161,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <param name="snap"></param>
         /// <returns></returns>
 
-        public long Generate(JobPositionSnapshot snap)
+        public int Generate(JobPositionSnapshot snap)
         {
 
             string plaintextHash = string.Join("|",

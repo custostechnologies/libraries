@@ -25,7 +25,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StaffJobPositionsSeq,
 
             // Hash Values
-            SynJobPositionFields.LongEncodedHash,
+            SynJobPositionFields.EncodedHash,
             SynJobPositionFields.PlaintextHash,
 
             // Status

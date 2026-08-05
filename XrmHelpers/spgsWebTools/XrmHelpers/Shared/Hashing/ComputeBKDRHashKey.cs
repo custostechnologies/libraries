@@ -7,7 +7,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
         /* takes a concatenated string (with '|' separator), converts each      */
         /* char to its corresponding integer, adds padding and then calculates  */
         /* the hash                                                             */
-        public static long Calculate(string plaintext)
+        public static int Calculate(string plaintext)
         {
 
             long seed = 1313;
@@ -31,7 +31,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
                     state = (state + (current * seed)) % modulo;
                 }
 
-                return state;
+                return (int)state;
             }
             catch (Exception ex)
             {

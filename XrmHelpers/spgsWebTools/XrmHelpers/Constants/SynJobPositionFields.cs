@@ -32,7 +32,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string StaffNameInternal = "pgrowth_staffnameinternal";
 
         // Hash Values
-        public const string LongEncodedHash = "pgrowth_encodedhash";
+        public const string EncodedHash = "pgrowth_encodedhash";
         public const string PlaintextHash = "pgrowth_plaintexthash";
 
         // Status
