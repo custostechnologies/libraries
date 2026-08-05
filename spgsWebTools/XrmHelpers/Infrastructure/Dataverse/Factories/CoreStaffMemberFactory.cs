@@ -260,9 +260,12 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
         }
         private void MapStatus(StaffMemberSnapshot syn, CoreStaffMember target)
         {
-            _tracer.Trace("MapStatus CoreStaffMemnberFactoty status: {0}", target.Status.ToString());
-            target.Status = syn.Status;
-            target.StatusReason = syn.StatusReason;
+            if(target.Status != null && target.StatusReason != null)
+            {
+                _tracer.Trace("MapStatus CoreStaffMemnberFactoty status: {0}", target.Status.ToString());
+                target.Status = syn.Status;
+                target.StatusReason = syn.StatusReason;
+            }
         }
         private void MapEmploymentDates(StaffMemberSnapshot syn, CoreStaffMember target)
         {
