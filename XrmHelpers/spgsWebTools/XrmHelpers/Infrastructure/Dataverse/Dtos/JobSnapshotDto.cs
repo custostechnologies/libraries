@@ -8,25 +8,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class JobAssignmentSnapshot
+    public class JobPositionSnapshot
     {
         // identity
         public Guid SynMirrorId { get; set; }
         public string? Name { get; set; }
-        public int StaffJobPositionSeq { get; set; }
+        public int JobPositionsSeq { get; set; }
+        public int StaffJobPositionsSeq { get; set; }
+        public string? SourceOfTruthId { get; set; }
 
         // job position
-        public EntityReference? CoreJobPosition { get; set; }
-        public string? CoreJobPositionIdx { get; set; }
         public string? SynReportsTo { get; set; }
 
         // user
-        public EntityReference? CoreStaffMember { get; set; }
-        public string? CoreStaffMemberIdx { get; set; }
-        public int? StaffId { get; set; }
+        public int StaffId { get; set; }
 
         // status
-        public int? IsActive { get; set; }
+        public int IsActive { get; set; }
         public OptionSetValue? Status { get; set; }
         public OptionSetValue? StatusReason { get; set; }
 
