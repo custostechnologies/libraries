@@ -54,12 +54,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         public void Create(Entity syncEvent, bool failed)
         {
             syncEvent["statecode"] = failed 
-                ? Enum.Status.Active 
-                : Enum.Status.Inactive;
+                ? new OptionSetValue((int)Enum.Status.Inactive) 
+                : new OptionSetValue((int)Enum.Status.Active);
             syncEvent["statuscode"] = failed 
-                ? Enum.SyncEventStatusReason.Error
-                : Enum.SyncEventStatusReason.Complete;
-            try
+                ? new OptionSetValue((int)Enum.SyncEventStatusReason.Error)
+                : new OptionSetValue((int)Enum.SyncEventStatusReason.Complete);
+            try 
             {
                 _tracer.Trace("Creating sync event");
                 _service.Create(syncEvent);

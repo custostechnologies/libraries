@@ -22,7 +22,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Resolvers
             }
             catch (Exception)
             {
-                return Status.Inactive;
+                return Status.Active;
             }
         }
     }
