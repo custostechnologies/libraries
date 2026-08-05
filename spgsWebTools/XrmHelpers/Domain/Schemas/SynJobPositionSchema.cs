@@ -2,7 +2,7 @@ using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
 using spgsWebTools.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Schemas
+namespace spgsWebTools.XrmHelpers.Domain.Schemas
 {
     /// <summary>
     /// Synergetic Job Position schema used for assignment change detection.

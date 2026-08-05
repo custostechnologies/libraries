@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Schemas
+namespace spgsWebTools.XrmHelpers.Domain.Schemas
 {
     /// <summary>
     /// Core Job Position schema used for assignment change detection.
