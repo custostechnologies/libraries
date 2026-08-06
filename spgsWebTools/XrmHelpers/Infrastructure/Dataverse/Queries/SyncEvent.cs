@@ -43,6 +43,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 );
                 syncEvent["pgrowth_syncallattributes"] = syncAll;
 
+                var result = _service.Create(syncEvent);
+
                 return syncEvent;
             }
             catch (Exception ex)
@@ -51,12 +53,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw;
             }
         }
-        public void CreateAndMarkError(Entity syncEvent)
+        public void Create(Entity syncEvent)
         {
             try 
             {
-                _tracer.Trace("Marking syncEvent status as failed until updated to complete if no errors are thrown"); 
-                syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
                 _tracer.Trace("Creating sync event");
                 _service.Create(syncEvent);
                 _tracer.Trace("Sync event created");
@@ -67,13 +67,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
         }
 
-        public void MarkComplete(Entity syncEvent)
+        public void UpdateStatus(Entity syncEvent, Enum.SyncEventStatusReason reason)
         {
             try
             {
                 _tracer.Trace("Marking syncEvent status as complete"); 
-                syncEvent["statecode"] = new OptionSetValue((int)Enum.Status.Inactive);
-                syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Complete);
+                Enum.Status status = reason == Enum.SyncEventStatusReason.Complete
+                    ? Enum.Status.Inactive
+                    : Enum.Status.Active;
+                syncEvent["statecode"] = new OptionSetValue((int)status);
+                syncEvent["statuscode"] = new OptionSetValue((int)reason);
             } catch (Exception)
             {
                 _tracer.Trace("Error encountered when setting syncEvent status to Inactive and statusReason to Complete.");
