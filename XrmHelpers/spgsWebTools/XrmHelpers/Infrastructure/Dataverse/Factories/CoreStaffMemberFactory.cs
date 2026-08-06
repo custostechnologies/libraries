@@ -113,8 +113,9 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 if (attributes.Contains(SynStaffMemberFields.ActiveFlag))
                     MapIsActive(syn, updateCore);
 
-                if (attributes.Contains(SynStaffMemberFields.Status) ||
-                    attributes.Contains(SynStaffMemberFields.StatusReason))
+                if (
+                    (attributes.Contains(SynStaffMemberFields.Status) && syn.Status != null) 
+                    || (attributes.Contains(SynStaffMemberFields.StatusReason) && syn.StatusReason != null))
                     MapStatus(syn, updateCore);
 
                 // job metadata
