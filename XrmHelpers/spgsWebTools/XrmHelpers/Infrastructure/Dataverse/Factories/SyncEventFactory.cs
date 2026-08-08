@@ -43,6 +43,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );
                 syncEvent["pgrowth_syncallattributes"] = syncAll;
 
+                var result = _service.Create(syncEvent);
+
                 return syncEvent;
             }
             catch (Exception ex)
@@ -70,7 +72,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw;
             }
         }
-
         public void MarkComplete(Entity syncEvent)
         {
             try
