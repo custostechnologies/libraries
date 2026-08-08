@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Schemas;
+using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
@@ -20,6 +20,8 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
         }
         public StaffMemberSnapshot Build(Entity target, Entity preImage)
         {
+            Enums.Status status = Enums.Status.Active;
+            Enums.StatusReason statusReason = Enums.StatusReason.Active;
 
             _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
 
@@ -86,6 +88,16 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, target, preImage),
                 StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, target, preImage)
             };
+
+            // update status based on values
+            if (
+                (synStaffMember.LeavingDate.HasValue && synStaffMember.LeavingDate.Value <= DateTime.UtcNow)
+                || (!synStaffMember.ActiveFlag)
+            )
+            {
+                synStaffMember.Status = new OptionSetValue((int)Enums.Status.Inactive);
+                synStaffMember.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
+            }
 
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
                 JsonSerializer.Serialize<StaffMemberSnapshot>(

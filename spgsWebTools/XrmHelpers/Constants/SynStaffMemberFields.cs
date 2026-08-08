@@ -2,6 +2,7 @@ namespace spgsWebTools.XrmHelpers.Constants
 {
     public static class SynStaffMemberFields
     {
+        public const string SynMirrorId = "pgrowth_synergetic_vstaff_community_leftjoinid";
         public const string StaffId = "pgrowth_staffid";
         public const string StaffPreferredName = "pgrowth_staffpreferredname";
         public const string StaffCampus = "pgrowth_staffcampus";
