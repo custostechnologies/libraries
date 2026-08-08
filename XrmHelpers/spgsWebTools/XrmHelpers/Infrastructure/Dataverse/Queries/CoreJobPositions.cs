@@ -1,5 +1,6 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers.Constants;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
@@ -21,9 +22,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             {
                 TopCount = 1,
                 ColumnSet = new ColumnSet(
-                    "pgrowth_jobpositionseq",
-                    "pgrowth_sourceoftruthid",
-                    "pgrowth_corejobpositionid"
+                    CoreJobPositionFields.JobPositionSeq,
+                    CoreJobPositionFields.SourceOfTruthId,
+                    CoreJobPositionFields.CoreJobPositionId
 
                 ),
                 Criteria =
@@ -31,7 +32,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     Conditions =
                     {
                         new ConditionExpression(
-                            "pgrowth_jobpositionseq",
+                            CoreJobPositionFields.JobPositionSeq,
                             ConditionOperator.Equal,
                             seq
                         )
@@ -63,9 +64,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             {
                 TopCount = 1,
                 ColumnSet = new ColumnSet(
-                    "pgrowth_jobpositionseq",
-                    "pgrowth_sourceoftruthid",
-                    "pgrowth_corejobpositionid"
+                    CoreJobPositionFields.JobPositionSeq,
+                    CoreJobPositionFields.SourceOfTruthId,
+                    CoreJobPositionFields.CoreJobPositionId
 
                 ),
                 Criteria =
@@ -73,7 +74,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     Conditions =
                     {
                         new ConditionExpression(
-                            "pgrowth_corejobpositionid",
+                            CoreJobPositionFields.CoreJobPositionId,
                             ConditionOperator.Equal,
                             id
                         )

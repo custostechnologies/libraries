@@ -15,6 +15,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StaffId,
             SynJobPositionFields.SourceOfTruthId,
 
+            // Job Position
+            SynJobPositionFields.JobPositionDescription,
+            SynJobPositionFields.JobPositionFTERequired,
+            SynJobPositionFields.JobPositionsSeq,
+
             // Staff Job Position
             SynJobPositionFields.StaffJobPositionActiveFlag,
             SynJobPositionFields.StaffJobPositionCode,

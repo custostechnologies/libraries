@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             CoreJobAssignmentFields.CoreJobAssignmentId,
             CoreJobAssignmentFields.Name,
             CoreJobAssignmentFields.SourceOfTruthId,
-            CoreJobAssignmentFields.StaffJobPositionsSeq,
+            CoreJobAssignmentFields.StaffJobPositionSeq,
 
             // Job Position
             CoreJobAssignmentFields.CoreJobPosition,

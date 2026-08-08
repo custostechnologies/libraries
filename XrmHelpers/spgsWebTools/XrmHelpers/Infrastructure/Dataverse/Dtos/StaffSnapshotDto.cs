@@ -27,7 +27,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         /// <summary>
         /// 
         /// </summary>
-        public int? StaffId { get; set; }
+        public int StaffId { get; set; }
         /// <summary>
         /// 
         /// </summary>
