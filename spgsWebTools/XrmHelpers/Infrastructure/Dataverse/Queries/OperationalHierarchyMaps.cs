@@ -79,7 +79,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
-                    ColumnSet = ReferenceHierarchyMapSchema.AllSyncColumns,
+                    ColumnSet = OperationalHierarchyMapSchema.SyncColumns,
                     Criteria = new FilterExpression(LogicalOperator.And)
                     {
                         Conditions =
