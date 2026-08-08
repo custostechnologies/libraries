@@ -7,9 +7,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public static class CoreJobAssignmentMapper
     {
         private const string ENTITY_LOGICAL_NAME = "pgrowth_corejobassignment";
-        public static Entity ToCreateEntity(this CoreJobAssignment core, ITracingService tracer)
+        public static Entity ToCreateEntity(this CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
         {
-            var entity = core.ToEntity(true);
+            var entity = core.ToEntity(true, updatedAttributes);
 
             foreach (var a in entity.Attributes)
             {
@@ -22,14 +22,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
             return entity;
         }
-        public static Entity ToUpdateEntity(this CoreJobAssignment core, ITracingService tracer)
+        public static Entity ToUpdateEntity(this CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
         {
             if (core.CoreJobAssignmentId == Guid.Empty)
             {
                 throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
             }
 
-            var entity = core.ToEntity(false);
+            var entity = core.ToEntity(false, updatedAttributes);
             entity.Id = core.CoreJobAssignmentId;
 
             foreach (var a in entity.Attributes)
@@ -44,29 +44,55 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             return entity;
         }
 
-        public static Entity ToEntity(this CoreJobAssignment core, bool create)
+        public static Entity ToEntity(this CoreJobAssignment core, bool create, string[] updatedAttributes)
         {
             var entity = new Entity(ENTITY_LOGICAL_NAME);
 
             // Identity
-            if (!string.IsNullOrWhiteSpace(core.Name))
-                entity[CoreJobAssignmentFields.Name] = core.Name;
 
-            if (!string.IsNullOrWhiteSpace(core.SourceOfTruthId))
-                entity[CoreJobAssignmentFields.SourceOfTruthId] = core.SourceOfTruthId;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.JobPositionDescription,
+                CoreJobAssignmentFields.Name,
+                core.Name
+            );
 
-            if (core.StaffId != null)
-                entity[CoreJobAssignmentFields.StaffId] = core.StaffId;
+            if (!string.IsNullOrWhiteSpace(core.SourceOfTruthId) &&
+    updatedAttributes.Contains("pgrowth_sourceoftruthid"))
+            {
+                entity[CoreStaffMemberFields.SourceOfTruthId] = core.SourceOfTruthId;
+            }
 
-            if (core.StaffJobPositionSeq != null)
-                entity[CoreJobAssignmentFields.StaffJobPositionsSeq] = core.StaffJobPositionSeq;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StaffId,
+                CoreJobAssignmentFields.StaffId,
+                core.StaffId
+            );
+
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StaffJobPositionsSeq,
+                CoreJobAssignmentFields.StaffJobPositionsSeq,
+                core.StaffJobPositionSeq
+            );
 
             // Status
-            if (core.IsActive != null)
-                entity[CoreJobAssignmentFields.IsActive] = core.IsActive;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StaffJobPositionActiveFlag,
+                CoreJobAssignmentFields.IsActive,
+                core.IsActive
+            );
 
             if (core.StatusReason != null && !create)
+            {
                 entity[CoreJobAssignmentFields.StatusReason] = core.StatusReason;
+            }
 
             // Job metadata
             if (core.CoreStaffMember != null)
@@ -81,26 +107,63 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             if (core.CoreJobPosition != null)
                 entity[CoreJobAssignmentFields.CoreJobPosition] = core.CoreJobPosition;
 
-            if (core.AssignmentFte != null)
-                entity[CoreJobAssignmentFields.AssignmentFte] = core.AssignmentFte;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StaffJobPositionFTE,
+                CoreJobAssignmentFields.AssignmentFte,
+                core.AssignmentFte
+            );
 
-            if (core.StartDate.HasValue)
-                entity[CoreJobAssignmentFields.StartDate] = core.StartDate.Value;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StaffJobPositionStartDate,
+                CoreJobAssignmentFields.StartDate,
+                core.StartDate
+            );
 
-            if (core.EndDate.HasValue)
-                entity[CoreJobAssignmentFields.EndDate] = core.EndDate.Value;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StaffJobPositionEndDate,
+                CoreJobAssignmentFields.EndDate,
+                core.EndDate
+            );
 
-            if (core.FteRequired != null)
-                entity[CoreJobAssignmentFields.FteRequired] = core.FteRequired;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.JobPositionFTERequired,
+                CoreJobAssignmentFields.FteRequired,
+                core.FteRequired
+            );
 
-            if (!string.IsNullOrWhiteSpace(core.SynReportsTo))
-                entity[CoreJobAssignmentFields.SynReportsTo] = core.SynReportsTo;
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.ReportsTo,
+                CoreJobAssignmentFields.SynReportsTo,
+                core.SynReportsTo
+            );
 
             // Sync data
-            if (core.LastSync.HasValue)
-                entity[CoreJobAssignmentFields.LastSync] = core.LastSync.Value;
+            entity[CoreJobAssignmentFields.LastSync] = DateTime.UtcNow;
 
             return entity;
+        }
+        private static void MapDelta<T>(
+            Entity entity,
+            string[] updatedAttributes,
+            string sourceAttribute,
+            string targetAttribute,
+            T value
+        )
+        {
+            if (updatedAttributes.Contains(sourceAttribute))
+            {
+                entity[targetAttribute] = value;
+            }
         }
     }
 }
