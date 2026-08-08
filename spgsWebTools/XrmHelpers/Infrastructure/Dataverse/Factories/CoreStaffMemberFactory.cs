@@ -113,8 +113,9 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 if (attributes.Contains(SynStaffMemberFields.ActiveFlag))
                     MapIsActive(syn, updateCore);
 
-                if (attributes.Contains(SynStaffMemberFields.Status) ||
-                    attributes.Contains(SynStaffMemberFields.StatusReason))
+                if (
+                    (attributes.Contains(SynStaffMemberFields.Status) && syn.Status != null) 
+                    || (attributes.Contains(SynStaffMemberFields.StatusReason) && syn.StatusReason != null))
                     MapStatus(syn, updateCore);
 
                 // job metadata
@@ -260,9 +261,12 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
         }
         private void MapStatus(StaffMemberSnapshot syn, CoreStaffMember target)
         {
-            _tracer.Trace("MapStatus CoreStaffMemnberFactoty status: {0}", target.Status.ToString());
-            target.Status = syn.Status;
-            target.StatusReason = syn.StatusReason;
+            if(target.Status != null && target.StatusReason != null)
+            {
+                _tracer.Trace("MapStatus CoreStaffMemnberFactoty status: {0}", target.Status.ToString());
+                target.Status = syn.Status;
+                target.StatusReason = syn.StatusReason;
+            }
         }
         private void MapEmploymentDates(StaffMemberSnapshot syn, CoreStaffMember target)
         {
