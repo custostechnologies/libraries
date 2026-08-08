@@ -6,10 +6,10 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string CoreJobAssignmentId = "mthomas_corejobassignmentid";
         public const string Name = "mthomas_name";
         public const string SourceOfTruthId = "pgrowth_sourceoftruthid";
-        public const string StaffJobPositionsSeq = "mthomas_StaffJobPositionsSeq";
+        public const string StaffJobPositionSeq = "mthomas_staffjobpositionseq";
 
         // job position
-        public const string CoreJobPosition = "pgrowth_corejobposition";
+        public const string CoreJobPosition = "mthomas_corejobposition";
         public const string CoreJobPositionIdx = "pgrowth_corejobpositionidx";
         public const string SynReportsTo = "mthomas_synreportsto";
 

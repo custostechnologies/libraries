@@ -37,17 +37,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _systemuserQuery = new Systemusers(_service, _tracer);
 
+            Entity core;
+
             if (syn.SourceOfTruthId == null)
             {
                 _tracer.Trace("Syn Staff Snapshot has no Source of Truth Id");
-                throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
+                core = _coreStaffQuery.GetEntityByStaffId(syn.StaffId);
             }
-            Entity core = _coreStaffQuery.GetEntityUsingTruth(syn.SourceOfTruthId);
+            else
+            {
+                core = _coreStaffQuery.GetEntityByTruth(syn.SourceOfTruthId);
+            }
 
             if (syn.OccupEmail == null && syn.NetworkLogin == null)
             {
                 _tracer.Trace("Syn Staff Snapshot has no OccupEmail and/or NetworkLogin");
-                throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
+                throw new InvalidPluginExecutionException("Unable to resolve Syn Staff Member");
             }
             EntityReference systemUserRef = _systemuserQuery.GetReferenceByMetadata(syn.OccupEmail!, syn.NetworkLogin!);
 

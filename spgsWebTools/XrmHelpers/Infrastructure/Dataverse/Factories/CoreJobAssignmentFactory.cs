@@ -12,9 +12,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        private CoreJobAssignments? _coreAssignmentQuery;
-        private CoreJobPositions? _corePositionQuery;
-        private CoreStaffMembers? _coreStaffQuery;
+        private SynJobPositions? _synJobPositionQuery;
+        private CoreJobAssignments? _coreJobAssignmentQuery;
+        private CoreJobPositions? _coreJobPositionQuery;
+        private CoreStaffMembers? _coreStaffMemberQuery;
         public CoreJobAssignmentFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -22,6 +23,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public CoreJobAssignment Build(JobPositionSnapshot snap, string[] attributes)
         {
+            Entity coreAssignment;
+
             _tracer.Trace("Entered CoreJobAssignmentFactory.Build");
             _tracer.Trace("attributes string[]: {0}",
                 JsonSerializer.Serialize(
@@ -32,19 +35,31 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     }
                 )
             );
-            _coreAssignmentQuery = new CoreJobAssignments(_service, _tracer);
+            _tracer.Trace("Initialising query obejcts");
+
+            _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
+            _coreJobPositionQuery = new CoreJobPositions(_service, _tracer);
+            _coreStaffMemberQuery = new CoreStaffMembers(_service, _tracer);
+
+            _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
 
             if (snap.SourceOfTruthId == null)
             {
-                _tracer.Trace("Unable to resolve Core Job Assignment.");
-                throw new Exception("Core Job Assignment Resolution Failed.");
+                _tracer.Trace("Has no source of truth id Core Job Assignment. Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
+                coreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
             }
-            Entity coreAssignment = _coreAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId);
+            else
+            {
+                _tracer.Trace("Has Source truth id Core Job Assignment. Searching by TRUTH");
+                coreAssignment = _coreJobAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId);
+            }
+
+            _tracer.Trace("Core Assignment returned with Id: {0}", coreAssignment.Id);
 
             CoreJobAssignment updateCore;
             CoreJobAssignment createCore;
 
-            if (coreAssignment.Id == Guid.Empty)
+            if (coreAssignment.Id != Guid.Empty)
             {
                 updateCore = new CoreJobAssignment
                 {
@@ -149,18 +164,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapCoreStaffMember(JobPositionSnapshot snap, CoreJobAssignment target)
         {
-            _coreStaffQuery = new CoreStaffMembers(_service, _tracer);
+            Entity coreStaffMember = _coreStaffMemberQuery!.GetEntityByStaffId(snap.StaffId);
 
-            EntityReference coreStaffRef = _coreStaffQuery.GetEntityReferenceByStaffId(snap.StaffId);
+            EntityReference coreRef = new EntityReference(
+                "pgrowth_corestaffmember",
+                coreStaffMember.Id
+            );
 
-            target.CoreStaffMember = coreStaffRef;
-            target.CoreStaffMemberIdx = coreStaffRef.Id.ToString();
+            target.CoreStaffMember = coreRef;
+            target.CoreStaffMemberIdx = coreRef.Id.ToString();
         }
         private void MapCoreJobPosition(JobPositionSnapshot snap, CoreJobAssignment target)
         {
-            _corePositionQuery = new CoreJobPositions(_service, _tracer);
-
-            EntityReference corePositionRef = _corePositionQuery.GetReferenceBySeq(snap.JobPositionsSeq);
+            EntityReference corePositionRef = _coreJobPositionQuery!.GetReferenceBySeq(snap.JobPositionsSeq);
 
             target.CoreJobPosition = corePositionRef;
             target.CoreJobPositionIdx = corePositionRef.Id.ToString();

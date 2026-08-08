@@ -6,7 +6,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public static class CoreJobAssignmentMapper
     {
-        private const string ENTITY_LOGICAL_NAME = "pgrowth_corejobassignment";
+        private const string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
         public static Entity ToCreateEntity(this CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
         {
             var entity = core.ToEntity(true, updatedAttributes);
@@ -53,7 +53,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             MapDelta(
                 entity,
                 updatedAttributes,
-                SynJobPositionFields.JobPositionDescription,
+                SynJobPositionFields.RecordTitle,
                 CoreJobAssignmentFields.Name,
                 core.Name
             );
@@ -76,7 +76,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 entity,
                 updatedAttributes,
                 SynJobPositionFields.StaffJobPositionsSeq,
-                CoreJobAssignmentFields.StaffJobPositionsSeq,
+                CoreJobAssignmentFields.StaffJobPositionSeq,
                 core.StaffJobPositionSeq
             );
 

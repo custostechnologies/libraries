@@ -2,6 +2,7 @@ using System;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Schemas;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
@@ -16,7 +17,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             _service = service;
             _tracer = tracer;
         }
-        public Entity GetEntityUsingTruth(string truthId)
+        public Entity GetEntityByTruth(string truthId)
         {
             try
             {
@@ -31,7 +32,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                         Conditions =
                         {
                             new ConditionExpression(
-                                "pgrowth_sourceoftruthid",
+                                CoreStaffMemberFields.SourceOfTruthId,
                                 ConditionOperator.Equal,
                                 truthId
                             )
@@ -76,7 +77,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw;
             }
         }
-        public EntityReference GetEntityReferenceByStaffId(int staffId)
+        public Entity GetEntityByStaffId(int staffId)
         {
             try
             {
@@ -91,7 +92,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                         Conditions =
                         {
                             new ConditionExpression(
-                                "pgrowth_staffid",
+                                CoreStaffMemberFields.StaffId,
                                 ConditionOperator.Equal,
                                 staffId
                             )
@@ -116,12 +117,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                             }
                         )
                     );
-                    return new EntityReference(ENTITY_LOGICAL_NAME, results.Entities[0].Id);
+                    return results.Entities[0];
                 }
                 else
                 {
                     _tracer.Trace("No existing entities were found");
-                    return new EntityReference(ENTITY_LOGICAL_NAME);
+                    return new Entity(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
