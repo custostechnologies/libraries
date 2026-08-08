@@ -51,15 +51,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw;
             }
         }
-        public void CreateAndMarkError(Entity syncEvent)
+        public Guid CreateAndMarkError(Entity syncEvent)
         {
             try
             {
+                Guid eventId;
                 _tracer.Trace("Marking syncEvent status as failed until updated to complete if no errors are thrown");
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
                 _tracer.Trace("Creating sync event");
-                _service.Create(syncEvent);
+                eventId = _service.Create(syncEvent);
                 _tracer.Trace("Sync event created");
+
+                return eventId;
             }
             catch (Exception)
             {
