@@ -6,7 +6,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace spgsWebTools.NewUserSyncEvent.Factories
+namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreStaffMemberFactory
     {
@@ -51,7 +51,7 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
             }
             EntityReference systemUserRef = _systemuserQuery.GetReferenceByMetadata(syn.OccupEmail!, syn.NetworkLogin!);
 
-            if (systemUserRef.Id == null || systemUserRef.Id == Guid.Empty)
+            if (systemUserRef == null || systemUserRef.Id == Guid.Empty)
             {
                 _tracer.Trace("systemUserRef.Id is null or empty");
                 // retrieve azure id (not via systemuser)
@@ -76,6 +76,12 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                         (Guid)newUserId
                     );
                 }
+            }
+
+            if (systemUserRef == null || systemUserRef.Id == Guid.Empty)
+            {
+                _tracer.Trace("systemUserRef is null or Id is empty.");
+                throw new InvalidPluginExecutionException("Invalid systemUserRef.");
             }
 
             _tracer.Trace("Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
@@ -114,7 +120,7 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                     MapIsActive(syn, updateCore);
 
                 if (
-                    (attributes.Contains(SynStaffMemberFields.Status) && syn.Status != null) 
+                    (attributes.Contains(SynStaffMemberFields.Status) && syn.Status != null)
                     || (attributes.Contains(SynStaffMemberFields.StatusReason) && syn.StatusReason != null))
                     MapStatus(syn, updateCore);
 
@@ -261,12 +267,8 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
         }
         private void MapStatus(StaffMemberSnapshot syn, CoreStaffMember target)
         {
-            if(target.Status != null && target.StatusReason != null)
-            {
-                _tracer.Trace("MapStatus CoreStaffMemnberFactoty status: {0}", target.Status.ToString());
-                target.Status = syn.Status;
-                target.StatusReason = syn.StatusReason;
-            }
+            target.Status = syn.Status;
+            target.StatusReason = syn.StatusReason;
         }
         private void MapEmploymentDates(StaffMemberSnapshot syn, CoreStaffMember target)
         {
@@ -328,6 +330,8 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
         }
         private void MapDepartment(StaffMemberSnapshot syn, CoreStaffMember target)
         {
+            _tracer.Trace("Entered MapDepartment");
+
             var _departmentQuery = new CoreDepartments(_service, _tracer);
 
             if (syn.StaffDepartment == null)
@@ -335,18 +339,28 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 _tracer.Trace("Syn Staff Snapshot has no StaffDepartment, unable to resolve core department");
                 throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
             }
+
+            _tracer.Trace("Calling _departmentQuery.GetReferenceByCode");
+
             var coreDeptRef = _departmentQuery.GetReferenceByCode(syn.StaffDepartment);
 
-            if (coreDeptRef.Id == null || coreDeptRef.Id == Guid.Empty)
+            _tracer.Trace("Executed _departmentQuery.GetReferenceByCode");
+
+            if (coreDeptRef == null || coreDeptRef.Id == Guid.Empty)
             {
+                _tracer.Trace("Department not found for code {0}. Using NOTSPEC.", syn.StaffDepartment);
                 coreDeptRef = _departmentQuery.GetReferenceByCode("NOTSPEC");
             }
+
+            _tracer.Trace("Setting target.CoreDepartment/Idx");
 
             target.CoreDepartment = coreDeptRef;
             target.CoreDepartmentIdx = coreDeptRef.Id.ToString();
         }
         private void MapCategory(StaffMemberSnapshot syn, CoreStaffMember target)
         {
+            _tracer.Trace("Entered MapCategory");
+
             var _categoryQuery = new CoreStaffCategories(_service, _tracer);
 
             if (syn.StaffCategory == null)
@@ -354,12 +368,20 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 _tracer.Trace("Syn Staff Snapshot has no StaffCategory, unable to resolve core category");
                 throw new InvalidPluginExecutionException("Unable to resolve Core Staff Category");
             }
+
+            _tracer.Trace("Executing _categoryQuery.GetReferenceByCode");
+
             var coreCategoryRef = _categoryQuery.GetReferenceByCode(syn.StaffCategory);
 
-            if (coreCategoryRef.Id == null || coreCategoryRef.Id == Guid.Empty)
+            _tracer.Trace("Completed _categoryQuery.GetReferenceByCode");
+
+            if (coreCategoryRef == null || coreCategoryRef.Id == Guid.Empty)
             {
+                _tracer.Trace("Category not found for code {0}. Using NOTSEL.", syn.StaffCategory);
                 coreCategoryRef = _categoryQuery.GetReferenceByCode("NOTSEL");
             }
+
+            _tracer.Trace("Setting target.Category/Idx");
 
             target.CoreStaffCategory = coreCategoryRef;
             target.CoreStaffCategoryIdx = coreCategoryRef.Id.ToString();

@@ -2,18 +2,16 @@ using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace spgsWebTools.NewUserSyncEvent.Factories
+namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
-    public class SynStaffMemberFactory
+    public class SynStaffSnaphotFactory
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        private SynStaffMembers? _synStaffQuery;
-        public SynStaffMemberFactory(IOrganizationService service, ITracingService tracer)
+        public SynStaffSnaphotFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
             _tracer = tracer;
@@ -113,15 +111,15 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
 
             return synStaffMember;
         }
-        public StaffMemberSnapshot Build(Entity synEntity)
+        public StaffMemberSnapshot Build(Entity staff)
         {
 
-            _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity from single Entity synStaffMember: {0}", synEntity.GetAttributeValue<Guid>("pgrowth_synergetic_vstaff_community_leftjoinid"));
+            _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity from single Entity synStaffMember: {0}", staff.GetAttributeValue<Guid>("pgrowth_synergetic_vstaff_community_leftjoinid"));
 
 
-            _tracer.Trace("In SynStaffMemberFactory.Build, synEntity is: {0}",
+            _tracer.Trace("In SynStaffMemberFactory.Build, staff is: {0}",
                 JsonSerializer.Serialize<Entity>(
-                    synEntity,
+                    staff,
                     new JsonSerializerOptions
                     {
                         WriteIndented = true
@@ -132,44 +130,44 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
             var synStaffMember = new StaffMemberSnapshot()
             {
                 // retrieve string values
-                StaffCampus = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCampus, synEntity),
-                StaffCategory = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCategory, synEntity),
-                SchoolStaffCode = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SchoolStaffCode, synEntity),
-                StaffDepartment = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffDepartment, synEntity),
-                Gender = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Gender, synEntity),
-                Given1 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given1, synEntity),
-                Given2 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given2, synEntity),
-                NameInternal = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NameInternal, synEntity),
-                Surname = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Surname, synEntity),
-                NetworkLogin = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NetworkLogin, synEntity),
-                MaidenName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.MaidenName, synEntity),
-                StaffPreferredName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffPreferredName, synEntity),
-                Email = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Email, synEntity),
-                SurnamePrevious = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SurnamePrevious, synEntity),
-                SubSchool = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SubSchool, synEntity),
-                CommunityGuid = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CommunityGuid, synEntity),
-                OccupEmail = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupEmail, synEntity),
-                OccupPhone = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupPhone, synEntity),
+                StaffCampus = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCampus, staff),
+                StaffCategory = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffCategory, staff),
+                SchoolStaffCode = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SchoolStaffCode, staff),
+                StaffDepartment = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffDepartment, staff),
+                Gender = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Gender, staff),
+                Given1 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given1, staff),
+                Given2 = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Given2, staff),
+                NameInternal = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NameInternal, staff),
+                Surname = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Surname, staff),
+                NetworkLogin = GetAttributeDelta.Execute<string>(SynStaffMemberFields.NetworkLogin, staff),
+                MaidenName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.MaidenName, staff),
+                StaffPreferredName = GetAttributeDelta.Execute<string>(SynStaffMemberFields.StaffPreferredName, staff),
+                Email = GetAttributeDelta.Execute<string>(SynStaffMemberFields.Email, staff),
+                SurnamePrevious = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SurnamePrevious, staff),
+                SubSchool = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SubSchool, staff),
+                CommunityGuid = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CommunityGuid, staff),
+                OccupEmail = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupEmail, staff),
+                OccupPhone = GetAttributeDelta.Execute<string>(SynStaffMemberFields.OccupPhone, staff),
 
                 // retrieve integer values
-                StaffId = GetAttributeDelta.Execute<int>(SynStaffMemberFields.StaffId, synEntity),
-                CampusKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CampusKey, synEntity),
-                GenderKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.GenderKey, synEntity),
+                StaffId = GetAttributeDelta.Execute<int>(SynStaffMemberFields.StaffId, staff),
+                CampusKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.CampusKey, staff),
+                GenderKey = GetAttributeDelta.Execute<string>(SynStaffMemberFields.GenderKey, staff),
 
                 // retrieve boolean values
-                ActiveFlag = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.ActiveFlag, synEntity),
+                ActiveFlag = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.ActiveFlag, staff),
 
                 // retrieve date times values accounting for null values
-                LeavingDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.LeavingDate, synEntity),
-                StartDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.StartDate, synEntity),
+                LeavingDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.LeavingDate, staff),
+                StartDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.StartDate, staff),
 
                 // retrieve source of truth id
-                SourceOfTruthId = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, synEntity),
+                SourceOfTruthId = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, staff),
 
-                SynMirrorId = synEntity.Id,
+                SynMirrorId = staff.Id,
                 // status
-                Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, synEntity),
-                StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, synEntity)
+                Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, staff),
+                StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, staff)
             };
 
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",

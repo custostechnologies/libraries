@@ -15,62 +15,74 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         }
         public EntityReference GetReferenceByCode(string code)
         {
-            _tracer.Trace("Building GetReferenceByCode query expression on {0}", ENTITY_LOGICAL_NAME);
-
-            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            try
             {
-                TopCount = 1,
-                ColumnSet = new ColumnSet(
-                    "pgrowth_code",
-                    "pgrowth_sourceoftruthid",
-                    "pgrowth_coredepartmentid",
-                    "pgrowth_coredepartmentname"
+                _tracer.Trace("Building GetReferenceByCode query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                ),
-                Criteria =
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
-                    Conditions =
+                    TopCount = 1,
+                    ColumnSet = new ColumnSet(
+                        "pgrowth_code",
+                        "pgrowth_sourceoftruthid",
+                        "pgrowth_coredepartmentid"
+
+                    ),
+                    Criteria =
                     {
-                        new ConditionExpression(
-                            "pgrowth_code",
-                            ConditionOperator.Equal,
-                            code
-                        )
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                "pgrowth_code",
+                                ConditionOperator.Equal,
+                                code
+                            )
+                        }
                     }
+                };
+
+                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+
+                var results = _service.RetrieveMultiple(query);
+
+                _tracer.Trace("Finished executing query expression");
+
+                if (results.Entities.Count > 0)
+                {
+                    return new EntityReference(ENTITY_LOGICAL_NAME, results.Entities[0].Id);
                 }
-            };
-
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
-
-            var results = _service.RetrieveMultiple(query);
-
-            _tracer.Trace("Finished executing query expression");
-
-            if (results.Entities.Count > 0)
-            {
-                return new EntityReference(ENTITY_LOGICAL_NAME, results.Entities[0].Id);
+                else
+                {
+                    _tracer.Trace("No existing entities were found");
+                    return new EntityReference(ENTITY_LOGICAL_NAME);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _tracer.Trace("No existing entities were found");
-                return new EntityReference(ENTITY_LOGICAL_NAME);
+                _tracer.Trace("Exception in CoreDepartments.GetReferenceByCode: {0}", ex);
+                if (ex.InnerException.Message != null)
+                {
+                    _tracer.Trace("Inner Exception in CoreDepartments.GetReferenceByCode: {0}", ex.InnerException.Message);
+                }
+                throw;
             }
         }
         public EntityReference GetReferenceById(Guid id)
         {
-            _tracer.Trace("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
-
-            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            try
             {
-                TopCount = 1,
-                ColumnSet = new ColumnSet(
-                    "pgrowth_code",
-                    "pgrowth_sourceoftruthid",
-                    "pgrowth_coredepartmentid",
-                    "pgrowth_coredepartmentname"
+                _tracer.Trace("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                ),
-                Criteria =
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+                {
+                    TopCount = 1,
+                    ColumnSet = new ColumnSet(
+                        "pgrowth_code",
+                        "pgrowth_sourceoftruthid",
+                        "pgrowth_coredepartmentid"
+
+                    ),
+                    Criteria =
                 {
                     Conditions =
                     {
@@ -81,22 +93,32 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                         )
                     }
                 }
-            };
+                };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+                var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+                _tracer.Trace("Finished executing query expression");
 
-            if (results.Entities.Count > 0)
-            {
-                return new EntityReference(ENTITY_LOGICAL_NAME, results.Entities[0].Id);
+                if (results.Entities.Count > 0)
+                {
+                    return new EntityReference(ENTITY_LOGICAL_NAME, results.Entities[0].Id);
+                }
+                else
+                {
+                    _tracer.Trace("No existing entities were found");
+                    return new EntityReference(ENTITY_LOGICAL_NAME);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _tracer.Trace("No existing entities were found");
-                return new EntityReference(ENTITY_LOGICAL_NAME);
+                _tracer.Trace("Exception in CoreDepartments.GetReferenceById: {0}", ex);
+                if (ex.InnerException.Message != null)
+                {
+                    _tracer.Trace("Inner Exception in CoreDepartments.GetReferenceById: {0}", ex.InnerException.Message);
+                }
+                throw;
             }
         }
     }
