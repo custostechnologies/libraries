@@ -7,9 +7,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public static class CoreStaffMemberMapper
     {
         private const string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        public static Entity ToCreateEntity(this CoreStaffMember core, ITracingService tracer)
+        public static Entity ToCreateEntity(this CoreStaffMember core, ITracingService tracer, string[] updatedAttributes)
         {
-            var entity = core.ToEntity(true);
+            var entity = core.ToEntity(true, updatedAttributes);
 
             foreach (var a in entity.Attributes)
             {
@@ -22,14 +22,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
             return entity;
         }
-        public static Entity ToUpdateEntity(this CoreStaffMember core, ITracingService tracer)
+        public static Entity ToUpdateEntity(this CoreStaffMember core, ITracingService tracer, string[] updatedAttributes)
         {
             if (core.CoreStaffMemberId == Guid.Empty)
             {
                 throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
             }
 
-            var entity = core.ToEntity(false);
+            var entity = core.ToEntity(false, updatedAttributes);
             entity.Id = core.CoreStaffMemberId;
 
             foreach (var a in entity.Attributes)
@@ -44,7 +44,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             return entity;
         }
 
-        public static Entity ToEntity(this CoreStaffMember core, bool create)
+        public static Entity ToEntity(this CoreStaffMember core, bool create, string[] updatedAttributes)
         {
             var entity = new Entity(ENTITY_LOGICAL_NAME);
 
@@ -52,29 +52,37 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             if (!string.IsNullOrWhiteSpace(core.AzureObjectId))
                 entity[CoreStaffMemberFields.AzureObjectId] = core.AzureObjectId;
 
-            if (!string.IsNullOrWhiteSpace(core.SourceOfTruthId))
+            if (!string.IsNullOrWhiteSpace(core.SourceOfTruthId) && updatedAttributes.Contains("pgrowth_sourceoftruthid"))
                 entity[CoreStaffMemberFields.SourceOfTruthId] = core.SourceOfTruthId;
 
-            if (core.StaffId != null)
-                entity[CoreStaffMemberFields.StaffId] = core.StaffId;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.StaffId,
+                CoreStaffMemberFields.StaffId,
+                core.StaffId);
 
             if (core.User != null)
                 entity[CoreStaffMemberFields.User] = core.User;
 
             // Status
-            if (core.IsActive != null)
-                entity[CoreStaffMemberFields.IsActive] = core.IsActive;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.ActiveFlag,
+                CoreStaffMemberFields.IsActive,
+                core.IsActive);
 
-            if (core.Status != null && !create)
-                entity[CoreStaffMemberFields.Status] = core.Status;
+            if (!create)
+            {
+                MapDelta(entity, updatedAttributes,
+                    SynStaffMemberFields.Status,
+                    CoreStaffMemberFields.Status,
+                    core.Status);
 
-            if (core.StatusReason != null && !create)
-                entity[CoreStaffMemberFields.StatusReason] = core.StatusReason;
+                MapDelta(entity, updatedAttributes,
+                    SynStaffMemberFields.StatusReason,
+                    CoreStaffMemberFields.StatusReason,
+                    core.StatusReason);
+            }
 
             // Job metadata
-            if (core.Campus != null)
-                entity[CoreStaffMemberFields.Campus] = core.Campus;
-
             if (core.CoreDepartment != null)
                 entity[CoreStaffMemberFields.CoreDepartment] = core.CoreDepartment;
 
@@ -87,54 +95,81 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             if (!string.IsNullOrWhiteSpace(core.CoreStaffCategoryIdx))
                 entity[CoreStaffMemberFields.CoreStaffCategoryIdx] = core.CoreStaffCategoryIdx;
 
-            if (core.StartDate.HasValue)
-                entity[CoreStaffMemberFields.StartDate] = core.StartDate.Value;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.StartDate,
+                CoreStaffMemberFields.StartDate,
+                core.StartDate);
 
-            if (core.EndDate.HasValue)
-                entity[CoreStaffMemberFields.EndDate] = core.EndDate.Value;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.LeavingDate,
+                CoreStaffMemberFields.EndDate,
+                core.EndDate);
 
-            if (!string.IsNullOrWhiteSpace(core.NetworkLogin))
-                entity[CoreStaffMemberFields.NetworkLogin] = core.NetworkLogin;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.NetworkLogin,
+                CoreStaffMemberFields.NetworkLogin,
+                core.NetworkLogin);
 
-            if (!string.IsNullOrWhiteSpace(core.WorkEmail))
-                entity[CoreStaffMemberFields.WorkEmail] = core.WorkEmail;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.OccupEmail,
+                CoreStaffMemberFields.WorkEmail,
+                core.WorkEmail);
 
             // Personal details
-            if (!string.IsNullOrWhiteSpace(core.DisplayName))
-                entity[CoreStaffMemberFields.DisplayName] = core.DisplayName;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.NameInternal,
+                CoreStaffMemberFields.DisplayName,
+                core.DisplayName);
 
-            if (!string.IsNullOrWhiteSpace(core.FullName))
-                entity[CoreStaffMemberFields.FullName] = core.FullName;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.NameInternal,
+                CoreStaffMemberFields.FullName,
+                core.FullName);
 
-            if (core.Gender != null)
-                entity[CoreStaffMemberFields.Gender] = core.Gender;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.Gender,
+                CoreStaffMemberFields.Gender,
+                core.Gender);
 
-            if (!string.IsNullOrWhiteSpace(core.PreferredName))
-                entity[CoreStaffMemberFields.PreferredName] = core.PreferredName;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.StaffPreferredName,
+                CoreStaffMemberFields.PreferredName,
+                core.PreferredName);
 
-            if (!string.IsNullOrWhiteSpace(core.GivenName1))
-                entity[CoreStaffMemberFields.GivenName1] = core.GivenName1;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.Given1,
+                CoreStaffMemberFields.GivenName1,
+                core.GivenName1);
 
-            if (!string.IsNullOrWhiteSpace(core.GivenName2))
-                entity[CoreStaffMemberFields.GivenName2] = core.GivenName2;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.Given2,
+                CoreStaffMemberFields.GivenName2,
+                core.GivenName2);
 
-            if (!string.IsNullOrWhiteSpace(core.LastName))
-                entity[CoreStaffMemberFields.LastName] = core.LastName;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.Surname,
+                CoreStaffMemberFields.LastName,
+                core.LastName);
 
-            if (!string.IsNullOrWhiteSpace(core.PreviousLastName))
-                entity[CoreStaffMemberFields.PreviousLastName] = core.PreviousLastName;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.SurnamePrevious,
+                CoreStaffMemberFields.PreviousLastName,
+                core.PreviousLastName);
 
-            if (!string.IsNullOrWhiteSpace(core.MaidenName))
-                entity[CoreStaffMemberFields.MaidenName] = core.MaidenName;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.MaidenName,
+                CoreStaffMemberFields.MaidenName,
+                core.MaidenName);
 
-            if (!string.IsNullOrWhiteSpace(core.PersonalEmail))
-                entity[CoreStaffMemberFields.PersonalEmail] = core.PersonalEmail;
+            MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.Email,
+                CoreStaffMemberFields.PersonalEmail,
+                core.PersonalEmail);
 
-            // Group membership
+            // Flags
             if (core.InUserGroup != null)
                 entity[CoreStaffMemberFields.InUserGroup] = core.InUserGroup;
 
-            // Flags
             if (core.ProfileResolutionFlag != null)
                 entity[CoreStaffMemberFields.ProfileResolutionFlag] = core.ProfileResolutionFlag;
 
@@ -144,11 +179,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             if (core.StaffEmailAddressFlag != null)
                 entity[CoreStaffMemberFields.StaffEmailAddressFlag] = core.StaffEmailAddressFlag;
 
-            // Sync data
-            if (core.LastSync.HasValue)
-                entity[CoreStaffMemberFields.LastSync] = core.LastSync.Value;
+            entity[CoreStaffMemberFields.LastSync] = DateTime.UtcNow;
 
             return entity;
+        }
+        private static void MapDelta<T>(
+            Entity entity,
+            string[] updatedAttributes,
+            string sourceAttribute,
+            string targetAttribute,
+            T value
+        )
+        {
+            if (updatedAttributes.Contains(sourceAttribute))
+            {
+                entity[targetAttribute] = value;
+            }
         }
     }
 }

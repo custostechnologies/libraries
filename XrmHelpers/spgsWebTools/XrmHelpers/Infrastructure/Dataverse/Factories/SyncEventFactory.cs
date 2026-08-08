@@ -6,11 +6,11 @@ using Enum = spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
-    public class SyncEvent
+    public class SyncEventFactory
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        public SyncEvent(
+        public SyncEventFactory(
             IOrganizationService service,
             ITracingService tracer
         )
@@ -55,18 +55,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw;
             }
         }
-        public Guid MarkError(Entity syncEvent)
+        public void MarkError(Entity syncEvent)
         {
             try
             {
-                Guid eventId;
                 _tracer.Trace("Marking syncEvent status as failed until updated to complete if no errors are thrown");
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
                 _tracer.Trace("Creating sync event");
-                eventId = _service.Update(syncEvent);
+                _service.Update(syncEvent);
                 _tracer.Trace("Sync event created");
-
-                return eventId;
             }
             catch (Exception)
             {
