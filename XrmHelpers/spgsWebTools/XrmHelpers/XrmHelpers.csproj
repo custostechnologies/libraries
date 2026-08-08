@@ -18,7 +18,7 @@
     <!-- <PackageLicenseExpression></PackageLicenseExpression> -->
     <PackageTags>utility;helper'tools</PackageTags>
     <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>C:\Users\matthew.thomas\src\spgs\custom-plugins\spgsWebTools\spgsWebTools.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>$(USERPROFILE)\src\spgs\custom-plugins\spgsWebTools\spgsWebTools.snk</AssemblyOriginatorKeyFile>
     <UserSecretsId>f52bc6f4-a83e-423b-a498-a1ceee6adb3b</UserSecretsId>
   </PropertyGroup>
 
