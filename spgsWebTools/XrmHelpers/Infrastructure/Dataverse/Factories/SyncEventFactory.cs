@@ -53,7 +53,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw;
             }
         }
-        public Guid CreateAndMarkError(Entity syncEvent)
+        public Guid MarkError(Entity syncEvent)
         {
             try
             {

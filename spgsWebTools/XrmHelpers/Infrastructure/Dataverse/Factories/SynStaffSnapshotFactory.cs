@@ -84,9 +84,6 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
                 SourceOfTruthId = GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, target, preImage),
 
                 SynMirrorId = preImage.Id,
-                // status
-                Status = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.Status, target, preImage),
-                StatusReason = GetAttributeDelta.Execute<OptionSetValue>(SynStaffMemberFields.StatusReason, target, preImage)
             };
 
             // update status based on values
@@ -97,6 +94,11 @@ namespace spgsWebTools.NewUserSyncEvent.Factories
             {
                 synStaffMember.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 synStaffMember.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
+            }
+            else
+            {
+                synStaffMember.Status = new OptionSetValue((int)status);
+                synStaffMember.StatusReason = new OptionSetValue((int)statusReason);
             }
 
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
