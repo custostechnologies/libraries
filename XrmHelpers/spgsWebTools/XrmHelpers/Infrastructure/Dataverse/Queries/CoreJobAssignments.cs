@@ -234,7 +234,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         public Entity GetEntityByPositionId(Guid id)
         {
             // should throw error if more than one entity is found
-            _tracer.Trace("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
+            _tracer.Trace("Building GetEntityByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -274,9 +274,48 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
+        public Entity GetEntityById(Guid id)
+        {
+            // should throw error if more than one entity is found
+            _tracer.Trace("Building GetEntityById query expression on {0}", ENTITY_LOGICAL_NAME);
+
+            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            {
+                TopCount = 1,
+                ColumnSet = CoreJobAssignmentSchema.SyncColumns,
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(
+                            CoreJobAssignmentFields.CoreJobAssignmentId,
+                            ConditionOperator.Equal,
+                            id
+                        )
+                    }
+                }
+            };
+
+            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+
+            var results = _service.RetrieveMultiple(query);
+
+            _tracer.Trace("Finished executing query expression");
+
+            if (results.Entities.Count > 0)
+            {
+                return results.Entities[0];
+            }
+            else
+            {
+                _tracer.Trace("No existing entities were found");
+                return new Entity(ENTITY_LOGICAL_NAME);
+            }
+        }
         public EntityReference GetMostRecentReferenceByPositionId(Guid jobPositionId)
         {
-            _tracer.Trace("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
+            _tracer.Trace("Building GetMostRecentReferenceByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
+            _tracer.Trace("With jobPositionId={0}", jobPositionId);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -299,14 +338,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     Conditions =
                     {
                         new ConditionExpression(
-                            CoreJobAssignmentFields.CoreJobAssignmentId,
+                            CoreJobAssignmentFields.CoreJobPosition,
                             ConditionOperator.Equal,
                             jobPositionId
-                        ),
-                        new ConditionExpression(
-                            CoreJobAssignmentFields.Status,
-                            ConditionOperator.Equal,
-                            new OptionSetValue((int)Enums.Status.Active)
                         )
                     }
                 }
