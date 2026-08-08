@@ -45,6 +45,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 var result = _service.Create(syncEvent);
 
+                syncEvent[$"{syncEntityLogicalName}id"] = result;
+
                 return syncEvent;
             }
             catch (Exception ex)
@@ -61,7 +63,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _tracer.Trace("Marking syncEvent status as failed until updated to complete if no errors are thrown");
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
                 _tracer.Trace("Creating sync event");
-                eventId = _service.Create(syncEvent);
+                eventId = _service.Update(syncEvent);
                 _tracer.Trace("Sync event created");
 
                 return eventId;
