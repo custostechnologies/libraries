@@ -55,6 +55,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             createMap[OperationalHierarchyMapFields.CoreJobAssignmentIdx] = assignment.Id.ToString();
             createMap[OperationalHierarchyMapFields.ParentJobAssignment] = parentAssignmentRef;
             createMap[OperationalHierarchyMapFields.ParentJobAssignmentIdx] = parentAssignmentRef.Id.ToString();
+
+            createMap[OperationalHierarchyMapFields.ChildJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ChildJobPosition);
+            createMap[OperationalHierarchyMapFields.ChildJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ChildJobPosition).Id.ToString();
+            createMap[OperationalHierarchyMapFields.CoreJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.CoreJobPosition);
+            createMap[OperationalHierarchyMapFields.CoreJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.CoreJobPosition).Id.ToString();
+            createMap[OperationalHierarchyMapFields.ParentJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition);
+            createMap[OperationalHierarchyMapFields.ParentJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition).Id.ToString();
+
             createMap[OperationalHierarchyMapFields.IsActive] = true;
             createMap[OperationalHierarchyMapFields.LinkType] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.LinkType);
             createMap[OperationalHierarchyMapFields.Name] = $"OPERATIONAL MAP: {referenceMapEntity.GetAttributeValue<string>(ReferenceHierarchyMapFields.Name)}";
