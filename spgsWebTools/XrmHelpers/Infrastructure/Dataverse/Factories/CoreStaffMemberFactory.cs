@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Net.Http;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.Infrastructure.Auth;
 using spgsWebTools.XrmHelpers.Constants;
@@ -18,11 +19,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     }
     internal class FlowResponse
     {
+        [JsonPropertyName("statusCode")]
         public string? StatusCode { get; set; }
+        [JsonPropertyName("body")]
         public FlowResponseBody? Body { get; set; }
     }
     internal class FlowResponseBody
     {
+        [JsonPropertyName("azureObjectId")]
         public string? AzureObjectId { get; set; }
     }
     public class CoreStaffMemberFactory
@@ -96,27 +100,25 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _httpRequest = new CreateHttpRequest(_tracer);
 
-                HttpContent responseContent = _httpRequest.TriggerAnonFlow(
+                string response = _httpRequest.TriggerAnonFlow(
                     SYNC_FLOW_ENDPOINT,
                     syn.OccupEmail,
                     _correlationId
                 );
 
-                var response = responseContent.ReadAsStringAsync().Result;
+                _tracer.Trace("Flow response: {0}", response);
 
-                FlowResponse flowResponse = JsonSerializer.Deserialize<FlowResponse>(response)!;
+                FlowResponseBody flowResponseBody = JsonSerializer.Deserialize<FlowResponseBody>(
+                    response,
+                    new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    }
+                )!;
 
-                var azureId = flowResponse?.Body?.AzureObjectId;
+                var azureId = flowResponseBody?.AzureObjectId;
 
                 _tracer.Trace("httpRequest flowResponse?.Body?.AzureObjectId: {0}", azureId);
-
-                /*var response = _httpRequest.PostAnonymous(
-                    SYNC_FLOW_ENDPOINT,
-                    JsonSerializer.Serialize<FlowRequestBody>(requestBody),
-                    30
-                );*/
-
-                //var newUserId = _forceSyncService.Execute(syn.OccupEmail);
 
                 if (!string.IsNullOrWhiteSpace(azureId))
                 {
@@ -124,24 +126,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
                 else
                 {
-                    _tracer.Trace("Unable to force syn user");
+                    _tracer.Trace("Unable to force syn user via power automate flow");
                     _resolutionFailed = true;
                     systemUserRef = new EntityReference("systemuser");
                 }
-
-                /*
-                if (newUserId == null)
-                {
-                    _tracer.Trace("Unable to force syn user");
-                    _resolutionFailed = true;
-                }
-                else
-                {
-                    systemUserRef = new EntityReference(
-                        "systemuser",
-                        (Guid)newUserId
-                    );
-                }*/
             }
 
             if (systemUserRef == null || systemUserRef.Id == Guid.Empty)

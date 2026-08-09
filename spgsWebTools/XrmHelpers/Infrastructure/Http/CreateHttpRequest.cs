@@ -19,7 +19,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
         {
             _tracer = tracer;
         }
-        public HttpContent TriggerAnonFlow(
+        public string TriggerAnonFlow(
             string endpoint,
             string upn,
             string correlationId
@@ -39,6 +39,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
                     "application/json");
 
                 var response = client.PostAsync(endpoint, content).Result;
+                var responseBody = response.Content.ReadAsStringAsync().Result;
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -49,7 +50,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
                         $"Flow call failed. Status: {response.StatusCode}. Response: {error}");
                 }
 
-                return response.Content;
+                return responseBody;
             }
         }
         /*
