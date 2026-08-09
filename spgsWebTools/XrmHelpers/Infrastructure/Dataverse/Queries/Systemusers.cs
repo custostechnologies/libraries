@@ -78,6 +78,65 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 );
             }
         }
+        public EntityReference GetReferenceByAzureId(string azureId)
+        {
+            _tracer.Trace("Building GetReferenceByAzureId query expression on systemuser");
+
+            var query = new QueryExpression("systemuser")
+            {
+                TopCount = 1,
+                ColumnSet = new ColumnSet(
+                    "internalemailaddress",
+                    "systemuserid",
+                    "domainname",
+                    "azureactivedirectoryobjectid"
+                ),
+                Criteria = new FilterExpression(LogicalOperator.Or)
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(
+                            "azureactivedirectoryobjectid",
+                            ConditionOperator.Equal,
+                            azureId
+                        )
+                    }
+                }
+            };
+
+            _tracer.Trace("Executing GetReferenceByAzureId query expression on systemuser");
+
+            var results = _service.RetrieveMultiple(query);
+
+            _tracer.Trace("Finished executing RetrieveReference query expression");
+
+            if (results.Entities.Count > 0)
+            {
+                var systemUserRef = new EntityReference(
+                    "systemuser",
+                    results.Entities[0].Id
+                );
+
+                _tracer.Trace("SystemUserQueryService.RetrieveReference systemUserRef: {0}",
+                    JsonSerializer.Serialize(
+                        systemUserRef,
+                        new JsonSerializerOptions
+                        {
+                            WriteIndented = true
+                        }
+                    )
+                );
+
+                return systemUserRef;
+            }
+            else
+            {
+                _tracer.Trace("No existing entities were found, returning empty EntityReference");
+                return new EntityReference(
+                    "systemuser"
+                );
+            }
+        }
         public Entity GetMetadataById(Guid systemuserid)
         {
             _tracer.Trace("Building RetrieveMetadata query expression on systemuser");

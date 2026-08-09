@@ -5,9 +5,14 @@ using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
+using spgsWebTools.XrmHelpers.Infrastructure.Http;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
+    internal class FlowRequestBody
+    {
+        public string? upn { get; set; }
+    }
     public class CoreStaffMemberFactory
     {
         private readonly IOrganizationService _service;
@@ -15,6 +20,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private bool _resolutionFailed = false;
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
+        private CreateHttpRequest? _httpRequest;
+        // TEMPORARILY HARDCODED FOR DEV
+        private string SYNC_FLOW_ENDPOINT = "https://1d7c41c84b08e1f3a61511f0059c0d.c0.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/12/workflows/2540c1018d9e41c3bd0ffb71bc75cc52/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC-BXGYlU_hqbETq8YqfDEqk83lvKV4aV1d8Fnq9Ra4";
         public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -60,15 +68,49 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 _tracer.Trace("systemUserRef.Id is null or empty");
                 // retrieve azure id (not via systemuser)
-                ForceUserSync _forceSyncService = new ForceUserSync(_service, _tracer);
 
                 if (syn.OccupEmail == null)
                 {
                     _tracer.Trace("Syn Staff Snapshot has no OccupEmail, unable to run ForceUserSync query");
                     throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
                 }
-                var newUserId = _forceSyncService.Execute(syn.OccupEmail);
 
+                // FORCE SYNC USER SDK MESSAGE IS OBSOLETE
+                //ForceUserSync _forceSyncService = new ForceUserSync(_service, _tracer);
+
+                // trigger force sync user Power Automate flow
+
+                _httpRequest = new CreateHttpRequest(_tracer);
+                string azureObjectId;
+
+                var requestBody = new FlowRequestBody
+                {
+                    upn = syn.OccupEmail
+                };
+
+                var response = _httpRequest.PostAnonymous(
+                    SYNC_FLOW_ENDPOINT,
+                    JsonSerializer.Serialize<FlowRequestBody>(requestBody),
+                    30
+                );
+
+                //var newUserId = _forceSyncService.Execute(syn.OccupEmail);
+
+                if (response != null)
+                {
+                    azureObjectId = response;
+                    systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureObjectId);
+                }
+                else
+                {
+                    _tracer.Trace("Unable to force syn user");
+                    _resolutionFailed = true;
+                    systemUserRef = new EntityReference("systemuser");
+
+                }
+
+
+                /*
                 if (newUserId == null)
                 {
                     _tracer.Trace("Unable to force syn user");
@@ -80,7 +122,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                         "systemuser",
                         (Guid)newUserId
                     );
-                }
+                }*/
             }
 
             if (systemUserRef == null || systemUserRef.Id == Guid.Empty)
