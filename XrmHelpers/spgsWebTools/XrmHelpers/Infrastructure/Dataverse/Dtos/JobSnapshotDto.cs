@@ -33,6 +33,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public decimal? FteRequired { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public string? JobPositionDescription { get; set; }
 
         // sync
         public string? PlaintextHash { get; set; }

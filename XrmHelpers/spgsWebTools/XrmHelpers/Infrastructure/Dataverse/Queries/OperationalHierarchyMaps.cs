@@ -15,30 +15,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             _service = service;
             _tracer = tracer;
         }
-        public EntityReference GetDefaultByCoreJobPositionId(Guid childPositionId, Guid parentPositionId)
+        public EntityReference GetByCompositeKey(Guid childAssignmentId, Guid parentAssignmentId)
         {
             // check if syn reports to position is defined for the given Core Job Position
             try
             {
-                _tracer.Trace("Building GetDefaultByCoreJobPositionId query expression to return EntityReference on {0}", ENTITY_LOGICAL_NAME);
+                _tracer.Trace("Building GetByCompositeKey query expression to return EntityReference on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
                     TopCount = 1,
-                    ColumnSet = ReferenceHierarchyMapSchema.AllSyncColumns,
+                    ColumnSet = OperationalHierarchyMapSchema.SyncColumns,
                     Criteria = new FilterExpression(LogicalOperator.And)
                     {
                         Conditions =
                         {
                             new ConditionExpression(
-                                ReferenceHierarchyMapFields.ChildJobPosition,
+                                OperationalHierarchyMapFields.ChildJobAssignmentIdx,
                                 ConditionOperator.Equal,
-                                childPositionId
+                                childAssignmentId.ToString()
                             ),
                             new ConditionExpression(
-                                ReferenceHierarchyMapFields.ParentJobPosition,
+                                OperationalHierarchyMapFields.ParentJobAssignmentIdx,
                                 ConditionOperator.Equal,
-                                parentPositionId
+                                parentAssignmentId.ToString()
                             )
                         }
                     }
