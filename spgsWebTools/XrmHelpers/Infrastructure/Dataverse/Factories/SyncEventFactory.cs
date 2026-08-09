@@ -10,13 +10,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
+        private readonly string _correlationId;
         public SyncEventFactory(
             IOrganizationService service,
-            ITracingService tracer
+            ITracingService tracer,
+            string correlationId
         )
         {
             _service = service;
             _tracer = tracer;
+            _correlationId = correlationId;
         }
         public Entity Build(
             string synMirrorId,
@@ -37,6 +40,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 syncEvent["statecode"] = new OptionSetValue((int)Enum.Status.Active);
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Pending);
                 syncEvent["pgrowth_sourcerecordid"] = synMirrorId;
+                syncEvent["pgrowth_correlationid"] = _correlationId;
                 syncEvent["pgrowth_updatedattributes"] = string.Join(
                     ",",
                     attributes.Keys.Select(key => key)
