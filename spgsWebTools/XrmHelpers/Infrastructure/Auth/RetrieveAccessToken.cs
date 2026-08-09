@@ -9,6 +9,24 @@ namespace spgsWebTools.Infrastructure.Auth
 {
     public class RetrieveAccessToken
     {
+        /*public static string Execute(ITracingService? tracingService, string tenantId, string clientId, string clientSecret, string scope)
+        {
+            string tokenEndpoint = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
+
+            var content = new FormUrlEncodedContent(parameterList);
+
+            string token = CreateHttpRequest.Execute(tracingService, tokenEndpoint, content, null, timeout, null, HttpMethod.Post);
+
+            if (token != null)
+            {
+                return token;
+            }
+            else
+            {
+                tracingService?.Trace($"RetrieveAccessToken.Execute() did not return a token.");
+                throw new InvalidPluginExecutionException("Failed to retrieve access token.");
+            }
+        }*/
         public static string Execute(ITracingService? tracingService, int timeout, List<KeyValuePair<string, string>> parameterList, string tenantId)
         {
             string tokenEndpoint = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
@@ -23,8 +41,8 @@ namespace spgsWebTools.Infrastructure.Auth
             }
             else
             {
-                tracingService?.Trace($"CreateHttpResponse.Execute() did not return a token.");
-                throw new InvalidPluginExecutionException("Failed to retrieve bearer token.");
+                tracingService?.Trace($"RetrieveAccessToken.Execute() did not return a token.");
+                throw new InvalidPluginExecutionException("Failed to retrieve access token.");
             }
         }
 
