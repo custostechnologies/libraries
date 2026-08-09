@@ -21,14 +21,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
         }
         public HttpContent TriggerAnonFlow(
             string endpoint,
-            string upn
+            string upn,
+            string correlationId
         )
         {
             using (var client = new HttpClient())
             {
 
                 var payload = $@"{{
-                    ""upn"": ""{upn}""
+                    ""upn"": ""{upn}"",
+                    ""correlationId"": ""{correlationId}""
                 }}";
 
                 var content = new StringContent(

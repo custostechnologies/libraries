@@ -14,26 +14,33 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     internal class FlowRequestBody
     {
-        public string? upn { get; set; }
+        public string? UserPrincipalName { get; set; }
+    }
+    internal class FlowResponse
+    {
+        public string? StatusCode { get; set; }
+        public FlowResponseBody? Body { get; set; }
     }
     internal class FlowResponseBody
     {
-        public string? azureObjectId { get; set; }
+        public string? AzureObjectId { get; set; }
     }
     public class CoreStaffMemberFactory
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
+        private readonly string _correlationId;
         private bool _resolutionFailed = false;
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
         private CreateHttpRequest? _httpRequest;
         // TEMPORARILY HARDCODED FOR DEV
         private string SYNC_FLOW_ENDPOINT = "https://1d7c41c84b08e1f3a61511f0059c0d.c0.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/12/workflows/2540c1018d9e41c3bd0ffb71bc75cc52/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC-BXGYlU_hqbETq8YqfDEqk83lvKV4aV1d8Fnq9Ra4";
-        public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer)
+        public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer, string correlationId)
         {
             _service = service;
             _tracer = tracer;
+            _correlationId = correlationId;
         }
         public CoreStaffMember Build(StaffMemberSnapshot syn, string[] attributes)
         {
@@ -91,16 +98,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 HttpContent responseContent = _httpRequest.TriggerAnonFlow(
                     SYNC_FLOW_ENDPOINT,
-                    syn.OccupEmail
+                    syn.OccupEmail,
+                    _correlationId
                 );
 
-                var json = responseContent.ReadAsStringAsync().Result;
+                var response = responseContent.ReadAsStringAsync().Result;
 
-                FlowResponseBody result = JsonSerializer.Deserialize<FlowResponseBody>(json)!;
+                FlowResponse flowResponse = JsonSerializer.Deserialize<FlowResponse>(response)!;
 
-                var azureId = result.azureObjectId;
+                var azureId = flowResponse?.Body?.AzureObjectId;
 
-                _tracer.Trace("httpRequest response: {0}", azureId);
+                _tracer.Trace("httpRequest flowResponse?.Body?.AzureObjectId: {0}", azureId);
 
                 /*var response = _httpRequest.PostAnonymous(
                     SYNC_FLOW_ENDPOINT,
@@ -110,16 +118,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 //var newUserId = _forceSyncService.Execute(syn.OccupEmail);
 
-                if (azureId != null)
+                if (!string.IsNullOrWhiteSpace(azureId))
                 {
-                    systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureId);
+                    systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureId!);
                 }
                 else
                 {
                     _tracer.Trace("Unable to force syn user");
                     _resolutionFailed = true;
                     systemUserRef = new EntityReference("systemuser");
-
                 }
 
                 /*
