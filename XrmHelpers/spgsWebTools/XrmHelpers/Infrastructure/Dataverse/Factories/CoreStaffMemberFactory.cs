@@ -38,6 +38,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
         private CreateHttpRequest? _httpRequest;
+        private Entity? _systemUser;
         // TEMPORARILY HARDCODED FOR DEV
         private string SYNC_FLOW_ENDPOINT = "https://1d7c41c84b08e1f3a61511f0059c0d.c0.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/12/workflows/2540c1018d9e41c3bd0ffb71bc75cc52/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC-BXGYlU_hqbETq8YqfDEqk83lvKV4aV1d8Fnq9Ra4";
         public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer, string correlationId)
@@ -123,6 +124,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 if (!string.IsNullOrWhiteSpace(azureId))
                 {
                     systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureId!);
+
+                    _tracer.Trace("Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
+
+                    _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
                 }
                 else
                 {
@@ -135,12 +140,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (systemUserRef == null || systemUserRef.Id == Guid.Empty)
             {
                 _tracer.Trace("systemUserRef is null or Id is empty.");
-                throw new InvalidPluginExecutionException("Invalid systemUserRef.");
+                _resolutionFailed = true;
             }
 
-            _tracer.Trace("Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
 
-            Entity systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
 
             CoreStaffMember updateCore;
             CoreStaffMember createCore;
@@ -164,9 +167,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
 
                 // Retrieve AzureObjectId
-                if (GetAttributeDelta.Execute<string>(CoreStaffMemberFields.AzureObjectId, core) == null && !_resolutionFailed)
+                if (GetAttributeDelta.Execute<string>(CoreStaffMemberFields.AzureObjectId, core) == null && !_resolutionFailed && _systemUser != null)
                 {
-                    updateCore.AzureObjectId = GetAttributeDelta.Execute<Guid>("azureactivedirectoryobjectid", systemUser).ToString();
+                    updateCore.AzureObjectId = GetAttributeDelta.Execute<Guid>("azureactivedirectoryobjectid", _systemUser).ToString();
                 }
 
                 // status
@@ -242,12 +245,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 // identity
                 MapStaffId(syn, createCore);
-                if (!_resolutionFailed)
+                if (!_resolutionFailed && _systemUser != null)
                 {
                     createCore.AzureObjectId =
                         GetAttributeDelta.Execute<Guid>(
                             "azureactivedirectoryobjectid",
-                            systemUser
+                            _systemUser
                         ).ToString();
 
                     createCore.User = systemUserRef;
