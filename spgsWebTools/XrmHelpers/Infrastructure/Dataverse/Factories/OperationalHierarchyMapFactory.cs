@@ -15,6 +15,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
         private CoreJobAssignments? _assignmentQuery;
+        private OperationalHierarchyMaps? _operationalMapQuery;
         private string ENTITY_LOGICAL_NAME = EntityLogicalNames.OperationalHierarchyMap;
         public OperationalHierarchyMapFactory(
             IOrganizationService service,
@@ -28,6 +29,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             // position id is PARENT if isParent true
             _assignmentQuery = new CoreJobAssignments(_service, _tracer);
+            _operationalMapQuery = new OperationalHierarchyMaps(_service, _tracer);
+
             EntityReference parentAssignmentRef;
             EntityReference childAssignmentRef;
 
@@ -45,66 +48,74 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     assignment.Id
             );
 
-            Entity createMap = new Entity(
-                ENTITY_LOGICAL_NAME
-            );
+            var existing = _operationalMapQuery.GetByCompositeKey(childAssignmentRef.Id, parentAssignmentRef.Id);
 
-            createMap[OperationalHierarchyMapFields.ChildJobAssignment] = childAssignmentRef;
-            createMap[OperationalHierarchyMapFields.ChildJobAssignmentIdx] = childAssignmentRef.Id.ToString();
-            createMap[OperationalHierarchyMapFields.CoreJobAssignment] = assignment.ToEntityReference();
-            createMap[OperationalHierarchyMapFields.CoreJobAssignmentIdx] = assignment.Id.ToString();
-            createMap[OperationalHierarchyMapFields.ParentJobAssignment] = parentAssignmentRef;
-            createMap[OperationalHierarchyMapFields.ParentJobAssignmentIdx] = parentAssignmentRef.Id.ToString();
+            if (existing == null || existing.Id == Guid.Empty)
+            {
+                Entity createMap = new Entity(ENTITY_LOGICAL_NAME);
 
-            createMap[OperationalHierarchyMapFields.ChildJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ChildJobPosition);
-            createMap[OperationalHierarchyMapFields.ChildJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ChildJobPosition).Id.ToString();
-            createMap[OperationalHierarchyMapFields.CoreJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.CoreJobPosition);
-            createMap[OperationalHierarchyMapFields.CoreJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.CoreJobPosition).Id.ToString();
-            createMap[OperationalHierarchyMapFields.ParentJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition);
-            createMap[OperationalHierarchyMapFields.ParentJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition).Id.ToString();
+                createMap[OperationalHierarchyMapFields.ChildJobAssignment] = childAssignmentRef;
+                createMap[OperationalHierarchyMapFields.ChildJobAssignmentIdx] = childAssignmentRef.Id.ToString();
+                createMap[OperationalHierarchyMapFields.CoreJobAssignment] = assignment.ToEntityReference();
+                createMap[OperationalHierarchyMapFields.CoreJobAssignmentIdx] = assignment.Id.ToString();
+                createMap[OperationalHierarchyMapFields.ParentJobAssignment] = parentAssignmentRef;
+                createMap[OperationalHierarchyMapFields.ParentJobAssignmentIdx] = parentAssignmentRef.Id.ToString();
 
-            createMap[OperationalHierarchyMapFields.IsActive] = true;
-            createMap[OperationalHierarchyMapFields.LinkType] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.LinkType);
-            createMap[OperationalHierarchyMapFields.Name] = $"OPERATIONAL MAP: {referenceMapEntity.GetAttributeValue<string>(ReferenceHierarchyMapFields.Name)}";
-            createMap[OperationalHierarchyMapFields.SourceOfTruthId] = Guid.NewGuid().ToString();
-            createMap[OperationalHierarchyMapFields.Status] = new OptionSetValue((int)Enums.Status.Active);
-            createMap[OperationalHierarchyMapFields.StatusReason] = new OptionSetValue((int)Enums.StatusReason.Active);
+                createMap[OperationalHierarchyMapFields.ChildJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ChildJobPosition);
+                createMap[OperationalHierarchyMapFields.ChildJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ChildJobPosition).Id.ToString();
+                createMap[OperationalHierarchyMapFields.CoreJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.CoreJobPosition);
+                createMap[OperationalHierarchyMapFields.CoreJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.CoreJobPosition).Id.ToString();
+                createMap[OperationalHierarchyMapFields.ParentJobPosition] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition);
+                createMap[OperationalHierarchyMapFields.ParentJobPositionIdx] = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition).Id.ToString();
 
-            var createMapJson = JsonSerializer.Serialize(
-                createMap,
-                new JsonSerializerOptions
+                createMap[OperationalHierarchyMapFields.IsActive] = true;
+                createMap[OperationalHierarchyMapFields.LinkType] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.LinkType);
+                createMap[OperationalHierarchyMapFields.Name] = $"OPERATIONAL MAP: {referenceMapEntity.GetAttributeValue<string>(ReferenceHierarchyMapFields.Name)}";
+                createMap[OperationalHierarchyMapFields.SourceOfTruthId] = Guid.NewGuid().ToString();
+                createMap[OperationalHierarchyMapFields.Status] = new OptionSetValue((int)Enums.Status.Active);
+                createMap[OperationalHierarchyMapFields.StatusReason] = new OptionSetValue((int)Enums.StatusReason.Active);
+
+                var createMapJson = JsonSerializer.Serialize(
+                    createMap,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }
+                );
+
+                _tracer.Trace("createMap entity: {0}", createMapJson);
+
+                if (assignment.Id == Guid.Empty)
                 {
-                    WriteIndented = true
+                    throw new InvalidPluginExecutionException("assignment has Guid.Empty");
                 }
-            );
 
-            _tracer.Trace("createMap entity: {0}", createMapJson);
+                if (parentAssignmentRef == null)
+                {
+                    throw new InvalidPluginExecutionException("parentAssignment is null");
+                }
 
-            if (assignment.Id == Guid.Empty)
-            {
-                throw new InvalidPluginExecutionException(
-                    "assignment has Guid.Empty");
+                if (parentAssignmentRef.Id == Guid.Empty)
+                {
+                    throw new InvalidPluginExecutionException("parentAssignment has Guid.Empty");
+                }
+
+                if (childAssignmentRef.Id == Guid.Empty)
+                {
+                    throw new InvalidPluginExecutionException("childAssignment has Guid.Empty");
+                }
+
+                var mapId = _service.Create(createMap);
+
+                _tracer.Trace("Created {0} with Id: {1}", ENTITY_LOGICAL_NAME, mapId);
+
+                return mapId;
             }
-
-            if (parentAssignmentRef == null)
+            else
             {
-                throw new InvalidPluginExecutionException(
-                    "parentAssignment is null");
+                _tracer.Trace("Existing Operational Hierarchy Map with the same Child Assignment Id and Parent Assignment Id was detected. Exiting this method.");
+                return Guid.Empty;
             }
-
-            if (parentAssignmentRef.Id == Guid.Empty)
-            {
-                throw new InvalidPluginExecutionException(
-                    "parentAssignment has Guid.Empty");
-            }
-
-            if (childAssignmentRef.Id == Guid.Empty)
-            {
-                throw new InvalidPluginExecutionException(
-                    "childAssignment has Guid.Empty");
-            }
-
-            return _service.Create(createMap);
         }
     }
 }

@@ -73,14 +73,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace("Calculating job assignment status and status reason");
 
             if (
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
+                // 0 represents inactive
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
             )
             {
-                snap.Status = new OptionSetValue((int)Enums.Status.Inactive); snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
+                snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
+                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
-                snap.Status = new OptionSetValue((int)Enums.Status.Active); snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
+                snap.Status = new OptionSetValue((int)Enums.Status.Active);
+                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
             }
 
             _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
@@ -107,12 +110,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 //identity
                 SynMirrorId = job.Id,
 
-                Name = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job),
+                Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, job)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, job)})",
 
                 // retrieve integer values
                 StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, job),
                 JobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.JobPositionsSeq, job),
                 StaffJobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, job),
+                JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job),
 
                 // retrieve float values
                 AssignmentFte = GetAttributeDelta.Execute<decimal>(SynJobPositionFields.StaffJobPositionFTE, job),
@@ -139,14 +143,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace("Calculating job assignment status and status reason");
 
             if (
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
             )
             {
-                snap.Status = new OptionSetValue((int)Enums.Status.Inactive); snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
+                snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
+                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
-                snap.Status = new OptionSetValue((int)Enums.Status.Active); snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
+                snap.Status = new OptionSetValue((int)Enums.Status.Active);
+                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
             }
 
             _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
