@@ -1,6 +1,9 @@
 using System;
+using System.Text;
+using System.Net.Http;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
+using spgsWebTools.Infrastructure.Auth;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
@@ -12,6 +15,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     internal class FlowRequestBody
     {
         public string? upn { get; set; }
+    }
+    internal class FlowResponseBody
+    {
+        public string? azureObjectId { get; set; }
     }
     public class CoreStaffMemberFactory
     {
@@ -81,25 +88,31 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 // trigger force sync user Power Automate flow
 
                 _httpRequest = new CreateHttpRequest(_tracer);
-                string azureObjectId;
 
-                var requestBody = new FlowRequestBody
-                {
-                    upn = syn.OccupEmail
-                };
+                HttpContent responseContent = _httpRequest.TriggerAnonFlow(
+                    SYNC_FLOW_ENDPOINT,
+                    syn.OccupEmail
+                );
 
-                var response = _httpRequest.PostAnonymous(
+                var json = responseContent.ReadAsStringAsync().Result;
+
+                FlowResponseBody result = JsonSerializer.Deserialize<FlowResponseBody>(json)!;
+
+                var azureId = result.azureObjectId;
+
+                _tracer.Trace("httpRequest response: {0}", azureId);
+
+                /*var response = _httpRequest.PostAnonymous(
                     SYNC_FLOW_ENDPOINT,
                     JsonSerializer.Serialize<FlowRequestBody>(requestBody),
                     30
-                );
+                );*/
 
                 //var newUserId = _forceSyncService.Execute(syn.OccupEmail);
 
-                if (response != null)
+                if (azureId != null)
                 {
-                    azureObjectId = response;
-                    systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureObjectId);
+                    systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureId);
                 }
                 else
                 {
@@ -108,7 +121,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     systemUserRef = new EntityReference("systemuser");
 
                 }
-
 
                 /*
                 if (newUserId == null)

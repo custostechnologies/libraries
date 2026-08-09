@@ -19,7 +19,38 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
         {
             _tracer = tracer;
         }
+        public HttpContent TriggerAnonFlow(
+            string endpoint,
+            string upn
+        )
+        {
+            using (var client = new HttpClient())
+            {
 
+                var payload = $@"{{
+                    ""upn"": ""{upn}""
+                }}";
+
+                var content = new StringContent(
+                    payload,
+                    Encoding.UTF8,
+                    "application/json");
+
+                var response = client.PostAsync(endpoint, content).Result;
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var error =
+                        response.Content.ReadAsStringAsync().Result;
+
+                    throw new Exception(
+                        $"Flow call failed. Status: {response.StatusCode}. Response: {error}");
+                }
+
+                return response.Content;
+            }
+        }
+        /*
         public string PostAnonymous(string endpointUrl, string jsonPayload, int timeout)
         {
             _tracer.Trace("Initialising new HttpClient connection");
@@ -70,7 +101,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
             }
 
             return responseBody;
-        }
+        }*/
         public static string Execute(ITracingService? tracingService, string endpointUrl, FormUrlEncodedContent? content, string? jsonPayload, int timeout, string? token, HttpMethod method)
         {
             tracingService?.Trace("Initialising new HttpClient connection");
