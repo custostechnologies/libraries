@@ -159,15 +159,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 // identity
                 if (attributes.Contains("pgrowth_staffid")) MapStaffId(syn, updateCore);
                 // Retrieve User
-                if (GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core) == null && !_resolutionFailed)
+                if (GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core, null) == null && !_resolutionFailed)
                 {
                     updateCore.User = systemUserRef;
                 }
 
                 // Retrieve AzureObjectId
-                if (GetAttributeDelta.Execute<string>(CoreStaffMemberFields.AzureObjectId, core) == null && !_resolutionFailed && _systemUser != null)
+                if (GetAttributeDelta.Execute<string>(CoreStaffMemberFields.AzureObjectId, core, null) == null && !_resolutionFailed && _systemUser != null)
                 {
-                    updateCore.AzureObjectId = GetAttributeDelta.Execute<Guid>("azureactivedirectoryobjectid", _systemUser).ToString();
+                    updateCore.AzureObjectId = GetAttributeDelta.Execute<Guid>("azureactivedirectoryobjectid", _systemUser, null).ToString();
                 }
 
                 // status
@@ -248,7 +248,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     createCore.AzureObjectId =
                         GetAttributeDelta.Execute<Guid>(
                             "azureactivedirectoryobjectid",
-                            _systemUser
+                            _systemUser,
+                            null
                         ).ToString();
 
                     createCore.User = systemUserRef;
