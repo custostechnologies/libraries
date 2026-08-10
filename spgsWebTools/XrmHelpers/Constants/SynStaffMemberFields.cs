@@ -33,6 +33,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string EncodedHash = "pgrowth_encodedhash";
         public const string PlaintextHash = "pgrowth_plaintexthash";
         public const string LastSuccessfulSync = "pgrowth_lastsuccessfulsync";
-        public const string IgnoreSync = "pgrowth_forcesync";
+        public const string IgnoreSync = "pgrowth_ignoresync";
+        public const string ForcePlugin = "pgrowth_forceplugin";
     }
 }
