@@ -11,5 +11,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SynJobPosition = "pgrowth_synergetic_vstaffjobpositions";
         public const string CoreDepartment = "pgrowth_coredepartment";
         public const string CoreStaffCategory = "pgrowth_corestaffcategory";
+        public const string UserSyncEvent = "pgrowth_usersyncevent";
+        public const string AssignmentSyncEvent = "pgrowth_assignmentsyncevent";
     }
 }
