@@ -1,18 +1,14 @@
-using System;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreJobAssignmentFactory
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        private SynJobPositions? _synJobPositionQuery;
         private CoreJobAssignments? _coreJobAssignmentQuery;
         private CoreJobPositions? _coreJobPositionQuery;
         private CoreStaffMembers? _coreStaffMemberQuery;
