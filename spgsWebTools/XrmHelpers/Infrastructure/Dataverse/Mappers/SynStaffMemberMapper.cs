@@ -1,105 +1,125 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Constants;
-
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
-    public static class SynStaffMemberMapper
+    public class SynStaffMemberMapper
     {
-        private const string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        public static Entity ToCreateEntity(this StaffMemberSnapshot snap, ITracingService tracer)
+        private ITracingService _tracer;
+        private AttributeCollection _attributes;
+        private Entity _target;
+        public SynStaffMemberMapper(ITracingService tracer, Entity target, AttributeCollection attributes)
         {
-            var entity = snap.ToEntity(true);
-
-            foreach (var a in entity.Attributes)
-            {
-                tracer.Trace(
-                    "{0} = {1}",
-                    a.Key,
-                    a.Value?.ToString() ?? "<null>"
-                );
-            }
-
-            return entity;
+            _tracer = tracer;
+            _target = target;
+            _attributes = attributes;
         }
-        public static Entity ToUpdateEntity(this StaffMemberSnapshot snap, ITracingService tracer)
+        public Entity ToEntity(StaffMemberSnapshot snap)
         {
-            if (snap.SynMirrorId == Guid.Empty)
+            _tracer.Trace("in SynStaffMemberMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
+            _tracer.Trace("Hash key discrepancy detected via ChangeDetection plugin for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
+            try
             {
-                throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
-            }
+                if (snap.SynMirrorId != Guid.Empty)
+                {
+                    SetDelta(SynStaffMemberFields.SynMirrorId, snap.SynMirrorId);
+                }
 
-            var entity = snap.ToEntity(false);
-            entity.Id = snap.SynMirrorId;
+                /* SET TARGET DELTAS */
+                // identity
+                SetDelta(SynStaffMemberFields.CommunityGuid, snap.CommunityGuid);
+                SetDelta(SynStaffMemberFields.StaffId, snap.StaffId);
+                SetDelta(SynStaffMemberFields.SourceOfTruthId, snap.SourceOfTruthId);
 
-            foreach (var a in entity.Attributes)
-            {
-                tracer.Trace(
-                    "{0} = {1}",
-                    a.Key,
-                    a.Value?.ToString() ?? "<null>"
+                // personal details
+                SetDelta(SynStaffMemberFields.Given1, snap.Given1);
+                SetDelta(SynStaffMemberFields.Given2, snap.Given2);
+                SetDelta(SynStaffMemberFields.NameInternal, snap.NameInternal);
+                SetDelta(SynStaffMemberFields.Surname, snap.Surname);
+                SetDelta(SynStaffMemberFields.MaidenName, snap.MaidenName);
+                SetDelta(SynStaffMemberFields.StaffPreferredName, snap.StaffPreferredName);
+                SetDelta(SynStaffMemberFields.SurnamePrevious, snap.SurnamePrevious);
+                SetDeltaKey(SynStaffMemberFields.Gender, SynStaffMemberFields.GenderKey, snap.Gender, snap.GenderKey);
+
+                // contact details
+                SetDelta(SynStaffMemberFields.Email, snap.Email);
+
+                // account metadata
+                SetDelta(SynStaffMemberFields.NetworkLogin, snap.NetworkLogin);
+
+                // job metadata
+                SetDelta(SynStaffMemberFields.SchoolStaffCode, snap.SchoolStaffCode);
+                SetDelta(SynStaffMemberFields.SubSchool, snap.SubSchool);
+                SetDelta(SynStaffMemberFields.OccupEmail, snap.OccupEmail);
+                SetDelta(SynStaffMemberFields.OccupPhone, snap.OccupPhone);
+                SetDeltaKey(SynStaffMemberFields.StaffCampus, SynStaffMemberFields.CampusKey, snap.StaffCampus, snap.CampusKey);
+                SetDelta(SynStaffMemberFields.StaffCategory, snap.StaffCategory);
+                SetDelta(SynStaffMemberFields.StaffDepartment, snap.StaffDepartment);
+                SetDelta(SynStaffMemberFields.StartDate, snap.StartDate);
+                SetDelta(SynStaffMemberFields.LeavingDate, snap.LeavingDate);
+
+                // status (calculated in snapshot factory)
+                SetDelta(SynStaffMemberFields.Status, snap.Status);
+                SetDelta(SynStaffMemberFields.StatusReason, snap.StatusReason);
+                SetDelta(SynStaffMemberFields.ActiveFlag, snap.ActiveFlag);
+
+                // sync metadata
+                _target[SynStaffMemberFields.EncodedHash] = snap.EncodedHash;
+                _target[SynStaffMemberFields.PlaintextHash] = snap.PlaintextHash;
+                _target[SynStaffMemberFields.LastSuccessfulSync] = DateTime.UtcNow;
+
+                _tracer.Trace("Update or create request entity mapped from snapshot");
+                _tracer.Trace("Target attributes set  via StaffChangeDetection plugin for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
+                _tracer.Trace(
+                    "Final encoded hash in target: {0}",
+                    _target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
-            }
 
-            return entity;
+                foreach (var a in _attributes)
+                {
+                    _tracer.Trace(
+                        "{0} = {1}",
+                        a.Key,
+                        a.Value?.ToString() ?? "<null>"
+                    );
+                }
+
+                return _target;
+            }
+            catch (Exception ex)
+            {
+                _tracer.Trace("Error SynStaffMemberMapper.ToEntity: {0}", ex);
+                if (ex.InnerException.Message != null)
+                {
+                    _tracer.Trace("InnerException SynStaffMemberMapper.ToEntity: {0}", ex.InnerException.Message);
+                }
+                throw;
+            }
         }
-
-        public static Entity ToEntity(this StaffMemberSnapshot snap, bool syncAll)
+        private void SetDelta<T>(string attributeName, T value)
         {
-            var entity = new Entity(ENTITY_LOGICAL_NAME);
+            _tracer.Trace("SetDelta(attributeName: {0}, value: {1}) called.", attributeName, value);
 
-            // Identity
-            entity[SynStaffMemberFields.SynMirrorId] = snap.SynMirrorId;
-
-            if (!string.IsNullOrWhiteSpace(snap.SourceOfTruthId))
+            if (_attributes.Contains(attributeName))
             {
-                entity[SynStaffMemberFields.SourceOfTruthId] = snap.SourceOfTruthId;
+                SetAttributeDelta.Execute(_target, attributeName, value);
             }
+        }
+        private void SetDeltaKey<T>(string attributeName, string keyAttributeName, T? value, string? key)
+        {
+            _tracer.Trace(
+                "SetDeltaKey(attributeName: {0}, keyAttributeName: {1}, value: {2}, key: {3}) called.",
+                attributeName,
+                keyAttributeName,
+                value,
+                key
+            );
 
-            entity[SynStaffMemberFields.StaffId] = snap.StaffId;
-            entity[SynStaffMemberFields.SchoolStaffCode] = snap.SchoolStaffCode;
-            entity[SynStaffMemberFields.CommunityGuid] = snap.CommunityGuid;
-            entity[SynStaffMemberFields.ActiveFlag] = snap.ActiveFlag;
-
-            if (snap.Status != null)
+            if (_attributes.Contains(attributeName))
             {
-                entity[SynStaffMemberFields.Status] = snap.Status;
+                SetAttributeDelta.Execute(_target, attributeName, value);
+                SetAttributeDelta.Execute(_target, keyAttributeName, key);
             }
-
-            if (snap.StatusReason != null)
-            {
-                entity[SynStaffMemberFields.StatusReason] = snap.StatusReason;
-            }
-
-            entity[SynStaffMemberFields.Gender] = snap.Gender;
-            entity[SynStaffMemberFields.Given1] = snap.Given1;
-            entity[SynStaffMemberFields.Given2] = snap.Given2;
-            entity[SynStaffMemberFields.NameInternal] = snap.NameInternal;
-            entity[SynStaffMemberFields.MaidenName] = snap.MaidenName;
-            entity[SynStaffMemberFields.StaffPreferredName] = snap.StaffPreferredName;
-            entity[SynStaffMemberFields.SurnamePrevious] = snap.SurnamePrevious;
-            entity[SynStaffMemberFields.Surname] = snap.Surname;
-            entity[SynStaffMemberFields.Email] = snap.Email;
-            entity[SynStaffMemberFields.OccupEmail] = snap.OccupEmail;
-            entity[SynStaffMemberFields.OccupPhone] = snap.OccupPhone;
-            entity[SynStaffMemberFields.StaffCampus] = snap.StaffCampus;
-            entity[SynStaffMemberFields.StaffCategory] = snap.StaffCategory;
-            entity[SynStaffMemberFields.StaffDepartment] = snap.StaffDepartment;
-            entity[SynStaffMemberFields.NetworkLogin] = snap.NetworkLogin;
-            entity[SynStaffMemberFields.SubSchool] = snap.SubSchool;
-            entity[SynStaffMemberFields.CampusKey] = snap.CampusKey;
-            entity[SynStaffMemberFields.GenderKey] = snap.GenderKey;
-            entity[SynStaffMemberFields.StartDate] = snap.StartDate;
-            entity[SynStaffMemberFields.SubSchool] = snap.LeavingDate;
-
-            if (!string.IsNullOrWhiteSpace(snap.PlaintextHash))
-            {
-                entity[SynStaffMemberFields.PlaintextHash] = snap.PlaintextHash;
-            }
-
-            entity[SynStaffMemberFields.EncodedHash] = snap.EncodedHash;
-
-            return entity;
         }
     }
 }

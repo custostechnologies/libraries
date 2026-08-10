@@ -5,7 +5,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class GetAttributeDelta
     {
-        public static T? Execute<T>(string attributeName, Entity target, Entity preImage)
+        public static T? Execute<T>(string attributeName, Entity target, Entity? preImage)
         {
             try
             {
@@ -26,27 +26,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
             }
 
             return default;
-        }
-
-        /* overloaded helper to retrieve value from one entity */
-        public static T? Execute<T>(string attributeName, Entity entity)
-        {
-            try
-            {
-                if (entity != null && entity.Contains(attributeName))
-                {
-                    return entity.GetAttributeValue<T>(attributeName);
-                }
-                else
-                {
-                    return default;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Exception occurred in GetValue<T>(attributeName, Entity): {0}", ex);
-                throw;
-            }
         }
     }
 }

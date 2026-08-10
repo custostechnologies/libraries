@@ -65,13 +65,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 _tracer.Trace("Marking syncEvent status as failed until updated to complete if no errors are thrown");
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
-                _tracer.Trace("Creating sync event");
+                _tracer.Trace("Updating syncEvent");
                 _service.Update(syncEvent);
-                _tracer.Trace("Sync event created");
+                _tracer.Trace("syncEvent updated from MarkError");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _tracer.Trace("Failed to create SyncEvent.");
+                _tracer.Trace("Failed to update SyncEvent from MarkError: {0}", ex);
+                if (ex.InnerException.Message != null)
+                {
+                    _tracer.Trace("InnerException: {0}", ex);
+                }
                 throw;
             }
         }
@@ -84,11 +88,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Complete);
                 _tracer.Trace("Updating syncEvent from SyncEventFactory.MarkComplete()");
                 _service.Update(syncEvent);
-                _tracer.Trace("_syncEvent Updated");
+                _tracer.Trace("_syncEvent updated from MarkComplete");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                _tracer.Trace("Error encountered when setting syncEvent status to Inactive and statusReason to Complete.");
+                _tracer.Trace("Error encountered when setting syncEvent status to Inactive and statusReason to Complete: {0}", ex);
+                if (ex.InnerException.Message != null)
+                {
+                    _tracer.Trace("InnerException: {0}", ex);
+                }
                 throw;
             }
         }

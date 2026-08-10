@@ -110,24 +110,24 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 //identity
                 SynMirrorId = job.Id,
 
-                Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, job)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, job)})",
+                Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, job, null)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job, null)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, job, null)})",
 
                 // retrieve integer values
-                StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, job),
-                JobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.JobPositionsSeq, job),
-                StaffJobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, job),
-                JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job),
+                StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, job, null),
+                JobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.JobPositionsSeq, job, null),
+                StaffJobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, job, null),
+                JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, job, null),
 
                 // retrieve float values
-                AssignmentFte = GetAttributeDelta.Execute<decimal>(SynJobPositionFields.StaffJobPositionFTE, job),
-                FteRequired = GetAttributeDelta.Execute<decimal>(SynJobPositionFields.JobPositionFTERequired, job),
+                AssignmentFte = GetAttributeDelta.Execute<decimal>(SynJobPositionFields.StaffJobPositionFTE, job, null),
+                FteRequired = GetAttributeDelta.Execute<decimal>(SynJobPositionFields.JobPositionFTERequired, job, null),
 
                 // retrieve boolean values
-                IsActive = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionActiveFlag, job),
+                IsActive = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionActiveFlag, job, null),
 
                 // retrieve date times values accounting for null values
-                EndDate = GetAttributeDelta.Execute<DateTime?>(SynJobPositionFields.StaffJobPositionEndDate, job),
-                StartDate = GetAttributeDelta.Execute<DateTime?>(SynJobPositionFields.StaffJobPositionStartDate, job)
+                EndDate = GetAttributeDelta.Execute<DateTime?>(SynJobPositionFields.StaffJobPositionEndDate, job, null),
+                StartDate = GetAttributeDelta.Execute<DateTime?>(SynJobPositionFields.StaffJobPositionStartDate, job, null)
             };
 
             _tracer.Trace("{0} SynMirrorId: {1}", ENTITY_LOGICAL_NAME, snap.SynMirrorId.ToString());
