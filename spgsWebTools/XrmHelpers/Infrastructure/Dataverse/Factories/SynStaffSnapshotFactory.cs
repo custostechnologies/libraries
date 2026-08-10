@@ -73,6 +73,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 // retrieve boolean values
                 ActiveFlag = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.ActiveFlag, target, preImage),
+                IgnoreSync = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.IgnoreSync, target, preImage),
 
                 // retrieve date times values accounting for null values
                 LeavingDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.LeavingDate, target, preImage),
@@ -156,6 +157,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 // retrieve boolean values
                 ActiveFlag = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.ActiveFlag, staff),
+                IgnoreSync = GetAttributeDelta.Execute<bool>(SynStaffMemberFields.IgnoreSync, staff),
 
                 // retrieve date times values accounting for null values
                 LeavingDate = GetAttributeDelta.Execute<DateTime?>(SynStaffMemberFields.LeavingDate, staff),
