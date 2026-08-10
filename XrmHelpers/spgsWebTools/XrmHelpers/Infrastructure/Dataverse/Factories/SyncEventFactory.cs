@@ -63,11 +63,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             try
             {
-                _tracer.Trace("Marking syncEvent status as failed until updated to complete if no errors are thrown");
+                _tracer.Trace("Marking syncEvent status as error");
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
-                _tracer.Trace("Creating sync event");
+                _tracer.Trace("Updating sync event");
                 _service.Update(syncEvent);
-                _tracer.Trace("Sync event created");
+                _tracer.Trace("Sync event updated");
             }
             catch (Exception)
             {
