@@ -84,7 +84,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             EntityReference systemUserRef = _systemuserQuery.GetReferenceByMetadata(syn.OccupEmail!, syn.NetworkLogin!);
 
             /* ATTEMPT TO FORCE SYN USER ACCOUNT */
-            // only if ActiveFlag is true
+            // only if ActiveFlag is true, call HTTP triggered Power Automate flow
             if (
                 (systemUserRef == null || systemUserRef.Id == Guid.Empty)
                 && syn.ActiveFlag
@@ -98,11 +98,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     _tracer.Trace("Syn Staff Snapshot has no OccupEmail, unable to run ForceUserSync query");
                     throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
                 }
-
-                // FORCE SYNC USER SDK MESSAGE IS OBSOLETE
-                //ForceUserSync _forceSyncService = new ForceUserSync(_service, _tracer);
-
-                // trigger force sync user Power Automate flow
 
                 _httpRequest = new CreateHttpRequest(_tracer);
 
