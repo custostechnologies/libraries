@@ -41,5 +41,6 @@ namespace spgsWebTools.XrmHelpers.Constants
 
         // Sync
         public const string UtcNow = "pgrowth_utcnow";
+        public const string ForcePlugin = "pgrowth_forceplugin";
     }
 }
