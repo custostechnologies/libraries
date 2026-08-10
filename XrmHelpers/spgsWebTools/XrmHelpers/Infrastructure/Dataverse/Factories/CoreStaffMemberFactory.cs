@@ -83,7 +83,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             EntityReference systemUserRef = _systemuserQuery.GetReferenceByMetadata(syn.OccupEmail!, syn.NetworkLogin!);
 
-            if (systemUserRef == null || systemUserRef.Id == Guid.Empty)
+            /* ATTEMPT TO FORCE SYN USER ACCOUNT */
+            // only if ActiveFlag is true
+            if (
+                (systemUserRef == null || systemUserRef.Id == Guid.Empty)
+                && syn.ActiveFlag
+            )
             {
                 _tracer.Trace("systemUserRef.Id is null or empty");
                 // retrieve azure id (not via systemuser)
@@ -142,8 +147,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _tracer.Trace("systemUserRef is null or Id is empty.");
                 _resolutionFailed = true;
             }
-
-
 
             CoreStaffMember updateCore;
             CoreStaffMember createCore;

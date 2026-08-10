@@ -148,5 +148,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         /// 
         /// </summary>
         public int EncodedHash { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IgnoreSync { get; set; }
     }
 }
