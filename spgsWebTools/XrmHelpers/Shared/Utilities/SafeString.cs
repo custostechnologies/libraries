@@ -1,3 +1,5 @@
+using System.Windows.Forms;
+
 namespace spgsWebTools.XrmHelpers.Shared.Utilities
 {
     public class SafeString
