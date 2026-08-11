@@ -26,6 +26,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     }
     internal class FlowResponseBody
     {
+        [JsonPropertyName("errorMessage")]
+        public string? ErrorMessage { get; set; }
         [JsonPropertyName("azureObjectId")]
         public string? AzureObjectId { get; set; }
     }
@@ -39,6 +41,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private Systemusers? _systemuserQuery;
         private CreateHttpRequest? _httpRequest;
         private Entity? _systemUser;
+        private string? _errorMessage;
+        private CoreStaffMember _emptyStaffMember = new CoreStaffMember();
         // TEMPORARILY HARDCODED FOR DEV
         private string SYNC_FLOW_ENDPOINT = "https://1d7c41c84b08e1f3a61511f0059c0d.c0.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/12/workflows/2540c1018d9e41c3bd0ffb71bc75cc52/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC-BXGYlU_hqbETq8YqfDEqk83lvKV4aV1d8Fnq9Ra4";
         public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer, string correlationId)
@@ -47,7 +51,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer = tracer;
             _correlationId = correlationId;
         }
-        public CoreStaffMember Build(StaffMemberSnapshot syn, string[] attributes)
+        public (CoreStaffMember staff, string? error) Build(StaffMemberSnapshot syn, string[] attributes)
         {
             _tracer.Trace("Entered CoreStaffMemberFactory.Build");
             _tracer.Trace("attributes string[]: {0}",
@@ -134,6 +138,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     _tracer.Trace("Unable to force syn user via power automate flow");
                     _resolutionFailed = true;
                     systemUserRef = new EntityReference("systemuser");
+                    if (flowResponseBody?.ErrorMessage != null)
+                    {
+                        return (_emptyStaffMember, flowResponseBody?.ErrorMessage);
+                    } else
+                    {
+                        return (_emptyStaffMember, "Unable to force sync user via Power Automate flow.");
+                    }
                 }
             }
 
@@ -230,7 +241,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 // sync data
                 MapLastSync(updateCore);
 
-                return updateCore;
+                return (updateCore, null);
             }
             else
             {
@@ -293,7 +304,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _tracer.Trace("createCore Entity: {0}", json);
 
-                return createCore;
+                return (createCore, null);
             }
         }
         private void MapCampus(StaffMemberSnapshot syn, CoreStaffMember target)

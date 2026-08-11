@@ -16,6 +16,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public StaffMemberSnapshot Build(Entity target, Entity? preImage)
         {
+            _tracer.Trace("Entered SynStaffSnapshotFactory.Build() with targetId: {0} and preImageId: {1}",
+                target.Id,
+                preImage?.Id
+            );
+
             Enums.Status status = Enums.Status.Active;
             Enums.StatusReason statusReason = Enums.StatusReason.Active;
 
@@ -84,7 +89,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     : GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, target, preImage),
             };
 
-            if (preImage != null) snap.SynMirrorId = preImage.Id;
+            if (preImage != null)
+            {
+                snap.SynMirrorId = preImage.Id;
+                snap.PlaintextHash = GetAttributeDelta.Execute<string>(SynStaffMemberFields.PlaintextHash, preImage, null);
+                snap.EncodedHash = GetAttributeDelta.Execute<int>(SynStaffMemberFields.EncodedHash, preImage, null);
+            }
             // update status based on values
             if (
                 ((snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow)
