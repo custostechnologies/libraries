@@ -4,7 +4,6 @@ using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
-using spgsWebTools.XrmHelpers.Shared.Hashing;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -14,7 +13,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class SynJobSnapshotFactory
     {
         private readonly ITracingService _tracer;
-        private readonly JobSnapshotHashService _hashService;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_synergetic_vstaffjobpositions";
         /// <summary>
         /// 
@@ -23,7 +21,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         public SynJobSnapshotFactory(ITracingService tracer)
         {
             _tracer = tracer;
-            _hashService = new JobSnapshotHashService(_tracer);
         }
         /// <summary>
         /// 
@@ -34,8 +31,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <returns></returns>
         public JobPositionSnapshot Build(Entity target, Entity preImage, Guid sourceRecordId)
         {
-            _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
-
             _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
             var snap = new JobPositionSnapshot
@@ -67,8 +62,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace(
                 JsonSerializer.Serialize(snap)
             );
-
-            snap.EncodedHash = _hashService.Generate(snap);
 
             _tracer.Trace("Calculating job assignment status and status reason");
 
@@ -131,8 +124,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace(
                 JsonSerializer.Serialize(snap)
             );
-
-            snap.EncodedHash = _hashService.Generate(snap);
 
             _tracer.Trace("Calculating job assignment status and status reason");
 
