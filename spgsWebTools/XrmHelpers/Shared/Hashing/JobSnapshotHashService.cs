@@ -12,7 +12,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
         {
             _tracer = tracer;
         }
-        public int Generate(JobPositionSnapshot snap)
+        public (string plain, int encoded) Generate(JobPositionSnapshot snap)
         {
             string plaintextHash = string.Join("|",
                     new string[] {
@@ -30,9 +30,9 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 
             _tracer.Trace("Plaintext hash: {0}", plaintextHash);
 
-            snap.PlaintextHash = plaintextHash;
+            var encodedHash = GetBKDRHashKey.Calculate(plaintextHash);
 
-            return GetBKDRHashKey.Calculate(plaintextHash);
+            return (plaintextHash, encodedHash);
         }
     }
 }
