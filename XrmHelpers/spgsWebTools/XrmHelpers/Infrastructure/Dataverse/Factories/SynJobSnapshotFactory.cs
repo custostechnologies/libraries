@@ -14,6 +14,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class SynJobSnapshotFactory
     {
         private readonly ITracingService _tracer;
+        private readonly JobSnapshotHashService _hashService;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_synergetic_vstaffjobpositions";
         /// <summary>
         /// 
@@ -22,6 +23,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         public SynJobSnapshotFactory(ITracingService tracer)
         {
             _tracer = tracer;
+            _hashService = new JobSnapshotHashService(_tracer);
         }
         /// <summary>
         /// 
@@ -33,8 +35,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         public JobPositionSnapshot Build(Entity target, Entity preImage, Guid sourceRecordId)
         {
             _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
-
-            JobBKDRHashService _hashService = new JobBKDRHashService(_tracer);
 
             _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
@@ -99,10 +99,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <returns></returns>
         public JobPositionSnapshot Build(Entity job)
         {
-            _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
-
-            JobBKDRHashService _hashService = new JobBKDRHashService(_tracer);
-
             _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
             var snap = new JobPositionSnapshot
@@ -158,48 +154,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
 
             return snap;
-        }
-    }
-    public class JobBKDRHashService
-    {
-        private readonly ITracingService _tracer;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tracer"></param>
-        public JobBKDRHashService(ITracingService tracer)
-        {
-            _tracer = tracer;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="snap"></param>
-        /// <returns></returns>
-
-        public int Generate(JobPositionSnapshot snap)
-        {
-
-            string plaintextHash = string.Join("|",
-                new string?[] {
-                    snap.Name ?? "",
-                    snap.JobPositionsSeq.ToString(),
-                    snap.StaffJobPositionsSeq.ToString(),
-                    snap.SynReportsTo ?? "",
-                    snap.AssignmentFte.ToString(),
-                    snap.FteRequired.ToString(),
-                    snap.StaffId.ToString(),
-                    snap.IsActive.ToString(),
-                    snap.StartDate?.ToString("yyyy-MM-dd HH:mm:ss"),
-                    snap.EndDate?.ToString("yyyy-MM-dd HH:mm:ss")
-                }.Select(val => val ?? string.Empty)
-            );
-
-            _tracer.Trace("Plaintext hash: {0}", plaintextHash);
-
-            snap.PlaintextHash = plaintextHash;
-
-            return GetBKDRHashKey.Calculate(plaintextHash);
         }
     }
 }
