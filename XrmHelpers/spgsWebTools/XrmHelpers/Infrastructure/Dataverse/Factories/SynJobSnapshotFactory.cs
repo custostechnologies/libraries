@@ -39,6 +39,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 SynMirrorId = sourceRecordId,
 
                 Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, target, preImage)})",
+                JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage),
 
                 // retrieve integer values
                 StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage),
