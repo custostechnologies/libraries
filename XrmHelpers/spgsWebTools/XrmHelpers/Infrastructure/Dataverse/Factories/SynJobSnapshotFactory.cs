@@ -59,27 +59,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _tracer.Trace("{0} SynMirrorId: {1}", ENTITY_LOGICAL_NAME, snap.SynMirrorId.ToString());
 
-            _tracer.Trace(
-                JsonSerializer.Serialize(snap)
-            );
-
             _tracer.Trace("Calculating job assignment status and status reason");
-
+            _tracer.Trace(
+                "SNAP EndDate.HasValue={0}, EndDate={1}, IsActive={2}",
+                snap.EndDate.HasValue,
+                snap.EndDate.HasValue ? snap.EndDate.Value.ToString("o") : "<null>",
+                snap.IsActive
+            );
             if (
                 // 0 represents inactive
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
             )
             {
+                _tracer.Trace("Setting status to Inactive");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+                _tracer.Trace("Setting status to Active");
                 snap.Status = new OptionSetValue((int)Enums.Status.Active);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
             }
 
-            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
+            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status?.Value, snap.StatusReason?.Value);
 
             return snap;
         }
@@ -121,28 +124,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _tracer.Trace("{0} SynMirrorId: {1}", ENTITY_LOGICAL_NAME, snap.SynMirrorId.ToString());
 
+            _tracer.Trace("Calculating job assignment status and status reason");
             _tracer.Trace(
-                JsonSerializer.Serialize(snap)
+                "SNAP EndDate.HasValue={0}, EndDate={1}, IsActive={2}",
+                snap.EndDate.HasValue,
+                snap.EndDate.HasValue ? snap.EndDate.Value.ToString("o") : "<null>",
+                snap.IsActive
             );
-
-            _tracer.Trace("Calculating job assignment status and status reason");
-
-            _tracer.Trace("Calculating job assignment status and status reason");
-
+            if (snap.EndDate.HasValue) _tracer.Trace("SNAP EndDate.Value: {0}", snap.EndDate.Value);
             if (
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
             )
             {
+                _tracer.Trace("Setting status to Inactive");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+                _tracer.Trace("Setting status to Active");
                 snap.Status = new OptionSetValue((int)Enums.Status.Active);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
             }
 
-            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
+            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status?.Value, snap.StatusReason?.Value);
 
             return snap;
         }
