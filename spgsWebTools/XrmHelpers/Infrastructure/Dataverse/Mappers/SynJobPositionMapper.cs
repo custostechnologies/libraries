@@ -55,15 +55,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                     _target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
 
-                foreach (var a in _attributes)
-                {
-                    _tracer.Trace(
-                        "{0} = {1}",
-                        a.Key,
-                        a.Value?.ToString() ?? "<null>"
-                    );
-                }
-
                 return _target;
             }
             catch (Exception ex)
