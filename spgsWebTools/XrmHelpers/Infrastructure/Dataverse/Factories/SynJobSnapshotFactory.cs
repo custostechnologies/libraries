@@ -4,7 +4,6 @@ using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
-using spgsWebTools.XrmHelpers.Shared.Hashing;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -32,10 +31,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <returns></returns>
         public JobPositionSnapshot Build(Entity target, Entity preImage, Guid sourceRecordId)
         {
-            _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
-
-            JobBKDRHashService _hashService = new JobBKDRHashService(_tracer);
-
             _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
             var snap = new JobPositionSnapshot
@@ -44,6 +39,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 SynMirrorId = sourceRecordId,
 
                 Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, target, preImage)})",
+                JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage),
 
                 // retrieve integer values
                 StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage),
@@ -64,29 +60,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _tracer.Trace("{0} SynMirrorId: {1}", ENTITY_LOGICAL_NAME, snap.SynMirrorId.ToString());
 
-            _tracer.Trace(
-                JsonSerializer.Serialize(snap)
-            );
-
-            snap.EncodedHash = _hashService.Generate(snap);
-
             _tracer.Trace("Calculating job assignment status and status reason");
-
+            _tracer.Trace(
+                "SNAP EndDate.HasValue={0}, EndDate={1}, IsActive={2}",
+                snap.EndDate.HasValue,
+                snap.EndDate.HasValue ? snap.EndDate.Value.ToString("o") : "<null>",
+                snap.IsActive
+            );
             if (
                 // 0 represents inactive
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
             )
             {
+                _tracer.Trace("Setting status to Inactive");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+                _tracer.Trace("Setting status to Active");
                 snap.Status = new OptionSetValue((int)Enums.Status.Active);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
             }
 
-            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
+            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status?.Value, snap.StatusReason?.Value);
 
             return snap;
         }
@@ -99,10 +96,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         /// <returns></returns>
         public JobPositionSnapshot Build(Entity job)
         {
-            _tracer.Trace("Initialising JobBKDRHashService in JobPositionSnapshot.Build");
-
-            JobBKDRHashService _hashService = new JobBKDRHashService(_tracer);
-
             _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
 
             var snap = new JobPositionSnapshot
@@ -132,74 +125,32 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _tracer.Trace("{0} SynMirrorId: {1}", ENTITY_LOGICAL_NAME, snap.SynMirrorId.ToString());
 
+            _tracer.Trace("Calculating job assignment status and status reason");
             _tracer.Trace(
-                JsonSerializer.Serialize(snap)
+                "SNAP EndDate.HasValue={0}, EndDate={1}, IsActive={2}",
+                snap.EndDate.HasValue,
+                snap.EndDate.HasValue ? snap.EndDate.Value.ToString("o") : "<null>",
+                snap.IsActive
             );
-
-            snap.EncodedHash = _hashService.Generate(snap);
-
-            _tracer.Trace("Calculating job assignment status and status reason");
-
-            _tracer.Trace("Calculating job assignment status and status reason");
-
+            if (snap.EndDate.HasValue) _tracer.Trace("SNAP EndDate.Value: {0}", snap.EndDate.Value);
             if (
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
             )
             {
+                _tracer.Trace("Setting status to Inactive");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+                _tracer.Trace("Setting status to Active");
                 snap.Status = new OptionSetValue((int)Enums.Status.Active);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
             }
 
-            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status, snap.StatusReason);
+            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status?.Value, snap.StatusReason?.Value);
 
             return snap;
-        }
-    }
-    public class JobBKDRHashService
-    {
-        private readonly ITracingService _tracer;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="tracer"></param>
-        public JobBKDRHashService(ITracingService tracer)
-        {
-            _tracer = tracer;
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="snap"></param>
-        /// <returns></returns>
-
-        public int Generate(JobPositionSnapshot snap)
-        {
-
-            string plaintextHash = string.Join("|",
-                new string?[] {
-                    snap.Name ?? "",
-                    snap.JobPositionsSeq.ToString(),
-                    snap.StaffJobPositionsSeq.ToString(),
-                    snap.SynReportsTo ?? "",
-                    snap.AssignmentFte.ToString(),
-                    snap.FteRequired.ToString(),
-                    snap.StaffId.ToString(),
-                    snap.IsActive.ToString(),
-                    snap.StartDate?.ToString("yyyy-MM-dd HH:mm:ss"),
-                    snap.EndDate?.ToString("yyyy-MM-dd HH:mm:ss")
-                }.Select(val => val ?? string.Empty)
-            );
-
-            _tracer.Trace("Plaintext hash: {0}", plaintextHash);
-
-            snap.PlaintextHash = plaintextHash;
-
-            return GetBKDRHashKey.Calculate(plaintextHash);
         }
     }
 }

@@ -24,28 +24,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             Enums.Status status = Enums.Status.Active;
             Enums.StatusReason statusReason = Enums.StatusReason.Active;
 
-            _tracer.Trace("In SynStaffMemberFactory.Build, TARGET is: {0}",
-                JsonSerializer.Serialize<Entity>(
-                    target,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                )
-            );
+            _tracer.Trace("In SynStaffMemberFactory.Build, TARGET id: {0}", target.Id);
 
             if (preImage != null)
             {
                 _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
-                _tracer.Trace("In SynStaffMemberFactory.Build, PREIMAGE is: {0}",
-                JsonSerializer.Serialize<Entity>(
-                    preImage,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                )
-            );
             }
 
             var snap = new StaffMemberSnapshot()
