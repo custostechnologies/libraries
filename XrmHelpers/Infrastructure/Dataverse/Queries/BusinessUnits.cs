@@ -11,7 +11,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly string ENTITY_LOGICAL_NAME = "businessunits";
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        public CoreDepartments(IOrganizationService service, ITracingService tracer)
+        public Businessunits(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
             _tracer = tracer;
@@ -20,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                var safe = SafeString(code);
+                var safe = SafeString.Normalise(code);
                 var norm = safe.ToUpper();
                 // convert back to upper case to match BU Code column format
 
