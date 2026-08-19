@@ -51,9 +51,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             if (upn != null && string.IsNullOrWhiteSpace(username)) query.Criteria.AddCondition(upnCondition);
             if (upn != null && username != null)
             {
-                query.Criteria.AddFilter(new FilterExpression(LogicalOperator.Or));
-                query.Criteria.AddCondition(usernameCondition);
-                query.Criteria.AddCondition(upnCondition);
+                var filter = new FilterExpression(LogicalOperator.Or);
+                filter.AddCondition(usernameCondition);
+                filter.AddCondition(upnCondition);
+                query.Criteria.AddFilter(filter);
             }
 
             _tracer.Trace("Executing RetrieveReference query expression on systemuser");

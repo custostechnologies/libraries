@@ -88,13 +88,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _tracer.Trace("Syn Staff Snapshot has no OccupEmail and/or NetworkLogin");
                 throw new InvalidPluginExecutionException("Unable to resolve Syn Staff Member");
             }
+
+            _tracer.Trace("calling _systemuserQuery.GetReferenceByMetadata with syn.OccupEmail: {0} and syn.NetworkLogin: {1}", syn.OccupEmail, syn.NetworkLogin);
             EntityReference systemUserRef = _systemuserQuery.GetReferenceByMetadata(syn.OccupEmail!, syn.NetworkLogin!);
 
             /* ATTEMPT TO FORCE SYN USER ACCOUNT */
             // only if ActiveFlag is true, call HTTP triggered Power Automate flow
+            _tracer.Trace("Determining whether to run force sync flow with conditions systemuserref == null: {0} and syn.ActiveFlag: {1}", systemUserRef == null, syn.ActiveFlag);
             if (systemUserRef == null && syn.ActiveFlag)
             {
-                _tracer.Trace("systemUserRef.Id is null or empty");
+                _tracer.Trace("systemUserRef is null and syn.ActiveFlag is true, running force sync user branch");
                 // retrieve azure id (not via systemuser)
 
                 if (syn.OccupEmail == null)
@@ -103,8 +106,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
                 }
 
+                _tracer.Trace("Create HttpRequest");
+
                 _httpRequest = new CreateHttpRequest(_tracer);
 
+                _tracer.Trace("Calling flow and retrieving response");
                 var response = _httpRequest.TriggerAnonFlow(
                     SYNC_FLOW_ENDPOINT,
                     syn.OccupEmail,
@@ -113,12 +119,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 if (response.status != HttpStatusCode.OK)
                 {
+                    _tracer.Trace("Flow response status != OK, returning empty staff member.");
                     return (_emptyStaffMember, $"{response.status} {response.body}");
                 }
 
                 _tracer.Trace("Flow response: {0}", response);
 
-                FlowResponseBody flowResponseBody = JsonSerializer.Deserialize<FlowResponseBody>(
+                var flowResponse = JsonSerializer.Deserialize<FlowResponse>(
                     response.body,
                     new JsonSerializerOptions
                     {
@@ -126,7 +133,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     }
                 )!;
 
-                var azureId = flowResponseBody?.AzureObjectId;
+                var azureId = flowResponse?.Body?.AzureObjectId;
 
                 _tracer.Trace("httpRequest flowResponse?.Body?.AzureObjectId: {0}", azureId);
 
@@ -143,12 +150,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     _tracer.Trace("Unable to force syn user via power automate flow");
                     _resolutionFailed = true;
                     systemUserRef = null;
-                    if (flowResponseBody?.ErrorMessage != null)
+                    if (flowResponse?.Body?.ErrorMessage != null)
                     {
-                        return (_emptyStaffMember, flowResponseBody?.ErrorMessage);
-                    } else
-                    {
-                        return (_emptyStaffMember, "Unable to force sync user via Power Automate flow.");
+                        _tracer.Trace(
+                            "RETURNING EMPTY STAFF MEMBER. Error: {0}",
+                            flowResponse?.Body?.ErrorMessage
+                        );
+                        return (_emptyStaffMember, flowResponse?.Body?.ErrorMessage);
                     }
                 }
             }
@@ -164,6 +172,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (core.Id != Guid.Empty)
             {
+                _tracer.Trace("core.Id ({0}) not empty, entered updateCore and setting IsCreate to false", core.Id);
                 // create new DTO with only dirty attributes
                 updateCore = new CoreStaffMember()
                 {
@@ -257,6 +266,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             else
             {
+                _tracer.Trace("core.Id is empty, entered createCore and setting IsCreate to true");
                 // create new DTO with all relevant fields
                 createCore = new CoreStaffMember
                 {
