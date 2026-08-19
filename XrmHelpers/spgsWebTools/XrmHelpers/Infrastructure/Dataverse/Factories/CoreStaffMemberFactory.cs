@@ -89,10 +89,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             /* ATTEMPT TO FORCE SYN USER ACCOUNT */
             // only if ActiveFlag is true, call HTTP triggered Power Automate flow
-            if (
-                (systemUserRef == null || systemUserRef.Id == Guid.Empty)
-                && syn.ActiveFlag
-            )
+            if (systemUserRef == null&& syn.ActiveFlag)
             {
                 _tracer.Trace("systemUserRef.Id is null or empty");
                 // retrieve azure id (not via systemuser)
@@ -137,7 +134,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 {
                     _tracer.Trace("Unable to force syn user via power automate flow");
                     _resolutionFailed = true;
-                    systemUserRef = new EntityReference("systemuser");
+                    systemUserRef = null;
                     if (flowResponseBody?.ErrorMessage != null)
                     {
                         return (_emptyStaffMember, flowResponseBody?.ErrorMessage);
@@ -170,7 +167,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 // identity
                 if (attributes.Contains("pgrowth_staffid")) MapStaffId(syn, updateCore);
                 // Retrieve User
-                if (GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core, null) == null && !_resolutionFailed)
+                if (
+                    GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core, null) == null 
+                    && !_resolutionFailed
+                    && systemUserRef != null
+                    && systemUserRef.Id != Guid.Empty
+                )
                 {
                     updateCore.User = systemUserRef;
                 }

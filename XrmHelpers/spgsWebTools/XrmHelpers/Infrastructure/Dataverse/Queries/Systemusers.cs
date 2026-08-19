@@ -73,9 +73,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _tracer.Trace("No existing entities were found, returning empty EntityReference");
-                return new EntityReference(
-                    "systemuser"
-                );
+                return null;
             }
         }
         public EntityReference GetReferenceByAzureId(string azureId)
@@ -132,9 +130,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _tracer.Trace("No existing entities were found, returning empty EntityReference");
-                return new EntityReference(
-                    "systemuser"
-                );
+                return null;
             }
         }
         public Entity GetMetadataById(Guid systemuserid)
@@ -186,7 +182,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _tracer.Trace("No existing entities were found");
-                return new Entity("systemuser");
+                return null;
             }
         }
         public UpsertResponse Upsert(string objectId, string upn)
