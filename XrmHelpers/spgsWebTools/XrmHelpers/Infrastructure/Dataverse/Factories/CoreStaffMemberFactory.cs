@@ -17,21 +17,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     internal class FlowRequestBody
     {
-        public string? UserPrincipalName { get; set; }
+        public string? upn { get; set; }
+        public string? correlationId { get; set; }
     }
     internal class FlowResponse
     {
         [JsonPropertyName("statusCode")]
-        public string? StatusCode { get; set; }
+        public string? statusCode { get; set; }
         [JsonPropertyName("body")]
-        public FlowResponseBody? Body { get; set; }
+        public FlowResponseBody? body { get; set; }
     }
     internal class FlowResponseBody
     {
         [JsonPropertyName("errorMessage")]
-        public string? ErrorMessage { get; set; }
+        public string? errorMessage { get; set; }
         [JsonPropertyName("azureObjectId")]
-        public string? AzureObjectId { get; set; }
+        public string? azureObjectId { get; set; }
     }
     public class CoreStaffMemberFactory
     {
@@ -43,7 +44,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private Systemusers? _systemuserQuery;
         private CreateHttpRequest? _httpRequest;
         private Entity? _systemUser;
-        private string? _errorMessage;
+        private Boolean _create = false;
         private CoreStaffMember _emptyStaffMember = new CoreStaffMember();
         // TEMPORARILY HARDCODED FOR DEV
         private string SYNC_FLOW_ENDPOINT = "https://1d7c41c84b08e1f3a61511f0059c0d.c0.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/12/workflows/2540c1018d9e41c3bd0ffb71bc75cc52/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC-BXGYlU_hqbETq8YqfDEqk83lvKV4aV1d8Fnq9Ra4";
@@ -67,7 +68,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             );
 
             _coreStaffQuery = new CoreStaffMembers(_service, _tracer);
-
             _systemuserQuery = new Systemusers(_service, _tracer);
 
             Entity core;
@@ -75,26 +75,36 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (string.IsNullOrWhiteSpace(syn.SourceOfTruthId))
             {
                 _tracer.Trace("Syn Staff Snapshot has no SourceofTruthId. Calling _coreStaffQuery.GetEntityByStaffId");
+
                 core = _coreStaffQuery.GetEntityByStaffId(syn.StaffId);
             }
             else
             {
                 _tracer.Trace("Syn Staff Snapshot HAS SourceofTruthId. Calling _coreStaffQuery.GetEntityByTruth");
+
                 core = _coreStaffQuery.GetEntityByTruth(syn.SourceOfTruthId!);
             }
 
+            _create = core == null;
+
+            /**/
+            _tracer.Trace("Core Staff Member queries complete. _create set to {0}. Querying systemusers.", _create);
+
             if (syn.OccupEmail == null && syn.NetworkLogin == null)
             {
-                _tracer.Trace("Syn Staff Snapshot has no OccupEmail and/or NetworkLogin");
+                _tracer.Trace("Syn Staff Snapshot has no OccupEmail and/or NetworkLogin. Exiting early.");
+
                 throw new InvalidPluginExecutionException("Unable to resolve Syn Staff Member");
             }
 
             _tracer.Trace("calling _systemuserQuery.GetReferenceByMetadata with syn.OccupEmail: {0} and syn.NetworkLogin: {1}", syn.OccupEmail, syn.NetworkLogin);
+
             EntityReference systemUserRef = _systemuserQuery.GetReferenceByMetadata(syn.OccupEmail!, syn.NetworkLogin!);
 
             /* ATTEMPT TO FORCE SYN USER ACCOUNT */
             // only if ActiveFlag is true, call HTTP triggered Power Automate flow
             _tracer.Trace("Determining whether to run force sync flow with conditions systemuserref == null: {0} and syn.ActiveFlag: {1}", systemUserRef == null, syn.ActiveFlag);
+
             if (systemUserRef == null && syn.ActiveFlag)
             {
                 _tracer.Trace("systemUserRef is null and syn.ActiveFlag is true, running force sync user branch");
@@ -119,13 +129,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 if (response.status != HttpStatusCode.OK)
                 {
-                    _tracer.Trace("Flow response status != OK, returning empty staff member.");
-                    return (_emptyStaffMember, $"{response.status} {response.body}");
+                    _tracer.Trace("Flow response status != OK, unable to resolve systemuser.");
                 }
 
-                _tracer.Trace("Flow response: {0}", response);
+                _tracer.Trace("Flow response in CoreStaffMemberFactory before deserialisation: {0}", response);
 
-                var flowResponse = JsonSerializer.Deserialize<FlowResponse>(
+                var flowResponseBody = JsonSerializer.Deserialize<FlowResponseBody>(
                     response.body,
                     new JsonSerializerOptions
                     {
@@ -133,46 +142,37 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     }
                 )!;
 
-                var azureId = flowResponse?.Body?.AzureObjectId;
+                var azureId = flowResponseBody?.azureObjectId;
 
-                _tracer.Trace("httpRequest flowResponse?.Body?.AzureObjectId: {0}", azureId);
+                _tracer.Trace("httpRequest flowResponseBody?.AzureObjectId: {0}", azureId);
 
                 if (!string.IsNullOrWhiteSpace(azureId))
                 {
+                    _tracer.Trace("azureId returned from flow is not null. Retrieving EntityReference via _systemUserQuery.GetReferenceByAzureId");
+
                     systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureId!);
 
-                    _tracer.Trace("Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
+                    if (systemUserRef != null)
+                    {
+                        _tracer.Trace("systemUserRef is not null. Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
 
-                    _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
+                        _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
+                    }
                 }
                 else
                 {
-                    _tracer.Trace("Unable to force syn user via power automate flow");
-                    _resolutionFailed = true;
-                    systemUserRef = null;
-                    if (flowResponse?.Body?.ErrorMessage != null)
-                    {
-                        _tracer.Trace(
-                            "RETURNING EMPTY STAFF MEMBER. Error: {0}",
-                            flowResponse?.Body?.ErrorMessage
-                        );
-                        return (_emptyStaffMember, flowResponse?.Body?.ErrorMessage);
-                    }
-                }
-            }
+                    _tracer.Trace("Unable to force syn user via power automate flow (azureId returned null). Setting _resolutionFailed to true.");
 
-            if (systemUserRef == null || systemUserRef.Id == Guid.Empty)
-            {
-                _tracer.Trace("systemUserRef is null or Id is empty.");
-                _resolutionFailed = true;
+                    _resolutionFailed = true;
+                }
             }
 
             CoreStaffMember updateCore;
             CoreStaffMember createCore;
 
-            if (core.Id != Guid.Empty)
+            if (_create == false && core != null)
             {
-                _tracer.Trace("core.Id ({0}) not empty, entered updateCore and setting IsCreate to false", core.Id);
+                _tracer.Trace("core not null and _create = true, entered updateCore and setting IsCreate to false", core.Id);
                 // create new DTO with only dirty attributes
                 updateCore = new CoreStaffMember()
                 {
@@ -185,7 +185,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 if (attributes.Contains("pgrowth_staffid")) MapStaffId(syn, updateCore);
                 // Retrieve User
                 if (
-                    GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core, null) == null 
+                    GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core, null) == null
                     && !_resolutionFailed
                     && systemUserRef != null
                     && systemUserRef.Id != Guid.Empty
@@ -266,7 +266,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             else
             {
-                _tracer.Trace("core.Id is empty, entered createCore and setting IsCreate to true");
+                _tracer.Trace("core is null and _create is true, entered createCore and setting IsCreate to true");
                 // create new DTO with all relevant fields
                 createCore = new CoreStaffMember
                 {
@@ -285,10 +285,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                             null
                         ).ToString();
 
-                        if (string.IsNullOrWhiteSpace(createCore.AzureObjectId))
-                        {
-                            throw new Exception("Retrieved AzureId is null");
-                        }
+                    if (string.IsNullOrWhiteSpace(createCore.AzureObjectId))
+                    {
+                        throw new Exception("Retrieved AzureId is null");
+                    }
 
                     createCore.User = systemUserRef;
                 }
