@@ -62,7 +62,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _tracer.Trace("No existing entities were found");
-                    return new Entity(ENTITY_LOGICAL_NAME);
+                    return null;
                 }
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _tracer.Trace("No existing entities were found");
-                    return new Entity(ENTITY_LOGICAL_NAME);
+                    return null;
                 }
             }
             catch (Exception ex)

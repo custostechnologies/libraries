@@ -162,7 +162,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             Entity coreStaffMember = _coreStaffMemberQuery!.GetEntityByStaffId(snap.StaffId);
 
-            EntityReference coreRef = new EntityReference(
+            EntityReference coreRef = coreStaffMember == null
+                ? null
+                : new EntityReference(
                 "pgrowth_corestaffmember",
                 coreStaffMember.Id
             );
