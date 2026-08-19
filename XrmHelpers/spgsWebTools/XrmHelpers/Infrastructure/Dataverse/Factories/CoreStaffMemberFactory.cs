@@ -166,6 +166,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     _resolutionFailed = true;
                 }
             }
+            else if (systemUserRef != null)
+            {
+                _tracer.Trace("ELSE IF BRANCH UNDER CALL POWER AUTOMATE FLOW BLOCK, systemUserRef is not null. Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
+
+                _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
+            }
 
             CoreStaffMember updateCore;
             CoreStaffMember createCore;
