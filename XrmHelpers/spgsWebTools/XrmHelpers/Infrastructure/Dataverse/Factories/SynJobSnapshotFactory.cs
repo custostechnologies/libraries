@@ -134,7 +134,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             );
             if (snap.EndDate.HasValue) _tracer.Trace("SNAP EndDate.Value: {0}", snap.EndDate.Value);
             if (
-                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 1
+                (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow) || snap.IsActive == 0
             )
             {
                 _tracer.Trace("Setting status to Inactive");
