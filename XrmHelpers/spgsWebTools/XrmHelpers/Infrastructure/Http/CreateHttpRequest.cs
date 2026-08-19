@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Xrm.Sdk;
 using System.Text.Json;
+using System.Net;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Http
 {
@@ -19,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
         {
             _tracer = tracer;
         }
-        public string TriggerAnonFlow(
+        public (HttpStatusCode status, string body) TriggerAnonFlow(
             string endpoint,
             string upn,
             string correlationId
@@ -50,7 +51,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
                         $"Flow call failed. Status: {response.StatusCode}. Response: {error}");
                 }
 
-                return responseBody;
+                return (response.StatusCode, responseBody);
             }
         }
         /*

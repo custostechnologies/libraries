@@ -10,6 +10,8 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Infrastructure.Http;
+using System.Runtime.InteropServices;
+using System.Net;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -103,16 +105,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _httpRequest = new CreateHttpRequest(_tracer);
 
-                string response = _httpRequest.TriggerAnonFlow(
+                var response = _httpRequest.TriggerAnonFlow(
                     SYNC_FLOW_ENDPOINT,
                     syn.OccupEmail,
                     _correlationId
                 );
 
+                if (response.status != HttpStatusCode.OK)
+                {
+                    return (_emptyStaffMember, $"{response.status} {response.body}");
+                }
+
                 _tracer.Trace("Flow response: {0}", response);
 
                 FlowResponseBody flowResponseBody = JsonSerializer.Deserialize<FlowResponseBody>(
-                    response,
+                    response.body,
                     new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true
