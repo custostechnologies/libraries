@@ -175,6 +175,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     updateCore.User = systemUserRef;
                 }
 
+                if (attributes.Contains("pgrowth_sourceoftruthid")) MapSourceOfTruthId(syn, updateCore);
+
                 // Retrieve AzureObjectId
                 if (GetAttributeDelta.Execute<string>(CoreStaffMemberFields.AzureObjectId, core, null) == null && !_resolutionFailed && _systemUser != null)
                 {
@@ -254,7 +256,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 // identity
                 MapStaffId(syn, createCore);
-                if (!_resolutionFailed && _systemUser != null)
+                if (_resolutionFailed == false && _systemUser != null)
                 {
                     createCore.AzureObjectId =
                         GetAttributeDelta.Execute<Guid>(
@@ -263,9 +265,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                             null
                         ).ToString();
 
+                        if (string.IsNullOrWhiteSpace(createCore.AzureObjectId))
+                        {
+                            throw new Exception("Retrieved AzureId is null");
+                        }
+
                     createCore.User = systemUserRef;
                 }
                 createCore.User = systemUserRef;
+                MapSourceOfTruthId(syn, createCore);
 
                 // status
                 MapIsActive(syn, createCore);
@@ -341,6 +349,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             target.StartDate = syn.StartDate;
             target.EndDate = syn.LeavingDate;
+        }
+        private void MapSourceOfTruthId(StaffMemberSnapshot syn, CoreStaffMember target)
+        {
+            target.SourceOfTruthId = syn.SourceOfTruthId;
         }
         private void MapNetworkLogin(StaffMemberSnapshot syn, CoreStaffMember target)
         {
