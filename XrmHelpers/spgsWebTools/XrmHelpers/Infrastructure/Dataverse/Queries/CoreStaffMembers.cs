@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building ExecuteAlternate query expression on {0}", ENTITY_LOGICAL_NAME);
+                _tracer.Trace("Building ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -40,11 +40,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing ExecuteAlternate query expression on {0}", ENTITY_LOGICAL_NAME);
+                _tracer.Trace("Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing ExecuteAlternate query expression");
+                _tracer.Trace("Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {0}", results.Entities.Count);
 
                 if (results.Entities.Count > 0)
                 {
@@ -61,7 +61,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _tracer.Trace("No existing CoreStaffMembers were found");
                     return null;
                 }
             }
@@ -121,7 +121,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _tracer.Trace("No existing CoreStaffMembers were found");
                     return null;
                 }
             }

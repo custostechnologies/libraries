@@ -22,15 +22,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             Entity coreAssignment;
 
             _tracer.Trace("Entered CoreJobAssignmentFactory.Build");
-            _tracer.Trace("attributes string[]: {0}",
-                JsonSerializer.Serialize(
-                    attributes,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                )
-            );
             _tracer.Trace("Initialising query obejcts");
 
             _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
@@ -95,16 +86,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 if (attributes.Contains(SynJobPositionFields.ReportsTo))
                     MapSynReportsTo(snap, updateCore);
-
-                var json = JsonSerializer.Serialize(
-                    updateCore,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                );
-
-                _tracer.Trace("updateCore CoreJobAssignment Entity: {0}", json);
 
                 return updateCore;
             }

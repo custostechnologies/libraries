@@ -70,14 +70,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             Entity core;
 
-            if (syn.SourceOfTruthId == null)
+            if (string.IsNullOrWhiteSpace(syn.SourceOfTruthId))
             {
-                _tracer.Trace("Syn Staff Snapshot has no Source of Truth Id");
+                _tracer.Trace("Syn Staff Snapshot has no SourceofTruthId. Calling _coreStaffQuery.GetEntityByStaffId");
                 core = _coreStaffQuery.GetEntityByStaffId(syn.StaffId);
             }
             else
             {
-                core = _coreStaffQuery.GetEntityByTruth(syn.SourceOfTruthId);
+                _tracer.Trace("Syn Staff Snapshot HAS SourceofTruthId. Calling _coreStaffQuery.GetEntityByTruth");
+                core = _coreStaffQuery.GetEntityByTruth(syn.SourceOfTruthId!);
             }
 
             if (syn.OccupEmail == null && syn.NetworkLogin == null)
@@ -89,7 +90,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             /* ATTEMPT TO FORCE SYN USER ACCOUNT */
             // only if ActiveFlag is true, call HTTP triggered Power Automate flow
-            if (systemUserRef == null&& syn.ActiveFlag)
+            if (systemUserRef == null && syn.ActiveFlag)
             {
                 _tracer.Trace("systemUserRef.Id is null or empty");
                 // retrieve azure id (not via systemuser)
