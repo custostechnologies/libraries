@@ -1,17 +1,11 @@
-using System;
-using System.Text;
-using System.Net.Http;
+using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.Infrastructure.Auth;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Infrastructure.Http;
-using System.Runtime.InteropServices;
-using System.Net;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -173,225 +167,170 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
             }
 
-            CoreStaffMember updateCore;
-            CoreStaffMember createCore;
-
-            if (_create == false && core != null)
-            {
-                _tracer.Trace("core not null and _create = true, entered updateCore and setting IsCreate to false", core.Id);
+            CoreStaffMember coreStaffMember;
+                if (core != null) _tracer.Trace("core not null and _create = true, entered coreStaffMember and setting IsCreate to false", core.Id);
                 // create new DTO with only dirty attributes
-                updateCore = new CoreStaffMember()
-                {
-                    IsCreate = false,
-                    CoreStaffMemberId = core.Id
-                };
+                coreStaffMember = core != null 
+                    ? new CoreStaffMember()
+                        {
+                            IsCreate = _create,
+                            CoreStaffMemberId = core.Id
+                        }
+                    : new CoreStaffMember()
+                    {
+                        IsCreate = _create
+                    };
 
                 /* update dirty attributes */
                 // identity
-                if (attributes.Contains("pgrowth_staffid")) MapStaffId(syn, updateCore);
+                MapStaffId(syn, coreStaffMember);
                 // Retrieve User
-                if (
-                    GetAttributeDelta.Execute<EntityReference>("pgrowth_user", core, null) == null
-                    && !_resolutionFailed
-                    && systemUserRef != null
-                    && systemUserRef.Id != Guid.Empty
-                )
+                if (systemUserRef != null && systemUserRef.Id != Guid.Empty && _systemUser != null) 
                 {
-                    updateCore.User = systemUserRef;
-                }
-
-                if (attributes.Contains("pgrowth_sourceoftruthid")) MapSourceOfTruthId(syn, updateCore);
-
-                // Retrieve AzureObjectId
-                if (GetAttributeDelta.Execute<string>(CoreStaffMemberFields.AzureObjectId, core, null) == null && !_resolutionFailed && _systemUser != null)
-                {
-                    updateCore.AzureObjectId = GetAttributeDelta.Execute<Guid>("azureactivedirectoryobjectid", _systemUser, null).ToString();
-                }
-
-                // status
-                if (attributes.Contains(SynStaffMemberFields.ActiveFlag))
-                    MapIsActive(syn, updateCore);
-
-                if (
-                    (attributes.Contains(SynStaffMemberFields.Status) && syn.Status != null)
-                    || (attributes.Contains(SynStaffMemberFields.StatusReason) && syn.StatusReason != null))
-                    MapStatus(syn, updateCore);
-
-                // job metadata
-                if (attributes.Contains(SynStaffMemberFields.StaffCampus))
-                    MapCampus(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.StaffDepartment))
-                    MapDepartment(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.StaffCategory))
-                    MapCategory(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.StartDate) ||
-                    attributes.Contains(SynStaffMemberFields.LeavingDate))
-                    MapEmploymentDates(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.NetworkLogin))
-                    MapNetworkLogin(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.OccupEmail) ||
-                    attributes.Contains(SynStaffMemberFields.Email))
-                    MapEmails(syn, updateCore);
-
-                // personal details
-                // construct display name
-                if (attributes.Contains(SynStaffMemberFields.NameInternal) ||
-                    attributes.Contains(SynStaffMemberFields.Given1) ||
-                    attributes.Contains(SynStaffMemberFields.Given2) ||
-                    attributes.Contains(SynStaffMemberFields.Surname) ||
-                    attributes.Contains(SynStaffMemberFields.StaffPreferredName))
-                {
-                    _tracer.Trace("in updateCore MapName");
-                    MapName(syn, updateCore);
-                }
-
-                if (attributes.Contains(SynStaffMemberFields.Gender))
-                    MapGender(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.SurnamePrevious))
-                    MapPreviousSurname(syn, updateCore);
-
-                if (attributes.Contains(SynStaffMemberFields.MaidenName))
-                    MapMaidenName(syn, updateCore);
-
-                /// group membership
-                updateCore.InUserGroup = !_resolutionFailed;
-
-                // flags
-                MapFlags(syn, updateCore, _resolutionFailed);
-
-                // sync data
-                MapLastSync(updateCore);
-
-                return (updateCore, null);
-            }
-            else
-            {
-                _tracer.Trace("core is null and _create is true, entered createCore and setting IsCreate to true");
-                // create new DTO with all relevant fields
-                createCore = new CoreStaffMember
-                {
-                    SourceOfTruthId = syn.SourceOfTruthId,
-                    IsCreate = true
-                };
-
-                // identity
-                MapStaffId(syn, createCore);
-                if (_resolutionFailed == false && _systemUser != null)
-                {
-                    createCore.AzureObjectId =
-                        GetAttributeDelta.Execute<Guid>(
+                    coreStaffMember.User = systemUserRef;
+                    coreStaffMember.AzureObjectId = GetAttributeDelta.Execute<Guid>(
                             "azureactivedirectoryobjectid",
                             _systemUser,
                             null
                         ).ToString();
 
-                    if (string.IsNullOrWhiteSpace(createCore.AzureObjectId))
+                    if (string.IsNullOrWhiteSpace(coreStaffMember.AzureObjectId))
                     {
                         throw new Exception("Retrieved AzureId is null");
                     }
-
-                    createCore.User = systemUserRef;
                 }
-                createCore.User = systemUserRef;
-                MapSourceOfTruthId(syn, createCore);
+
+                MapSourceOfTruthId(syn, coreStaffMember);
 
                 // status
-                MapIsActive(syn, createCore);
-                MapStatus(syn, createCore);
-
-                // job metadata
-                MapCampus(syn, createCore);
-                MapDepartment(syn, createCore);
-                MapCategory(syn, createCore);
-                MapEmploymentDates(syn, createCore);
-                MapNetworkLogin(syn, createCore);
-                MapEmails(syn, createCore);
+                MapIsActive(syn, coreStaffMember, attributes);
+                MapStatus(syn, coreStaffMember);
 
                 // personal details
-                MapName(syn, createCore);
-                MapGender(syn, createCore);
-                MapPreviousSurname(syn, createCore);
-                MapMaidenName(syn, createCore);
+                MapName(syn, coreStaffMember, attributes);
+                MapGender(syn, coreStaffMember, attributes);
+                MapMaidenName(syn, coreStaffMember, attributes);
+                MapPreviousSurname(syn, coreStaffMember, attributes);
 
-                // group membership
-                createCore.InUserGroup = !_resolutionFailed;
+                // job metadata
+                MapCampus(syn, coreStaffMember, attributes);
+                MapDepartment(syn, coreStaffMember, attributes);
+                MapCategory(syn, coreStaffMember, attributes);
+                MapEmploymentDates(syn, coreStaffMember, attributes);
+                MapNetworkLogin(syn, coreStaffMember, attributes);
+                MapEmails(syn, coreStaffMember, attributes);
 
                 // flags
-                MapFlags(syn, createCore, _resolutionFailed);
+                MapFlags(syn, coreStaffMember, _resolutionFailed, attributes);
+                coreStaffMember.InUserGroup = !_resolutionFailed;
 
-                // sync
-                MapLastSync(createCore);
+                // sync data
+                MapLastSync(coreStaffMember);
 
-                var json = JsonSerializer.Serialize(
-                    createCore,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                );
-
-                _tracer.Trace("createCore Entity: {0}", json);
-
-                return (createCore, null);
-            }
+                return (coreStaffMember, null);
         }
-        private void MapCampus(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapCampus(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
             _tracer.Trace("In MapCampus");
-            _tracer.Trace("syn.CampusKey: {0}", syn.CampusKey);
-            var campusKey = int.TryParse(syn.CampusKey, out int key) ? key : 384810005; // represets Resolution Error option
-            _tracer.Trace("campusKey parsed to: {0}", key);
-            target.Campus = new OptionSetValue(campusKey);
+            if (_create || attributes.Contains(SynStaffMemberFields.StaffCampus))
+            {
+                _tracer.Trace("syn.CampusKey: {0}", syn.CampusKey);
+                var campusKey = int.TryParse(syn.CampusKey, out int key) ? key : 384810005; // represets Resolution Error option
+                _tracer.Trace("campusKey parsed to: {0}", key);
+                target.Campus = new OptionSetValue(campusKey);
+            }
         }
-        private void MapGender(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapGender(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
             _tracer.Trace("In MapGender");
-            _tracer.Trace("syn.GenderKey: {0}", syn.GenderKey);
-            var genderKey = int.TryParse(syn.GenderKey, out int key) ? key : 384810005; // represets Resolution Error option
-            _tracer.Trace("genderKey parsed to: {0}", key);
-            target.Gender = new OptionSetValue(genderKey);
+            if (_create || attributes.Contains(SynStaffMemberFields.Gender))
+            {
+                _tracer.Trace("syn.GenderKey: {0}", syn.GenderKey);
+                var genderKey = int.TryParse(syn.GenderKey, out int key) ? key : 384810005; // represets Resolution Error option
+                _tracer.Trace("genderKey parsed to: {0}", key);
+                target.Gender = new OptionSetValue(genderKey);   
+            }
         }
-        private void MapName(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapName(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.GivenName1 = syn.Given1;
-            target.GivenName2 = syn.Given2;
-            target.LastName = syn.Surname;
-            target.PreferredName = syn.StaffPreferredName;
-            target.DisplayName = $"{syn.StaffPreferredName} {syn.Surname}";
-            target.FullName = $"{syn.Given1} {syn.Surname}";
+            _tracer.Trace("In MapName");
+            bool contains = attributes.Contains(SynStaffMemberFields.NameInternal) 
+                || attributes.Contains(SynStaffMemberFields.Given1) 
+                || attributes.Contains(SynStaffMemberFields.Given2) 
+                || attributes.Contains(SynStaffMemberFields.Surname) 
+                || attributes.Contains(SynStaffMemberFields.StaffPreferredName);
+            
+            if (_create || contains)
+            {
+                target.GivenName1 = syn.Given1;
+                target.GivenName2 = syn.Given2;
+                target.LastName = syn.Surname;
+                target.PreferredName = syn.StaffPreferredName;
+                target.DisplayName = $"{syn.StaffPreferredName} {syn.Surname}";
+                target.FullName = $"{syn.Given1} {syn.Surname}";    
+                _tracer.Trace("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}, DisplayName: {4}, FullName: {5}",
+                    target.GivenName1,
+                    target.GivenName2,
+                    target.LastName,
+                    target.PreferredName,
+                    target.DisplayName,
+                    target.FullName
+                );
+            }
+            
         }
         private void MapStatus(StaffMemberSnapshot syn, CoreStaffMember target)
         {
             target.Status = syn.Status;
             target.StatusReason = syn.StatusReason;
         }
-        private void MapEmploymentDates(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapEmploymentDates(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.StartDate = syn.StartDate;
-            target.EndDate = syn.LeavingDate;
+            _tracer.Trace("In MapEmploymentDates");
+            if (_create || (attributes.Contains(SynStaffMemberFields.StartDate) && syn.StartDate.HasValue)) {
+                target.StartDate = syn.StartDate;
+                _tracer.Trace("Set target.StartDate to: {0}", target.StartDate!.Value);
+            };
+            if (_create || attributes.Contains(SynStaffMemberFields.LeavingDate) && syn.LeavingDate.HasValue){
+                target.EndDate = syn.LeavingDate;
+                _tracer.Trace("Set target.EndDate to: {0}", target.EndDate!.Value);
+            };
         }
         private void MapSourceOfTruthId(StaffMemberSnapshot syn, CoreStaffMember target)
         {
             target.SourceOfTruthId = syn.SourceOfTruthId;
         }
-        private void MapNetworkLogin(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapNetworkLogin(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.NetworkLogin = syn.NetworkLogin;
+            _tracer.Trace("In MapNetworkLogin.");
+            if (_create || attributes.Contains(SynStaffMemberFields.NetworkLogin))
+            {
+                target.NetworkLogin = syn.NetworkLogin;
+                _tracer.Trace("Set target.NetworkLogin to: {0}", target.NetworkLogin);   
+            }
         }
-        private void MapEmails(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapEmails(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.WorkEmail = syn.OccupEmail;
-            target.PersonalEmail = syn.Email;
+            _tracer.Trace("In MapEmails.");
+            if (_create || attributes.Contains(SynStaffMemberFields.OccupEmail))
+            {
+                target.WorkEmail = syn.OccupEmail;
+                _tracer.Trace("Set target.WorkEmail to: {0}", target.WorkEmail);   
+            }
+            if (_create || attributes.Contains(SynStaffMemberFields.Email))
+            {
+                target.PersonalEmail = syn.Email;
+                _tracer.Trace("Set target.PersonalEmail to: {0}", target.PersonalEmail);   
+            }
         }
-        private void MapIsActive(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapIsActive(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.IsActive = syn.ActiveFlag;
+            _tracer.Trace("In MapIsActive.");
+            if (_create || attributes.Contains(SynStaffMemberFields.ActiveFlag))
+            {
+                target.IsActive = syn.ActiveFlag;
+                _tracer.Trace("Set target.IsActive to: {0}", target.IsActive);   
+            }
         }
         private void MapLastSync(CoreStaffMember target)
         {
@@ -401,95 +340,118 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             target.StaffId = syn.StaffId;
         }
-        private void MapPreviousSurname(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapPreviousSurname(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.PreviousLastName = syn.SurnamePrevious;
+            _tracer.Trace("In MapPreviousSurname.");
+            if (_create || attributes.Contains(SynStaffMemberFields.SurnamePrevious))
+            {
+                target.PreviousLastName = syn.SurnamePrevious;
+                _tracer.Trace("Set target.PreviousLastName to: {0}", target.PreviousLastName);   
+            }
         }
-        private void MapMaidenName(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapMaidenName(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            target.MaidenName = syn.MaidenName;
+            _tracer.Trace("In MapMaidenName.");
+            if (_create || attributes.Contains(SynStaffMemberFields.MaidenName))
+            {
+                target.MaidenName = syn.MaidenName;
+                _tracer.Trace("Set target.MaidenName to: {0}", target.MaidenName);   
+            }
         }
-        private void MapFlags(StaffMemberSnapshot syn, CoreStaffMember target, bool resolutionFlag)
+        private void MapFlags(StaffMemberSnapshot syn, CoreStaffMember target, bool resolutionFlag, string[] attributes)
         {
-            target.ProfileResolutionFlag = resolutionFlag;
-            target.SPGSEmailAddressFlag = !string.IsNullOrWhiteSpace(syn.OccupEmail)
-             ? syn.OccupEmail!.Contains("@stpauls.nsw.edu.au")
-             : false;
-
-            bool staffEmail = true;
-
-            // if numeric, not staff login
-            var staffNetworkLogin = !int.TryParse(syn.NetworkLogin, out int result);
-
-            // if network login is still numeric id
-            if (!staffNetworkLogin)
+            _tracer.Trace("In MapFlags");
+            bool contains = attributes.Contains(SynStaffMemberFields.OccupEmail)
+                && attributes.Contains(SynStaffMemberFields.Email)
+                && attributes.Contains(SynStaffMemberFields.NetworkLogin);
+            
+            if(_create || contains)
             {
-                // check if email is updated to non-numeric username
-                staffEmail =
-                    !string.IsNullOrWhiteSpace(syn.NetworkLogin)
-                    && !string.IsNullOrWhiteSpace(syn.OccupEmail)
-                        ? !syn.OccupEmail!.Contains(syn.NetworkLogin)
-                        : false;
+                target.ProfileResolutionFlag = resolutionFlag;
+                target.SPGSEmailAddressFlag = !string.IsNullOrWhiteSpace(syn.OccupEmail)
+                ? syn.OccupEmail!.Contains("@stpauls.nsw.edu.au")
+                : false;
+
+                bool staffEmail = true;
+
+                // if numeric, not staff login
+                var staffNetworkLogin = !int.TryParse(syn.NetworkLogin, out int result);
+
+                // if network login is still numeric id
+                if (!staffNetworkLogin)
+                {
+                    // check if email is updated to non-numeric username
+                    staffEmail =
+                        !string.IsNullOrWhiteSpace(syn.NetworkLogin)
+                        && !string.IsNullOrWhiteSpace(syn.OccupEmail)
+                            ? !syn.OccupEmail!.Contains(syn.NetworkLogin)
+                            : false;
+                }
+                target.StaffEmailAddressFlag = staffEmail;
+                target.InUserGroup = !_resolutionFailed;   
             }
-            target.StaffEmailAddressFlag = staffEmail;
         }
-        private void MapDepartment(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapDepartment(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            _tracer.Trace("Entered MapDepartment");
-
-            var _departmentQuery = new CoreDepartments(_service, _tracer);
-
-            if (syn.StaffDepartment == null)
+            _tracer.Trace("In MapDepartment.");
+            if (_create || attributes.Contains(SynStaffMemberFields.StaffDepartment))
             {
-                _tracer.Trace("Syn Staff Snapshot has no StaffDepartment, unable to resolve core department");
-                throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
-            }
+                var _departmentQuery = new CoreDepartments(_service, _tracer);
 
-            _tracer.Trace("Calling _departmentQuery.GetReferenceByCode");
+                if (syn.StaffDepartment == null)
+                {
+                    _tracer.Trace("Syn Staff Snapshot has no StaffDepartment, unable to resolve core department");
+                    throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
+                }
 
-            var coreDeptRef = _departmentQuery.GetReferenceByCode(syn.StaffDepartment);
+                _tracer.Trace("Calling _departmentQuery.GetReferenceByCode");
 
-            _tracer.Trace("Executed _departmentQuery.GetReferenceByCode");
+                var coreDeptRef = _departmentQuery.GetReferenceByCode(syn.StaffDepartment);
 
-            if (coreDeptRef == null || coreDeptRef.Id == Guid.Empty)
-            {
-                _tracer.Trace("Department not found for code {0}. Using NOTSPEC.", syn.StaffDepartment);
-                coreDeptRef = _departmentQuery.GetReferenceByCode("NOTSPEC");
-            }
+                _tracer.Trace("Executed _departmentQuery.GetReferenceByCode");
 
-            _tracer.Trace("Setting target.CoreDepartment/Idx");
+                if (coreDeptRef == null || coreDeptRef.Id == Guid.Empty)
+                {
+                    _tracer.Trace("Department not found for code {0}. Using NOTSPEC.", syn.StaffDepartment);
+                    coreDeptRef = _departmentQuery.GetReferenceByCode("NOTSPEC");
+                }
 
-            target.CoreDepartment = coreDeptRef;
-            target.CoreDepartmentIdx = coreDeptRef.Id.ToString();
+                _tracer.Trace("Setting target.CoreDepartment/Idx");
+
+                target.CoreDepartment = coreDeptRef;
+                target.CoreDepartmentIdx = coreDeptRef.Id.ToString();   
+            }   
         }
-        private void MapCategory(StaffMemberSnapshot syn, CoreStaffMember target)
+        private void MapCategory(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
-            _tracer.Trace("Entered MapCategory");
-
-            var _categoryQuery = new CoreStaffCategories(_service, _tracer);
-
-            if (syn.StaffCategory == null)
+            _tracer.Trace("In MapCategory.");
+            if (_create || attributes.Contains(SynStaffMemberFields.StaffCategory))
             {
-                _tracer.Trace("Syn Staff Snapshot has no StaffCategory, unable to resolve core category");
-                throw new InvalidPluginExecutionException("Unable to resolve Core Staff Category");
+                var _categoryQuery = new CoreStaffCategories(_service, _tracer);
+
+                if (syn.StaffCategory == null)
+                {
+                    _tracer.Trace("Syn Staff Snapshot has no StaffCategory, unable to resolve core category");
+                    throw new InvalidPluginExecutionException("Unable to resolve Core Staff Category");
+                }
+
+                _tracer.Trace("Executing _categoryQuery.GetReferenceByCode");
+
+                var coreCategoryRef = _categoryQuery.GetReferenceByCode(syn.StaffCategory);
+
+                _tracer.Trace("Completed _categoryQuery.GetReferenceByCode");
+
+                if (coreCategoryRef == null || coreCategoryRef.Id == Guid.Empty)
+                {
+                    _tracer.Trace("Category not found for code {0}. Using NOTSEL.", syn.StaffCategory);
+                    coreCategoryRef = _categoryQuery.GetReferenceByCode("NOTSEL");
+                }
+
+                _tracer.Trace("Setting target.Category/Idx");
+
+                target.CoreStaffCategory = coreCategoryRef;
+                target.CoreStaffCategoryIdx = coreCategoryRef.Id.ToString();
             }
-
-            _tracer.Trace("Executing _categoryQuery.GetReferenceByCode");
-
-            var coreCategoryRef = _categoryQuery.GetReferenceByCode(syn.StaffCategory);
-
-            _tracer.Trace("Completed _categoryQuery.GetReferenceByCode");
-
-            if (coreCategoryRef == null || coreCategoryRef.Id == Guid.Empty)
-            {
-                _tracer.Trace("Category not found for code {0}. Using NOTSEL.", syn.StaffCategory);
-                coreCategoryRef = _categoryQuery.GetReferenceByCode("NOTSEL");
-            }
-
-            _tracer.Trace("Setting target.Category/Idx");
-
-            target.CoreStaffCategory = coreCategoryRef;
-            target.CoreStaffCategoryIdx = coreCategoryRef.Id.ToString();
         }
     }
 }

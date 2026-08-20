@@ -79,20 +79,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 snap.EncodedHash = GetAttributeDelta.Execute<int>(SynStaffMemberFields.EncodedHash, preImage, null);
             }
             // update status based on values
-            if (
-                ((snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow)
-                || (!snap.ActiveFlag))
-                && (snap.Status == new OptionSetValue((int)status))
-            )
+            _tracer.Trace("Calculating snapshot status based on ActiveFlag and LeavingDate.");
+            if (snap.ActiveFlag == false || (snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow))
             {
+                _tracer.Trace("Setting snap.Status and snap.StatusReason to INACTIVE.");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+                _tracer.Trace("Setting snap.Status and snap.StatusReason to status: {0} and statusReason: {1}", status.ToString(), statusReason.ToString());
                 snap.Status = new OptionSetValue((int)status);
                 snap.StatusReason = new OptionSetValue((int)statusReason);
             }
+
+            _tracer.Trace("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
 
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
                 JsonSerializer.Serialize<StaffMemberSnapshot>(
