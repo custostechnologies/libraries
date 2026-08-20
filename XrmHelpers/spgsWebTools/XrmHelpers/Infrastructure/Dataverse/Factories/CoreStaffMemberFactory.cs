@@ -402,17 +402,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var _departmentQuery = new CoreDepartments(_service, _tracer);
 
+                EntityReference coreDeptRef;
+
                 if (syn.StaffDepartment == null)
                 {
-                    _tracer.Trace("Syn Staff Snapshot has no StaffDepartment, unable to resolve core department");
-                    throw new InvalidPluginExecutionException("Unable to resolve Core Staff Member");
+                    _tracer.Trace("Syn Staff Snapshot has no StaffDepartment, setting to NOTSPEC department.");
+                    coreDeptRef = null;
+                } else {
+                    _tracer.Trace("Syn Staff Snapshot has StaffDepartment with code: {0}.", syn.StaffDepartment);
+                    _tracer.Trace("Calling _departmentQuery.GetReferenceByCode");
+                    coreDeptRef = _departmentQuery.GetReferenceByCode(syn.StaffDepartment);
                 }
-
-                _tracer.Trace("Calling _departmentQuery.GetReferenceByCode");
-
-                var coreDeptRef = _departmentQuery.GetReferenceByCode(syn.StaffDepartment);
-
-                _tracer.Trace("Executed _departmentQuery.GetReferenceByCode");
 
                 if (coreDeptRef == null || coreDeptRef.Id == Guid.Empty)
                 {
@@ -421,7 +421,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
 
                 _tracer.Trace("Setting target.CoreDepartment/Idx");
-
                 target.CoreDepartment = coreDeptRef;
                 target.CoreDepartmentIdx = coreDeptRef.Id.ToString();   
             }   
@@ -433,17 +432,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var _categoryQuery = new CoreStaffCategories(_service, _tracer);
 
+                EntityReference coreCategoryRef;
+
                 if (syn.StaffCategory == null)
                 {
                     _tracer.Trace("Syn Staff Snapshot has no StaffCategory, unable to resolve core category");
-                    throw new InvalidPluginExecutionException("Unable to resolve Core Staff Category");
+                    coreCategoryRef = null;
+                } else
+                {
+                    _tracer.Trace("Executing _categoryQuery.GetReferenceByCode");
+                    coreCategoryRef = _categoryQuery.GetReferenceByCode(syn.StaffCategory);
+                    _tracer.Trace("Completed _categoryQuery.GetReferenceByCode");
                 }
-
-                _tracer.Trace("Executing _categoryQuery.GetReferenceByCode");
-
-                var coreCategoryRef = _categoryQuery.GetReferenceByCode(syn.StaffCategory);
-
-                _tracer.Trace("Completed _categoryQuery.GetReferenceByCode");
 
                 if (coreCategoryRef == null || coreCategoryRef.Id == Guid.Empty)
                 {
