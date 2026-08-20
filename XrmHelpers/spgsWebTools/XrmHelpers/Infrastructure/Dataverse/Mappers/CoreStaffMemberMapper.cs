@@ -127,6 +127,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 core.FullName);
 
             MapDelta(entity, updatedAttributes,
+                SynStaffMemberFields.CampusKey,
+                CoreStaffMemberFields.Campus,
+                core.Campus);
+
+            MapDelta(entity, updatedAttributes,
                 SynStaffMemberFields.Gender,
                 CoreStaffMemberFields.Gender,
                 core.Gender);
