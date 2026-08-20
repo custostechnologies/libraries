@@ -48,7 +48,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer = tracer;
             _correlationId = correlationId;
         }
-        public (CoreStaffMember staff, string? error) Build(StaffMemberSnapshot syn, string[] attributes)
+        public (CoreStaffMember staff, bool createAsInactive, string? error) Build(StaffMemberSnapshot syn, string[] attributes)
         {
             _tracer.Trace("Entered CoreStaffMemberFactory.Build");
             _tracer.Trace("attributes string[]: {0}",
@@ -226,8 +226,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 // sync data
                 MapLastSync(coreStaffMember);
-
-                return (coreStaffMember, null);
+                if (_create && syn.ActiveFlag == false)
+                {
+                    _tracer.Trace("CREATE CoreStaffMember with a status of INACTIVE. Returning with createAsInactive = TRUE to perform subsequent UPDATE operation to inactive the record afyter CREATE.");
+                    return (coreStaffMember, true, null);   
+                }
+                return (coreStaffMember, false, null);
         }
         private void MapCampus(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
