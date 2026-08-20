@@ -168,70 +168,70 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
 
             CoreStaffMember coreStaffMember;
-                if (core != null) _tracer.Trace("core not null and _create = true, entered coreStaffMember and setting IsCreate to false", core.Id);
-                // create new DTO with only dirty attributes
-                coreStaffMember = core != null 
-                    ? new CoreStaffMember()
-                        {
-                            IsCreate = _create,
-                            CoreStaffMemberId = core.Id
-                        }
-                    : new CoreStaffMember()
-                    {
-                        IsCreate = _create
-                    };
-
-                /* update dirty attributes */
-                // identity
-                MapStaffId(syn, coreStaffMember);
-                // Retrieve User
-                if (systemUserRef != null && systemUserRef.Id != Guid.Empty && _systemUser != null) 
+            if (core != null) _tracer.Trace("core not null and _create = true, entered coreStaffMember and setting IsCreate to false", core.Id);
+            // create new DTO with only dirty attributes
+            coreStaffMember = core != null
+                ? new CoreStaffMember()
                 {
-                    coreStaffMember.User = systemUserRef;
-                    coreStaffMember.AzureObjectId = GetAttributeDelta.Execute<Guid>(
-                            "azureactivedirectoryobjectid",
-                            _systemUser,
-                            null
-                        ).ToString();
-
-                    if (string.IsNullOrWhiteSpace(coreStaffMember.AzureObjectId))
-                    {
-                        throw new Exception("Retrieved AzureId is null");
-                    }
+                    IsCreate = _create,
+                    CoreStaffMemberId = core.Id
                 }
-
-                MapSourceOfTruthId(syn, coreStaffMember);
-
-                // status
-                MapIsActive(syn, coreStaffMember, attributes);
-                MapStatus(syn, coreStaffMember);
-
-                // personal details
-                MapName(syn, coreStaffMember, attributes);
-                MapGender(syn, coreStaffMember, attributes);
-                MapMaidenName(syn, coreStaffMember, attributes);
-                MapPreviousSurname(syn, coreStaffMember, attributes);
-
-                // job metadata
-                MapCampus(syn, coreStaffMember, attributes);
-                MapDepartment(syn, coreStaffMember, attributes);
-                MapCategory(syn, coreStaffMember, attributes);
-                MapEmploymentDates(syn, coreStaffMember, attributes);
-                MapNetworkLogin(syn, coreStaffMember, attributes);
-                MapEmails(syn, coreStaffMember, attributes);
-
-                // flags
-                MapFlags(syn, coreStaffMember, _resolutionFailed, attributes);
-                coreStaffMember.InUserGroup = !_resolutionFailed;
-
-                // sync data
-                MapLastSync(coreStaffMember);
-                if (_create && syn.ActiveFlag == false)
+                : new CoreStaffMember()
                 {
-                    _tracer.Trace("CREATE CoreStaffMember with a status of INACTIVE. Returning with createAsInactive = TRUE to perform subsequent UPDATE operation to inactive the record afyter CREATE.");
-                    return (coreStaffMember, true, null);   
+                    IsCreate = _create
+                };
+
+            /* update dirty attributes */
+            // identity
+            MapStaffId(syn, coreStaffMember);
+            // Retrieve User
+            if (systemUserRef != null && systemUserRef.Id != Guid.Empty && _systemUser != null)
+            {
+                coreStaffMember.User = systemUserRef;
+                coreStaffMember.AzureObjectId = GetAttributeDelta.Execute<Guid>(
+                        "azureactivedirectoryobjectid",
+                        _systemUser,
+                        null
+                    ).ToString();
+
+                if (string.IsNullOrWhiteSpace(coreStaffMember.AzureObjectId))
+                {
+                    throw new Exception("Retrieved AzureId is null");
                 }
-                return (coreStaffMember, false, null);
+            }
+
+            MapSourceOfTruthId(syn, coreStaffMember);
+
+            // status
+            MapIsActive(syn, coreStaffMember, attributes);
+            MapStatus(syn, coreStaffMember);
+
+            // personal details
+            MapName(syn, coreStaffMember, attributes);
+            MapGender(syn, coreStaffMember, attributes);
+            MapMaidenName(syn, coreStaffMember, attributes);
+            MapPreviousSurname(syn, coreStaffMember, attributes);
+
+            // job metadata
+            MapCampus(syn, coreStaffMember, attributes);
+            MapDepartment(syn, coreStaffMember, attributes);
+            MapCategory(syn, coreStaffMember, attributes);
+            MapEmploymentDates(syn, coreStaffMember, attributes);
+            MapNetworkLogin(syn, coreStaffMember, attributes);
+            MapEmails(syn, coreStaffMember, attributes);
+
+            // flags
+            MapFlags(syn, coreStaffMember, _resolutionFailed, attributes);
+            coreStaffMember.InUserGroup = !_resolutionFailed;
+
+            // sync data
+            MapLastSync(coreStaffMember);
+            if (_create && syn.ActiveFlag == false)
+            {
+                _tracer.Trace("CREATE CoreStaffMember with a status of INACTIVE. Returning with createAsInactive = TRUE to perform subsequent UPDATE operation to inactive the record afyter CREATE.");
+                return (coreStaffMember, true, null);
+            }
+            return (coreStaffMember, false, null);
         }
         private void MapCampus(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
@@ -252,18 +252,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _tracer.Trace("syn.GenderKey: {0}", syn.GenderKey);
                 var genderKey = int.TryParse(syn.GenderKey, out int key) ? key : 384810005; // represets Resolution Error option
                 _tracer.Trace("genderKey parsed to: {0}", key);
-                target.Gender = new OptionSetValue(genderKey);   
+                target.Gender = new OptionSetValue(genderKey);
             }
         }
         private void MapName(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
             _tracer.Trace("In MapName");
-            bool contains = attributes.Contains(SynStaffMemberFields.NameInternal) 
-                || attributes.Contains(SynStaffMemberFields.Given1) 
-                || attributes.Contains(SynStaffMemberFields.Given2) 
-                || attributes.Contains(SynStaffMemberFields.Surname) 
+            bool contains = attributes.Contains(SynStaffMemberFields.NameInternal)
+                || attributes.Contains(SynStaffMemberFields.Given1)
+                || attributes.Contains(SynStaffMemberFields.Given2)
+                || attributes.Contains(SynStaffMemberFields.Surname)
                 || attributes.Contains(SynStaffMemberFields.StaffPreferredName);
-            
+
             if (_create || contains)
             {
                 target.GivenName1 = syn.Given1;
@@ -271,7 +271,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 target.LastName = syn.Surname;
                 target.PreferredName = syn.StaffPreferredName;
                 target.DisplayName = $"{syn.StaffPreferredName} {syn.Surname}";
-                target.FullName = $"{syn.Given1} {syn.Surname}";    
+                target.FullName = $"{syn.Given1} {syn.Surname}";
                 _tracer.Trace("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}, DisplayName: {4}, FullName: {5}",
                     target.GivenName1,
                     target.GivenName2,
@@ -281,7 +281,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     target.FullName
                 );
             }
-            
+
         }
         private void MapStatus(StaffMemberSnapshot syn, CoreStaffMember target)
         {
@@ -291,14 +291,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private void MapEmploymentDates(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
             _tracer.Trace("In MapEmploymentDates");
-            if (_create || (attributes.Contains(SynStaffMemberFields.StartDate) && syn.StartDate.HasValue)) {
+            if ((_create || attributes.Contains(SynStaffMemberFields.StartDate)) && syn.StartDate.HasValue)
+            {
                 target.StartDate = syn.StartDate;
-                _tracer.Trace("Set target.StartDate to: {0}", target.StartDate!.Value);
-            };
-            if (_create || attributes.Contains(SynStaffMemberFields.LeavingDate) && syn.LeavingDate.HasValue){
+                _tracer.Trace("Set target.StartDate to: {0}", target.StartDate.Value);
+            }
+            ;
+            if ((_create || attributes.Contains(SynStaffMemberFields.LeavingDate)) && syn.LeavingDate.HasValue)
+            {
                 target.EndDate = syn.LeavingDate;
-                _tracer.Trace("Set target.EndDate to: {0}", target.EndDate!.Value);
-            };
+                _tracer.Trace("Set target.EndDate to: {0}", target.EndDate.Value);
+            }
+            ;
         }
         private void MapSourceOfTruthId(StaffMemberSnapshot syn, CoreStaffMember target)
         {
@@ -310,7 +314,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (_create || attributes.Contains(SynStaffMemberFields.NetworkLogin))
             {
                 target.NetworkLogin = syn.NetworkLogin;
-                _tracer.Trace("Set target.NetworkLogin to: {0}", target.NetworkLogin);   
+                _tracer.Trace("Set target.NetworkLogin to: {0}", target.NetworkLogin);
             }
         }
         private void MapEmails(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
@@ -319,12 +323,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (_create || attributes.Contains(SynStaffMemberFields.OccupEmail))
             {
                 target.WorkEmail = syn.OccupEmail;
-                _tracer.Trace("Set target.WorkEmail to: {0}", target.WorkEmail);   
+                _tracer.Trace("Set target.WorkEmail to: {0}", target.WorkEmail);
             }
             if (_create || attributes.Contains(SynStaffMemberFields.Email))
             {
                 target.PersonalEmail = syn.Email;
-                _tracer.Trace("Set target.PersonalEmail to: {0}", target.PersonalEmail);   
+                _tracer.Trace("Set target.PersonalEmail to: {0}", target.PersonalEmail);
             }
         }
         private void MapIsActive(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
@@ -333,7 +337,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (_create || attributes.Contains(SynStaffMemberFields.ActiveFlag))
             {
                 target.IsActive = syn.ActiveFlag;
-                _tracer.Trace("Set target.IsActive to: {0}", target.IsActive);   
+                _tracer.Trace("Set target.IsActive to: {0}", target.IsActive);
             }
         }
         private void MapLastSync(CoreStaffMember target)
@@ -350,7 +354,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (_create || attributes.Contains(SynStaffMemberFields.SurnamePrevious))
             {
                 target.PreviousLastName = syn.SurnamePrevious;
-                _tracer.Trace("Set target.PreviousLastName to: {0}", target.PreviousLastName);   
+                _tracer.Trace("Set target.PreviousLastName to: {0}", target.PreviousLastName);
             }
         }
         private void MapMaidenName(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
@@ -359,7 +363,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (_create || attributes.Contains(SynStaffMemberFields.MaidenName))
             {
                 target.MaidenName = syn.MaidenName;
-                _tracer.Trace("Set target.MaidenName to: {0}", target.MaidenName);   
+                _tracer.Trace("Set target.MaidenName to: {0}", target.MaidenName);
             }
         }
         private void MapFlags(StaffMemberSnapshot syn, CoreStaffMember target, bool resolutionFlag, string[] attributes)
@@ -368,8 +372,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             bool contains = attributes.Contains(SynStaffMemberFields.OccupEmail)
                 && attributes.Contains(SynStaffMemberFields.Email)
                 && attributes.Contains(SynStaffMemberFields.NetworkLogin);
-            
-            if(_create || contains)
+
+            if (_create || contains)
             {
                 target.ProfileResolutionFlag = resolutionFlag;
                 target.SPGSEmailAddressFlag = !string.IsNullOrWhiteSpace(syn.OccupEmail)
@@ -392,7 +396,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                             : false;
                 }
                 target.StaffEmailAddressFlag = staffEmail;
-                target.InUserGroup = !_resolutionFailed;   
+                target.InUserGroup = !_resolutionFailed;
             }
         }
         private void MapDepartment(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
@@ -408,7 +412,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 {
                     _tracer.Trace("Syn Staff Snapshot has no StaffDepartment, setting to NOTSPEC department.");
                     coreDeptRef = null;
-                } else {
+                }
+                else
+                {
                     _tracer.Trace("Syn Staff Snapshot has StaffDepartment with code: {0}.", syn.StaffDepartment);
                     _tracer.Trace("Calling _departmentQuery.GetReferenceByCode");
                     coreDeptRef = _departmentQuery.GetReferenceByCode(syn.StaffDepartment);
@@ -422,8 +428,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _tracer.Trace("Setting target.CoreDepartment/Idx");
                 target.CoreDepartment = coreDeptRef;
-                target.CoreDepartmentIdx = coreDeptRef.Id.ToString();   
-            }   
+                target.CoreDepartmentIdx = coreDeptRef.Id.ToString();
+            }
         }
         private void MapCategory(StaffMemberSnapshot syn, CoreStaffMember target, string[] attributes)
         {
@@ -438,7 +444,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 {
                     _tracer.Trace("Syn Staff Snapshot has no StaffCategory, unable to resolve core category");
                     coreCategoryRef = null;
-                } else
+                }
+                else
                 {
                     _tracer.Trace("Executing _categoryQuery.GetReferenceByCode");
                     coreCategoryRef = _categoryQuery.GetReferenceByCode(syn.StaffCategory);
