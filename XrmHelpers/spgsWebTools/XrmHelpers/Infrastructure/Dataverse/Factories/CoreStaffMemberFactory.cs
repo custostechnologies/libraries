@@ -36,12 +36,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private bool _resolutionFailed = false;
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
+        private EnvironmentVariableValues? _envVarQuery;
         private CreateHttpRequest? _httpRequest;
         private Entity? _systemUser;
-        private Boolean _create = false;
-        private CoreStaffMember _emptyStaffMember = new CoreStaffMember();
-        // TEMPORARILY HARDCODED FOR DEV
-        private string SYNC_FLOW_ENDPOINT = "https://1d7c41c84b08e1f3a61511f0059c0d.c0.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/12/workflows/2540c1018d9e41c3bd0ffb71bc75cc52/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=FC-BXGYlU_hqbETq8YqfDEqk83lvKV4aV1d8Fnq9Ra4";
+        private bool _create = false;
+        private string ENDPOINT_ENV_VAR_SCHEMA_NAME = "pgrowth_XrmHelpers_FlowEndpoint_ForceUserSync";
+        private string SYNC_FLOW_ENDPOINT = "";
         public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer, string correlationId)
         {
             _service = service;
@@ -63,6 +63,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _coreStaffQuery = new CoreStaffMembers(_service, _tracer);
             _systemuserQuery = new Systemusers(_service, _tracer);
+            _envVarQuery = new EnvironmentVariableValues(_tracer, _service);
 
             Entity core;
 
@@ -103,6 +104,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 _tracer.Trace("systemUserRef is null and syn.ActiveFlag is true, running force sync user branch");
                 // retrieve azure id (not via systemuser)
+
+                _tracer.Trace("Retrieving flow endpoint for current environment");
+
+                SYNC_FLOW_ENDPOINT = _envVarQuery.GetValue(ENDPOINT_ENV_VAR_SCHEMA_NAME).Value!;
 
                 if (syn.OccupEmail == null)
                 {

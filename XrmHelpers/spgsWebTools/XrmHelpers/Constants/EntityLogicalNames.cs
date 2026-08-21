@@ -13,5 +13,8 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string CoreStaffCategory = "pgrowth_corestaffcategory";
         public const string UserSyncEvent = "pgrowth_usersyncevent";
         public const string AssignmentSyncEvent = "pgrowth_assignmentsyncevent";
+        public const string Organization = "organization";
+        public const string EnvironmentVariableValue = "environmentvariablevalue";
+        public const string EnvironmentVariableDefinition = "environmentvariabledefinition";
     }
 }
