@@ -127,6 +127,54 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
+                _tracer.Trace("CoreStaffMembers.GetEntityByStaffId Exception: {0}", ex.Message);
+                throw;
+            }
+        }
+        public EntityReference GetReferenceByStaffId(int staffId)
+        {
+            try
+            {
+                _tracer.Trace("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+                {
+                    TopCount = 1,
+                    ColumnSet = new ColumnSet(
+                        CoreStaffMemberFields.StaffId
+                    ),
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                CoreStaffMemberFields.StaffId,
+                                ConditionOperator.Equal,
+                                staffId
+                            )
+                        }
+                    }
+                };
+
+                _tracer.Trace("Executing GetReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+
+                var results = _service.RetrieveMultiple(query);
+
+                _tracer.Trace("Finished executing ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId query expression");
+
+                if (results.Entities.Count > 0)
+                {
+                    _tracer.Trace("ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId results.Entities.Count: ", results.Entities.Count);
+                    return results.Entities[0].ToEntityReference();
+                }
+                else
+                {
+                    _tracer.Trace("No existing CoreStaffMembers were found");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
                 _tracer.Trace("GetEntityReferenceByStaffId Exception:");
                 _tracer.Trace(ex.ToString());
                 if (ex.InnerException != null)

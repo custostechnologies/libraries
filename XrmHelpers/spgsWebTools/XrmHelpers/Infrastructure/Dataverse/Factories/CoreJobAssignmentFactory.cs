@@ -12,6 +12,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private CoreJobAssignments? _coreJobAssignmentQuery;
         private CoreJobPositions? _coreJobPositionQuery;
         private CoreStaffMembers? _coreStaffMemberQuery;
+        private Boolean _create = false;
         public CoreJobAssignmentFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -19,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public CoreJobAssignment Build(JobPositionSnapshot snap, string[] attributes)
         {
-            Entity coreAssignment;
+            Entity existingCoreAssignment;
 
             _tracer.Trace("Entered CoreJobAssignmentFactory.Build");
             _tracer.Trace("Initialising query obejcts");
@@ -33,152 +34,136 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (snap.SourceOfTruthId == null)
             {
                 _tracer.Trace("Has no source of truth id Core Job Assignment. Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
-                coreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
+                existingCoreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
             }
             else
             {
                 _tracer.Trace("Has Source truth id Core Job Assignment. Searching by TRUTH");
-                coreAssignment = _coreJobAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId);
+                existingCoreAssignment = _coreJobAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId);
             }
 
-            _tracer.Trace("Core Assignment returned with Id: {0}", coreAssignment.Id);
+            _create = existingCoreAssignment == null;
 
-            CoreJobAssignment updateCore;
-            CoreJobAssignment createCore;
+            if (_create == false && existingCoreAssignment != null) _tracer.Trace("Core Assignment returned with Id: {0} AND _create set to FALSE", existingCoreAssignment.Id);
 
-            if (coreAssignment.Id != Guid.Empty)
-            {
-                updateCore = new CoreJobAssignment
+            CoreJobAssignment coreAssignment;
+
+            coreAssignment = existingCoreAssignment != null
+                ? new CoreJobAssignment
                 {
                     IsCreate = false,
-                    CoreJobAssignmentId = coreAssignment.Id
-                };
-
-                if (attributes.Contains(SynJobPositionFields.JobPositionDescription)
-                ) MapName(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffJobPositionsSeq))
-                    MapStaffJobPositionSeq(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.SourceOfTruthId))
-                    MapSourceOfTrithId(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffId))
-                    MapStaffId(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffId))
-                    MapCoreStaffMember(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffJobPositionCode))
-                    MapCoreJobPosition(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffJobPositionFTE))
-                    MapAssignmentFte(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffJobPositionStartDate))
-                    MapStartDate(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffJobPositionEndDate))
-                    MapEndDate(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
-                    MapIsActive(snap, updateCore);
-
-                if (attributes.Contains(SynJobPositionFields.ReportsTo))
-                    MapSynReportsTo(snap, updateCore);
-
-                return updateCore;
-            }
-            else
-            {
-                // create new DTO with all relevant fields
-                createCore = new CoreJobAssignment
+                    CoreJobAssignmentId = existingCoreAssignment.Id
+                }
+                : new CoreJobAssignment
                 {
-                    SourceOfTruthId = snap.SourceOfTruthId,
                     IsCreate = true
                 };
 
-                MapName(snap, createCore);
-                MapStaffJobPositionSeq(snap, createCore);
-                MapSourceOfTrithId(snap, createCore);
-                MapStaffId(snap, createCore);
-                MapCoreStaffMember(snap, createCore);
-                MapCoreJobPosition(snap, createCore);
-                MapAssignmentFte(snap, createCore);
-                MapStartDate(snap, createCore);
-                MapEndDate(snap, createCore);
-                MapIsActive(snap, createCore);
-                MapSynReportsTo(snap, createCore);
+            MapName(snap, coreAssignment, attributes);
+            MapStaffJobPositionSeq(snap, coreAssignment, attributes);
+            MapSourceOfTrithId(snap, coreAssignment, attributes);
+            MapStaffId(snap, coreAssignment, attributes);
+            MapCoreStaffMember(snap, coreAssignment);
+            MapCoreJobPosition(snap, coreAssignment, attributes);
+            MapAssignmentFte(snap, coreAssignment, attributes);
+            MapPositionDates(snap, coreAssignment, attributes);
+            MapIsActive(snap, coreAssignment, attributes);
+            MapSynReportsTo(snap, coreAssignment, attributes);
+            MapStatus(snap, coreAssignment);
 
-                var json = JsonSerializer.Serialize(
-                    createCore,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                );
+            _tracer.Trace("coreAssignment CoreJobAssignment IsCreate: {0}, StaffId: {1}, StaffJobPositionSeq: {2}",
+                coreAssignment.IsCreate,
+                coreAssignment.StaffId,
+                coreAssignment.StaffJobPositionSeq
+            );
 
-                _tracer.Trace("createCore CoreJobAssignment Entity: {0}", json);
-
-                return createCore;
+            return coreAssignment;
+        }
+        private void MapName(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
+        {
+            if (_create || attributes.Contains(SynJobPositionFields.JobPositionDescription))
+            {
+                target.Name = snap.Name;
             }
         }
-        private void MapName(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapStaffJobPositionSeq(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.Name = snap.Name;
+            if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionsSeq)){
+                target.StaffJobPositionSeq = snap.StaffJobPositionsSeq;
+            }
         }
-        private void MapStaffJobPositionSeq(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapSourceOfTrithId(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.StaffJobPositionSeq = snap.StaffJobPositionsSeq;
+            if (_create || attributes.Contains(SynJobPositionFields.SourceOfTruthId)){
+                target.SourceOfTruthId = snap.SourceOfTruthId;
+            }
         }
-        private void MapSourceOfTrithId(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapStaffId(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.SourceOfTruthId = snap.SourceOfTruthId;
-        }
-        private void MapStaffId(JobPositionSnapshot snap, CoreJobAssignment target)
-        {
-            target.StaffId = snap.StaffId;
+            if (_create || attributes.Contains(SynJobPositionFields.StaffId))
+            {
+                target.StaffId = snap.StaffId;
+            }
         }
         private void MapCoreStaffMember(JobPositionSnapshot snap, CoreJobAssignment target)
         {
             Entity coreStaffMember = _coreStaffMemberQuery!.GetEntityByStaffId(snap.StaffId);
 
-            EntityReference coreRef = coreStaffMember == null
-                ? null
-                : new EntityReference(
+            EntityReference coreRef = new EntityReference(
                 "pgrowth_corestaffmember",
                 coreStaffMember.Id
             );
 
-            target.CoreStaffMember = coreRef;
-            target.CoreStaffMemberIdx = coreRef.Id.ToString();
+            if (coreStaffMember != null && coreRef != null)
+            {
+                target.CoreStaffMember = coreRef;
+                target.CoreStaffMemberIdx = coreRef.Id.ToString();
+            }
         }
-        private void MapCoreJobPosition(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapCoreJobPosition(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
             EntityReference corePositionRef = _coreJobPositionQuery!.GetReferenceBySeq(snap.JobPositionsSeq);
 
             target.CoreJobPosition = corePositionRef;
             target.CoreJobPositionIdx = corePositionRef.Id.ToString();
         }
-        private void MapAssignmentFte(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapAssignmentFte(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
             target.AssignmentFte = snap.AssignmentFte;
         }
-        private void MapStartDate(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapPositionDates(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.StartDate = snap.StartDate;
+            if (
+                (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionStartDate)) 
+                && snap.StartDate.HasValue
+            ) target.StartDate = snap.StartDate;
+            
+            if (
+                (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionEndDate)) 
+                && snap.EndDate.HasValue
+            )target.EndDate = snap.EndDate;
         }
-        private void MapEndDate(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapIsActive(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.EndDate = snap.EndDate;
+            if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
+            {
+                target.IsActive = snap.IsActive == 0;   
+            }
         }
-        private void MapIsActive(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapSynReportsTo(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.IsActive = snap.IsActive == 0;
+            if (_create || attributes.Contains(SynJobPositionFields.ReportsTo))
+            {
+                target.SynReportsTo = snap.SynReportsTo;
+            }
         }
-        private void MapSynReportsTo(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapStatus(JobPositionSnapshot snap, CoreJobAssignment target)
         {
-            target.SynReportsTo = snap.SynReportsTo;
+            if ((snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.Now) || _create)
+            {
+                target.Status = snap.Status;
+                target.StatusReason = snap.StatusReason;
+            }
         }
     }
 }
