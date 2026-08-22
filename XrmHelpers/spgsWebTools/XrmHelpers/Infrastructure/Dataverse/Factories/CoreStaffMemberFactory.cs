@@ -70,14 +70,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (string.IsNullOrWhiteSpace(syn.SourceOfTruthId))
             {
                 _tracer.Trace("Syn Staff Snapshot has no SourceofTruthId. Calling _coreStaffQuery.GetEntityByStaffId");
-
                 core = _coreStaffQuery.GetEntityByStaffId(syn.StaffId);
             }
             else
             {
                 _tracer.Trace("Syn Staff Snapshot HAS SourceofTruthId. Calling _coreStaffQuery.GetEntityByTruth");
-
                 core = _coreStaffQuery.GetEntityByTruth(syn.SourceOfTruthId!);
+
+                if (core == null)
+                {
+                    _tracer.Trace("No Core Staff Member found via GetEntityByTruth. Trying again with StaffId");
+                    core = _coreStaffQuery.GetEntityByStaffId(syn.StaffId);
+                }
             }
 
             _create = core == null;
@@ -88,7 +92,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (syn.OccupEmail == null && syn.NetworkLogin == null)
             {
                 _tracer.Trace("Syn Staff Snapshot has no OccupEmail and/or NetworkLogin. Exiting early.");
-
                 throw new InvalidPluginExecutionException("Unable to resolve Syn Staff Member");
             }
 
@@ -142,33 +145,28 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 )!;
 
                 var azureId = flowResponseBody?.azureObjectId;
-
                 _tracer.Trace("httpRequest flowResponseBody?.AzureObjectId: {0}", azureId);
 
                 if (!string.IsNullOrWhiteSpace(azureId))
                 {
                     _tracer.Trace("azureId returned from flow is not null. Retrieving EntityReference via _systemUserQuery.GetReferenceByAzureId");
-
                     systemUserRef = _systemuserQuery.GetReferenceByAzureId(azureId!);
 
                     if (systemUserRef != null)
                     {
                         _tracer.Trace("systemUserRef is not null. Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
-
                         _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
                     }
                 }
                 else
                 {
                     _tracer.Trace("Unable to force syn user via power automate flow (azureId returned null). Setting _resolutionFailed to true.");
-
                     _resolutionFailed = true;
                 }
             }
             else if (systemUserRef != null)
             {
                 _tracer.Trace("ELSE IF BRANCH UNDER CALL POWER AUTOMATE FLOW BLOCK, systemUserRef is not null. Retrieving systemUser metadata using systemUserRef.Id: {0}", systemUserRef.Id.ToString());
-
                 _systemUser = _systemuserQuery.GetMetadataById(systemUserRef.Id);
             }
 
