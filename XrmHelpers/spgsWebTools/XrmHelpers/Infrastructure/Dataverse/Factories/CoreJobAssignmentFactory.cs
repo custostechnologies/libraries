@@ -43,12 +43,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
 
             _create = existingCoreAssignment == null;
+            if (existingCoreAssignment != null) _create = existingCoreAssignment.Id == Guid.Empty;
 
             if (_create == false && existingCoreAssignment != null) _tracer.Trace("Core Assignment returned with Id: {0} AND _create set to FALSE", existingCoreAssignment.Id);
 
             CoreJobAssignment coreAssignment;
 
-            coreAssignment = existingCoreAssignment != null
+            coreAssignment = _create == false
                 ? new CoreJobAssignment
                 {
                     IsCreate = false,
@@ -88,13 +89,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapStaffJobPositionSeq(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionsSeq)){
+            if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionsSeq))
+            {
                 target.StaffJobPositionSeq = snap.StaffJobPositionsSeq;
             }
         }
         private void MapSourceOfTrithId(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            if (_create || attributes.Contains(SynJobPositionFields.SourceOfTruthId)){
+            if (_create || attributes.Contains(SynJobPositionFields.SourceOfTruthId))
+            {
                 target.SourceOfTruthId = snap.SourceOfTruthId;
             }
         }
@@ -134,20 +137,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private void MapPositionDates(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
             if (
-                (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionStartDate)) 
+                (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionStartDate))
                 && snap.StartDate.HasValue
             ) target.StartDate = snap.StartDate;
-            
+
             if (
-                (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionEndDate)) 
+                (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionEndDate))
                 && snap.EndDate.HasValue
-            )target.EndDate = snap.EndDate;
+            ) target.EndDate = snap.EndDate;
         }
         private void MapIsActive(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
             if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
             {
-                target.IsActive = snap.IsActive == 0;   
+                target.IsActive = snap.IsActive == 0;
             }
         }
         private void MapSynReportsTo(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
