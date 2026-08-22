@@ -24,7 +24,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         }
         public static Entity ToUpdateEntity(this CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
         {
-            if (core.CoreJobAssignmentId == Guid.Empty)
+            if (core == null || core.CoreJobAssignmentId == Guid.Empty)
             {
                 throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
             }
