@@ -40,7 +40,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStaffMemberFields.SourceOfTruthId,
                 SynStaffMemberFields.EncodedHash,
                 SynStaffMemberFields.PlaintextHash,
-                SynStaffMemberFields.IgnoreSync
+                SynStaffMemberFields.IgnoreSync,
+                SynStaffMemberFields.MutePlugin
             );
 
         /// <summary>

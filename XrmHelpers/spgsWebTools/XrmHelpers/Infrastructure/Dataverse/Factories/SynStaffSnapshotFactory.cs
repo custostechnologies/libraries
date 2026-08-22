@@ -9,6 +9,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
+        private bool _forceIncoming = false;
         public SynStaffSnaphotFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -25,6 +26,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             Enums.StatusReason statusReason = Enums.StatusReason.Active;
 
             _tracer.Trace("In SynStaffMemberFactory.Build, TARGET id: {0}", target.Id);
+
+            if (target.Contains(SynStaffMemberFields.MutePlugin))
+            {
+                _forceIncoming = target.GetAttributeValue<bool>(SynStaffMemberFields.MutePlugin);
+                _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
+                preImage = null;
+            }
 
             if (preImage != null)
             {

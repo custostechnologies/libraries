@@ -13,6 +13,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class SynJobSnapshotFactory
     {
         private readonly ITracingService _tracer;
+        private bool? _forceIncoming = false;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_synergetic_vstaffjobpositions";
         /// <summary>
         /// 
@@ -32,6 +33,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         public JobPositionSnapshot Build(Entity target, Entity preImage, Guid sourceRecordId)
         {
             _tracer.Trace("Creating job snapshot in JobPositionSnapshot.Build");
+
+            if (target.Contains(SynStaffMemberFields.MutePlugin))
+            {
+                _forceIncoming = target.GetAttributeValue<bool>(SynStaffMemberFields.MutePlugin);
+                _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
+                preImage = null;
+            }
 
             var snap = new JobPositionSnapshot
             {

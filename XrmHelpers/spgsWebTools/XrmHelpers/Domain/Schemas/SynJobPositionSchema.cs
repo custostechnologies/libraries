@@ -38,7 +38,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StatusReason,
 
             // Sync
-            SynJobPositionFields.UtcNow
+            SynJobPositionFields.UtcNow,
+            SynJobPositionFields.MutePlugin
         );
 
         public static readonly HashSet<string> TrackedFields = new HashSet<string>
