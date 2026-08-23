@@ -49,6 +49,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, target, preImage)})",
                 JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage),
                 SynReportsTo = GetAttributeDelta.Execute<string>(SynJobPositionFields.ReportsTo, target, preImage),
+                SourceOfTruthId = GetAttributeDelta.Execute<string>(SynJobPositionFields.SourceOfTruthId, target, preImage),
 
                 // retrieve integer values
                 StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage),
@@ -68,6 +69,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             };
 
             _tracer.Trace("{0} SynMirrorId: {1}", ENTITY_LOGICAL_NAME, snap.SynMirrorId.ToString());
+
+            if (string.IsNullOrWhiteSpace(snap.SourceOfTruthId))
+            {
+                snap.SourceOfTruthId = Guid.NewGuid().ToString();
+                _tracer.Trace("Set new SrcOfTruthId: {0}", snap.SourceOfTruthId);
+            }
 
             _tracer.Trace("Calculating job assignment status and status reason");
             _tracer.Trace(
@@ -94,6 +101,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace("Calulated status: {0} and statusReason: {1}",
                 ((Enums.Status)snap.Status?.Value).ToString(),
                 ((Enums.StatusReason)snap.StatusReason?.Value).ToString()
+            );
+            _tracer.Trace("SNAP: {0}",
+                JsonSerializer.Serialize(
+                    snap,
+                    new JsonSerializerOptions
+                    {
+                        WriteIndented = true
+                    }
+                )
             );
 
             return snap;

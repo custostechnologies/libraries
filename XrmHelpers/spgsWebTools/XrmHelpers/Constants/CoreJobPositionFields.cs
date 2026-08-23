@@ -23,5 +23,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         // Metadata
         public const string FteRequired = "pgrowth_fterequired";
         public const string NextReviewDate = "mthomas_nextreviewdate";
+        public const string HierarchyDependsOnCampus = "pgrowth_hierarchydependsoncampus";
     }
 }

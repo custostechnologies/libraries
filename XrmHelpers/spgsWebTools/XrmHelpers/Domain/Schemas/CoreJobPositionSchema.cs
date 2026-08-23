@@ -29,7 +29,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
 
             // Metadata
             CoreJobPositionFields.FteRequired,
-            CoreJobPositionFields.NextReviewDate
+            CoreJobPositionFields.NextReviewDate,
+            CoreJobPositionFields.HierarchyDependsOnCampus
         );
     }
 }

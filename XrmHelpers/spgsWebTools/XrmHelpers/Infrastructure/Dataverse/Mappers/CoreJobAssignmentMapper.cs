@@ -89,12 +89,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             );
 
             // Status
-            MapDelta(
+            MapIsActiveDelta(
                 entity,
                 updatedAttributes,
-                SynJobPositionFields.StaffJobPositionActiveFlag,
-                CoreJobAssignmentFields.IsActive,
-                core.IsActive
+                core.IsActive ?? false
             );
 
             if (core.StatusReason != null && !create)
@@ -198,6 +196,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             if (_create || updatedAttributes.Contains(sourceAttribute))
             {
                 entity[targetAttribute] = value;
+            }
+        }
+        private void MapIsActiveDelta(
+            Entity entity,
+            string[] updatedAttributes,
+            bool value
+        )
+        {
+            _tracer.Trace("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
+            SynJobPositionFields.StaffJobPositionActiveFlag, CoreJobAssignmentFields.IsActive, value
+            );
+            if (_create || updatedAttributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
+            {
+                entity[CoreJobAssignmentFields.IsActive] = value;
+                _tracer.Trace("Set CoreJobAssignmentFields.IsActive to {0}", entity.GetAttributeValue<bool>(CoreJobAssignmentFields.IsActive));
             }
         }
     }

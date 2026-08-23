@@ -75,6 +75,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 createMap[OperationalHierarchyMapFields.Status] = new OptionSetValue((int)Enums.Status.Active);
                 createMap[OperationalHierarchyMapFields.StatusReason] = new OptionSetValue((int)Enums.StatusReason.Active);
 
+                if (referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex) != null) createMap[OperationalHierarchyMapFields.ApprovalIndex] = referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex);
+
+                if (referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus) != null) createMap[OperationalHierarchyMapFields.Campus] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus);
+
                 var createMapJson = JsonSerializer.Serialize(
                     createMap,
                     new JsonSerializerOptions

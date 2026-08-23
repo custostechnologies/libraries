@@ -22,7 +22,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public CoreJobAssignment Build(JobPositionSnapshot snap, string[] attributes)
         {
-            Entity existingCoreAssignment;
+            Entity existingCoreAssignment = null;
 
             _tracer.Trace("Entered CoreJobAssignmentFactory.Build");
             _tracer.Trace("Initialising query obejcts");
@@ -33,15 +33,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
 
-            if (snap.SourceOfTruthId == null)
+            if (snap.StaffJobPositionsSeq != null)
             {
-                _tracer.Trace("Has no source of truth id Core Job Assignment. Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
+                _tracer.Trace("Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
                 existingCoreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
             }
-            else
+            if (existingCoreAssignment == null && !string.IsNullOrWhiteSpace(snap.SourceOfTruthId))
             {
-                _tracer.Trace("Has Source truth id Core Job Assignment. Searching by TRUTH");
-                existingCoreAssignment = _coreJobAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId);
+                _tracer.Trace("existingCoreAssignment is still null and has Source truth id Core Job Assignment. Searching by TRUTH");
+                existingCoreAssignment = _coreJobAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId!);
             }
 
             _create = existingCoreAssignment == null;
@@ -161,6 +161,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapIsActive(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
+            _tracer.Trace("MapIsActive: snap.IsActive: {0}, attributes.Contains(staffJobPosActiveFlag): {1}",
+                snap.IsActive,
+                attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag)
+            );
             if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
             {
                 target.IsActive = snap.IsActive == 1;
