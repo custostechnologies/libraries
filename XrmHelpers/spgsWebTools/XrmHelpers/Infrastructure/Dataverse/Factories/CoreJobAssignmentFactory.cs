@@ -163,7 +163,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
             {
-                target.IsActive = snap.IsActive == 0;
+                target.IsActive = snap.IsActive == 1;
             }
         }
         private void MapSynReportsTo(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
