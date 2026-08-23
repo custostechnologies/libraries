@@ -28,6 +28,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StaffJobPositionExistsFlag,
             SynJobPositionFields.StaffJobPositionFTE,
             SynJobPositionFields.StaffJobPositionsSeq,
+            SynJobPositionFields.ReportsTo,
 
             // Hash Values
             SynJobPositionFields.EncodedHash,
@@ -55,6 +56,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StaffJobPositionExistsFlag,
             SynJobPositionFields.StaffJobPositionFTE,
             SynJobPositionFields.StaffJobPositionsSeq,
+            SynJobPositionFields.ReportsTo,
             "pgrowth_forceplugin"
         };
     }

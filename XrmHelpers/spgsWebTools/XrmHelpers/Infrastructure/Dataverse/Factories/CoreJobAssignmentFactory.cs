@@ -132,7 +132,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapAssignmentFte(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            target.AssignmentFte = snap.AssignmentFte;
+            if (_create || attributes.Contains(SynJobPositionFields.AssignmentFte))
+            {
+                target.AssignmentFte = snap.AssignmentFte;
+            }
         }
         private void MapPositionDates(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
