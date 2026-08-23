@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
@@ -12,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private CoreJobAssignments? _coreJobAssignmentQuery;
         private CoreJobPositions? _coreJobPositionQuery;
         private CoreStaffMembers? _coreStaffMemberQuery;
-        private Boolean _create = false;
+        private bool _create = false;
         public CoreJobAssignmentFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -67,6 +68,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             MapCoreStaffMember(snap, coreAssignment);
             MapCoreJobPosition(snap, coreAssignment, attributes);
             MapAssignmentFte(snap, coreAssignment, attributes);
+            MapFteRequired(snap, coreAssignment, attributes);
             MapPositionDates(snap, coreAssignment, attributes);
             MapIsActive(snap, coreAssignment, attributes);
             MapSynReportsTo(snap, coreAssignment, attributes);
@@ -85,6 +87,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (_create || attributes.Contains(SynJobPositionFields.JobPositionDescription))
             {
                 target.Name = snap.Name;
+            }
+        }
+        private void MapFteRequired(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
+        {
+            if (_create || attributes.Contains(SynJobPositionFields.JobPositionFTERequired))
+            {
+                target.FteRequired = snap.FteRequired;
             }
         }
         private void MapStaffJobPositionSeq(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
@@ -132,7 +141,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapAssignmentFte(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            if (_create || attributes.Contains(SynJobPositionFields.AssignmentFte))
+            if (_create || attributes.Contains(SynJobPositionFields.StaffJobPositionFTE))
             {
                 target.AssignmentFte = snap.AssignmentFte;
             }
