@@ -4,6 +4,7 @@ using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreJobAssignmentFactory
@@ -72,7 +73,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             MapPositionDates(snap, coreAssignment, attributes);
             MapIsActive(snap, coreAssignment, attributes);
             MapSynReportsTo(snap, coreAssignment, attributes);
-            MapStatus(snap, coreAssignment);
+            MapStatus(snap, coreAssignment, attributes);
 
             _tracer.Trace("coreAssignment CoreJobAssignment IsCreate: {0}, StaffId: {1}, StaffJobPositionSeq: {2}",
                 coreAssignment.IsCreate,
@@ -172,12 +173,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 target.SynReportsTo = snap.SynReportsTo;
             }
         }
-        private void MapStatus(JobPositionSnapshot snap, CoreJobAssignment target)
+        private void MapStatus(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            if ((snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.Now) || _create)
+            _tracer.Trace("MapStatus Called. _create: {0}, attributes.Contains(statecode): {1}, attributes.Contains(statuscode): {2}",
+                _create,
+                attributes.Contains("statecode"),
+                attributes.Contains("statecode")
+            );
+            if (_create || attributes.Contains("statecode") || attributes.Contains("statuscode"))
             {
                 target.Status = snap.Status;
                 target.StatusReason = snap.StatusReason;
+                _tracer.Trace("target.Status: {0}, target.StatusReason: {1}",
+                    ((Enums.Status)target.Status.Value).ToString(),
+                    ((Enums.StatusReason)target.StatusReason.Value).ToString()
+                );
             }
         }
     }

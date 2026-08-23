@@ -78,20 +78,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             );
 
             // 0 represents inactive
-            if (snap.IsActive == 1 || (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow))
-            {
-                _tracer.Trace("Setting status to Active");
-                snap.Status = new OptionSetValue((int)Enums.Status.Active);
-                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
-            }
-            else
+            if (snap.IsActive == 0 || (snap.EndDate.HasValue && snap.EndDate.Value <= DateTime.UtcNow))
             {
                 _tracer.Trace("Setting status to Inactive");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
+            else
+            {
+                _tracer.Trace("Setting status to Active");
+                snap.Status = new OptionSetValue((int)Enums.Status.Active);
+                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Active);
+            }
 
-            _tracer.Trace("Calulated status: {0} and statusReason: {1}", snap.Status?.Value, snap.StatusReason?.Value);
+            _tracer.Trace("Calulated status: {0} and statusReason: {1}",
+                ((Enums.Status)snap.Status?.Value).ToString(),
+                ((Enums.StatusReason)snap.StatusReason?.Value).ToString()
+            );
 
             return snap;
         }
