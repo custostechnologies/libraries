@@ -35,5 +35,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string StatusReason = "statuscode";
         public const string ApprovalIndex = "pgrowth_approvalindex";
         public const string Campus = "pgrowth_campus";
+        public const string MapVersion = "pgrowth_mapversion";
     }
 }
