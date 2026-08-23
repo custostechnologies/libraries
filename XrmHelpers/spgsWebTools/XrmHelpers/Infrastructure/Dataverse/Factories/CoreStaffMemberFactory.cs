@@ -51,16 +51,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         public (CoreStaffMember staff, bool createAsInactive, string? error) Build(StaffMemberSnapshot syn, string[] attributes)
         {
             _tracer.Trace("Entered CoreStaffMemberFactory.Build");
-            _tracer.Trace("attributes string[]: {0}",
-                JsonSerializer.Serialize(
-                    attributes,
-                    new JsonSerializerOptions
-                    {
-                        WriteIndented = true
-                    }
-                )
-            );
-
             _coreStaffQuery = new CoreStaffMembers(_service, _tracer);
             _systemuserQuery = new Systemusers(_service, _tracer);
             _envVarQuery = new EnvironmentVariableValues(_tracer, _service);
@@ -288,6 +278,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapStatus(StaffMemberSnapshot syn, CoreStaffMember target)
         {
+            _tracer.Trace("In MapStatus with syn.Status: {0}, syn.StatusReason: {1}", syn.Status, syn.StatusReason);
             target.Status = syn.Status;
             target.StatusReason = syn.StatusReason;
         }

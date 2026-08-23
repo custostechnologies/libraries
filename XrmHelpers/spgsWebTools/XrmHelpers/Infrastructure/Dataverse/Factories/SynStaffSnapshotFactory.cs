@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
@@ -79,6 +80,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     ? Guid.NewGuid().ToString()
                     : GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, target, preImage),
             };
+
+            if (string.IsNullOrWhiteSpace(snap.StaffCategory)) snap.StaffCategory = "NOTSEL";
+            if (string.IsNullOrWhiteSpace(snap.StaffDepartment)) snap.StaffDepartment = "NOTSPEC";
+            if (string.IsNullOrWhiteSpace(snap.StaffCampus)) snap.CampusKey = Enums.Campus.OtherOrNone.ToString();
+            if (string.IsNullOrWhiteSpace(snap.Gender)) snap.GenderKey = Enums.Gender.NotSpecified.ToString();
 
             if (preImage != null)
             {
