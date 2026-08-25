@@ -47,7 +47,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var sJSeq = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage);
             var sJCode = GetAttributeDelta.Execute<string>(SynJobPositionFields.StaffJobPositionCode, target, preImage);
             var sID = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage);
-            var sStaffName = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffNameInternal, target, preImage);
+            var sStaffName = GetAttributeDelta.Execute<string>(SynJobPositionFields.StaffNameInternal, target, preImage);
 
             var snap = new JobPositionSnapshot
             {
