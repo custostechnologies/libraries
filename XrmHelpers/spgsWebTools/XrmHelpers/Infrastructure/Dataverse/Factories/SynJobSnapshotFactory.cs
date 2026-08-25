@@ -41,20 +41,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 preImage = null;
             }
 
+            var sName = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage);
+            var sDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage);
+            var sASeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, target, preImage);
+            var sJSeq = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage);
+            var sJCode = GetAttributeDelta.Execute<string>(SynJobPositionFields.StaffJobPositionCode, target, preImage);
+            var sID = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage);
+            var sStaffName = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffNameInternal, target, preImage);
+
             var snap = new JobPositionSnapshot
             {
                 //identity
                 SynMirrorId = sourceRecordId,
 
-                Name = $"{GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage)} {GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage)} (SEQ: {GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, target, preImage)})",
-                JobPositionDescription = GetAttributeDelta.Execute<string>(SynJobPositionFields.JobPositionDescription, target, preImage),
+                Name = $"[{sID}] {sStaffName} {sDescription} (SEQ: {sASeq})",
+                JobPositionDescription = sDescription,
                 SynReportsTo = GetAttributeDelta.Execute<string>(SynJobPositionFields.ReportsTo, target, preImage),
                 SourceOfTruthId = GetAttributeDelta.Execute<string>(SynJobPositionFields.SourceOfTruthId, target, preImage),
 
                 // retrieve integer values
-                StaffId = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffId, target, preImage),
+                StaffId = sID,
                 JobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.JobPositionsSeq, target, preImage),
                 StaffJobPositionsSeq = GetAttributeDelta.Execute<int>(SynJobPositionFields.StaffJobPositionsSeq, target, preImage),
+                StaffJobPositionCode = sJCode,
+                StaffNameInternal = sStaffName,
 
                 // retrieve float values
                 AssignmentFte = GetAttributeDelta.Execute<decimal>(SynJobPositionFields.StaffJobPositionFTE, target, preImage),
