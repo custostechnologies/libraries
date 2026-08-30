@@ -66,6 +66,7 @@ namespace spgsWebTools.XrmHelpers.Constants
 
         public const string HealthConditionsDetails = "pgrowth_healthconditionsdetails";
         public const string HealthConditionsYN = "pgrowth_healthconditionsyn";
+        public const string HasAccomplishedTeacher = "pgrowth_hasaccomplishedteacher";
 
         public const string HomePhoneNumber = "pgrowth_homephonenumber";
 
