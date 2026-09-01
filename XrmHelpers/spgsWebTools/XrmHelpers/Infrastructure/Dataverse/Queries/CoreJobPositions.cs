@@ -210,5 +210,45 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
+        public T GetPropertyValue<T>(Guid recordId, string attributeName)
+        {
+            _tracer.Trace("Building GetPropertyValue query expression on {0}", ENTITY_LOGICAL_NAME);
+
+            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            {
+                TopCount = 1,
+                ColumnSet = new ColumnSet(
+                    CoreJobPositionFields.CoreJobPositionId,
+                    attributeName
+                ),
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(
+                            CoreJobPositionFields.CoreJobPositionId,
+                            ConditionOperator.Equal,
+                            recordId
+                        )
+                    }
+                }
+            };
+
+            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+
+            var results = _service.RetrieveMultiple(query);
+
+            _tracer.Trace("Finished executing query expression");
+
+            if (results.Entities.Count > 0)
+            {
+                return results.Entities[0].GetAttributeValue<T>(attributeName);
+            }
+            else
+            {
+                _tracer.Trace("No existing entities were found");
+                return null;
+            }
+        }
     }
 }
