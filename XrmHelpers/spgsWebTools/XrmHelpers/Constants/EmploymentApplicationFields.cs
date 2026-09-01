@@ -30,8 +30,6 @@ namespace spgsWebTools.XrmHelpers.Constants
 
         public const string CurrentEmployerAddress = "pgrowth_currentemployeraddress";
         public const string CurrentEmployerName = "pgrowth_currentemployername";
-        public const string CurrentEmployerPostCode = "pgrowth_currentemployerpostcode";
-        public const string CurrentEmployerState = "pgrowth_currentemployerstate";
 
         public const string CurrentEmploymentBaseSalary = "pgrowth_currentemploymentbasesalary";
         public const string CurrentEmploymentCurrentAllowances = "pgrowth_currentemploymentcurrentallowances";
@@ -177,5 +175,10 @@ namespace spgsWebTools.XrmHelpers.Constants
 
         public const string WWCCExpiryDate = "pgrowth_wwccexpirydate";
         public const string WWCCNumber = "pgrowth_wwccnumber";
+
+        // current combined into single form field
+        public const string CurrentEmployerPostCode = "pgrowth_currentemployerpostcode";
+        public const string CurrentEmployerState = "pgrowth_currentemployerstate";
+
     }
 }

@@ -8,5 +8,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SourceMessageId = "pgrowth_sourcemessageid";
         public const string Message = "pgrowth_message";
         public const string BodyContent = "pgrowth_bodycontent";
+        public const string DebuggingOuput = "pgrowth_debuggingoutput";
     }
 }

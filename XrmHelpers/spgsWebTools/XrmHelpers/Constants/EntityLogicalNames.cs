@@ -16,5 +16,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Organization = "organization";
         public const string EnvironmentVariableValue = "environmentvariablevalue";
         public const string EnvironmentVariableDefinition = "environmentvariabledefinition";
+        public const string JobOpportunity = "pgrowth_jobopportunity";
+        public const string EmploymentApplication = "pgrowth_employmentapplication";
     }
 }
