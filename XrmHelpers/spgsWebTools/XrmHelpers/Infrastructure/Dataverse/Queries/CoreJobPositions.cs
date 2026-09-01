@@ -210,17 +210,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
-        public T GetPropertyValue<T>(Guid recordId, string attributeName)
+        public Entity GetPropertyValues(Guid recordId, string[] attributeNames)
         {
             _tracer.Trace("Building GetPropertyValue query expression on {0}", ENTITY_LOGICAL_NAME);
+
+            var colSet = new ColumnSet(CoreJobPositionFields.CoreJobPositionId);
+            if (attributeNames.Length > 0) colSet.AddColumns(attributeNames);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
                 TopCount = 1,
-                ColumnSet = new ColumnSet(
-                    CoreJobPositionFields.CoreJobPositionId,
-                    attributeName
-                ),
+                ColumnSet = colSet,
                 Criteria =
                 {
                     Conditions =
@@ -242,7 +242,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             if (results.Entities.Count > 0)
             {
-                return results.Entities[0].GetAttributeValue<T>(attributeName);
+                return results.Entities[0];
             }
             else
             {

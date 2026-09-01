@@ -13,6 +13,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Category = "mthomas_category";
         public const string CategoryCode = "mthomas_categorycode";
         public const string CmeaType = "pgrowth_cmeatype";
+        public const string PAOSSubType = "pgrowth_paossubtype";
         public const string ReportsTo = "pgrowth_reportsto";
 
         // Status

@@ -97,6 +97,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
 
                 MapJobLookUps(_dto.JobOpportunityCode);
+                MapApplicationType(_dto.JobPosition.Id);
 
                 return _service.Create(_newApplication);
             }
@@ -106,19 +107,40 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw;
             }
         }
-        private void MapCmeaType(Guid coreJobPositionId)
+        private void MapApplicationType(Guid coreJobPositionId)
         {
-            var value = _coreJobPositionsQuery.GetAttributeValue(coreJobPositionId, CoreJobPositionFields.CMEAType);
-            if (value == null)
+            ApplicationType applicationType = ApplicationType.Other;
+            CMEAType cmeaType = CMEAType.NotApplicable;
+
+            var attributes = [CoreJobPositionFields.CMEAType, CoreJobPositionFields.PAOSSubType];
+            var entity = _coreJobPositionsQuery.GetAttributeValues(coreJobPositionId, attributes) ?? throw new InvalidPluginExecutionException($"Core Job Position {coreJobPositionId} not found.");
+
+            var cmeaTypeValue = entity.GetAttributeValue<MapOptionSetValue>(CoreJobPositionFields.CMEAType) ?? throw new InvalidPluginExecutionException("Core Job Position has no CMEA Type. Unable to set nullable field in new Employment Application Record. Exiting.");
+
+            cmeaType = (CMEAType)cmeaTypeValue.Value;
+
+            if (cmeaType == CMEAType.Teaching)
             {
-                _tracer.Trace("Core Job Position has no CMEA Type");
-                throw new InvalidPluginExecutionException("Core Job Position has no CMEA Type. Unable to set nullable field in new Employment Application Record. Exiting.");
+                applicationType = ApplicationType.Teaching;
             }
-            else
+            else if (cmeaType == CMEAType.PAOS)
             {
-                if (value = CMEAType.Teaching)
-                    _newApplication[EmploymentApplicationFields.Type] = MapOptionSetValue((int)ApplicationType.Teaching);
+                var paosSubTypeValue = entity.GetAttributeValue<MapOptionSetValue>(CoreJobPositionFields.PAOSSubType) ?? throw new InvalidPluginExecutionException("CMEA Type is PAOS but CoreJobPosition PAOS Sub-Type is null. Exiting. ");
+
+                var paosSubType = (PAOSSubType)paosSubTypeValue.Value;
+
+                if (paosSubType == PAOSSubType.CoCurricular)
+                {
+                    applicationType = ApplicationType.CoCurricular;
+                }
+                else if (paosSubType == PAOSSubType.NonCoCurricular)
+                {
+                    applicationType = ApplicationType.Support;
+                }
             }
+
+            _newApplication[EmploymentApplicationFields.Type] = MapOptionSetValue((int)applicationType);
+            _newApplication[EmploymentApplicationFields.CMEAType] = MapOptionSetValue((int)cmeaType);
         }
         private void MapJobLookUps(int opportunityCode)
         {

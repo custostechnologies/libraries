@@ -4,6 +4,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Enums
     {
         Support = 386630000,
         Teaching = 386630001,
-        CoCurricular = 386630002
+        CoCurricular = 386630002,
+        Other = 386630003
     }
 }
