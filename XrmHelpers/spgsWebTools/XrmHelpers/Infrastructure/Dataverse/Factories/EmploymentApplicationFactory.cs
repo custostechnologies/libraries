@@ -41,6 +41,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             try
             {
                 // test numeric postcodes
+                _tracer.Trace("Before postcode mapping");
                 if (
                     !string.IsNullOrWhiteSpace(_dto.PostCodeText)
                         && _dto.PostCodeText.All(char.IsDigit)
@@ -57,10 +58,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
 
                 // test VisaWorkApprovalDetails
+                _tracer.Trace("Before vis/work approval details mapping");
                 _newApplication[EmploymentApplicationFields.IsPermanentResident] = _dto.VisaWorkApprovalDetails.ToLower() == "permanentresident";
                 _newApplication[EmploymentApplicationFields.HasWorkVisa] = _dto.VisaWorkApprovalDetails.ToLower() == "workvisa";
 
                 // test preferred name
+                _tracer.Trace("Before preferred name mapping");
                 if (string.IsNullOrWhiteSpace(_dto.PreferredName))
                 {
                     _newApplication[EmploymentApplicationFields.PreferredName] = _dto.GivenNames.Split(' ')[0];
@@ -71,14 +74,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
 
                 // test CPR and First Aid qualifications
+                _tracer.Trace("Before cpr and first aid mapping");
                 _newApplication[EmploymentApplicationFields.CurrentFirstAidYN] = string.IsNullOrWhiteSpace(_dto.NameOfFirstAidQualification) == false;
                 _newApplication[EmploymentApplicationFields.CPRQualificationYN] = string.IsNullOrWhiteSpace(_dto.NameOfCPRQualification) == false;
 
                 // set OptionSetValues from integer keys
+                _tracer.Trace("Before Salutation mapping");
                 _newApplication[EmploymentApplicationFields.Salutation] = MapOptionSetValue((int)_dto.Salutation);
-                _newApplication[EmploymentApplicationFields.CMEAType] = MapOptionSetValue((int)_dto.CMEAType);
+
+                _tracer.Trace("Before State mapping");
                 _newApplication[EmploymentApplicationFields.State] = MapOptionSetValue((int)_dto.State);
+
+                _tracer.Trace("Before CurrentEmployerState mapping");
                 _newApplication[EmploymentApplicationFields.CurrentEmployerState] = MapOptionSetValue((int)_dto.CurrentEmployerState);
+
+                _tracer.Trace("Before Denomination mapping");
                 _newApplication[EmploymentApplicationFields.Denomination] = MapOptionSetValue((int)_dto.Denomination);
 
                 Type type = typeof(EmploymentApplicationFields);
