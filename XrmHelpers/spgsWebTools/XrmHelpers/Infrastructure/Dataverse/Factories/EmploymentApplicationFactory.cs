@@ -112,10 +112,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             ApplicationType applicationType = ApplicationType.Other;
             CMEAType cmeaType = CMEAType.NotApplicable;
 
-            var attributes = [CoreJobPositionFields.CMEAType, CoreJobPositionFields.PAOSSubType];
-            var entity = _coreJobPositionsQuery.GetAttributeValues(coreJobPositionId, attributes) ?? throw new InvalidPluginExecutionException($"Core Job Position {coreJobPositionId} not found.");
+            string[] attributes = [CoreJobPositionFields.CmeaType, CoreJobPositionFields.PAOSSubType];
+            var entity = _coreJobPositionsQuery.GetPropertyValues(coreJobPositionId, attributes) ?? throw new InvalidPluginExecutionException($"Core Job Position {coreJobPositionId} not found.");
 
-            var cmeaTypeValue = entity.GetAttributeValue<MapOptionSetValue>(CoreJobPositionFields.CMEAType) ?? throw new InvalidPluginExecutionException("Core Job Position has no CMEA Type. Unable to set nullable field in new Employment Application Record. Exiting.");
+            var cmeaTypeValue = entity.GetAttributeValue<OptionSetValue>(CoreJobPositionFields.CmeaType) ?? throw new InvalidPluginExecutionException("Core Job Position has no CMEA Type. Unable to set nullable field in new Employment Application Record. Exiting.");
 
             cmeaType = (CMEAType)cmeaTypeValue.Value;
 
@@ -125,7 +125,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             else if (cmeaType == CMEAType.PAOS)
             {
-                var paosSubTypeValue = entity.GetAttributeValue<MapOptionSetValue>(CoreJobPositionFields.PAOSSubType) ?? throw new InvalidPluginExecutionException("CMEA Type is PAOS but CoreJobPosition PAOS Sub-Type is null. Exiting. ");
+                var paosSubTypeValue = entity.GetAttributeValue<OptionSetValue>(CoreJobPositionFields.PAOSSubType) ?? throw new InvalidPluginExecutionException("CMEA Type is PAOS but CoreJobPosition PAOS Sub-Type is null. Exiting. ");
 
                 var paosSubType = (PAOSSubType)paosSubTypeValue.Value;
 
@@ -139,7 +139,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
             }
 
-            _newApplication[EmploymentApplicationFields.Type] = MapOptionSetValue((int)applicationType);
+            _newApplication[EmploymentApplicationFields.ApplicationType] = MapOptionSetValue((int)applicationType);
             _newApplication[EmploymentApplicationFields.CMEAType] = MapOptionSetValue((int)cmeaType);
         }
         private void MapJobLookUps(int opportunityCode)
