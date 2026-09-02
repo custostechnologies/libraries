@@ -94,11 +94,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 
 
         [ApplicationField(EmploymentApplicationFields.CurrentEmploymentBaseSalary)]
-        public decimal CurrentEmploymentBaseSalary { get; set; }
+        public string? CurrentEmploymentBaseSalary { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.CurrentEmploymentCurrentAllowances)]
-        public decimal CurrentEmploymentCurrentAllowances { get; set; }
+        public string? CurrentEmploymentCurrentAllowances { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.CurrentEmploymentEndDate)]
