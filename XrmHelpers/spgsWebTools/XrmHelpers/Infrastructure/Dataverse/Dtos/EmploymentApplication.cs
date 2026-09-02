@@ -29,30 +29,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField(EmploymentApplicationFields.ApplicationType)]
         public ApplicationType? ApplicationType { get; set; }
 
+        //[ApplicationField(EmploymentApplicationFields.CertifierOfCPRQualification)]
+        //public string? CertifierOfCPRQualification { get; set; }
 
-        [ApplicationField(EmploymentApplicationFields.CertifierOfCPRQualification)]
-        public string? CertifierOfCPRQualification { get; set; }
-
-
-        [ApplicationField(EmploymentApplicationFields.CertifierOfFirstAidQualification)]
-        public string? CertifierOfFirstAidQualification { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.CertifierOfFirstAidQualification)]
+        //public string? CertifierOfFirstAidQualification { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.ChurchAttending)]
         public string? ChurchAttending { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.CitizenshipCountry)]
-        public string? CitizenshipCountry { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.CitizenshipCountry)]
+        //public string? CitizenshipCountry { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.CMEAType)]
         public CMEAType? CMEAType { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.CommunityAndChurchInvolvement)]
-        public string? CommunityAndChurchInvolvement { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.CommunityAndChurchInvolvement)]
+        //public string? CommunityAndChurchInvolvement { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.ChurchAddressLine1)]
         public string? ChurchAddressLine1 { get; set; }
@@ -72,13 +65,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         //[ApplicationField(EmploymentApplicationFields.CoreJobPosition)]
         public EntityReference? CoreJobPosition { get; set; }
 
+        //[ApplicationField(EmploymentApplicationFields.CountryOfCitizenship)]
+        //public string? CountryOfCitizenship { get; set; }
 
-        [ApplicationField(EmploymentApplicationFields.CountryOfCitizenship)]
-        public string? CountryOfCitizenship { get; set; }
-
-
-        [ApplicationField(EmploymentApplicationFields.CountryOfCitizenshipText)]
-        public string? CountryOfCitizenshipText { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.CountryOfCitizenshipText)]
+        //public string? CountryOfCitizenshipText { get; set; }
 
         public bool CPRQualificationYN { get; set; }
 
@@ -154,10 +145,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField(EmploymentApplicationFields.Denomination)]
         public Denomination? Denomination { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.EducationalPhilosophy)]
-        public string? EducationalPhilosophy { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.EducationalPhilosophy)]
+        //public string? EducationalPhilosophy { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.EducationalQualifications)]
         public string? EducationalQualifications { get; set; }
@@ -166,10 +155,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField(EmploymentApplicationFields.EmailAddressMinisterOfReligion)]
         public string? EmailAddressMinisterOfReligion { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.ExtraCurricularInvolvement)]
-        public string? ExtraCurricularInvolvement { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.ExtraCurricularInvolvement)]
+        //public string? ExtraCurricularInvolvement { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.GivenNames)]
         public string? GivenNames { get; set; }
@@ -183,12 +170,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public bool IsAlum { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.HealthConditionsDetails)]
-        public string? HealthConditionsDetails { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.HealthConditionsDetails)]
+        //public string? HealthConditionsDetails { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.HealthConditionsYN)]
-        public string? HealthConditionsYN { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.HealthConditionsYN)]
+        //public string? HealthConditionsYN { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.HomePhoneNumber)]
@@ -253,25 +239,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField(EmploymentApplicationFields.NESAAccreditationStatus)]
         public NESAAccreditation? NESAAccreditationStatus { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.OtherQualifications)]
-        public string? OtherQualifications { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.OtherQualifications)]
+        //public string? OtherQualifications { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.OtherQualifiedSubjects)]
         public string? OtherQualifiedSubjects { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.PassportNumber)]
-        public string? PassportNumber { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.PassportNumber)]
+        //public string? PassportNumber { get; set; }
 
+        //[ApplicationField(EmploymentApplicationFields.PastEmploymentDetails)]
+        //public string? PastEmploymentDetails { get; set; }
 
-        [ApplicationField(EmploymentApplicationFields.PastEmploymentDetails)]
-        public string? PastEmploymentDetails { get; set; }
-
-
-        [ApplicationField(EmploymentApplicationFields.PastoralCareInterestSkills)]
-        public string? PastoralCareInterestSkills { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.PastoralCareInterestSkills)]
+        //public string? PastoralCareInterestSkills { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.PersonalEmailAddress)]
@@ -291,16 +273,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? PreferredName { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.PreviousWorkersCompClaimsDetails)]
-        public string? PreviousWorkersCompClaimsDetails { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.PreviousWorkersCompClaimsDetails)]
+        //public string? PreviousWorkersCompClaimsDetails { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.PreviousWorkersCompClaimsYN)]
-        public string? PreviousWorkersCompClaimsYN { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.PreviousWorkersCompClaimsYN)]
+        //public string? PreviousWorkersCompClaimsYN { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.ProcessId)]
-        public string? ProcessId { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.ProcessId)]
+        //public string? ProcessId { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.ProfessionalMembershipDetails)]
@@ -443,8 +425,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? WorkPhoneNumber { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.WWCCExpiryDate)]
-        public DateTime? WWCCExpiryDate { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.WWCCExpiryDate)]
+        //public DateTime? WWCCExpiryDate { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.WWCCNumber)]
