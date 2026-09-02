@@ -90,12 +90,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     }
                 }
 
+                BuildAddresses();
                 MapJobLookUps(_dto.WebFormOptionValue);
 
                 if (_coreJobPositionRef == null) throw new InvalidPluginExecutionException("CoreJobPositionRef is null. Exiting.");
 
                 MapApplicationType(_coreJobPositionRef.Id);
-                _newApplication[EmploymentApplicationFields.SubmissionDate] = DateTimeOffset.Now;
+                _newApplication[EmploymentApplicationFields.SubmissionDate] = DateTime.UtcNow;
 
                 return _service.Create(_newApplication);
             }

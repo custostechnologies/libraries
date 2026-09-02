@@ -11,8 +11,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField("pgrowth_webformoptionvalue")]
         public int WebFormOptionValue { get; set; }
 
-        [ApplicationField(EmploymentApplicationFields.Address)]
-        public string? Address { get; set; }
+        [ApplicationField(EmploymentApplicationFields.AddressLine1)]
+        public string? AddressLine1 { get; set; }
 
         //[ApplicationField(EmploymentApplicationFields.ApplicantDeclarationId)]
         //public string? ApplicantDeclarationId { get; set; }
