@@ -2,13 +2,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Enums
 {
     public enum StateTerritory
     {
-        NSW = 384810000,
-        VIC = 384810001,
-        QLD = 384810002,
-        SA = 384810003,
-        NT = 384810004,
-        WA = 384810005,
-        TAS = 384810006,
-        Other = 384810007
+        NSW = 386630000,
+        VIC = 386630001,
+        QLD = 386630002,
+        SA = 386630003,
+        NT = 386630004,
+        WA = 386630005,
+        TAS = 386630006,
+        Other = 386630007
     }
 }
