@@ -2,9 +2,6 @@ namespace spgsWebTools.XrmHelpers.Constants
 {
     public static class EmploymentApplicationFields
     {
-        public const string StageId = "stageid";
-        public const string TraversedPath = "traversedpath";
-
         // application metadata
         public const string ApplicantDeclarationId = "pgrowth_applicantdeclarationid";
         public const string ApplicationFolderPath = "pgrowth_applicationfolderpath";
@@ -154,6 +151,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         // other information
 
         // unused fields
+        /*
         public const string CommunityAndChurchInvolvement = "pgrowth_communityandchurchinvolvement";
         public const string CertifierOfCPRQualification = "pgrowth_certifierofcprqualification";
         public const string CertifierOfFirstAidQualification = "pgrowth_certifieroffirstaidqualification";
@@ -174,20 +172,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string PreviousWorkersCompClaimsDetails = "pgrowth_previousworkerscompclaimsdetails";
         public const string PreviousWorkersCompClaimsYN = "pgrowth_previousworkerscompclaimsyn";
         public const string WWCCExpiryDate = "pgrowth_wwccexpirydate";
-
-        // reference only
-        public const string CreatedBy = "createdby";
-        public const string CreatedOnBehalfBy = "createdonbehalfby";
-        public const string CreatedOn = "createdon";
-        public const string ModifiedBy = "modifiedby";
-        public const string ModifiedOnBehalfBy = "modifiedonbehalfby";
-        public const string ModifiedOn = "modifiedon";
-        public const string OwnerId = "ownerid";
-        public const string OwningBusinessUnit = "owningbusinessunit";
-        public const string OwningTeam = "owningteam";
-        public const string OwningUser = "owninguser";
-        public const string ProcessId = "processid";
-        public const string OverriddenCreatedOn = "overriddencreatedon";
+        */
 
     }
 }
