@@ -180,7 +180,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             EmploymentApplicationFields.CurrentFirstAidYN,
             EmploymentApplicationFields.ApplicationType,
             EmploymentApplicationFields.CMEAType,
-            EmploymentApplicationFields.WebFormOptionValue
+            "pgrowth_webformoptionvalue"
         };
     }
 }
