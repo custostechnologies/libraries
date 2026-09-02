@@ -242,6 +242,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             if (results.Entities.Count > 0)
             {
+                _tracer.Trace("CoreJobPositions.GetPropertyValues for recordId: {0} returned {1} entities.",
+                    recordId,
+                    results.Entities.Count
+                );
                 return results.Entities[0];
             }
             else

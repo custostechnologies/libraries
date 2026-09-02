@@ -102,14 +102,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapApplicationType(Guid coreJobPositionId)
         {
+            _tracer.Trace("Entered MapApplicationType.");
+
             ApplicationType applicationType = ApplicationType.Other;
             CMEAType cmeaType = CMEAType.NotApplicable;
 
             string[] attributes = [CoreJobPositionFields.CmeaType, CoreJobPositionFields.PAOSSubType];
+
+            _tracer.Trace("Retrieving CoreJobPosition properties in MapApplicationType.");
             var entity = _coreJobPositionsQuery.GetPropertyValues(coreJobPositionId, attributes) ?? throw new InvalidPluginExecutionException($"Core Job Position {coreJobPositionId} not found.");
 
+            _tracer.Trace("Setting cmeaTypeValue.");
             var cmeaTypeValue = entity.GetAttributeValue<OptionSetValue>(CoreJobPositionFields.CmeaType) ?? throw new InvalidPluginExecutionException("Core Job Position has no CMEA Type. Unable to set nullable field in new Employment Application Record. Exiting.");
 
+            _tracer.Trace("Casting cmeaTypeValue to CMEAType enum and storing as cmeaType");
             cmeaType = (CMEAType)cmeaTypeValue.Value;
 
             if (cmeaType == CMEAType.Teaching)
@@ -118,8 +124,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             else if (cmeaType == CMEAType.PAOS)
             {
+                _tracer.Trace("Setting paosSubTypeValue.");
                 var paosSubTypeValue = entity.GetAttributeValue<OptionSetValue>(CoreJobPositionFields.PAOSSubType) ?? throw new InvalidPluginExecutionException("CMEA Type is PAOS but CoreJobPosition PAOS Sub-Type is null. Exiting. ");
 
+                _tracer.Trace("Casting paosSubTypeValue to PAOSSubType enum and storing as paosSubType");
                 var paosSubType = (PAOSSubType)paosSubTypeValue.Value;
 
                 if (paosSubType == PAOSSubType.CoCurricular)
@@ -132,8 +140,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
             }
 
+            _tracer.Trace("Setting _newApplication ApplicationType and CMEAType properties.");
             _newApplication[EmploymentApplicationFields.ApplicationType] = MapOptionSetValue((int)applicationType);
             _newApplication[EmploymentApplicationFields.CMEAType] = MapOptionSetValue((int)cmeaType);
+            _tracer.Trace("Returning to calling factory instance.");
         }
         private void MapJobLookUps(int webFormOptionValue)
         {
@@ -145,6 +155,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.ToEntityReference();
             _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.GetAttributeValue<EntityReference>(JobOpportunityFields.HiringFor);
+
+            _tracer.Trace("MapJobLookups completed.");
         }
         private static OptionSetValue MapOptionSetValue(int key)
         {
