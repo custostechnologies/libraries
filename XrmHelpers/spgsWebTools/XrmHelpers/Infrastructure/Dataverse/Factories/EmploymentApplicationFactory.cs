@@ -43,54 +43,57 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 // test VisaWorkApprovalDetails
                 _tracer.Trace("Before vis/work approval details mapping");
-                _newApplication[EmploymentApplicationFields.IsPermanentResident] = _dto.VisaWorkApprovalDetails.ToLower() == "permanentresident";
-                _newApplication[EmploymentApplicationFields.HasWorkVisa] = _dto.VisaWorkApprovalDetails.ToLower() == "workvisa";
+                var visaStatus = _dto.VisaWorkApprovalDetails?.ToLowerInvariant();
+                _newApplication[EmploymentApplicationFields.IsPermanentResident] = visaStatus == "permanentresident";
+                _newApplication[EmploymentApplicationFields.HasWorkVisa] = visaStatus == "workvisa";
 
                 // test preferred name
                 _tracer.Trace("Before preferred name mapping");
-                if (string.IsNullOrWhiteSpace(_dto.PreferredName))
-                {
-                    _newApplication[EmploymentApplicationFields.PreferredName] = _dto.GivenNames.Split(' ')[0];
-                }
-                else
-                {
-                    _newApplication[EmploymentApplicationFields.PreferredName] = _dto.PreferredName;
-                }
+
+                _newApplication[EmploymentApplicationFields.PreferredName] = string.IsNullOrWhiteSpace(_dto.PreferredName)
+                    ? _dto.GivenNames.Split(' ')[0]
+                    : _dto.PreferredName;
 
                 // test CPR and First Aid qualifications
                 _tracer.Trace("Before cpr and first aid mapping");
                 _newApplication[EmploymentApplicationFields.CurrentFirstAidYN] = string.IsNullOrWhiteSpace(_dto.NameOfFirstAidQualification) == false;
                 _newApplication[EmploymentApplicationFields.CPRQualificationYN] = string.IsNullOrWhiteSpace(_dto.NameOfCPRQualification) == false;
 
-                // set OptionSetValues from integer keys
-                _tracer.Trace("Before Salutation mapping");
-                _newApplication[EmploymentApplicationFields.Salutation] = MapOptionSetValue((int)_dto.Salutation);
+                var properties = typeof(EmploymentApplication).GetProperties();
 
-                _tracer.Trace("Before State mapping");
-                _newApplication[EmploymentApplicationFields.State] = MapOptionSetValue((int)_dto.State);
-
-                _tracer.Trace("Before CurrentEmployerState mapping");
-                _newApplication[EmploymentApplicationFields.CurrentEmployerState] = MapOptionSetValue((int)_dto.CurrentEmployerState);
-
-                _tracer.Trace("Before Denomination mapping");
-                _newApplication[EmploymentApplicationFields.Denomination] = MapOptionSetValue((int)_dto.Denomination);
-
-                Type type = typeof(EmploymentApplicationFields);
-                FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static);
-
-                foreach (var field in fields)
+                foreach (var property in properties)
                 {
-                    if (field.IsLiteral && !field.IsInitOnly)
-                    {
-                        string name = field.Name;
-                        object value = field.GetValue(null);
+                    var attribute = property.GetCustomAttribute<ApplicationFieldAttribute>();
 
-                        Console.WriteLine($"Setting field {name} = {value}");
-                        _newApplication[name] = value;
+                    if (attribute == null) continue;
+                    if (excludedFields.Contains(attribute.FieldName)) continue;
+                    var value = property.GetValue(_dto);
+
+                    _tracer.Trace(
+                        "Mapping {0} -> {1}, Value: {2}",
+                        property.Name,
+                        attribute.FieldName,
+                        value ?? "<null>"
+                    );
+
+                    if (value == null) continue;
+
+                    var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+                    if (type.IsEnum)
+                    {
+                        _newApplication[attribute.FieldName] = new OptionSetValue(Convert.ToInt32(value));
+                    }
+                    else
+                    {
+                        _newApplication[attribute.FieldName] = value;
                     }
                 }
 
                 MapJobLookUps(_dto.WebFormOptionValue);
+
+                if (_coreJobPositionRef == null) throw new InvalidPluginExecutionException("CoreJobPositionRef is null. Exiting.");
+
                 MapApplicationType(_coreJobPositionRef.Id);
 
                 return _service.Create(_newApplication);
@@ -169,5 +172,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             return new OptionSetValue(key);
         }
+        private readonly HashSet<string> excludedFields = new HashSet<string>()
+        {
+            EmploymentApplicationFields.IsPermanentResident,
+            EmploymentApplicationFields.HasWorkVisa,
+            EmploymentApplicationFields.CPRQualificationYN,
+            EmploymentApplicationFields.CurrentFirstAidYN,
+            EmploymentApplicationFields.ApplicationType,
+            EmploymentApplicationFields.CMEAType,
+            EmploymentApplicationFields.WebFormOptionValue
+        };
     }
 }

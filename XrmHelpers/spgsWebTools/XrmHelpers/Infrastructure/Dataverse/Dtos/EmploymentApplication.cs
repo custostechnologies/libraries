@@ -14,17 +14,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField(EmploymentApplicationFields.Address)]
         public string? Address { get; set; }
 
-        [ApplicationField(EmploymentApplicationFields.ApplicantDeclarationId)]
-        public string? ApplicantDeclarationId { get; set; }
+        //[ApplicationField(EmploymentApplicationFields.ApplicantDeclarationId)]
+        //public string? ApplicantDeclarationId { get; set; }
 
+        //[ApplicationField(EmploymentApplicationFields.ApplicationFolderPath)]
+        //public string? ApplicationFolderPath { get; set; }
 
-        [ApplicationField(EmploymentApplicationFields.ApplicationFolderPath)]
-        public string? ApplicationFolderPath { get; set; }
-
-
-        [ApplicationField(EmploymentApplicationFields.ApplicationKey)]
-        public string? ApplicationKey { get; set; }
-
+        //[ApplicationField(EmploymentApplicationFields.ApplicationKey)]
+        //public string? ApplicationKey { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.ApplicationType)]
         public ApplicationType? ApplicationType { get; set; }
