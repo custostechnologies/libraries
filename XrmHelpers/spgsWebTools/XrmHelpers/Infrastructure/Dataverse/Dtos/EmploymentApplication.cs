@@ -349,7 +349,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 
 
         [ApplicationField(EmploymentApplicationFields.Referee2State)]
-        public string? Referee2State { get; set; }
+        public StateTerritory? Referee2State { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.Referee3AddressLine1)]
