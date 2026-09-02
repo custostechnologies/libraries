@@ -22,6 +22,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private Entity _newApplication;
         private EmploymentApplication _dto = null;
         private CoreJobPositions _coreJobPositionsQuery = null;
+        private EntityReference? _coreJobPositionRef = null;
         public EmploymentApplicationFactory(
             ITracingService tracer,
             IOrganizationService service
@@ -90,7 +91,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 }
 
                 MapJobLookUps(_dto.WebFormOptionValue);
-                MapApplicationType(_dto.JobPosition.Id);
+                MapApplicationType(_coreJobPositionRef.Id);
 
                 return _service.Create(_newApplication);
             }
@@ -154,7 +155,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             if (entity == null) throw new InvalidPluginExecutionException("Job Opportunity entity returned to MapJobLookups in EmploymentApplicationFactory is null. Exiting.");
 
             _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.ToEntityReference();
-            _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.GetAttributeValue<EntityReference>(JobOpportunityFields.HiringFor);
+
+            _tracer.Trace("Retrieving CoreJobPositionRef");
+            _coreJobPositionRef = entity.GetAttributeValue<EntityReference>(JobOpportunityFields.HiringFor);
+
+            if (_coreJobPositionRef == null) throw new InvalidPluginExecutionException("Unable to resolve CoreJobPosition. Exiting.");
+
+            _newApplication[EmploymentApplicationFields.CoreJobPosition] = _coreJobPositionRef;
 
             _tracer.Trace("MapJobLookups completed.");
         }
