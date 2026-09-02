@@ -9,6 +9,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Enums
         Lutheran = 386630004,
         Presbyterian = 386630005,
         Methodist = 386630006,
-        Other = 386630007
+        Other = 386630007,
+        None = 386630008
     }
 }

@@ -8,8 +8,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 {
     public class EmploymentApplication
     {
-        [ApplicationField("pgrowth_positionappliedfor")]
-        public int JobOpportunityCode { get; set; }
+        [ApplicationField("pgrowth_webformoptionvalue")]
+        public int WebFormOptionValue { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.Address)]
         public string? Address { get; set; }
@@ -54,9 +54,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? CommunityAndChurchInvolvement { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.ChurchAddress)]
-        public string? ChurchAddress { get; set; }
+        [ApplicationField(EmploymentApplicationFields.ChurchAddressLine1)]
+        public string? ChurchAddressLine1 { get; set; }
 
+        [ApplicationField(EmploymentApplicationFields.ChurchSuburb)]
+        public string? ChurchSuburb { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.ChurchState)]
+        public StateTerritory? ChurchState { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.ChurchCountry)]
+        public string? ChurchCountry { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.ChurchPostcode)]
+        public string? ChurchPostcode { get; set; }
 
         //[ApplicationField(EmploymentApplicationFields.CoreJobPosition)]
         public EntityReference? CoreJobPosition { get; set; }
@@ -72,16 +83,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public bool CPRQualificationYN { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.CurrentEmployerAddress)]
-        public string? CurrentEmployerAddress { get; set; }
+        [ApplicationField(EmploymentApplicationFields.CurrentEmployerAddressLine1)]
+        public string? CurrentEmployerAddressLine1 { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.CurrentEmployerName)]
         public string? CurrentEmployerName { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.CurrentEmployerPostCode)]
-        public string? CurrentEmployerPostCode { get; set; }
+        [ApplicationField(EmploymentApplicationFields.CurrentEmployerPostcode)]
+        public string? CurrentEmployerPostcode { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.CurrentEmployerSuburb)]
+        public string? CurrentEmployerSuburb { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.CurrentEmployerCountry)]
+        public string? CurrentEmployerCountry { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.CurrentEmployerState)]
@@ -265,12 +282,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? PhoneNumberMinisterOfReligion { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.PostCode)]
-        public int PostCode { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Postcode)]
+        public int Postcode { get; set; }
 
-
-        [ApplicationField(EmploymentApplicationFields.PostCodeText)]
-        public string? PostCodeText { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.PreferredName)]
@@ -293,8 +307,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? ProfessionalMembershipDetails { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.Referee1Address)]
-        public string? Referee1Address { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Referee1AddressLine1)]
+        public string? Referee1AddressLine1 { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.Referee1Name)]
@@ -309,9 +323,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? Referee1PhoneNumber { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.Referee1PostCode)]
-        public int Referee1PostCode { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Referee1Postcode)]
+        public string? Referee1Postcode { get; set; }
 
+        [ApplicationField(EmploymentApplicationFields.Referee1Suburb)]
+        public string? Referee1Suburb { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.Referee1Country)]
+        public string? Referee1Country { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.Referee1RelationshipToApplicant)]
         public string? Referee1RelationshipToApplicant { get; set; }
@@ -321,8 +340,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public StateTerritory? Referee1State { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.Referee2Address)]
-        public string? Referee2Address { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Referee2AddressLine1)]
+        public string? Referee2AddressLine1 { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.Referee2Name)]
@@ -337,9 +356,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? Referee2PhoneNumber { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.Referee2PostCode)]
-        public int Referee2PostCode { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Referee2Postcode)]
+        public string? Referee2Postcode { get; set; }
 
+        [ApplicationField(EmploymentApplicationFields.Referee2Suburb)]
+        public string? Referee2Suburb { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.Referee2Country)]
+        public string? Referee2Country { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.Referee2RelationshipToApplicant)]
         public string? Referee2RelationshipToApplicant { get; set; }
@@ -349,8 +373,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? Referee2State { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.Referee3Address)]
-        public string? Referee3Address { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Referee3AddressLine1)]
+        public string? Referee3AddressLine1 { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.Referee3Name)]
@@ -365,8 +389,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         public string? Referee3PhoneNumber { get; set; }
 
 
-        [ApplicationField(EmploymentApplicationFields.Referee3PostCode)]
-        public int Referee3PostCode { get; set; }
+        [ApplicationField(EmploymentApplicationFields.Referee3Postcode)]
+        public string? Referee3Postcode { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.Referee3Suburb)]
+        public string? Referee3Suburb { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.Referee3Country)]
+        public string? Referee3Country { get; set; }
 
 
         [ApplicationField(EmploymentApplicationFields.Referee3RelationshipToApplicant)]
@@ -380,10 +410,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
         [ApplicationField(EmploymentApplicationFields.Salutation)]
         public Salutation Salutation { get; set; }
 
-
         [ApplicationField(EmploymentApplicationFields.State)]
         public StateTerritory? State { get; set; }
 
+        [ApplicationField(EmploymentApplicationFields.Suburb)]
+        public string? Suburb { get; set; }
+
+        [ApplicationField(EmploymentApplicationFields.Country)]
+        public string? Country { get; set; }
 
         [ApplicationField(EmploymentApplicationFields.SubmissionDate)]
         public DateTime? SubmissionDate { get; set; }

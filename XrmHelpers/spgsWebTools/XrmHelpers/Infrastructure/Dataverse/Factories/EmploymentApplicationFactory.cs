@@ -40,23 +40,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             try
             {
-                // test numeric postcodes
-                _tracer.Trace("Before postcode mapping");
-                if (
-                    !string.IsNullOrWhiteSpace(_dto.PostCodeText)
-                        && _dto.PostCodeText.All(char.IsDigit)
-                )
-                {
-                    _newApplication[EmploymentApplicationFields.PostCode] = int.Parse(_dto.PostCodeText);
-                }
-                if (
-                    _dto.CurrentEmployerPostCode != null
-                        && _dto.CurrentEmployerPostCode.All(char.IsDigit)
-                )
-                {
-                    _newApplication[EmploymentApplicationFields.PostCode] = int.Parse(_dto.PostCodeText);
-                }
-
                 // test VisaWorkApprovalDetails
                 _tracer.Trace("Before vis/work approval details mapping");
                 _newApplication[EmploymentApplicationFields.IsPermanentResident] = _dto.VisaWorkApprovalDetails.ToLower() == "permanentresident";
@@ -106,7 +89,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     }
                 }
 
-                MapJobLookUps(_dto.JobOpportunityCode);
+                MapJobLookUps(_dto.WebFormOptionValue);
                 MapApplicationType(_dto.JobPosition.Id);
 
                 return _service.Create(_newApplication);
@@ -152,13 +135,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _newApplication[EmploymentApplicationFields.ApplicationType] = MapOptionSetValue((int)applicationType);
             _newApplication[EmploymentApplicationFields.CMEAType] = MapOptionSetValue((int)cmeaType);
         }
-        private void MapJobLookUps(int opportunityCode)
+        private void MapJobLookUps(int webFormOptionValue)
         {
             // query and set entity reference (parent job opp.)
             var _jobOpportunityQuery = new JobOpportunities(_service, _tracer);
-            var entity = _jobOpportunityQuery.GetEntityByCode(_dto.JobOpportunityCode);
+            var entity = _jobOpportunityQuery.GetEntityByCode(webFormOptionValue);
+
+            if (entity == null) throw new InvalidPluginExecutionException("Job Opportunity entity returned to MapJobLookups in EmploymentApplicationFactory is null. Exiting.");
+
             _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.ToEntityReference();
-            _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.GetAttributeValue<XmlEntityReference>(JobOpportunityFields.HiringFor);
+            _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.GetAttributeValue<EntityReference>(JobOpportunityFields.HiringFor);
         }
         private static OptionSetValue MapOptionSetValue(int key)
         {
