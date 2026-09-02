@@ -262,7 +262,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 
 
         [ApplicationField(EmploymentApplicationFields.Postcode)]
-        public int Postcode { get; set; }
+        public string? Postcode { get; set; }
 
 
 
