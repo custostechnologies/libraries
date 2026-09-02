@@ -95,6 +95,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 if (_coreJobPositionRef == null) throw new InvalidPluginExecutionException("CoreJobPositionRef is null. Exiting.");
 
                 MapApplicationType(_coreJobPositionRef.Id);
+                _newApplication[EmploymentApplicationFields.SubmissionDate] = DateTimeOffset.Now;
 
                 return _service.Create(_newApplication);
             }
@@ -167,6 +168,88 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _newApplication[EmploymentApplicationFields.CoreJobPosition] = _coreJobPositionRef;
 
             _tracer.Trace("MapJobLookups completed.");
+        }
+        private void BuildAddresses()
+        {
+            _tracer.Trace("Entered EmploymentApplicationFactory.BuildAddresses()");
+            _tracer.Trace("Building Address");
+            if (_dto.AddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.AddressLine1}</p>
+                <p>{_dto.Suburb.ToUpper()} {_dto.State.ToString()} {_dto.Postcode}</p>
+                <p>{_dto.Country}</p>";
+
+                _newApplication[EmploymentApplicationFields.Address] = address;
+            }
+
+            _tracer.Trace("Building ChurchAddress");
+            if (_dto.AddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.AddressLine1}</p>
+                <p>{_dto.Suburb.ToUpper()} {_dto.State.ToString()} {_dto.Postcode}</p>
+                <p>{_dto.Country}</p>";
+
+                _newApplication[EmploymentApplicationFields.Address] = address;
+            }
+
+            _tracer.Trace("Building ChurchAddress");
+            if (_dto.ChurchAddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.ChurchAddressLine1}</p>
+                <p>{_dto.ChurchSuburb.ToUpper()} {_dto.ChurchState.ToString()} {_dto.ChurchPostcode}</p>
+                <p>{_dto.ChurchCountry}</p>";
+
+                _newApplication[EmploymentApplicationFields.ChurchAddress] = address;
+            }
+
+            _tracer.Trace("Building CurrentEmployerAddress");
+            if (_dto.CurrentEmployerAddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.CurrentEmployerAddressLine1}</p>
+                <p>{_dto.CurrentEmployerSuburb.ToUpper()} {_dto.CurrentEmployerState.ToString()} {_dto.CurrentEmployerPostcode}</p>
+                <p>{_dto.CurrentEmployerCountry}</p>";
+
+                _newApplication[EmploymentApplicationFields.CurrentEmployerAddress] = address;
+            }
+
+            _tracer.Trace("Building Referee1Address");
+            if (_dto.Referee1AddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.Referee1AddressLine1}</p>
+                <p>{_dto.Referee1Suburb.ToUpper()} {_dto.Referee1State.ToString()} {_dto.Referee1Postcode}</p>
+                <p>{_dto.Referee1Country}</p>";
+
+                _newApplication[EmploymentApplicationFields.Referee1Address] = address;
+            }
+
+            _tracer.Trace("Building Referee2Address");
+            if (_dto.Referee2AddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.Referee2AddressLine1}</p>
+                <p>{_dto.Referee2Suburb.ToUpper()} {_dto.Referee2State.ToString()} {_dto.Referee2Postcode}</p>
+                <p>{_dto.Referee2Country}</p>";
+
+                _newApplication[EmploymentApplicationFields.Referee2Address] = address;
+            }
+
+            _tracer.Trace("Building Referee3Address");
+            if (_dto.Referee3AddressLine1 != null)
+            {
+                var address = $@"
+                <p>{_dto.Referee3AddressLine1}</p>
+                <p>{_dto.Referee3Suburb.ToUpper()} {_dto.Referee3State.ToString()} {_dto.Referee3Postcode}</p>
+                <p>{_dto.Referee1Country}</p>";
+
+                _newApplication[EmploymentApplicationFields.Referee3Address] = address;
+            }
+
+            _tracer.Trace("Returning to EmploymentApplicationFactory.Create caller.");
         }
         private static OptionSetValue MapOptionSetValue(int key)
         {
