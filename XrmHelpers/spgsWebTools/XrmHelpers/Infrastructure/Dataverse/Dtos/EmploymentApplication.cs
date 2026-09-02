@@ -452,22 +452,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 
         // settable entity references and Guid's
         public EntityReference? ParentJobOpportunity { get; set; }
-        public EntityReference? OwningBusinessUnit { get; set; }
-        public EntityReference? OwningTeam { get; set; }
-        public EntityReference? OwningUser { get; set; }
-        public EntityReference? JobPosition { get; set; }
-        public string? StageId { get; set; }
-        public string? TraversedPath { get; set; }
-
-        // reference-only system fields
-        public Status? Status { get; set; }
-        public StatusReason? StatusReason { get; set; }
-        public EntityReference? ModifiedBy { get; }
-        public DateTime? ModifiedOn { get; }
-        public EntityReference? CreatedBy { get; }
-        public string? CreatedOn { get; }
-        public Guid? OwnerId { get; }
-        public Guid? EmploymentApplicationId { get; set; }
     }
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class ApplicationFieldAttribute : Attribute
