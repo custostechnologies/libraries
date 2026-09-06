@@ -1,4 +1,6 @@
 using System;
+using Microsoft.Xrm.Sdk;
+using System.Linq;
 using System.Security.Cryptography;
 
 namespace spgsWebTools.XrmHelpers.Shared.Hashing
@@ -16,7 +18,9 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 
             var sha256 = SHA256.Create();
             byte[] hash = sha256.ComputeHash(image);
-            string hexHash = Convert.ToHexString(hash);
+            string hexHash = string.Concat(
+                hash.Select(bit => bit.ToString("X2"))
+            );
 
             _tracer.Trace("Returning to caller with hash: {0}.", hexHash);
             return hexHash;
