@@ -6,12 +6,12 @@ using spgsWebTools.XrmHelpers.Shared.Utilities;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-    public class Businessunits
+    public class BusinessUnits
     {
         private readonly string ENTITY_LOGICAL_NAME = "businessunits";
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        public Businessunits(IOrganizationService service, ITracingService tracer)
+        public BusinessUnits(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
             _tracer = tracer;

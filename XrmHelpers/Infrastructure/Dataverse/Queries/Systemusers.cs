@@ -19,6 +19,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             _tracer.Trace("Building RetrieveReference query expression on systemuser");
 
+            if (string.IsNullOrWhiteSpace(upn) && string.IsNullOrWhiteSpace(username))
+            {
+                _tracer.Trace("Systemusers.GetReferenceByMetadata called with null upn and username");
+                throw new Exception();
+            }
+
             var query = new QueryExpression("systemuser")
             {
                 TopCount = 1,
@@ -26,24 +32,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     "internalemailaddress",
                     "systemuserid",
                     "domainname"
-                ),
-                Criteria = new FilterExpression(LogicalOperator.Or)
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(
-                            "internalemailaddress",
-                            ConditionOperator.Equal,
-                            upn
-                        ),
-                        new ConditionExpression(
-                            "domainname",
-                            ConditionOperator.Equal,
-                            username
-                        )
-                    }
-                }
+                )
             };
+
+            var upnCondition = new ConditionExpression(
+                "internalemailaddress",
+                ConditionOperator.Equal,
+                upn
+            );
+
+            var usernameCondition = new ConditionExpression(
+                "domainname",
+                ConditionOperator.Equal,
+                username
+            );
+
+            if (string.IsNullOrWhiteSpace(upn) && username != null) query.Criteria.AddCondition(usernameCondition);
+            if (upn != null && string.IsNullOrWhiteSpace(username)) query.Criteria.AddCondition(upnCondition);
+            if (upn != null && username != null)
+            {
+                var filter = new FilterExpression(LogicalOperator.Or);
+                filter.AddCondition(usernameCondition);
+                filter.AddCondition(upnCondition);
+                query.Criteria.AddFilter(filter);
+            }
 
             _tracer.Trace("Executing RetrieveReference query expression on systemuser");
 
@@ -73,9 +85,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _tracer.Trace("No existing entities were found, returning empty EntityReference");
-                return new EntityReference(
-                    "systemuser"
-                );
+                return null;
             }
         }
         public EntityReference GetReferenceByAzureId(string azureId)
@@ -132,9 +142,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _tracer.Trace("No existing entities were found, returning empty EntityReference");
-                return new EntityReference(
-                    "systemuser"
-                );
+                return null;
             }
         }
         public Entity GetMetadataById(Guid systemuserid)
@@ -186,7 +194,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _tracer.Trace("No existing entities were found");
-                return new Entity("systemuser");
+                return null;
             }
         }
         public UpsertResponse Upsert(string objectId, string upn)

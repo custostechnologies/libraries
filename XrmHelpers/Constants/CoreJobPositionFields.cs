@@ -13,6 +13,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Category = "mthomas_category";
         public const string CategoryCode = "mthomas_categorycode";
         public const string CmeaType = "pgrowth_cmeatype";
+        public const string PAOSSubType = "pgrowth_paossubtype";
         public const string ReportsTo = "pgrowth_reportsto";
 
         // Status
@@ -23,5 +24,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         // Metadata
         public const string FteRequired = "pgrowth_fterequired";
         public const string NextReviewDate = "mthomas_nextreviewdate";
+        public const string HierarchyDependsOnCampus = "pgrowth_hierarchydependsoncampus";
     }
 }

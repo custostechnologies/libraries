@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
@@ -9,6 +10,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
+        private bool _forceIncoming = false;
         public SynStaffSnaphotFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -25,6 +27,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             Enums.StatusReason statusReason = Enums.StatusReason.Active;
 
             _tracer.Trace("In SynStaffMemberFactory.Build, TARGET id: {0}", target.Id);
+
+            if (target.Contains(SynStaffMemberFields.MutePlugin))
+            {
+                _forceIncoming = target.GetAttributeValue<bool>(SynStaffMemberFields.MutePlugin);
+                _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
+                preImage = null;
+            }
 
             if (preImage != null)
             {
@@ -72,6 +81,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     : GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, target, preImage),
             };
 
+            if (string.IsNullOrWhiteSpace(snap.StaffCategory)) snap.StaffCategory = "NOTSEL";
+            if (string.IsNullOrWhiteSpace(snap.StaffDepartment)) snap.StaffDepartment = "NOTSPEC";
+            if (string.IsNullOrWhiteSpace(snap.StaffCampus)) snap.CampusKey = Enums.Campus.OtherOrNone.ToString();
+            if (string.IsNullOrWhiteSpace(snap.Gender)) snap.GenderKey = Enums.Gender.NotSpecified.ToString();
+
             if (preImage != null)
             {
                 snap.SynMirrorId = preImage.Id;
@@ -79,20 +93,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 snap.EncodedHash = GetAttributeDelta.Execute<int>(SynStaffMemberFields.EncodedHash, preImage, null);
             }
             // update status based on values
-            if (
-                ((snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow)
-                || (!snap.ActiveFlag))
-                && (snap.Status == new OptionSetValue((int)status))
-            )
+            _tracer.Trace("Calculating snapshot status based on ActiveFlag and LeavingDate.");
+            if (snap.ActiveFlag == false || (snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow))
             {
+                _tracer.Trace("Setting snap.Status and snap.StatusReason to INACTIVE.");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+                _tracer.Trace("Setting snap.Status and snap.StatusReason to status: {0} and statusReason: {1}", status.ToString(), statusReason.ToString());
                 snap.Status = new OptionSetValue((int)status);
                 snap.StatusReason = new OptionSetValue((int)statusReason);
             }
+
+            _tracer.Trace("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
 
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
                 JsonSerializer.Serialize<StaffMemberSnapshot>(

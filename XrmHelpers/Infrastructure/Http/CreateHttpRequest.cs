@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Xrm.Sdk;
 using System.Text.Json;
+using System.Net;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Http
 {
@@ -19,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
         {
             _tracer = tracer;
         }
-        public string TriggerAnonFlow(
+        public (HttpStatusCode status, string body) TriggerAnonFlow(
             string endpoint,
             string upn,
             string correlationId
@@ -39,18 +40,29 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
                     "application/json");
 
                 var response = client.PostAsync(endpoint, content).Result;
-                var responseBody = response.Content.ReadAsStringAsync().Result;
 
-                if (!response.IsSuccessStatusCode)
+                if (response != null)
                 {
-                    var error =
-                        response.Content.ReadAsStringAsync().Result;
+                    _tracer.Trace("Flow response (client.PostAsync().Result): {0}", JsonSerializer.Serialize(response));
 
-                    throw new Exception(
-                        $"Flow call failed. Status: {response.StatusCode}. Response: {error}");
+                    var responseBody = response.Content.ReadAsStringAsync().Result;
+
+                    _tracer.Trace("Flow Response Body (response.Content.ReadAsStringAsync().Result): {0}", JsonSerializer.Serialize(responseBody));
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var error =
+                            response.Content.ReadAsStringAsync().Result;
+
+                        throw new Exception(
+                            $"Flow call failed. Status: {response.StatusCode}. Response: {error}");
+                    }
+
+                    _tracer.Trace("Flow response received successfully. Returning (response.StatusCode, responseBody) to calling method.");
+
+                    return (response.StatusCode, responseBody);
                 }
-
-                return responseBody;
+                return (HttpStatusCode.SeeOther, "");
             }
         }
         /*

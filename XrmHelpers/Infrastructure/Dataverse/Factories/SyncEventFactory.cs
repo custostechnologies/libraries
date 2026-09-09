@@ -27,7 +27,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             string sourceEntityLogicalName,
             string syncEntityLogicalName,
             AttributeCollection attributes,
-            bool syncAll
+            bool syncAll,
+            bool exitEarly
         )
         {
             try
@@ -41,6 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Pending);
                 syncEvent["pgrowth_sourcerecordid"] = synMirrorId;
                 syncEvent["pgrowth_correlationid"] = _correlationId;
+                syncEvent["pgrowth_exitearly"] = exitEarly;
                 syncEvent["pgrowth_updatedattributes"] = string.Join(
                     ",",
                     attributes.Keys.Select(key => key)
@@ -59,12 +61,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw;
             }
         }
-        public void MarkError(Entity syncEvent)
+        public void MarkError(Entity syncEvent, string errorMessage)
         {
             try
             {
                 _tracer.Trace("Marking syncEvent status as error");
                 syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
+                syncEvent["pgrowth_errormessage"] = errorMessage;
                 _tracer.Trace("Updating syncEvent");
                 _service.Update(syncEvent);
                 _tracer.Trace("syncEvent updated from MarkError");
