@@ -64,20 +64,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (!string.IsNullOrWhiteSpace(snap.StudentCampus))
             {
-                var campus = (Enums.Campus)Resolvers.CampusResolver.ToEnum(snap.StudentCampus);
+                var campus = Resolvers.CampusResolver.ToEnum(snap.StudentCampus!);
                 snap.StudentCampusKey = ((int)campus).ToString();
             }
 
             if (!string.IsNullOrWhiteSpace(snap.StudentGender))
             {
-                var gender = (Enums.Gender)Resolvers.GenderResolver.ToEnum(snap.StudentGender);
+                var gender = Resolvers.GenderResolver.ToEnum(snap.StudentGender!);
                 snap.StudentGenderKey = ((int)gender).ToString();
             }
 
             if (!string.IsNullOrWhiteSpace(snap.StudentHouse))
             {
-                var campus = (Enums.House)Resolvers.HouseResolver.ToEnum(snap.StudentCampus);
-                snap.StudentCampusKey = ((int)campus).ToString();
+                _tracer.Trace($"snap.StudentHouse: {snap.StudentHouse}");
+                var house = Resolvers.HouseResolver.ToEnum(snap.StudentHouse!);
+                snap.StudentHouseKey = ((int)house).ToString();
             }
 
             if (preImage != null)

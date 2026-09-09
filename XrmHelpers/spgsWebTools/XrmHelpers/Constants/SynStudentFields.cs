@@ -2,7 +2,7 @@ namespace spgsWebTools.XrmHelpers.Constants
 {
     public static class SynStudentFields
     {
-        public const string SynMirrorId = "pgrowth_pgrowth_synergeticvstudentscurrentid";
+        public const string SynMirrorId = "pgrowth_synergeticvstudentscurrentid";
         public const string StudentId = "pgrowth_studentid";
         public const string Age = "pgrowth_age";
         public const string MutePlugin = "pgrowth_muteplugin";
