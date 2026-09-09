@@ -18,5 +18,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string EnvironmentVariableDefinition = "environmentvariabledefinition";
         public const string JobOpportunity = "pgrowth_jobopportunity";
         public const string EmploymentApplication = "pgrowth_employmentapplication";
+        public const string SynStudent = "pgrowth_synergeticvstudentscurrent";
+        public const string CoreStudent = "pgrowth_corestudent";
     }
 }
