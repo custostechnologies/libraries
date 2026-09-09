@@ -22,5 +22,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string PhotoLastModified = "pgrowth_photolastmodified";
         public const string Status = "statecode";
         public const string StatusReason = "statuscode";
+        public const string LastSync = "pgrowth_lastsync";
     }
 }
