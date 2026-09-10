@@ -135,7 +135,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 target.Surname = syn.StudentSurname;
                 target.Preferred = syn.StudentPreferred;
                 target.DisplayName = $"{syn.StudentPreferred} {syn.StudentSurname}";
-                _tracer.Trace("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}, DisplayName: {4}, FullName: {5}",
+                _tracer.Trace("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}, DisplayName: {4}",
                     target.Given1,
                     target.Given2,
                     target.Surname,
