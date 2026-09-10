@@ -19,7 +19,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStudentFields.StudentGiven2,
                 SynStudentFields.StudentSurname,
                 SynStudentFields.StudentPreferred,
-                SynStudentFields.StudentId
+                SynStudentFields.Age,
+                SynStudentFields.StudentCampus,
+                SynStudentFields.StudentHouse,
+                SynStudentFields.StudentYearLevel
             );
 
         /// <summary>

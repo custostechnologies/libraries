@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
@@ -57,14 +58,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                     _target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
 
-                foreach (var a in _attributes)
-                {
-                    _tracer.Trace(
-                        "{0} = {1}",
-                        a.Key,
-                        a.Value?.ToString() ?? "<null>"
-                    );
-                }
+                _tracer.Trace("_TARGET AT END OF SynStudentMapper: {0}", JsonSerializer.Serialize(
+                    _target,
+                    new JsonSerializerOptions { WriteIndented = true }
+                ));
 
                 return _target;
             }
@@ -86,6 +83,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             {
                 SetAttributeDelta.Execute(_target, attributeName, value);
             }
+
+            _tracer.Trace("SetDelta _target[{0}] set to: {1}", attributeName, _target.GetAttributeValue<T>(attributeName));
         }
     }
 }

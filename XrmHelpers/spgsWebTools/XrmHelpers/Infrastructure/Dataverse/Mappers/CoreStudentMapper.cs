@@ -16,11 +16,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         }
         public Entity ToCreateEntity(CoreStudent core, string[] updatedAttributes)
         {
+            _tracer.Trace("ToCreateEntity called with updatedAttributes: {0}", string.Join(",", updatedAttributes));
             var entity = ToEntity(core, true, updatedAttributes);
             return entity;
         }
         public Entity ToUpdateEntity(CoreStudent core, string[] updatedAttributes)
         {
+            _tracer.Trace("ToUpdateEntity called with updatedAttributes: {0}", string.Join(",", updatedAttributes));
             if (core.CoreStudentId == Guid.Empty)
             {
                 throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
@@ -33,6 +35,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
         public Entity ToEntity(CoreStudent core, bool create, string[] updatedAttributes)
         {
+            _tracer.Trace("ToEntity called with core: {0}, create: {1}, and updatedAttributes: {2}",
+               string.Join(",", updatedAttributes),
+               create,
+               string.Join(",", updatedAttributes)
+           );
             var entity = new Entity(ENTITY_LOGICAL_NAME);
 
             // Identity
