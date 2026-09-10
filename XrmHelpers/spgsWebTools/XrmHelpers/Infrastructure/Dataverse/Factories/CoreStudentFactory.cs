@@ -28,11 +28,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer.Trace("Entered CoreStudentFactory.Build");
             _coreStudentQuery = new CoreStudents(_service, _tracer);
 
-            _tracer.Trace("No Core Student Member found via GetEntityByTruth. Trying again with StudentId");
+            _tracer.Trace("Retrieving Core Student using StudentId");
 
             Entity core = _coreStudentQuery.GetEntityByStudentId(syn.StudentId);
-
-            _create = core == null;
 
             CoreStudent coreStudent;
             if (core != null) _tracer.Trace("core not null and _create = true, entered coreStudent and setting IsCreate to false", core.Id);
@@ -40,12 +38,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             coreStudent = core != null
                 ? new CoreStudent()
                 {
-                    IsCreate = _create,
+                    IsCreate = false,
                     CoreStudentId = core.Id
                 }
                 : new CoreStudent()
                 {
-                    IsCreate = _create
+                    IsCreate = true
                 };
 
             /* update dirty attributes */

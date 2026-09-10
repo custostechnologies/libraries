@@ -50,6 +50,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             _tracer.Trace($"create is: {create}");
             if (create == false)
             {
+                entity[CoreStudentFields.CoreStudentId] = core.CoreStudentId;
                 MapDelta(entity, updatedAttributes,
                     SynStudentFields.Status,
                     CoreStudentFields.Status,
