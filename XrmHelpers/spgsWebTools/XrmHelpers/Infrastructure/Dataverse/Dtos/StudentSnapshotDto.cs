@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics.Contracts;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
+using spgsWebTools.XrmHelpers.Domain.Attributes;
+using spgsWebTools.XrmHelpers.Constants;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 {
@@ -11,8 +13,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
     public class StudentSnapshot
     {
         // identity
-        public Guid SynMirrorId { get; set; }
-        public int StudentId { get; set; }
+        [DataverseLink(
+            srcName: SynStudentFields.SynMirrorId, 
+            srcType: typeof(Guid), 
+            trgName: null, 
+            trgType: null
+        )]
+        public Guid? SourceRecordId { get; set; }
+        
+        public Guid? CoreRecordId { get; set; }
+        
+        public int? StudentId { get; set; }
         public bool? MutePlugin { get; set; }
         public bool? StudentActiveFlag { get; set; }
         public string? StudentCampus { get; set; }

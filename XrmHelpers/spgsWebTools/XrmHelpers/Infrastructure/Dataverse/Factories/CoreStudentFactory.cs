@@ -23,15 +23,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer = tracer;
             _correlationId = correlationId;
         }
-        public (CoreStudent student, bool createAsInactive, string? error) Build(StudentSnapshot syn, string[] attributes)
+        public (CoreStudent student, bool createAsInactive, string? error) Build(StudentSnapshot snap, string[] attributes)
         {
             _tracer.Trace("Entered CoreStudentFactory.Build");
             _coreStudentQuery = new CoreStudents(_service, _tracer);
 
-            _tracer.Trace("No Core Student Member found via GetEntityByTruth. Trying again with StudentId");
+            if (snap.StudentId == null) throw new InvalidPluginExecutionException("StudentSnapshot has no StudentID key.");
+            int _studentId = (int)snap.StudentId;
 
-            Entity core = _coreStudentQuery.GetEntityByStudentId(syn.StudentId);
-
+            Entity core = _coreStudentQuery.GetEntityByStudentId(_studentId);
             _create = core == null;
 
             CoreStudent coreStudent;
@@ -50,77 +50,86 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             /* update dirty attributes */
             // identity
-            MapStudentId(syn, coreStudent);
-            MapStudentActiveFlag(syn, coreStudent, attributes);
-            MapStatus(syn, coreStudent);
-            MapStudentName(syn, coreStudent, attributes);
-            MapStudentGender(syn, coreStudent, attributes);
-            MapStudentCampus(syn, coreStudent, attributes);
-            MapStudentHouse(syn, coreStudent, attributes);
-            MapAge(syn, coreStudent, attributes);
-            MapStudentYearLevel(syn, coreStudent, attributes);
+            MapStudentId(snap, coreStudent);
+            MapStudentActiveFlag(snap, coreStudent, attributes);
+            MapStatus(snap, coreStudent);
+            MapStudentName(snap, coreStudent, attributes);
+            MapStudentGender(snap, coreStudent, attributes);
+            MapStudentCampus(snap, coreStudent, attributes);
+            MapStudentHouse(snap, coreStudent, attributes);
+            MapAge(snap, coreStudent, attributes);
+            MapStudentYearLevel(snap, coreStudent, attributes);
 
             // sync data
             MapLastSync(coreStudent);
-            if (_create && syn.StudentActiveFlag == false)
+            if (_create && snap.StudentActiveFlag == false)
             {
                 _tracer.Trace("CREATE CoreStudent with a status of INACTIVE. Returning with createAsInactive = TRUE to perform subsequent UPDATE operation to inactive the record afyter CREATE.");
                 return (coreStudent, true, null);
             }
             return (coreStudent, false, null);
         }
-        private void MapStudentCampus(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        public void SnapshotToEntity(StudentSnapshot snap, string[] attributes)
+        {
+            
+        }
+
+
+
+
+
+        private void MapStudentCampus(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapStudentCampus");
             if (_create || attributes.Contains(SynStudentFields.StudentCampus))
             {
-                _tracer.Trace("syn.StudentCampusKey: {0}", syn.StudentCampusKey);
-                var campusKey = int.TryParse(syn.StudentCampusKey, out int key) ? key : 384810005; // represets Resolution Error option
+                _tracer.Trace("snap.StudentCampusKey: {0}", snap.StudentCampusKey);
+                var campusKey = int.TryParse(snap.StudentCampusKey, out int key) ? key : 384810005; // represets Resolution Error option
                 _tracer.Trace("campusKey parsed to: {0}", key);
-                target.Campus = new OptionSetValue(campusKey);
+                core.Campus = new OptionSetValue(campusKey);
             }
         }
-        private void MapStudentGender(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        private void MapStudentGender(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapGender");
             if (_create || attributes.Contains(SynStudentFields.StudentGender))
             {
-                _tracer.Trace("syn.StudentGenderKey: {0}", syn.StudentGenderKey);
-                var genderKey = int.TryParse(syn.StudentGenderKey, out int key) ? key : 384810005; // represets Resolution Error option
+                _tracer.Trace("snap.StudentGenderKey: {0}", snap.StudentGenderKey);
+                var genderKey = int.TryParse(snap.StudentGenderKey, out int key) ? key : 384810005; // represets Resolution Error option
                 _tracer.Trace("genderKey parsed to: {0}", key);
-                target.Gender = new OptionSetValue(genderKey);
+                core.Gender = new OptionSetValue(genderKey);
             }
         }
-        private void MapStudentHouse(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        private void MapStudentHouse(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapStudentHouse");
             if (_create || attributes.Contains(SynStudentFields.StudentHouse))
             {
-                _tracer.Trace("syn.StudentHouseKey: {0}", syn.StudentHouseKey);
-                var houseKey = int.TryParse(syn.StudentHouseKey, out int key) ? key : 384810005; // represets Resolution Error option
+                _tracer.Trace("snap.StudentHouseKey: {0}", snap.StudentHouseKey);
+                var houseKey = int.TryParse(snap.StudentHouseKey, out int key) ? key : 384810005; // represets Resolution Error option
                 _tracer.Trace("houseKey parsed to: {0}", key);
-                target.House = new OptionSetValue(houseKey);
+                core.House = new OptionSetValue(houseKey);
             }
         }
-        private void MapAge(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        private void MapAge(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapAge.");
             if (_create || attributes.Contains(SynStudentFields.Age))
             {
-                target.Age = syn.Age;
-                _tracer.Trace("Set target.Age to: {0}", target.Age);
+                core.Age = snap.Age;
+                _tracer.Trace("Set core.Age to: {0}", core.Age);
             }
         }
-        private void MapStudentYearLevel(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        private void MapStudentYearLevel(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapStudentYearLevel.");
             if (_create || attributes.Contains(SynStudentFields.StudentYearLevel))
             {
-                target.YearLevel = syn.StudentYearLevel;
-                _tracer.Trace("Set target.YearLevel to: {0}", target.YearLevel);
+                core.YearLevel = snap.StudentYearLevel;
+                _tracer.Trace("Set core.YearLevel to: {0}", core.YearLevel);
             }
         }
-        private void MapStudentName(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        private void MapStudentName(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapName");
             bool contains = attributes.Contains(SynStudentFields.StudentGiven1)
@@ -130,42 +139,42 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (_create || contains)
             {
-                target.Given1 = syn.StudentGiven1;
-                target.Given2 = syn.StudentGiven2;
-                target.Surname = syn.StudentSurname;
-                target.Preferred = syn.StudentPreferred;
-                target.DisplayName = $"{syn.StudentPreferred} {syn.StudentSurname}";
+                core.Given1 = snap.StudentGiven1;
+                core.Given2 = snap.StudentGiven2;
+                core.Surname = snap.StudentSurname;
+                core.Preferred = snap.StudentPreferred;
+                core.DisplayName = $"{snap.StudentPreferred} {snap.StudentSurname}";
                 _tracer.Trace("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}",
-                    target.Given1,
-                    target.Given2,
-                    target.Surname,
-                    target.Preferred
+                    core.Given1,
+                    core.Given2,
+                    core.Surname,
+                    core.Preferred
                 );
             }
 
         }
-        private void MapStatus(StudentSnapshot syn, CoreStudent target)
+        private void MapStatus(StudentSnapshot snap, CoreStudent core)
         {
-            _tracer.Trace("In MapStatus with syn.Status: {0}, syn.StatusReason: {1}", syn.Status, syn.StatusReason);
-            target.Status = syn.Status;
-            target.StatusReason = syn.StatusReason;
+            _tracer.Trace("In MapStatus with snap.Status: {0}, snap.StatusReason: {1}", snap.Status, snap.StatusReason);
+            core.Status = snap.Status;
+            core.StatusReason = snap.StatusReason;
         }
-        private void MapStudentActiveFlag(StudentSnapshot syn, CoreStudent target, string[] attributes)
+        private void MapStudentActiveFlag(StudentSnapshot snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapIsActive.");
             if (_create || attributes.Contains(SynStudentFields.StudentActiveFlag))
             {
-                target.ActiveFlag = syn.StudentActiveFlag ?? false;
-                _tracer.Trace("Set target.IsActive to: {0}", target.ActiveFlag);
+                core.ActiveFlag = snap.StudentActiveFlag ?? false;
+                _tracer.Trace("Set core.IsActive to: {0}", core.ActiveFlag);
             }
         }
-        private void MapLastSync(CoreStudent target)
+        private void MapLastSync(CoreStudent core)
         {
-            target.LastSync = DateTime.UtcNow;
+            core.LastSync = DateTime.UtcNow;
         }
-        private void MapStudentId(StudentSnapshot syn, CoreStudent target)
+        private void MapStudentId(StudentSnapshot snap, CoreStudent core)
         {
-            target.StudentId = syn.StudentId;
+            if (snap.StudentId != null) core.StudentId = (int)snap.StudentId;
         }
     }
 }

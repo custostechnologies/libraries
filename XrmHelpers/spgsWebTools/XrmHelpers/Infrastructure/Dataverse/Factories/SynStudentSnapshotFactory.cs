@@ -2,43 +2,29 @@ using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 using Resolvers = spgsWebTools.XrmHelpers.Domain.Resolvers;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStudentSnapshotFactory
     {
-        private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-        private bool _forceIncoming = false;
-        public SynStudentSnapshotFactory(IOrganizationService service, ITracingService tracer)
+        public SynStudentSnapshotFactory(ITracingService tracer)
         {
-            _service = service;
             _tracer = tracer;
         }
         public StudentSnapshot Build(Entity target, Entity? preImage)
         {
-            _tracer.Trace("Entered SynStudentSnapshotFactory.Build() with targetId: {0} and preImageId: {1}",
+            _tracer.Trace("Entered SynStudentSnapshotFactory.Build() with Entity target ID: {0} and Entity preImage ID: {1}",
                 target.Id,
                 preImage?.Id
             );
 
-            Enums.Status status = Enums.Status.Active;
-            Enums.StatusReason statusReason = Enums.StatusReason.Active;
-
-            _tracer.Trace("In SynStudentFactory.Build, TARGET id: {0}", target.Id);
-
-            if (target.Contains(SynStudentFields.MutePlugin))
+            if (target.Contains(SynStudentFields.MutePlugin) && target.GetAttributeValue<bool>(SynStudentFields.MutePlugin))
             {
-                _forceIncoming = target.GetAttributeValue<bool>(SynStudentFields.MutePlugin);
                 _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
                 preImage = null;
-            }
-
-            if (preImage != null)
-            {
-                _tracer.Trace("Executing SynStudentQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
             }
 
             var snap = new StudentSnapshot()
@@ -83,23 +69,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (preImage != null)
             {
-                snap.SynMirrorId = preImage.Id;
+                snap.SourceRecordId = preImage.Id;
                 snap.PlaintextHash = GetAttributeDelta.Execute<string>(SynStudentFields.PlaintextHash, preImage, null);
                 snap.EncodedHash = GetAttributeDelta.Execute<int>(SynStudentFields.EncodedHash, preImage, null);
             }
+
             // update status based on values
             _tracer.Trace("Calculating snapshot status based on StudentActiveFlag.");
             if (snap.StudentActiveFlag == false)
             {
-                _tracer.Trace("Setting snap.Status and snap.StatusReason to INACTIVE.");
-                snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
-                snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
+                snap.Status = new OptionSetValue((int)Status.Inactive);
+                snap.StatusReason = new OptionSetValue((int)StatusReason.Inactive);
             }
             else
             {
-                _tracer.Trace("Setting snap.Status and snap.StatusReason to status: {0} and statusReason: {1}", status.ToString(), statusReason.ToString());
-                snap.Status = new OptionSetValue((int)status);
-                snap.StatusReason = new OptionSetValue((int)statusReason);
+                snap.Status = new OptionSetValue((int)Status.Active);
+                snap.StatusReason = new OptionSetValue((int)StatusReason.Inactive);
             }
 
             _tracer.Trace("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);

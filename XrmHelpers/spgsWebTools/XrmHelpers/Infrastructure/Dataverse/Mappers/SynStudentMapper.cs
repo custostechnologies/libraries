@@ -21,9 +21,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             _tracer.Trace("Hash key discrepancy detected via ChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", snap.StudentId, snap.EncodedHash);
             try
             {
-                if (snap.SynMirrorId != Guid.Empty)
+                if (snap.SourceRecordId != Guid.Empty)
                 {
-                    SetDelta(SynStudentFields.SynMirrorId, snap.SynMirrorId);
+                    SetDelta(SynStudentFields.SynMirrorId, snap.SourceRecordId);
                 }
 
                 /* SET TARGET DELTAS */
