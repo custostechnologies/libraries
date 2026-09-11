@@ -4,7 +4,8 @@ using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using Resolvers = spgsWebTools.XrmHelpers.Domain.Resolvers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Dtos;
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStudentSnapshotFactory
@@ -14,7 +15,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             _tracer = tracer;
         }
-        public StudentSnapshot Build(Entity target, Entity? preImage)
+        public StudentDto Build(Entity target, Entity? preImage)
         {
             _tracer.Trace("Entered SynStudentSnapshotFactory.Build() with Entity target ID: {0} and Entity preImage ID: {1}",
                 target.Id,

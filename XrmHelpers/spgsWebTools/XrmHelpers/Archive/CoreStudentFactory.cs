@@ -6,6 +6,7 @@ using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Infrastructure.Http;
+using spgsWebTools.XrmHelpers.Domain.Dtos;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -23,12 +24,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _tracer = tracer;
             _correlationId = correlationId;
         }
-        public (CoreStudent student, bool createAsInactive, string? error) Build(StudentSnapshot snap, string[] attributes)
+        public (CoreStudent student, bool createAsInactive, string? error) Build(StudentDto snap, string[] attributes)
         {
             _tracer.Trace("Entered CoreStudentFactory.Build");
             _coreStudentQuery = new CoreStudents(_service, _tracer);
 
-            if (snap.StudentId == null) throw new InvalidPluginExecutionException("StudentSnapshot has no StudentID key.");
+            if (snap.StudentId == null) throw new InvalidPluginExecutionException("StudentDto has no StudentID key.");
             int _studentId = (int)snap.StudentId;
 
             Entity core = _coreStudentQuery.GetEntityByStudentId(_studentId);
@@ -69,16 +70,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             return (coreStudent, false, null);
         }
-        public void SnapshotToEntity(StudentSnapshot snap, string[] attributes)
+        public void SnapshotToEntity(StudentDto snap, string[] attributes)
         {
-            
+
         }
 
 
 
 
 
-        private void MapStudentCampus(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapStudentCampus(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapStudentCampus");
             if (_create || attributes.Contains(SynStudentFields.StudentCampus))
@@ -89,7 +90,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 core.Campus = new OptionSetValue(campusKey);
             }
         }
-        private void MapStudentGender(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapStudentGender(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapGender");
             if (_create || attributes.Contains(SynStudentFields.StudentGender))
@@ -100,7 +101,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 core.Gender = new OptionSetValue(genderKey);
             }
         }
-        private void MapStudentHouse(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapStudentHouse(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapStudentHouse");
             if (_create || attributes.Contains(SynStudentFields.StudentHouse))
@@ -111,7 +112,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 core.House = new OptionSetValue(houseKey);
             }
         }
-        private void MapAge(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapAge(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapAge.");
             if (_create || attributes.Contains(SynStudentFields.Age))
@@ -120,7 +121,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _tracer.Trace("Set core.Age to: {0}", core.Age);
             }
         }
-        private void MapStudentYearLevel(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapStudentYearLevel(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapStudentYearLevel.");
             if (_create || attributes.Contains(SynStudentFields.StudentYearLevel))
@@ -129,7 +130,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _tracer.Trace("Set core.YearLevel to: {0}", core.YearLevel);
             }
         }
-        private void MapStudentName(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapStudentName(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapName");
             bool contains = attributes.Contains(SynStudentFields.StudentGiven1)
@@ -153,13 +154,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
 
         }
-        private void MapStatus(StudentSnapshot snap, CoreStudent core)
+        private void MapStatus(StudentDto snap, CoreStudent core)
         {
             _tracer.Trace("In MapStatus with snap.Status: {0}, snap.StatusReason: {1}", snap.Status, snap.StatusReason);
             core.Status = snap.Status;
             core.StatusReason = snap.StatusReason;
         }
-        private void MapStudentActiveFlag(StudentSnapshot snap, CoreStudent core, string[] attributes)
+        private void MapStudentActiveFlag(StudentDto snap, CoreStudent core, string[] attributes)
         {
             _tracer.Trace("In MapIsActive.");
             if (_create || attributes.Contains(SynStudentFields.StudentActiveFlag))
@@ -172,7 +173,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             core.LastSync = DateTime.UtcNow;
         }
-        private void MapStudentId(StudentSnapshot snap, CoreStudent core)
+        private void MapStudentId(StudentDto snap, CoreStudent core)
         {
             if (snap.StudentId != null) core.StudentId = (int)snap.StudentId;
         }

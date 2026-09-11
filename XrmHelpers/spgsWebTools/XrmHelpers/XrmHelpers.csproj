@@ -7,7 +7,7 @@
     <Nullable>enable</Nullable>
     <!-- <RepositoryUrl>https://github.com/stpaulsgrammar/spgswebtools_nuget_packages</RepositoryUrl> -->
 
-	  <RootNamespace>spgsWebTools</RootNamespace>
+    <RootNamespace>spgsWebTools</RootNamespace>
 
     <!-- NuGet Metadata Settings -->
     <packageId>spgsWebTools.XrmHelpers</packageId>
@@ -23,6 +23,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" Version="1.2.10" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="**\Archive\**" />
   </ItemGroup>
 
 </Project>
