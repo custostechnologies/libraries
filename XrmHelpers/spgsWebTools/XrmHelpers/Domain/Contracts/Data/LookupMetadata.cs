@@ -40,7 +40,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string targetAttributeLogicalName,
             string sourceEntityLogicalName,
             string sourceAttributeLogicalName,
-            ColumnSet columnSet
+            ColumnSet columnSet,
+            int topCount
         )
         {
             TargetRecordKey = targetRecordKey;
@@ -51,6 +52,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             SourceEntityLogicalName = sourceEntityLogicalName;
             SourceAttributeLogicalName = sourceAttributeLogicalName;
             Columns = columnSet;
+            TopCount = topCount;
         }
         public TKey TargetRecordKey { get; }
         public string TargetKeyType => typeof(TKey).Name;
@@ -61,6 +63,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public string SourceEntityLogicalName { get; }
         public string SourceAttributeLogicalName { get; }
         public ColumnSet Columns { get; }
+        public int TopCount { get; } = 500;
     }
     public class LookupResult<TKey> : ILookupResult<TKey>
     {
@@ -126,13 +129,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             _warnings.Add(warning);
         }
-        internal void AddSuccessRange(List<EntityReference> successes)
+        internal void AddSuccessRange(List<EntityReference> references)
         {
-            _successes.Add(new LookupSuccess(successes));
+            _successes.Add(new LookupSuccess(references));
         }
-        internal void AddSuccess(LookupSuccess success)
+        internal void AddSuccess(EntityReference reference)
         {
-            _successes.Add(success);
+            List<EntityReference> list = new() { reference };
+            _successes.Add(new LookupSuccess(list));
         }
     }
 }

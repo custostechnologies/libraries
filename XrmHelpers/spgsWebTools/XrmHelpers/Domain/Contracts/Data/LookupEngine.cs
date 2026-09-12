@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _logger.WriteLog("Class instantiated via constructor.");
         }
-        public ILookupResult<TKey> Execute<TKey>(TKey metadata) where TKey : ILookupMetadata<TKey>
+        public ILookupResult<TKey> Execute<TKey>(ILookupMetadata<TKey> metadata)
         {
             var entityName = metadata.TargetEntityLogicalName;
             _logger.WriteLog($"Execution starting to retrieve a record from {metadata.TargetEntityLogicalName}");

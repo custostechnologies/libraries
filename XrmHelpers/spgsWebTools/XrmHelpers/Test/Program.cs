@@ -1,9 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
 using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Serialisation;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Resolvers;
+using System.Security.Cryptography;
 
 var services = new ServiceCollection();
 
@@ -42,12 +44,36 @@ Console.WriteLine("Start Dry Run...");
 var student = new StudentDto
 {
     StudentId = 283224,
-    Given1 = "Matt"
+    Given1 = "Matt",
+    YearLevel = 12,
+    Age = 26
 };
 
+var cols = new ColumnSet(
+    SynStudentFields.StudentId,
+    SynStudentFields.SynMirrorId,
+    SynStudentFields.StudentGiven1
+);
+
+var metadata = new LookupMetadata<int>(
+    283224,
+    false,
+    true,
+    EntityLogicalNames.SynStudent,
+    SynStudentFields.StudentId,
+    EntityLogicalNames.SynStudent,
+    SynStudentFields.StudentId,
+    cols,
+    500
+);
+
 var validationEngine = serviceProvider.GetRequiredService<IValidationEngine>();
+var lookupEngine = serviceProvider.GetRequiredService<ILookupEngine>();
 
 ValidationResult report = validationEngine.Validate(student);
+ILookupResult<int> luResult = lookupEngine.Execute(metadata);
+
+Console.WriteLine("after lu resolution");
 
 if (!report.IsValid)
 {

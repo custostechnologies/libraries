@@ -16,7 +16,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 
             _logger = new DataverseLogger(_context.Tracer, typeof(LookupResolver<TKey>).Name);
         }
-        public abstract ColumnSet Columns { get; }
         public abstract bool CanResolve(ILookupMetadata<TKey> metadata);
         public ILookupResult<TKey> Resolve(ILookupMetadata<TKey> metadata)
         {
@@ -24,7 +23,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 
             var query = new Query<TKey>(
                 metadata,
-                Columns,
                 _context
             );
 
@@ -38,7 +36,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 
             var luResult = new LookupResult<TKey>(
                 metadata,
-                LuMethods.NoKey,
+                LuMethod.NoKey,
                 recordCount,
                 false,
                 duration
@@ -61,7 +59,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
             {
                 if (allowMultiple == false)
                 {
-                    var err = LuFailureReason.MultipleMatchesFound;
+                    var err = LuFailureReason.MultipleMatches;
                     luResult.AddError(
                         $"[] Lookup query references.Count: {recordCount}, Error Message: {err}",
                         err

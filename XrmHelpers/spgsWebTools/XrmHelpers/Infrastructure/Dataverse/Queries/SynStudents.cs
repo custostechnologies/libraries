@@ -59,7 +59,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {
@@ -81,17 +81,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw;
             }
         }
-        public RetrieveMultipleResponse FindByStudentId(IQuery<int> query)
+        /*
+        public (EntityCollection results, TimeSpan duration) FindByStudentId(IQuery<int> query)
         {
             try
             {
-                var entity = query.TargetEntityLogicalName;
-                var key = query.TargetRecordKey;
-                var attribute = query.TargetAttributeLogicalName;
+                var entity = query.Metadata.TargetEntityLogicalName;
+                var key = query.Metadata.TargetRecordKey;
+                var attribute = query.Metadata.TargetAttributeLogicalName;
                 var count = query.TopCount;
                 var columns = query.Columns;
 
-                _logger.WriteLog($"Querying TABLE: {entity ?? "<NULL>"}, KEY: {key ?? "<NULL>"}, TARGET_ATTRIBUTE: {attribute ?? "<NULL>"} TOP_COUNT: {count ?? "<NULL>"}");
+                _logger.WriteLog($"Querying TABLE: {entity ?? "<NULL>"}, KEY: {key.ToString() ?? "<NULL>"}, TARGET_ATTRIBUTE: {attribute ?? "<NULL>"} TOP_COUNT: {count ?? "<NULL>"}");
 
                 QueryExpression queryExpression = new QueryExpression(entity)
                 {
@@ -111,19 +112,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (count != null) queryExpression.TopCount = count;
 
-                var results = _service.RetrieveMultiple(queryExpression);
+                var results = _context.Service.RetrieveMultiple(queryExpression);
 
-                return results;
+                return (results, TimeSpan.Zero);
             }
             catch (Exception ex)
             {
                 _logger.WriteLog($"Exception: {ex}");
                 if (ex.InnerException != null)
                 {
-                    _logger.WriteLog($"InnerException: {ex.InnerException.ToString()}");
+                    _logger.WriteLog($"InnerException: {ex.InnerException}");
                 }
                 throw;
             }
-        }
+        }*/
     }
 }

@@ -20,7 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Remove="Archive\**" />
+        <Compile Remove="**\Archive\**" />
+        <Compile Remove="Test\**" />
     </ItemGroup>
 
 </Project>

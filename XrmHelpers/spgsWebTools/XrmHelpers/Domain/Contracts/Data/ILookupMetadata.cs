@@ -16,6 +16,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         string SourceEntityLogicalName { get; }
         string SourceAttributeLogicalName { get; }
         ColumnSet Columns { get; }
+        int TopCount { get; }
     }
     public interface ILookupError
     {

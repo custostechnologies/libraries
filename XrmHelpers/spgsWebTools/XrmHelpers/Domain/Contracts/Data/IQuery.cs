@@ -8,7 +8,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
     {
         ILookupMetadata<TKey> Metadata { get; }
         QueryExpression Build();
-        ColumnSet Columns { get; }
         (EntityCollection results, TimeSpan duration) Execute();
     }
 }

@@ -15,9 +15,5 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Resolvers
         {
             return metadata.TargetEntityLogicalName == EntityLogicalNames.SynStudent && metadata.TargetAttributeLogicalName == SynStudentFields.StudentId;
         }
-        public override ColumnSet Columns => new ColumnSet(
-                SynStudentFields.SynMirrorId,
-                SynStudentFields.StudentId
-            );
     }
 }

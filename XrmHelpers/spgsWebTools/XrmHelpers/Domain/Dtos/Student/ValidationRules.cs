@@ -129,7 +129,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     {
         public override ValidationResult Validate(StudentDto entity)
         {
-            if (!int.TryParse(entity.YearLevel.ToString(), out int yearLevel) || (yearLevel >= -1 && yearLevel <= 12))
+            if (
+                !int.TryParse(entity.YearLevel.ToString(), out int yearLevel)
+                    || (yearLevel < -1 && yearLevel > 12))
             {
                 return Failure(
                     nameof(StudentDto.YearLevel),

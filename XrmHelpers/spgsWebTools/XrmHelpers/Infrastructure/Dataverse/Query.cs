@@ -12,12 +12,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
         private readonly DataverseLogger _logger;
         public Query(
             ILookupMetadata<TKey> metadata,
-            ColumnSet cols,
             IDataverseContext context
         )
         {
             Metadata = metadata;
-            Columns = cols;
             _context = context;
 
             _logger = new DataverseLogger(
@@ -26,7 +24,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
             );
         }
         public ILookupMetadata<TKey> Metadata { get; }
-        public ColumnSet Columns { get; }
         public QueryExpression Build()
         {
             try
@@ -35,7 +32,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 
                 QueryExpression queryExpression = new QueryExpression(Metadata.TargetEntityLogicalName)
                 {
-                    ColumnSet = Columns,
+                    ColumnSet = Metadata.Columns,
                     Criteria =
                     {
                         Conditions =

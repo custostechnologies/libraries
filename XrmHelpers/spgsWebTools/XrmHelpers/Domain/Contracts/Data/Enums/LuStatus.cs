@@ -29,12 +29,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             return reason switch
             {
-                LuStatus.NotAttempted => "Not Attempted",
-                LuStatus.Succeeded => "Succeeded",
-                LuStatus.SucceededWithWarnings => "Succeeded with Warnings",
-                LuStatus.SucceededWithErrors => "Succeeded with Errors",
-                LuStatus.Failed => "Failed",
-                _ => "Unknown - Encountered unknown failure reason"
+                LuStatus.NotAttempted => "NO ATTEMPT: Lookup resultion not attempted. -- ",
+                LuStatus.Succeeded => "SUCCESS: Lookup resolution succeeded. -- ",
+                LuStatus.SucceededWithWarnings => "SUCCESS: Succeeded with Warnings. -- ",
+                LuStatus.SucceededWithErrors => "SUCCESS: Succeeded with Errors. -- ",
+                LuStatus.Failed => "FAILED: Lookup resolution failed. -- ",
+                _ => "UNKNOWN: Encountered unknown failure reason. -- "
             };
         }
     }

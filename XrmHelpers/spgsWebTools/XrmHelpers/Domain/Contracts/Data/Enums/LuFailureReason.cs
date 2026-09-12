@@ -18,7 +18,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             return value switch
             {
                 var r when r.Equals("recordnotfound", StringComparison.OrdinalIgnoreCase) => LuFailureReason.RecordNotFound,
-                var r when r.Equals("multiplematches", StringComparison.OrdinalIgnoreCase) => LuFailureReason.MultipleMatchesFound,
+                var r when r.Equals("multiplematches", StringComparison.OrdinalIgnoreCase) => LuFailureReason.MultipleMatches,
                 var r when r.Equals("invalidkeyformat", StringComparison.OrdinalIgnoreCase) => LuFailureReason.InvalidKeyFormat,
                 var r when r.Equals("securityrestriction", StringComparison.OrdinalIgnoreCase) => LuFailureReason.SecurityRestriction,
                 var r when r.Equals("dataversequeryfailure", StringComparison.OrdinalIgnoreCase) => LuFailureReason.DataverseQueryFailure,
