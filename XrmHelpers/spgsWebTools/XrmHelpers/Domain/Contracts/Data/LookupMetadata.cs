@@ -1,14 +1,18 @@
+using System.Collections.Generic;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class LookupError : ILookupError
     {
-        public LookupError(string message, LookupFailureReasons reason)
+        public LookupError(string message, LuFailureReason reason)
         {
             Message = message;
             Reason = reason;
         }
         public string Message { get; }
-        public LookupFailureReasons Reason { get; }
+        public LuFailureReason Reason { get; }
     }
     public class LookupWarning : ILookupWarning
     {
@@ -20,11 +24,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     }
     public class LookupSuccess : ILookupSuccess
     {
-        public LookupSuccess(EntityReferenceCollection refs)
+        public LookupSuccess(List<EntityReference> refs)
         {
             References = refs;
         }
-        public EntityReferenceCollection References { get; }
+        public List<EntityReference> References { get; }
     }
     public class LookupMetadata<TKey> : ILookupMetadata<TKey>
     {
@@ -35,7 +39,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string targetEntityLogicalName,
             string targetAttributeLogicalName,
             string sourceEntityLogicalName,
-            string sourceAttributeLogicalName
+            string sourceAttributeLogicalName,
+            ColumnSet columnSet
         )
         {
             TargetRecordKey = targetRecordKey;
@@ -45,6 +50,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TargetAttributeLogicalName = targetAttributeLogicalName;
             SourceEntityLogicalName = sourceEntityLogicalName;
             SourceAttributeLogicalName = sourceAttributeLogicalName;
+            Columns = columnSet;
         }
         public TKey TargetRecordKey { get; }
         public string TargetKeyType => typeof(TKey).Name;
@@ -54,12 +60,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public string TargetAttributeLogicalName { get; }
         public string SourceEntityLogicalName { get; }
         public string SourceAttributeLogicalName { get; }
+        public ColumnSet Columns { get; }
     }
     public class LookupResult<TKey> : ILookupResult<TKey>
     {
         public LookupResult(
             ILookupMetadata<TKey> metadata,
-            LookupMethod method,
+            LuMethod method,
             int recordCount,
             bool fromCache,
             TimeSpan duration
@@ -72,17 +79,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             Metadata = metadata;
         }
         public ILookupMetadata<TKey> Metadata { get; }
-        public LookupMethod Method { get; }
+        public LuMethod Method { get; }
         public int MatchingRecordCount { get; }
         public bool RetrievedFromCache { get; }
         public TimeSpan LookupDuration { get; }
-        private readonly List<ILookupError> _errors { get; } = new();
+        private List<ILookupError> _errors { get; } = new();
         public IReadOnlyList<ILookupError> Errors => _errors;
-        private readonly List<ILookupWarning> _warnings { get; } = new();
+        private List<ILookupWarning> _warnings { get; } = new();
         public IReadOnlyList<ILookupWarning> Warnings => _warnings;
-        private readonly List<ILookupSuccess> _successes { get; } = new();
+        private List<ILookupSuccess> _successes { get; } = new();
         public IReadOnlyList<ILookupSuccess> Successes => _successes;
-        public LookupStatus Status
+        public LuStatus Status
         {
             get
             {
@@ -90,20 +97,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var successCount = Successes.Count;
                 var errorCount = Errors.Count;
 
-                if (errorCount > 0 && successCount == 0) return LookupStatus.Failed;
-                else if (successCount == 0 && errorCount == 0 && warnCount == 0) return LookupStatus.NotAttempted;
-                else if (successCount > 0 && warnCount > 0 && errorCount == 0) return LookupStatus.SucceededWithWarnings;
-                else if (successCount > 0 && errorCount > 0) return LookupStatus.SucceededWithErrors;
-                else if (successCount > 0 && warnCount == 0 && errorCount == 0) return LookupStatus.Succeeded;
-                else return LookupStatus.Unknown;
+                if (errorCount > 0 && successCount == 0) return LuStatus.Failed;
+                else if (successCount == 0 && errorCount == 0 && warnCount == 0) return LuStatus.NotAttempted;
+                else if (successCount > 0 && warnCount > 0 && errorCount == 0) return LuStatus.SucceededWithWarnings;
+                else if (successCount > 0 && errorCount > 0) return LuStatus.SucceededWithErrors;
+                else if (successCount > 0 && warnCount == 0 && errorCount == 0) return LuStatus.Succeeded;
+                else return LuStatus.Unknown;
             }
         }
         public bool Succeeded =>
-            Status == LookupStatus.Succeeded
-            || Status == LookupStatus.SucceededWithWarnings
-            || Status == LookupStatus.SucceededWithErrors;
+            Status == LuStatus.Succeeded
+            || Status == LuStatus.SucceededWithWarnings
+            || Status == LuStatus.SucceededWithErrors;
 
-        internal void AddError(string message, LookupFailureReasons reason)
+        internal void AddError(string message, LuFailureReason reason)
         {
             _errors.Add(new LookupError(message, reason));
         }
@@ -118,6 +125,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         internal void AddWarning(LookupWarning warning)
         {
             _warnings.Add(warning);
+        }
+        internal void AddSuccessRange(List<EntityReference> successes)
+        {
+            _successes.Add(new LookupSuccess(successes));
         }
         internal void AddSuccess(LookupSuccess success)
         {

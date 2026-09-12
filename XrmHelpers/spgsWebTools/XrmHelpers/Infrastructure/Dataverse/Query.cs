@@ -1,25 +1,86 @@
+using System.Diagnostics;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class Query<TKey> : IQuery<TKey>
     {
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         public Query(
-            string entityName,
-            TKey key,
-            string attributeName,
+            ILookupMetadata<TKey> metadata,
             ColumnSet cols,
-            int? topCount
+            IDataverseContext context
         )
         {
-            TargetEntityLogicalName = entityName;
-            TargetRecordKey = key;
-            TargetAttributeLogicalName = attributeName;
+            Metadata = metadata;
             Columns = cols;
-            TopCount = topCount;
+            _context = context;
+
+            _logger = new DataverseLogger(
+                _context.Tracer,
+                typeof(Query<TKey>).Name
+            );
         }
-        public string TargetEntityLogicalName { get; }
-        public TKey TargetRecordKey { get; }
-        public string TargetAttributeLogicalName { get; }
+        public ILookupMetadata<TKey> Metadata { get; }
         public ColumnSet Columns { get; }
-        public int? TopCount { get; }
+        public QueryExpression Build()
+        {
+            try
+            {
+                _logger.WriteLog("Building new QueryExpression...");
+
+                QueryExpression queryExpression = new QueryExpression(Metadata.TargetEntityLogicalName)
+                {
+                    ColumnSet = Columns,
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                Metadata.TargetAttributeLogicalName,
+                                ConditionOperator.Equal,
+                                Metadata.TargetRecordKey
+                            )
+                        }
+                    }
+                };
+
+                _logger.WriteLog("Query building complete...");
+                return queryExpression;
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"Exception: {ex}");
+                throw;
+            }
+        }
+        public (EntityCollection results, TimeSpan duration) Execute()
+        {
+            try
+            {
+                _logger.WriteLog("Calling Build() to create QueryExpression...");
+
+                var query = Build();
+
+                _logger.WriteLog("Executing QueryExpression using IOrganizationService provided by IDataverseContext...");
+
+                var stopwatch = Stopwatch.StartNew();
+                var results = _context.Service.RetrieveMultiple(query);
+                stopwatch.Stop();
+
+                _logger.WriteLog($"Execution complete [Duration: {stopwatch.Elapsed}]...");
+
+                return (results, stopwatch.Elapsed);
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"Exception: {ex}");
+                throw;
+            }
+        }
     }
 }

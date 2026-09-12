@@ -1,6 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Extensions.DependencyInjection;
 using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {

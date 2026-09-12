@@ -1,3 +1,5 @@
+using Microsoft.Xrm.Sdk;
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class DataverseContext : IDataverseContext

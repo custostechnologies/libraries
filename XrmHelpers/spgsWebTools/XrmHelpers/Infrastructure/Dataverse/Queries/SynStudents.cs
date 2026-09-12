@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Sdk.Messages;
 using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
@@ -39,9 +40,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Entered SynQueryService.RetrieveAllMetadata");
-                _tracer.Trace("Constructing QueryExpression");
-                _tracer.Trace("Called with synEntityId: {0}", synEntityId.ToString());
+                _logger.WriteLog($"Constructing QueryExpression with synEntityId: {synEntityId.ToString()}");
 
                 QueryExpression query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -68,21 +67,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("Unable to retrieve Synergetic Student using EntityId: {0}. Returning blank Entity.", synEntityId.ToString());
+                    _logger.WriteLog($"Unable to retrieve Synergetic Student using EntityId: {synEntityId}. Returning blank Entity.");
                     return new Entity(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in SynQueryService.RetrieveAllMetadata: {0}", ex);
+                _logger.WriteLog($"Exception: {ex}");
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("InnerException in SynQueryService.RetrieveAllMetadata: {0}", ex.InnerException.ToString());
+                    _logger.WriteLog($"InnerException: {ex.InnerException}");
                 }
                 throw;
             }
         }
-        public RetrieveMultipleResponse FindByStudentId(IQuery query)
+        public RetrieveMultipleResponse FindByStudentId(IQuery<int> query)
         {
             try
             {
@@ -92,7 +91,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 var count = query.TopCount;
                 var columns = query.Columns;
 
-                _tracer.Trace($"Querying TABLE: {entity ?? "<NULL>"}, KEY: {key ?? "<NULL>"}, TARGET_ATTRIBUTE: {attribute ?? "<NULL>"} TOP_COUNT: {count ?? "<NULL>"}");
+                _logger.WriteLog($"Querying TABLE: {entity ?? "<NULL>"}, KEY: {key ?? "<NULL>"}, TARGET_ATTRIBUTE: {attribute ?? "<NULL>"} TOP_COUNT: {count ?? "<NULL>"}");
 
                 QueryExpression queryExpression = new QueryExpression(entity)
                 {
@@ -121,7 +120,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 _logger.WriteLog($"Exception: {ex}");
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace($"InnerException: {ex.InnerException.ToString()}");
+                    _logger.WriteLog($"InnerException: {ex.InnerException.ToString()}");
                 }
                 throw;
             }

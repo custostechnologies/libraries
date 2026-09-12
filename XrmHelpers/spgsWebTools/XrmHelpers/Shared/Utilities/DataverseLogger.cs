@@ -1,19 +1,20 @@
 using System;
+using Microsoft.Xrm.Sdk;
 using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.XrmHelpers
 {
-    public class DataverseLogger(ITracingService tracer, Type targetType)
+    public class DataverseLogger(ITracingService tracer, string className)
     {
         private readonly ITracingService _tracer = tracer;
-        private readonly Type _targetType = targetType;
+        private readonly string _className = className;
         public void WriteLog()
         {
             _tracer.Trace("Logger.WriteLog() called with no arguments.");
         }
-        private void WriteLog(string message, [CallerMemberName] string memberName = "")
+        public void WriteLog(string message, [CallerMemberName] string memberName = "")
         {
-            _tracer.Trace($"[{_targetType.Name}.{memberName}] {message}");
+            _tracer.Trace($"[{_className}.{memberName}] {message}");
         }
     }
 }

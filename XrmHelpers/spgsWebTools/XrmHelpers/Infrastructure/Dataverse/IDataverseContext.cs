@@ -1,9 +1,11 @@
+using Microsoft.Xrm.Sdk;
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public interface IDataverseContext
     {
-        public IOrganizationService Service { get; }
-        public ITracingService Tracer { get; }
-        public IExecutionContext ExecutionContext { get; }
+        IOrganizationService Service { get; }
+        ITracingService Tracer { get; }
+        IExecutionContext ExecutionContext { get; }
     }
 }

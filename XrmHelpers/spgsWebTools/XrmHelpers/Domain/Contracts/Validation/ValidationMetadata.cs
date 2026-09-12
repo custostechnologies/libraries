@@ -24,8 +24,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public class ValidationResult : IValidationResult
     {
         public bool IsValid => Errors.Count == 0;
-        public List<ValidationError> Errors { get; } = new();
-        public List<ValidationWarning> Warnings { get; } = new();
+        public List<IValidationError> Errors { get; } = new();
+        public List<IValidationWarning> Warnings { get; } = new();
     }
 
     public class ValidationMetadata
