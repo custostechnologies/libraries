@@ -1,23 +1,30 @@
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class LookupEnricher<TDto> : ILookupEnricher<TDto>
+    public class LookupEnricher<TDto> : ILookupEnricher<TDto> where TDto : IDto
     {
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
         private readonly DataverseLogger _logger;
+        private readonly ILookupMetadataFactory _metadataFactory;
         public LookupEnricher(
             IDataverseContext context,
-            ILookupEngine lookupEngine
+            ILookupEngine lookupEngine,
+            ILookupMetadataFactory lookupMetadataFactory
         )
         {
             _context = context;
             _logger = new DataverseLogger(_context.Tracer, typeof(LookupEnricher<TDto>).Name);
             _lookupEngine = lookupEngine;
+            _metadataFactory = lookupMetadataFactory;
         }
         public TDto ResolveLookups(TDto dto)
         {
@@ -25,55 +32,44 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             foreach (var property in properties)
             {
-                DataverseLookupAttribute link = property.GetCustomAttribute<DataverseLookupAttribute>();
+                DataverseLookupAttribute lookupAttribute = property.GetCustomAttribute<DataverseLookupAttribute>();
+                DataverseLinkAttribute linkAttribute = property.GetCustomAttribute<DataverseLinkAttribute>();
 
-                if (link == null) continue;
+                if (lookupAttribute == null || linkAttribute == null) continue;
+                var keyProperty = typeof(TDto).GetProperty(lookupAttribute.KeyProperty.Name);
+                var keyValue = keyProperty.GetValue(dto);
+                var targetAttribute = lookupAttribute.TargetAttribute;
+                var targetEntity = lookupAttribute.TargetEntity;
+                var srcEntity = dto.SourceEntityLogicalName;
+                var srcAttribute = linkAttribute.SourceLogicalName;
+                //var keyType = typeof(keyProperty);
 
-                metadata = InstantiateLookupMetadata(
-                    link.KeyProperty,
-                    dto.SourceEntityLogicalName,
-                    dto.SourceAttribueLogicalName,
-                    link.TargetEntity,
-                    link.TargetAttribute,
-                    dto[link.KeyProperty.GetValue()]
+                var metadataRequest = new LookupMetadataRequest
+                {
+                    AllowMultipleMatches = true,
+                    ReturnMultipleReferences = true,
+                    TargetEntityLogicalName = targetEntity,
+                    TargetAttributeLogicalName = targetAttribute,
+                    SourceEntityLogicalName = srcEntity,
+                    SourceAttributeLogicalName = srcAttribute,
+                    Columns = new ColumnSet(
+                    $"{targetEntity}id",
+                        targetAttribute
+                    ),
+                    TopCount = 500
+                };
+
+                var metadata = _metadataFactory.Create(
+                    (int)keyValue,
+                    metadataRequest
                 );
 
                 var luResult = _lookupEngine.Execute(metadata);
 
-                property.SetValue(link.KeyProperty, luResult.Successes.FirstOrDefault());
+                property.SetValue(dto, luResult.Successes.FirstOrDefault());
             }
-        }
-        private ILookupMetadata InstantiateLookupMetadata(
-            Type keyType,
-            string srcEntityName,
-            string srcAttributeName,
-            string targetEntityName,
-            string targetAttributeName,
-            object value
-        )
-        {
-            var metadataRequest = new LookupMetadataRequest
-            {
-                AllowMultipleMatches = true,
-                ReturnMultipleReferences = true,
-                TargetEntityLogicalName = targetEntityName,
-                TargetAttributeLogicalName = targetAttributeName,
-                SourceEntityLogicalName = srcEntityName,
-                SourceAttributeLogicalName = srcAttributeName,
-                Columns = new ColumnSet(
-                    $"{targetEntityName}id",
-                    targetAttributeName
-                ),
-                TopCount = 500
-            };
 
-            var metadataFactory = new LookupMetadataFactory();
-            ILookupMetadata metadata = metadataFactory.Create(
-                keyType,
-                value,
-                metadataRequest
-            );
-            return metadata;
+            return dto;
         }
     }
 }

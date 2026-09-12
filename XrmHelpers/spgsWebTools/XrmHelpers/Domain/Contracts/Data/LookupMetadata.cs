@@ -55,6 +55,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TopCount = topCount;
         }
         public TKey TargetRecordKey { get; }
+        object ILookupMetadata.TargetRecordKey => TargetRecordKey;
         public string TargetKeyType => typeof(TKey).Name;
         public bool AllowMultipleMatches { get; }
         public bool ReturnMultipleReferences { get; }

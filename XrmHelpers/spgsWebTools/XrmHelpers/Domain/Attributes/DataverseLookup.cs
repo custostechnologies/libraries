@@ -7,17 +7,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Attributes
     public class DataverseLookupAttribute : Attribute
     {
         public Type KeyProperty { get; }
-        public string Target { get; }
+        public string TargetEntity { get; }
         public string TargetAttribute { get; }
         public DataverseLookupAttribute(
             Type keyProperty,
-            string targetEntityName,
-            string targetAttributeName
+            string targetEntity,
+            string targetAttribute
         )
         {
             KeyProperty = keyProperty;
-            TargetEntity = targetEntityName;
-            TargetAttribute = targetAttributeName;
+            TargetEntity = targetEntity;
+            TargetAttribute = targetAttribute;
         }
     }
 }

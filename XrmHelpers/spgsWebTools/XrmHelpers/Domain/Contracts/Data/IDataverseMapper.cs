@@ -4,7 +4,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface IDataverseMapper<TDto>
     {
-        TDto MapToDto(Entity srcEntity) where TDto : new();
+        TDto MapToDto(Entity srcEntity);
         Entity MapToSource(TDto dto);
         Entity MapToTarget(TDto dto);
     }

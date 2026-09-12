@@ -33,8 +33,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     public class StudentDto : IValidationMetadata, IDto
     {
         public string ValidationRuleSet => "StrictStudentRules";
-        public static string SourceEntityLogicalName = EntityLogicalNames.SynStudent;
-        public static string TargetEntityLogicalName = EntityLogicalNames.CoreStudent;
+        public string SourceEntityLogicalName => EntityLogicalNames.SynStudent;
+        public string TargetEntityLogicalName => EntityLogicalNames.CoreStudent;
         // identity
         [DataverseLink(srcName: SynStudentFields.SynMirrorId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid? SourceRecordId { get; set; }

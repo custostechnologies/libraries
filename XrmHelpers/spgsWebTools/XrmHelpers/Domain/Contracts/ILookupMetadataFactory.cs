@@ -6,9 +6,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface ILookupMetadataFactory
     {
-        ILookupMetadata Create(
-            Type keyType,
-            object keyValue,
+        ILookupMetadata<TKey> Create<TKey>(
+            TKey keyValue,
             LookupMetadataRequest request
         );
     }

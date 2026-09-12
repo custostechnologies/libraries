@@ -1,3 +1,5 @@
+using System.Reflection;
+
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class DataverseLinkDefinition

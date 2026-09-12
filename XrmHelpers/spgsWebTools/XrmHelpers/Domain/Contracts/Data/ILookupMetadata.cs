@@ -4,10 +4,14 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public interface ILookupMetadata<TKey>
+    public interface ILookupMetadata
+    {
+        object TargetRecordKey { get; }
+    }
+    public interface ILookupMetadata<TKey> : ILookupMetadata
     {
         // what needs to be resolved
-        TKey TargetRecordKey { get; }
+        new TKey TargetRecordKey { get; }
         string TargetKeyType { get; }
         bool AllowMultipleMatches { get; }
         bool ReturnMultipleReferences { get; }

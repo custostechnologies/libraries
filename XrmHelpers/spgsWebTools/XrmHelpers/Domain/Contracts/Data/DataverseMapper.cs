@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
@@ -8,7 +9,7 @@ using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class DataverseMapper<TDto> : IDataverseMapper<TDto> where TDto : IDataverseDto, new()
+    public class DataverseMapper<TDto> : IDataverseMapper<TDto> where TDto : IDto, new()
     {
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
@@ -39,13 +40,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 if (value == null) continue;
 
-                var srcType = Nullable.GetUnderlyingType(link.SrcType) ?? link.SrcType;
+                var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
                 var dtoValueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
 
-                if (link.SrcName == null)
+                if (link.SourceLogicalName == null)
                     continue;
 
-                srcName = link.SrcName;
+                srcName = link.SourceLogicalName;
 
                 if (srcType == dtoValueType)
                 {
@@ -82,7 +83,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 if (value == null) continue;
 
-                entity[link.trgName] = value;
+                entity[link.TargetLogicalName] = value;
             }
 
             return entity;
@@ -102,15 +103,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
                     if (link == null) continue;
-                    var srcType = Nullable.GetUnderlyingType(link.SrcType) ?? link.SrcType;
+                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
                     var dtoValueType =
                         Nullable.GetUnderlyingType(property.PropertyType)
                             ?? property.PropertyType;
 
-                    if (link.SrcName == null)
+                    if (link.SourceLogicalName == null)
                         continue;
 
-                    srcName = link.SrcName;
+                    srcName = link.SourceLogicalName;
 
                     if (!srcEntity.Contains(srcName)) continue;
                     var value = srcEntity[srcName];
