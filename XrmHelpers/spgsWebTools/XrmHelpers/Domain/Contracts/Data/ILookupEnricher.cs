@@ -6,6 +6,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface ILookupEnricher<TDto>
     {
-        TDto ResolveLookups(TDto dto);
+        TDto Execute(TDto dto);
     }
 }

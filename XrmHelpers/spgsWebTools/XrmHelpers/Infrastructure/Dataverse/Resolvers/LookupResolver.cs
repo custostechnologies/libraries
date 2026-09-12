@@ -6,17 +6,17 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
-    public abstract class LookupResolver<TKey> : ILookupResolver<TKey>
+    public class LookupResolver<TKey> : ILookupResolver<TKey>
     {
-        protected readonly IDataverseContext _context;
-        protected readonly DataverseLogger _logger;
-        protected LookupResolver(IDataverseContext dataverseContext)
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
+        public LookupResolver(IDataverseContext dataverseContext)
         {
             _context = dataverseContext;
 
             _logger = new DataverseLogger(_context.Tracer, typeof(LookupResolver<TKey>).Name);
         }
-        public abstract bool CanResolve(ILookupMetadata<TKey> metadata);
+        //public bool CanResolve(ILookupMetadata<TKey> metadata);
         public ILookupResult<TKey> Resolve(ILookupMetadata<TKey> metadata)
         {
             _logger.WriteLog("Starting Resolve method and building query using query provider...");

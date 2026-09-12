@@ -6,6 +6,7 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
+using spgsWebTools.XrmHelpers.Domain.Resolvers;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -103,10 +104,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
                     if (link == null) continue;
-                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
-                    var dtoValueType =
-                        Nullable.GetUnderlyingType(property.PropertyType)
-                            ?? property.PropertyType;
+                    var srcType = link.SourceType;
+                    var dtoValueType = property.PropertyType;
 
                     if (link.SourceLogicalName == null)
                         continue;
@@ -129,8 +128,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
                         else if (property.PropertyType.IsEnum)
                         {
-                            // convert string to enum
-                            setValue = Enum.Parse(dtoValueType, value.ToString());
+                            _logger.WriteLog($"Entered PropertyType.IsEnum with dtoValueType: {dtoValueType.Name}");
+
+                            switch (dtoValueType.Name)
+                            {
+                                case "Campus":
+                                    setValue = CampusResolver.ToEnum(value.ToString());
+                                    break;
+                                case "House":
+                                    setValue = HouseResolver.ToEnum(value.ToString());
+                                    break;
+                                case "Gender":
+                                    setValue = GenderResolver.ToEnum(value.ToString());
+                                    break;
+                                default:
+                                    setValue = Enum.Parse(dtoValueType, value.ToString());
+                                    break;
+                            }
                         }
                         else if (dtoValueType == typeof(Guid))
                         {

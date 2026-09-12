@@ -32,9 +32,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// </summary>
     public class StudentDto : IValidationMetadata, IDto
     {
+        const string _srcEntityName = EntityLogicalNames.SynStudent;
+        const string _targetEntityName = EntityLogicalNames.CoreStudent;
         public string ValidationRuleSet => "StrictStudentRules";
         public string SourceEntityLogicalName => EntityLogicalNames.SynStudent;
         public string TargetEntityLogicalName => EntityLogicalNames.CoreStudent;
+
+        [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: CoreStudentFields.StudentId, trgType: typeof(int))]
+        public int StudentId { get; set; }
+
+        /* TEST */
+        [DataverseLookup(keyProperty: nameof(StudentId), targetEntity: _srcEntityName, targetAttribute: "studentreference")]
+        [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: _targetEntityName, trgType: typeof(EntityReference))]
+        public EntityReference? SynReference { get; set; }
+
         // identity
         [DataverseLink(srcName: SynStudentFields.SynMirrorId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid? SourceRecordId { get; set; }
@@ -51,8 +62,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public Guid? SourceOfTruthId { get; set; }
 
 
-        [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: CoreStudentFields.StudentId, trgType: typeof(int))]
-        public int StudentId { get; set; }
+
 
 
         [DataverseLink(srcName: SynStudentFields.MutePlugin, srcType: typeof(bool), trgName: null, trgType: null)]

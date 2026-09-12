@@ -4,7 +4,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface ILookupResolver<TKey>
     {
-        bool CanResolve(ILookupMetadata<TKey> metadata);
+        //bool CanResolve(ILookupMetadata<TKey> metadata);
         ILookupResult<TKey> Resolve(ILookupMetadata<TKey> metadata);
     }
 }

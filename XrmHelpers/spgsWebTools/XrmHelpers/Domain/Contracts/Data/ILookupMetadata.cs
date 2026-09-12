@@ -50,5 +50,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         IReadOnlyList<ILookupSuccess> Successes { get; }
         LuStatus Status { get; }
         bool Succeeded { get; }
+        string GenerateDetailedLogSummary();
+        string GenerateLogSummary();
     }
 }

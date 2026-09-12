@@ -27,10 +27,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _logger.WriteLog($"Execution starting to retrieve a record from {metadata.TargetEntityLogicalName}");
 
             var resolver = _services
-                .GetServices<ILookupResolver<TKey>>()
-                .FirstOrDefault(
-                    resolver => resolver.CanResolve(metadata)
-                );
+                .GetRequiredService<ILookupResolver<TKey>>();
 
             if (resolver == null)
             {

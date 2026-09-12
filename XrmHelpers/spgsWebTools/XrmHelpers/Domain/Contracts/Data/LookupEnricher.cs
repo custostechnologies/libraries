@@ -26,9 +26,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _lookupEngine = lookupEngine;
             _metadataFactory = lookupMetadataFactory;
         }
-        public TDto ResolveLookups(TDto dto)
+        public TDto Execute(TDto dto)
         {
+            _logger.WriteLog($"Enriching DTO lookup fields, typeof(TDTO).Name: {typeof(TDto).Name}");
+
             var properties = typeof(TDto).GetProperties();
+
+            _logger.WriteLog($"Retrieved TDto properties, entering iteration through properties to find and populate lookup fields.");
 
             foreach (var property in properties)
             {
@@ -36,13 +40,26 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 DataverseLinkAttribute linkAttribute = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                 if (lookupAttribute == null || linkAttribute == null) continue;
-                var keyProperty = typeof(TDto).GetProperty(lookupAttribute.KeyProperty.Name);
+                var keyProperty = typeof(TDto).GetProperty(lookupAttribute.KeyProperty);
+
+                if (keyProperty == null)
+                {
+                    _logger.WriteLog($"Could not find property '{lookupAttribute.KeyProperty}' on DTO of type '{typeof(TDto).Name}'");
+                    throw new InvalidPluginExecutionException();
+                }
+                else
+                {
+                    _logger.WriteLog($"Lookup field detected - Name: {keyProperty.Name}, PropertyType: {keyProperty.PropertyType}");
+                }
+
                 var keyValue = keyProperty.GetValue(dto);
                 var targetAttribute = lookupAttribute.TargetAttribute;
                 var targetEntity = lookupAttribute.TargetEntity;
                 var srcEntity = dto.SourceEntityLogicalName;
                 var srcAttribute = linkAttribute.SourceLogicalName;
                 //var keyType = typeof(keyProperty);
+
+                _logger.WriteLog($"Asking for new MetadataRequest from MetadataRequestFactory.");
 
                 var metadataRequest = new LookupMetadataRequest
                 {
@@ -64,9 +81,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     metadataRequest
                 );
 
+                _logger.WriteLog($"Running Execute on LookupEngine with keyValue: {keyValue}, querying TargetEntity: {targetEntity}.");
+
                 var luResult = _lookupEngine.Execute(metadata);
 
-                property.SetValue(dto, luResult.Successes.FirstOrDefault());
+                _logger.WriteLog($"\n{luResult.GenerateDetailedLogSummary()}\n");
+
+                property.SetValue(dto, luResult.Successes.FirstOrDefault().References.FirstOrDefault());
             }
 
             return dto;

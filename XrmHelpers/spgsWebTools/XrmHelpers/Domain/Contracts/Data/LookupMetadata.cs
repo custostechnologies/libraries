@@ -139,5 +139,81 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             List<EntityReference> list = new() { reference };
             _successes.Add(new LookupSuccess(list));
         }
+        public string GenerateDetailedLogSummary()
+        {
+            var errors = Errors.Count > 0
+                ? string.Join(
+                    "; ",
+                    Errors.Select(e => $"[{e.Reason}] {e.Message}"))
+                : "None";
+
+            var warnings = Warnings.Count > 0
+                ? string.Join(
+                    "; ",
+                    Warnings.Select(w => w.Message))
+                : "None";
+
+            var successes = Successes.Count > 0
+                ? string.Join(
+                    "; ",
+                    Successes.SelectMany(s => s.References)
+                        .Select(r => $"{r.LogicalName}:{r.Id}"))
+                : "None";
+
+            return $@"
+                === Lookup Summary ===
+                Status: {Status}
+                Method: {Method}
+
+                Input Parameters
+                ----------------
+                Target Key Type: {Metadata.TargetKeyType}
+                Target Key Value: {Metadata.TargetRecordKey}
+                Target Entity: {Metadata.TargetEntityLogicalName}
+                Target Attribute: {Metadata.TargetAttributeLogicalName}
+                Source Entity: {Metadata.SourceEntityLogicalName}
+                Source Attribute: {Metadata.SourceAttributeLogicalName}
+                Allow Multiple Matches: {Metadata.AllowMultipleMatches}
+                Return Multiple References: {Metadata.ReturnMultipleReferences}
+                Top Count: {Metadata.TopCount}
+
+                Execution
+                ---------
+                Records Found: {MatchingRecordCount}
+                Retrieved From Cache: {RetrievedFromCache}
+                Duration: {LookupDuration}
+
+                Results
+                -------
+                Success Count: {Successes.Count}
+                Warning Count: {Warnings.Count}
+                Error Count: {Errors.Count}
+
+                Successes
+                ---------
+                {successes}
+
+                Warnings
+                --------
+                {warnings}
+
+                Errors
+                ------
+                {errors}";
+        }
+        public string GenerateLogSummary()
+        {
+            return
+                $"Status={Status}; " +
+                $"Method={Method}; " +
+                $"Records={MatchingRecordCount}; " +
+                $"Duration={LookupDuration.TotalMilliseconds:N0}ms; " +
+                $"Entity={Metadata.TargetEntityLogicalName}; " +
+                $"Attribute={Metadata.TargetAttributeLogicalName}; " +
+                $"Key={Metadata.TargetRecordKey}; " +
+                $"Successes={Successes.Count}; " +
+                $"Warnings={Warnings.Count}; " +
+                $"Errors={Errors.Count}";
+        }
     }
 }
