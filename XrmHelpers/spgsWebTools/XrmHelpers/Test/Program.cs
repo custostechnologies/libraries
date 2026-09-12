@@ -3,11 +3,37 @@ using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Serialisation;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Resolvers;
 
 var services = new ServiceCollection();
 
+// create mock services
+var service = Mock<IOrganizationService>();
+var context = Mock<IExecutionContext>();
+var tracer = Mock<ITracingService>();
+
+// core Dataverse service registrations
+services.AddSingleton<IOrganizationService>(service);
+services.AddSingleton<IExecutionContext>(context);
+services.AddSingleton<ITracingService>(tracer);
+
+// IDataverseContext registration
+services.AddSingleton<IDataverseContext, DataverseContext>();
+
 services.AddSingleton<IValidationEngine, ValidationEngine>();
 services.AddSingleton<IValidationRuleSetProvider<StudentDto>, StrictStudentRuleSet>();
+
+// LookupEngine registration
+services.AddSingleton<ILookupEngine, LookupEngine>();
+
+// ILookupResolver service registrations
+services.AddTransient<
+    ILookupResolver<int>,
+    SynStudentByStudentIdResolver
+>();
+
+// add query providers
+services.AddTransient<SynStudents>();
 
 var serviceProvider = services.AddXrmSerializationEngine().BuildServiceProvider();
 
