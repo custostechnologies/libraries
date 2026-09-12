@@ -4,14 +4,19 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Serialisation;
 
-var serviceProvider = new ServiceCollection().AddXrmSerializationEngine().BuildServiceProvider();
+var services = new ServiceCollection();
+
+services.AddSingleton<IValidationEngine, ValidationEngine>();
+services.AddSingleton<IValidationRuleSetProvider<StudentDto>, StrictStudentRuleSet>();
+
+var serviceProvider = services.AddXrmSerializationEngine().BuildServiceProvider();
 
 Console.WriteLine("Start Dry Run...");
 
 var student = new StudentDto
 {
-    StudentId = -283224,
-    Given1 = ""
+    StudentId = 283224,
+    Given1 = "Matt"
 };
 
 var validationEngine = serviceProvider.GetRequiredService<IValidationEngine>();
