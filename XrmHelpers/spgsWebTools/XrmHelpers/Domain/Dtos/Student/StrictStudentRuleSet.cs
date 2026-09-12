@@ -9,6 +9,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         {
             yield return new Given1NotEmptyRule();
             yield return new NumericStudentIdRule();
+            yield return new StudentIdMoreThanZeroRule();
+            yield return new SurnameNotEmptyRule();
+            yield return new HouseNotEmptyRule();
+            yield return new GenderNotEmptyRule();
+            yield return new CampusNotEmptyRule();
+            yield return new AgeMoreThanZeroRule();
+            yield return new ValidYearLevelRule();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public interface IValidationResult
     {
         public bool IsValid { get; }
-        public List<ValidationError> Errors { get; }
-        public List<ValidationWarning> Warnings { get; }
+        public List<IValidationError> Errors { get; }
+        public List<IValidationWarning> Warnings { get; }
     }
 }
