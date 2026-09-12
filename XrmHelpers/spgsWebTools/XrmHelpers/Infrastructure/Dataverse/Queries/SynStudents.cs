@@ -2,6 +2,7 @@ using System;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
@@ -75,6 +76,55 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 if (ex.InnerException != null)
                 {
                     _tracer.Trace("InnerException in SynQueryService.RetrieveAllMetadata: {0}", ex.InnerException.ToString());
+                }
+                throw;
+            }
+        }
+        public RetrieveMultipleResponse FindByStudentId(IQuery query)
+        {
+            try
+            {
+                var entity = query.TargetEntityLogicalName;
+                var key = query.TargetRecordKey;
+                var attribute = query.TargetAttributeLogicalName;
+                var count = query.TopCount;
+                var columns = query.Columns;
+
+                _tracer.Trace("[SynStudents.FindByStudentId] Querying TABLE: {0}, KEY: {1}, TARGET_ATTRIBUTE: {2} TOP_COUNT: {3}",
+                    entity ?? "<NULL>",
+                    key ?? "<NULL>",
+                    attribute ?? "<NULL>",
+                    count ?? "<NULL>"
+                );
+
+                QueryExpression queryExpression = new QueryExpression(entity)
+                {
+                    ColumnSet = columns,
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                attribute,
+                                ConditionOperator.Equal,
+                                key
+                            )
+                        }
+                    }
+                };
+
+                if (count != null) queryExpression.TopCount = count;
+
+                var results = _service.RetrieveMultiple(queryExpression);
+
+                return results;
+            }
+            catch (Exception ex)
+            {
+                _tracer.Trace("[SynStudents.FindByStudentId] Exception: {0}", ex);
+                if (ex.InnerException != null)
+                {
+                    _tracer.Trace("[SynStudents.FindByStudentId] InnerException: {0}", ex.InnerException.ToString());
                 }
                 throw;
             }
