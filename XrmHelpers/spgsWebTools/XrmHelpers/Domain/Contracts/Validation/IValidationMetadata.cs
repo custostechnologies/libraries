@@ -6,17 +6,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     }
     public interface IValidationError
     {
-        public string TargetAttribute { get; set; }
-        public string Message { get; set; }
+        public string TargetAttribute { get; }
+        public string Message { get; }
     }
     public interface IValidationWarning
     {
-        public string TargetAttribute { get; set; }
-        public string Message { get; set; }
+        public string TargetAttribute { get; }
+        public string Message { get; }
     }
     public interface IValidationResult
     {
-        public bool IsValid { get; set; }
+        public bool IsValid { get; }
         public List<ValidationError> Errors { get; }
         public List<ValidationWarning> Warnings { get; }
     }

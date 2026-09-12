@@ -1,21 +1,39 @@
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class ValidationMetadata
+    public class ValidationError : IValidationError
     {
         public ValidationError(string targetAttribute, string message)
         {
             TargetAttribute = targetAttribute ?? string.Empty;
             Message = message ?? string.Empty;
         }
+        public string TargetAttribute { get; }
+        public string Message { get; }
+    }
+    public class ValidationWarning : IValidationWarning
+    {
         public ValidationWarning(string targetAttribute, string message)
         {
             TargetAttribute = targetAttribute ?? string.Empty;
             Message = message ?? string.Empty;
         }
-        public ValidationResult(List<ValidationError> errors, List<ValidationWarning> warnings)
+        public string TargetAttribute { get; }
+        public string Message { get; }
+    }
+
+    public class ValidationResult : IValidationResult
+    {
+        public bool IsValid => Errors.Count == 0;
+        public List<ValidationError> Errors { get; } = new();
+        public List<ValidationWarning> Warnings { get; } = new();
+    }
+
+    public class ValidationMetadata
+    {
+        public ValidationMetadata(string ruleSetName)
         {
-            IsValid => Errors.Count == 0;
-            Errors = [];
-    public List<ValidationWarning> Warnings { get; } = [];
+            ValidationRuleSet = ruleSetName ?? "";
+        }
+        public string ValidationRuleSet { get; }
     }
 }

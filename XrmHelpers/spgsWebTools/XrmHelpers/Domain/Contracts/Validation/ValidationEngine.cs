@@ -1,3 +1,5 @@
+using Microsoft.Extensions.DependencyInjection;
+
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
      public class ValidationEngine : IValidationEngine
@@ -12,13 +14,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
           public ValidationResult Validate<T>(T payload) where T : IValidationMetadata
           {
                var result = new ValidationResult();
-               var ruleSet = _serviceProvider.GetServices<IValidationRuleSetProvider<T>>().FirstOrDefault();
+               var ruleSet = _serviceProvider
+                    .GetServices<IValidationRuleSetProvider<T>>()
+                    .FirstOrDefault(
+                         set => set.RuleSetName == payload.ValidationRuleSet
+                    );
 
                if (ruleSet == null)
                {
                     result.Errors.Add(new ValidationError(
-                         typeof(payload).Name,
-                         $"No ruleset registered for object of type: {typeof(T).Name}"
+                         payload.GetType().Name,
+                         $"No ruleset registered for object of type: {payload.GetType().Name}"
                     ));
                     return result;
                }

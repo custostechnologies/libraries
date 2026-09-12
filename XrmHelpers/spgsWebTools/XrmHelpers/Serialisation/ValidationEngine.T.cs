@@ -1,3 +1,4 @@
+using System.Runtime.Versioning;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Serialisation
@@ -11,9 +12,9 @@ namespace spgsWebTools.XrmHelpers.Serialisation
         }
         public ValidationResult Validate(T payload)
         {
-            var result = new ValidationResult();
-
             Console.WriteLine($"[ValidationEngine] Loading configuration key for: '{payload.ValidationRuleSet}'");
+
+            var result = new ValidationResult();
 
             // find provider strategy
             var provider = _ruleSetProviders
@@ -22,23 +23,20 @@ namespace spgsWebTools.XrmHelpers.Serialisation
 
             if (provider == null)
             {
-                result.Errors.Add(new ValidationError
-                {
-                    Message = $"Rule set provider mapping for '{payload.ValidationRuleSet}' not found."
-                });
+                var error = new ValidationError
+                (
+                    "TargetAttribute",
+                    $"Rule set provider mapping for '{payload.ValidationRuleSet}' not found."
+                );
+                result.Errors.Add(error);
                 return result;
             }
 
             // Loop and process cleanly
             foreach (var rule in provider.GetRules())
             {
-                if (!rule.IsValid(payload))
-                {
-                    result.Errors.Add(new ValidationError
-                    {
-                        Message = rule.ErrorMessage
-                    });
-                }
+                var outcome = rule.Validate(payload);
+                if (!outcome.IsValid) result.Errors.AddRange(outcome.Errors);
             }
 
             return result;

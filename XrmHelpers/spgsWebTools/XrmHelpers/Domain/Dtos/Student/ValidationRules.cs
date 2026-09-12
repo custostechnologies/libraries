@@ -4,21 +4,33 @@ using spgsWebTools.XrmHelpers.Constants;
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
     // Rule 1: Ensure string properties are populated
-    public class Given1NotEmptyRule : IValidationRule<StudentDto>
+    public class Given1NotEmptyRule : ValidationRule<StudentDto>
     {
-        public string ErrorMessage => "Student Given1 cannot be null or whitespace.";
-        public bool IsValid(StudentDto student) =>
-            !string.IsNullOrWhiteSpace(student.Given1);
+        public override ValidationResult Validate(StudentDto entity)
+        {
+            return string.IsNullOrWhiteSpace(entity.Given1)
+                ? Failure(
+                    nameof(entity.Given1),
+                    "StudentDto.Given1 cannot be empty."
+                )
+                : Success();
+        }
     }
 
     // Rule 2: Ensure StudentID is up to 8 digits numeric identifier
-    public class NumericStudentIdRule : IValidationRule<StudentDto>
+    public class NumericStudentIdRule : ValidationRule<StudentDto>
     {
-        public string ErrorMessage => "StudentID must a numeric identifier that is 8 digits or less and greater than zero.";
-        public bool IsValid(StudentDto student)
+        public override ValidationResult Validate(StudentDto entity)
         {
-            var str = student.StudentId.ToString();
-            return str.Length <= 8 && student.StudentId > 0;
+            if (!int.TryParse(entity.StudentId.ToString(), out int id) || id.ToString().Length > 8)
+            {
+                return Failure(
+                    nameof(StudentDto.StudentId),
+                    "StudentID must be numeric and less than 8 digits."
+                );
+            }
+
+            return Success();
         }
     }
 }
