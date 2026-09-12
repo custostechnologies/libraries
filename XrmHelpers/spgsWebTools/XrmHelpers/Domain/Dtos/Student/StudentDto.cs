@@ -30,7 +30,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class StudentDto : IValidationMetadata
+    public class StudentDto : IValidationMetadata, IDto
     {
         public string ValidationRuleSet => "StrictStudentRules";
         public static string SourceEntityLogicalName = EntityLogicalNames.SynStudent;

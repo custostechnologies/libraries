@@ -4,7 +4,7 @@ using spgsWebTools.XrmHelpers.Constants;
 namespace spgsWebTools.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class DataverseLinkAttribute: Attribute
+    public class DataverseLinkAttribute : Attribute
     {
         public string? SourceLogicalName { get; }
         public string? TargetLogicalName { get; }
