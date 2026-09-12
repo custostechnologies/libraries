@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
@@ -12,17 +13,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class SynStudents
     {
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.SynStudent;
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private DataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="service"></param>
         /// <param name="tracer"></param>
-        public SynStudents(IOrganizationService service, ITracingService tracer)
+        public SynStudents(IDataverseContext context)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+
+            _logger = new DataverseLogger(_context.Tracer, nameof(SynStudents));
         }
         /// <summary>
         /// 
@@ -90,12 +92,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 var count = query.TopCount;
                 var columns = query.Columns;
 
-                _tracer.Trace("[SynStudents.FindByStudentId] Querying TABLE: {0}, KEY: {1}, TARGET_ATTRIBUTE: {2} TOP_COUNT: {3}",
-                    entity ?? "<NULL>",
-                    key ?? "<NULL>",
-                    attribute ?? "<NULL>",
-                    count ?? "<NULL>"
-                );
+                _tracer.Trace($"Querying TABLE: {entity ?? "<NULL>"}, KEY: {key ?? "<NULL>"}, TARGET_ATTRIBUTE: {attribute ?? "<NULL>"} TOP_COUNT: {count ?? "<NULL>"}");
 
                 QueryExpression queryExpression = new QueryExpression(entity)
                 {
@@ -121,10 +118,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _tracer.Trace("[SynStudents.FindByStudentId] Exception: {0}", ex);
+                _logger.WriteLog($"Exception: {ex}");
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("[SynStudents.FindByStudentId] InnerException: {0}", ex.InnerException.ToString());
+                    _tracer.Trace($"InnerException: {ex.InnerException.ToString()}");
                 }
                 throw;
             }
