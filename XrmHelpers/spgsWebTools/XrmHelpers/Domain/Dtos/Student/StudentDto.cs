@@ -43,10 +43,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: CoreStudentFields.StudentId, trgType: typeof(int))]
         public int StudentId { get; set; }
 
-        /* TEST */
+        /* TEST 
         [DataverseLookup(keyProperty: nameof(StudentId), targetEntity: _srcEntityName, targetAttribute: "studentreference")]
         [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: _targetEntityName, trgType: typeof(EntityReference))]
-        public EntityReference? SynReference { get; set; }
+        public EntityReference? SynReference { get; set; }*/
 
         // identity
         [Hash, Attributes.Key(keyType: "Primary"), AlwaysSync]

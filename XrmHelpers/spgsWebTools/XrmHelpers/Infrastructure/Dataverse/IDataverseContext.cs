@@ -6,6 +6,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
     {
         IOrganizationService Service { get; }
         ITracingService Tracer { get; }
-        IExecutionContext ExecutionContext { get; }
+        IPluginExecutionContext ExecutionContext { get; }
     }
 }

@@ -33,6 +33,8 @@ namespace spgsWebTools.XrmHelpers.Domain
 
             services.AddSingleton(typeof(IChangeDetectionService<>), typeof(ChangeDetectionService<>));
 
+            services.AddSingleton(typeof(ISyncPipeline<>), typeof(SyncPipeline<>));
+
             return services;
         }
     }

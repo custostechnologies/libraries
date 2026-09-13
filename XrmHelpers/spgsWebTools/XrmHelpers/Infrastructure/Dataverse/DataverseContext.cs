@@ -7,17 +7,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
         public DataverseContext(
             IOrganizationService service,
             ITracingService tracer,
-            IExecutionContext context
+            IPluginExecutionContext executionContext
         )
         {
             Service = service;
             Tracer = tracer;
-            ExecutionContext = context;
+            ExecutionContext = executionContext;
 
             tracer.Trace("[DataverseContext] Instantiated DataverseContext class.");
         }
         public IOrganizationService Service { get; }
         public ITracingService Tracer { get; }
-        public IExecutionContext ExecutionContext { get; }
+        public IPluginExecutionContext ExecutionContext { get; }
     }
 }
