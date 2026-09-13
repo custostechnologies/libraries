@@ -33,7 +33,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 var srcName = string.Empty;
 
-                DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                var link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                 if (link == null) continue;
 
@@ -43,6 +43,70 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
                 var dtoValueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
+
+                if (link.SourceLogicalName == null)
+                    continue;
+
+                srcName = link.SourceLogicalName;
+
+                if (srcType == dtoValueType)
+                {
+                    entity[srcName] = value;
+                }
+                else if (srcType == typeof(OptionSetValue))
+                {
+                    entity[srcName] = new OptionSetValue(Convert.ToInt32(value));
+                }
+                else if (srcType == typeof(string) && dtoValueType == typeof(Guid))
+                {
+                    entity[srcName] = value.ToString() ?? Guid.Empty.ToString();
+                }
+                else
+                {
+                    entity[srcName] = Convert.ChangeType(value, srcType);
+                }
+            }
+
+            return entity;
+        }
+        public Entity MapToSourceDelta(TDto dto, DeltaComparison<TDto> deltaComparison)
+        {
+            var entity = new Entity(dto.SourceEntityLogicalName);
+            var incomingDto = deltaComparison.NewRecord;
+            var deltaProperties = deltaComparison.ChangedAttributes;
+
+            foreach (var property in deltaProperties)
+            {
+                var srcName = string.Empty;
+
+                var hash = property.GetCustomAttribute<HashAttribute>();
+                var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                var touchDateTime = property.GetCustomAttribute<TouchDateTime>();
+
+                if (hash.Identifier == "PlaintextHash")
+                {
+                    entity[link.SourceLogicalName] = deltaComparison.plaintextHash;
+                    continue;
+                }
+                if (hash.Identifier == "EncodedHash")
+                {
+                    entity[link.SourceLogicalName] = deltaComparison.encodedHash;
+                    continue;
+                }
+                if (touchDateTime != null)
+                {
+                    entity[link.SourceLogicalName] = DateTime.UtcNow;
+                    continue;
+                }
+
+                if (link == null) continue;
+
+                var value = property.GetValue(incomingDto);
+
+                if (value == null) continue;
+
+                var srcType = link.SourceType;
+                var dtoValueType = value.GetType();
 
                 if (link.SourceLogicalName == null)
                     continue;
