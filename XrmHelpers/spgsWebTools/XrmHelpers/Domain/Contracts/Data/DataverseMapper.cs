@@ -71,22 +71,69 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         }
         public Entity MapToTarget(TDto dto)
         {
+            _logger.WriteLog($"\nEntered MapToTarget with typeof(Dto).Name: {typeof(TDto).Name}");
+            _logger.WriteLog($"Creating new entity for EntityLogicalName: {dto.Entity}");
+
             var entity = new Entity(dto.TargetEntityLogicalName);
             var properties = typeof(TDto).GetProperties();
 
             foreach (var property in properties)
             {
-                var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                try
+                {
+                    object setValue;
 
-                if (link == null) continue;
+                    var link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
-                var value = property.GetValue(dto);
+                    if (link == null) continue;
 
-                if (value == null) continue;
+                    var value = property.GetValue(dto);
 
-                entity[link.TargetLogicalName] = value;
+                    if (value == null) continue;
+
+                    var targetType = link.TargetType;
+                    var dtoValueType = property.PropertyType;
+
+                    if (link.TargetLogicalName == null)
+                        continue;
+
+                    targetAttribute = link.TargetLogicalName;
+
+                    if (dtoValueType == targetType)
+                    {
+                        setValue = value;
+                    }
+                    else if (targetType == typeof(OptionSetValue) && property.PropertyType.IsEnum)
+                    {
+                        setValue = new OptionSetValue(Convert.ToInt32(value));
+                    }
+                    else if (targetType == typeof(string) && dtoValueType == typeof(Guid))
+                    {
+                        setValue = value.ToString() ?? Guid.Empty.ToString();
+                    }
+                    else if (dtoValueType == typeof(string) && targetType == typeof(Guid))
+                    {
+                        setValue = Guid.Parse(value);
+                    }
+                    else
+                    {
+                        setValue = Convert.ChangeType(value, srcType);
+                    }
+
+                    entity[link.TargetLogicalName] = setValue;
+                }
+                catch (Exception ex)
+                {
+                    _logger.WriteLog($"Exception: {ex}");
+                    if (ex.InnerException != null)
+                    {
+                        _logger.WriteLog($"InnerException: {ex.InnerException}");
+                    }
+                    throw;
+                }
             }
 
+            _logger.WriteLog($"Constructed new Entity to be sent to Target after determining operation type...");
             return entity;
         }
         public TDto MapToDto(Entity srcEntity)
