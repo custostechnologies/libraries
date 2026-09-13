@@ -73,7 +73,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             var entity = new Entity(dto.SourceEntityLogicalName);
             var incomingDto = deltaComparison.NewRecord;
-            var deltaProperties = deltaComparison.ChangedAttributes;
+            var deltaProperties = deltaComparison.ChangedProperties;
 
             foreach (var property in deltaProperties)
             {
@@ -81,16 +81,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 var hash = property.GetCustomAttribute<HashAttribute>();
                 var link = property.GetCustomAttribute<DataverseLinkAttribute>();
-                var touchDateTime = property.GetCustomAttribute<TouchDateTime>();
+                var touchDateTime = property.GetCustomAttribute<TouchDateTimeAttribute>();
 
                 if (hash.Identifier == "PlaintextHash")
                 {
-                    entity[link.SourceLogicalName] = deltaComparison.plaintextHash;
+                    entity[link.SourceLogicalName] = deltaComparison.NewPlaintextHash;
                     continue;
                 }
                 if (hash.Identifier == "EncodedHash")
                 {
-                    entity[link.SourceLogicalName] = deltaComparison.encodedHash;
+                    entity[link.SourceLogicalName] = deltaComparison.NewEncodedHash;
                     continue;
                 }
                 if (touchDateTime != null)
@@ -136,7 +136,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public Entity MapToTarget(TDto dto)
         {
             _logger.WriteLog($"\nEntered MapToTarget with typeof(Dto).Name: {typeof(TDto).Name}");
-            _logger.WriteLog($"Creating new entity for EntityLogicalName: {dto.Entity}");
+            _logger.WriteLog($"Creating new entity for EntityLogicalName: {dto.TargetEntityLogicalName}");
 
             var entity = new Entity(dto.TargetEntityLogicalName);
             var properties = typeof(TDto).GetProperties();
@@ -156,12 +156,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     if (value == null) continue;
 
                     var targetType = link.TargetType;
+                    var srcType = link.SourceType;
                     var dtoValueType = property.PropertyType;
 
                     if (link.TargetLogicalName == null)
                         continue;
 
-                    targetAttribute = link.TargetLogicalName;
+                    var targetAttribute = link.TargetLogicalName;
 
                     if (dtoValueType == targetType)
                     {
@@ -169,7 +170,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
                     else if (targetType == typeof(OptionSetValue) && property.PropertyType.IsEnum)
                     {
-                        setValue = new OptionSetValue(Convert.ToInt32(value));
+                        setValue = new OptionSetValue(Convert.ToInt32(value.ToString()));
                     }
                     else if (targetType == typeof(string) && dtoValueType == typeof(Guid))
                     {
@@ -177,7 +178,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
                     else if (dtoValueType == typeof(string) && targetType == typeof(Guid))
                     {
-                        setValue = Guid.Parse(value);
+                        setValue = Guid.Parse(value.ToString());
                     }
                     else
                     {

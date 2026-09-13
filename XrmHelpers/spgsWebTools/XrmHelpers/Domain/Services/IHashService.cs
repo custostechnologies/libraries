@@ -2,10 +2,10 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Domain.Services
 {
-    public interface HashResult
+    public class HashResult
     {
-        string PlaintextHash { get; }
-        int EncodedHash { get; }
+        public string PlaintextHash { get; set; }
+        public int EncodedHash { get; set; }
     }
     public interface IHashService<TDto>
     {

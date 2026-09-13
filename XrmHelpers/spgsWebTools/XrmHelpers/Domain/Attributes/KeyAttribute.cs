@@ -7,6 +7,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Attributes
     public class KeyAttribute : Attribute
     {
         public string KeyType { get; }
-        public KeyAttribute(string keyType) { KeyType = keyType; }
+        public KeyAttribute(string keyType = "NA") { KeyType = keyType; }
     }
 }

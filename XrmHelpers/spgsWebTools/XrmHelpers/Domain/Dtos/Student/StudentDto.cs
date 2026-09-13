@@ -49,14 +49,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public EntityReference? SynReference { get; set; }
 
         // identity
-        [Hash, Key(keyType: "Primary"), AlwaysSync]
+        [Hash, Attributes.Key(keyType: "Primary"), AlwaysSync]
         [DataverseLink(srcName: SynStudentFields.SynMirrorId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid? SourceRecordId { get; set; }
 
         // satisfy IBusinessData
         public string EntityId => StudentId.ToString();
 
-        [Hash, Key(keyType: "Primary")]
+        [Hash, Attributes.Key(keyType: "Primary")]
         [DataverseLink(srcName: null, srcType: null, trgName: CoreStudentFields.CoreStudentId, trgType: typeof(Guid))]
         public Guid? TargetRecordId { get; set; }
 

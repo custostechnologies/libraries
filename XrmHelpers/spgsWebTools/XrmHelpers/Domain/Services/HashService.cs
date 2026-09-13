@@ -1,21 +1,18 @@
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Shared.Hashing;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using System;
 using System.Linq;
 using System.Reflection;
 
 namespace spgsWebTools.XrmHelpers.Domain.Services
 {
-    public class HashResult
-    {
-        public string PlaintextHash { get; }
-        public int EncodedHash { get; }
-    }
     public class HashService<TDto> : IHashService<TDto>
     {
-        private IDataverseContext _context;
-        private DataverseLogger _logger;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         public HashService(
             IDataverseContext context
         )
@@ -38,14 +35,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Services
                 .ToArray();
 
             var plaintextHash = string.Empty;
-            string[] valueArray = new[] { };
+            List<string> valueArray = new List<string>();
 
             foreach (var property in hashProperties)
             {
                 var value = property.GetValue(dto);
-                var type = value.GetType();
-
-                valueArray.Add(Convert.ChangeType(value, type));
+                valueArray.Add(value?.ToString() ?? string.Empty);
             }
 
             plaintextHash = string.Join("|", valueArray);
