@@ -136,9 +136,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public Entity MapToTarget(TDto dto)
         {
             _logger.WriteLog($"\nEntered MapToTarget with typeof(Dto).Name: {typeof(TDto).Name}");
-            _logger.WriteLog($"Creating new entity for EntityLogicalName: {dto.TargetEntityLogicalName}");
 
-            var entity = new Entity(dto.TargetEntityLogicalName);
+            var keyCollection = dto.KeyCollection;
+
+            _logger.WriteLog($"Creating new entity for EntityLogicalName: {dto.TargetEntityLogicalName}");
+            if (keyCollection != null) _logger.WriteLog($"Using keyCollection: {keyCollection}");
+
+            var entity = keyCollection != null
+                ? new Entity(dto.TargetEntityLogicalName, keyCollection)
+                : new Entity(dto.TargetEntityLogicalName);
+
             var properties = typeof(TDto).GetProperties();
 
             foreach (var property in properties)

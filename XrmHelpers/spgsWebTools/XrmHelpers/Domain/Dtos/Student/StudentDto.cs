@@ -8,6 +8,7 @@ using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.Design;
 
 /*
 Attribute
@@ -42,8 +43,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SynStudentFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public DateTime? ForcePlugin { get; set; } = null;
 
-
-        [Hash]
+        [Hash, Attributes.Key(keyType: "Alternate")]
         [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: CoreStudentFields.StudentId, trgType: typeof(int))]
         public int StudentId { get; set; }
 
@@ -136,5 +136,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(srcName: SynStudentFields.IgnoreSync, srcType: typeof(bool), trgName: null, trgType: null)]
         public bool? IgnoreSync { get; set; }
+
+        // CUST FIELD BUIDLING LOGIC
+        [DataverseLink(srcName: null, srcType: null, trgName: CoreStudentFields.DisplayName, trgType: typeof(string))]
+        public string DisplayName => $"{Preferred ?? Given1} {Surname}".Trim();
+
+        // KEY ATTRIBUTE COLLECTION
+        public KeyAttributeCollection KeyCollection =>
+            new KeyAttributeCollection
+            {
+                { CoreStudentFields.StudentId, StudentId }
+            };
     }
 }
