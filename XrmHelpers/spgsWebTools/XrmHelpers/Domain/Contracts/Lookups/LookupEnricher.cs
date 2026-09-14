@@ -53,11 +53,28 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
 
                 var keyValue = keyProperty.GetValue(dto);
+                _logger.WriteLog($"keyValue: {keyValue}");
+
+                if (keyValue == null)
+                {
+                    _logger.WriteLog($"keyValue is NULL, skipping...");
+                    continue;
+                }
+
                 var targetAttribute = lookupAttribute.TargetAttribute;
+                _logger.WriteLog($"targetAttribute: {targetAttribute}");
+
                 var targetEntity = lookupAttribute.TargetEntity;
+                _logger.WriteLog($"targetEntity: {targetEntity}");
+
                 var srcEntity = dto.SourceEntityLogicalName;
+                _logger.WriteLog($"srcEntity: {srcEntity}");
+
                 var srcAttribute = linkAttribute.SourceLogicalName;
-                //var keyType = typeof(keyProperty);
+                _logger.WriteLog($"srcAttribute: {srcAttribute}");
+
+                var keyType = keyValue.GetType().Name;
+                _logger.WriteLog($"keyType: {keyType}");
 
                 _logger.WriteLog($"Asking for new MetadataRequest from MetadataRequestFactory.");
 
@@ -76,8 +93,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     TopCount = 500
                 };
 
+                _logger.WriteLog($"_metadataFactory null? {_metadataFactory == null}");
+                _logger.WriteLog(
+                    $"keyValue={(keyValue == null ? "NULL" : keyValue.ToString())}"
+                );
+                _logger.WriteLog(
+                    $"KeyProperty={keyProperty.Name}, Type={keyProperty.PropertyType}"
+                );
+
                 var metadata = _metadataFactory.Create(
-                    (int)keyValue,
+                    keyValue,
                     metadataRequest
                 );
 

@@ -113,7 +113,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public Campus Campus { get; set; }
 
         [DataverseLookup(keyProperty: nameof(StaffCategory), targetEntity: EntityLogicalNames.CoreStaffCategory, targetAttribute: "pgrowth_code")]
-        [DataverseLink(srcName: null, srcType: null, trgName: CoreStaffMemberFields.CoreStaffCategory, trgType: typeof(EntityReference))]
+        [DataverseLink(srcName: SynStaffMemberFields.StaffCategory, srcType: typeof(string), trgName: CoreStaffMemberFields.CoreStaffCategory, trgType: typeof(EntityReference))]
         public EntityReference CoreStaffCategory { get; set; }
 
         [Hash]
@@ -121,7 +121,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string? StaffCategory { get; set; }
 
         [DataverseLookup(keyProperty: nameof(StaffDepartment), targetEntity: EntityLogicalNames.CoreDepartment, targetAttribute: "pgrowth_code")]
-        [DataverseLink(srcName: null, srcType: null, trgName: CoreStaffMemberFields.CoreStaffCategory, trgType: typeof(EntityReference))]
+        [DataverseLink(srcName: SynStaffMemberFields.StaffDepartment, srcType: typeof(string), trgName: CoreStaffMemberFields.CoreStaffCategory, trgType: typeof(EntityReference))]
         public EntityReference CoreDepartment { get; set; }
 
         [Hash]

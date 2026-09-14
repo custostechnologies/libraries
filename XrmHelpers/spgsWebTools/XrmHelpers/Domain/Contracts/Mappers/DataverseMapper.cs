@@ -233,8 +233,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
                     if (link == null) continue;
-                    var srcType = link.SourceType;
-                    var dtoValueType = property.PropertyType;
+                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
+                    var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                     if (link.SourceLogicalName == null)
                         continue;
