@@ -4,6 +4,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     {
         string SourceEntityLogicalName { get; }
         string TargetEntityLogicalName { get; }
-        bool ForcePlugin { get; set; }
+        DateTime? ForcePlugin { get; set; }
     }
 }

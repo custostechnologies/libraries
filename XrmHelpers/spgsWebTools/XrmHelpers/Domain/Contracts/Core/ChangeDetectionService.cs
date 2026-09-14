@@ -51,7 +51,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var nextValue = property.GetValue(next);
                 _logger.WriteLog($"nextValue: {nextValue}");
 
-                if (!Equals(oldValue, nextValue) || forcePlugin)
+                if (!Equals(oldValue, nextValue) || forcePlugin != null)
                 {
                     _logger.WriteLog($"Adding {property.Name} to ChangedProperties");
                     changes.Add(property);

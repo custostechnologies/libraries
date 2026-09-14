@@ -164,13 +164,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     var targetAttribute = link.TargetLogicalName;
 
-                    if (dtoValueType == targetType)
+                    if (property.PropertyType.IsEnum)
+                    {
+                        setValue = setValue = new OptionSetValue(Convert.ToInt32(value));
+                    }
+                    else if (dtoValueType == targetType)
                     {
                         setValue = value;
                     }
-                    else if (targetType == typeof(OptionSetValue) && property.PropertyType.IsEnum)
+                    else if (targetType == typeof(OptionSetValue))
                     {
-                        setValue = new OptionSetValue(Convert.ToInt32(value.ToString()));
+                        setValue = value;
                     }
                     else if (targetType == typeof(string) && dtoValueType == typeof(Guid))
                     {
@@ -182,7 +186,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
                     else
                     {
-                        setValue = Convert.ChangeType(value, srcType);
+                        _logger.WriteLog(
+                            $"Attempting ChangeType." +
+                            $" Property={property.Name}" +
+                            $" ValueType={value.GetType().FullName}" +
+                            $" TargetType={targetType.FullName}"
+                        );
+                        setValue = Convert.ChangeType(value, targetType);
                     }
 
                     entity[link.TargetLogicalName] = setValue;
@@ -281,10 +291,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 catch (Exception ex)
                 {
                     _logger.WriteLog($"Exception: {ex}");
-                    if (ex.InnerException != null)
+                    /*if (ex.InnerException != null)
                     {
                         _logger.WriteLog($"InnerException: {ex.InnerException}");
-                    }
+                    }*/
                     throw;
                 }
             }

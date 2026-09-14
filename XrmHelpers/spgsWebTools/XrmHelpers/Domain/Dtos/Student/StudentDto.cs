@@ -39,8 +39,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string SourceEntityLogicalName => EntityLogicalNames.SynStudent;
         public string TargetEntityLogicalName => EntityLogicalNames.CoreStudent;
 
-        [DataverseLink(srcName: SynStudentFields.ForcePlugin, srcType: typeof(bool), trgName: null, trgType: null)]
-        public bool ForcePlugin { get; set; } = false;
+        [DataverseLink(srcName: SynStudentFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
+        public DateTime? ForcePlugin { get; set; } = null;
 
 
         [Hash]
@@ -119,7 +119,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SynStudentFields.Status, srcType: typeof(OptionSetValue), trgName: CoreStudentFields.Status, trgType: typeof(OptionSetValue))]
         public OptionSetValue? Status { get; set; }
 
-        [DataverseLink(srcName: SynStudentFields.StatusReason, srcType: typeof(OptionSetValue), trgName: CoreStudentFields.StatusReason, trgType: typeof(Options))]
+        [DataverseLink(srcName: SynStudentFields.StatusReason, srcType: typeof(OptionSetValue), trgName: CoreStudentFields.StatusReason, trgType: typeof(OptionSetValue))]
         public OptionSetValue? StatusReason { get; set; }
 
         [AlwaysSync, Hash(identifier: "EncodedHash")]

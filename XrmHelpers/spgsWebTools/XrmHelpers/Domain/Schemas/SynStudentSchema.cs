@@ -22,6 +22,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStudentFields.StudentPreferred,
                 SynStudentFields.Age,
                 SynStudentFields.StudentCampus,
+                SynStudentFields.StudentGender,
                 SynStudentFields.StudentHouse,
                 SynStudentFields.StudentYearLevel,
                 SynStudentFields.Status,
@@ -43,6 +44,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStudentFields.Age,
                 SynStudentFields.StudentCampus,
                 SynStudentFields.StudentHouse,
+                SynStudentFields.StudentGender,
                 SynStudentFields.StudentYearLevel,
                 SynStudentFields.Status,
                 SynStudentFields.StatusReason
