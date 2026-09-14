@@ -234,7 +234,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
                     if (link == null) continue;
                     var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
+                    _logger.WriteLog($"srcType: {srcType.Name}");
+
                     var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    _logger.WriteLog($"dtoValueType: {dtoValueType.Name}");
 
                     if (link.SourceLogicalName == null)
                         continue;
@@ -243,6 +246,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     if (!srcEntity.Contains(srcName)) continue;
                     var value = srcEntity[srcName];
+                    _logger.WriteLog($"value: {value}");
 
                     if (value == null)
                     {
@@ -289,9 +293,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
                         else
                         {
-                            setValue = Convert.ChangeType(value, srcType);
+                            setValue = Convert.ChangeType(value, dtoValueType);
                         }
 
+                        _logger.WriteLog(
+                            $"Setting property={property.Name}" +
+                            $" PropertyType={property.PropertyType.FullName}" +
+                            $" SetValueType={setValue?.GetType().FullName}" +
+                            $" Value={setValue}"
+                        );
                         property.SetValue(dto, setValue);
                     }
                 }
