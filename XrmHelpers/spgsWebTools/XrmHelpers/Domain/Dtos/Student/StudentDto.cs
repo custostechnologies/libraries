@@ -10,23 +10,6 @@ using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 
-/*
-Attribute
-    = metadata
-
-Mapper
-    = field translation
-
-Resolver
-    = lookup handling
-
-Validator
-    = validation
-
-ChangeDetector
-    = change tracking
-*/
-
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
     /// <summary>
