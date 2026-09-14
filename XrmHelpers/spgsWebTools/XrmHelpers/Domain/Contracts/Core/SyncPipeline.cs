@@ -40,6 +40,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 _logger.WriteLog("Mapping target...");
                 current = _mapper.MapToDto(target);
+
                 _logger.WriteLog("Enriching target...");
                 current = _enricher.Execute(current);
 
@@ -52,8 +53,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 {
                     _logger.WriteLog("Mapping preImage...");
                     previous = _mapper.MapToDto(preImage);
+
                     _logger.WriteLog("Enriching preImage...");
                     previous = _enricher.Execute(previous);
+
                     delta = _changeDetector.Compare(previous, current);
 
                     _logger.WriteLog(
@@ -78,50 +81,24 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         }
 
         // MAP SOURCE -> TARGET
-        public Entity? ExecuteOutbound(Entity target, Entity? preImage)
+        public Entity ExecuteOutbound(Entity target)
         {
-            DeltaComparison<TDto>? delta = null;
-            TDto current;
-            TDto previous;
+            TDto dto;
 
             try
             {
                 _logger.WriteLog("Mapping target...");
-                current = _mapper.MapToDto(target);
+                dto = _mapper.MapToDto(target);
+
                 _logger.WriteLog("Enriching target...");
-                current = _enricher.Execute(current);
+                dto = _enricher.Execute(dto);
 
-                if (preImage == null)
-                {
-                    _logger.WriteLog("preImage is NULL, creating new record instead.");
-                    return _mapper.MapToSource(current);
-                }
-                else
-                {
-                    _logger.WriteLog("Mapping preImage...");
-                    previous = _mapper.MapToDto(preImage);
-                    _logger.WriteLog("Enriching preImage...");
-                    previous = _enricher.Execute(previous);
-                    delta = _changeDetector.Compare(previous, current);
-
-                    _logger.WriteLog(
-                        $"Change detection completed. " +
-                        $"HasChanged={delta.HasChanged}; ");
-                }
+                return _mapper.MapToTarget(dto);
             }
             catch (Exception ex)
             {
                 _logger.WriteLog($"Exception: {ex}");
                 throw;
-            }
-
-            if (delta == null || !delta.HasChanged)
-            {
-                return null;
-            }
-            else
-            {
-                return _mapper.MapToSourceDelta(current, delta);
             }
         }
     }

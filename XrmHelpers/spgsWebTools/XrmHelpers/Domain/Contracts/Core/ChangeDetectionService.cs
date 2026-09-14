@@ -6,7 +6,7 @@ using spgsWebTools.XrmHelpers.Domain.Services;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class ChangeDetectionService<TDto> : IChangeDetectionService<TDto>
+    public class ChangeDetectionService<TDto> : IChangeDetectionService<TDto> where TDto : IDto
     {
         private readonly IDataverseContext _context;
         private readonly DataverseLogger _logger;
@@ -25,20 +25,37 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _logger.WriteLog($"Comparing old and new DTO's.");
 
             var oldHash = _hashService.Generate(prev);
+            _logger.WriteLog($"oldHash: {oldHash}");
+
             var newHash = _hashService.Generate(next);
+            _logger.WriteLog($"newHash: {newHash}");
 
             var changes = new List<PropertyInfo>();
             var hashProperties = typeof(TDto)
                 .GetProperties()
-                .Where(x => x.IsDefined(typeof(HashAttribute))
-                    || x.IsDefined(typeof(Attributes.KeyAttribute))).ToArray();
+                .Where(
+                    x => x.IsDefined(typeof(HashAttribute))
+                        || x.IsDefined(typeof(Attributes.KeyAttribute))
+                ).ToArray();
+
+            var forcePlugin = prev.ForcePlugin;
+            _logger.WriteLog($"forcePlugin: {forcePlugin}");
 
             foreach (var property in hashProperties)
             {
-                var oldValue = property.GetValue(prev);
-                var nextValue = property.GetValue(next);
+                _logger.WriteLog($"property.Name: {property.Name}");
 
-                if (!Equals(oldValue, nextValue)) changes.Add(property);
+                var oldValue = property.GetValue(prev);
+                _logger.WriteLog($"oldValue: {oldValue}");
+
+                var nextValue = property.GetValue(next);
+                _logger.WriteLog($"nextValue: {nextValue}");
+
+                if (!Equals(oldValue, nextValue) || forcePlugin)
+                {
+                    _logger.WriteLog($"Adding {property.Name} to ChangedProperties");
+                    changes.Add(property);
+                }
             }
 
             _logger.WriteLog($"Returning DeltaComparison result.");

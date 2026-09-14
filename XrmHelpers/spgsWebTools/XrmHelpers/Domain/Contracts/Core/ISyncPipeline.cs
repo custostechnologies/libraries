@@ -4,6 +4,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface ISyncPipeline<TDto>
     {
-        Entity Execute(Entity target, Entity preImage);
+        Entity ExecuteInbound(Entity target, Entity? preImage);
+        Entity ExecuteOutbound(Entity target);
     }
 }

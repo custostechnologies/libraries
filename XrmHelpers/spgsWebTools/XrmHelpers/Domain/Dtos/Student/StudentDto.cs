@@ -39,6 +39,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string SourceEntityLogicalName => EntityLogicalNames.SynStudent;
         public string TargetEntityLogicalName => EntityLogicalNames.CoreStudent;
 
+        [DataverseLink(srcName: SynStudentFields.ForcePlugin, srcType: typeof(bool), trgName: null, trgType: null)]
+        public bool ForcePlugin { get; set; } = false;
+
+
         [Hash]
         [DataverseLink(srcName: SynStudentFields.StudentId, srcType: typeof(int), trgName: CoreStudentFields.StudentId, trgType: typeof(int))]
         public int StudentId { get; set; }
@@ -130,9 +134,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SynStudentFields.LastSuccessfulSync, srcType: typeof(DateTime), trgName: CoreStudentFields.LastSync, trgType: typeof(DateTime))]
         public DateTime? LastSuccessfulSync { get; set; }
 
-
         [DataverseLink(srcName: SynStudentFields.IgnoreSync, srcType: typeof(bool), trgName: null, trgType: null)]
         public bool? IgnoreSync { get; set; }
-
     }
 }
