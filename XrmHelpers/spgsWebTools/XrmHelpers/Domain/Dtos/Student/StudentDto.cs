@@ -147,5 +147,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             {
                 { CoreStudentFields.StudentId, StudentId }
             };
+
+        [DataverseLink(srcName: null, srcType: null, trgName: CoreStudentFields.EmailAddress, trgType: typeof(string))]
+        public string EmailAddress => $"{StudentId:D8}@stpauls.nsw.edu.au";
     }
 }
