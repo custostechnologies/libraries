@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Domain.Types;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Messages;
 

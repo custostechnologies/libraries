@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Domain.Types
+namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class EnvironmentVariable<T>
     {
