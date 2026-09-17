@@ -1,6 +1,7 @@
+using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Dtos;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStudentMapper
@@ -14,57 +15,53 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             _target = target;
             _attributes = attributes;
         }
-        public Entity ToEntity(StudentSnapshot snap)
+        public Entity ToEntity(StudentDto dto)
         {
             _tracer.Trace("in SynStudentMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
-            _tracer.Trace("Hash key discrepancy detected via ChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", snap.StudentId, snap.EncodedHash);
+            _tracer.Trace("Hash key discrepancy detected via ChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", dto.StudentId, dto.EncodedHash);
             try
             {
-                if (snap.SynMirrorId != Guid.Empty)
+                if (dto.SourceRecordId != Guid.Empty)
                 {
-                    SetDelta(SynStudentFields.SynMirrorId, snap.SynMirrorId);
+                    SetDelta(SynStudentFields.SynMirrorId, dto.SourceRecordId);
                 }
 
                 /* SET TARGET DELTAS */
                 // identity
-                SetDelta(SynStudentFields.StudentId, snap.StudentId);
+                SetDelta(SynStudentFields.StudentId, dto.StudentId);
 
                 // personal details
-                SetDelta(SynStudentFields.Age, snap.Age);
-                SetDelta(SynStudentFields.StudentGiven1, snap.StudentGiven1);
-                SetDelta(SynStudentFields.StudentGiven2, snap.StudentGiven2);
-                SetDelta(SynStudentFields.StudentPreferred, snap.StudentPreferred);
-                SetDelta(SynStudentFields.StudentSurname, snap.StudentSurname);
-                SetDelta(SynStudentFields.StudentActiveFlag, snap.StudentActiveFlag);
-                SetDelta(SynStudentFields.StudentCampus, snap.StudentCampus);
-                SetDelta(SynStudentFields.StudentGender, snap.StudentGender);
-                SetDelta(SynStudentFields.StudentYearLevel, snap.StudentYearLevel);
+                SetDelta(SynStudentFields.Age, dto.Age);
+                SetDelta(SynStudentFields.StudentGiven1, dto.Given1);
+                SetDelta(SynStudentFields.StudentGiven2, dto.Given2);
+                SetDelta(SynStudentFields.StudentPreferred, dto.Preferred);
+                SetDelta(SynStudentFields.StudentSurname, dto.Surname);
+                SetDelta(SynStudentFields.StudentActiveFlag, dto.IsActive);
+                SetDelta(SynStudentFields.StudentCampus, dto.Campus);
+                SetDelta(SynStudentFields.StudentGender, dto.StudentGender);
+                SetDelta(SynStudentFields.StudentYearLevel, dto.StudentYearLevel);
 
                 // status (calculated in snapshot factory)
-                SetDelta(SynStudentFields.Status, snap.Status);
-                SetDelta(SynStudentFields.StatusReason, snap.StatusReason);
-                SetDelta(SynStudentFields.StudentActiveFlag, snap.StudentActiveFlag);
+                SetDelta(SynStudentFields.Status, dto.Status);
+                SetDelta(SynStudentFields.StatusReason, dto.StatusReason);
+                SetDelta(SynStudentFields.StudentActiveFlag, dto.StudentActiveFlag);
 
                 // sync metadata
-                _target[SynStudentFields.EncodedHash] = snap.EncodedHash;
-                _target[SynStudentFields.PlaintextHash] = snap.PlaintextHash;
+                _target[SynStudentFields.EncodedHash] = dto.EncodedHash;
+                _target[SynStudentFields.PlaintextHash] = dto.PlaintextHash;
                 _target[SynStudentFields.LastSuccessfulSync] = DateTime.UtcNow;
 
                 _tracer.Trace("Update or create request entity mapped from snapshot");
-                _tracer.Trace("Target attributes set  via StudentChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", snap.StudentId, snap.EncodedHash);
+                _tracer.Trace("Target attributes set  via StudentChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", dto.StudentId, dto.EncodedHash);
                 _tracer.Trace(
                     "Final encoded hash in target: {0}",
                     _target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
 
-                foreach (var a in _attributes)
-                {
-                    _tracer.Trace(
-                        "{0} = {1}",
-                        a.Key,
-                        a.Value?.ToString() ?? "<null>"
-                    );
-                }
+                _tracer.Trace("_TARGET AT END OF SynStudentMapper: {0}", JsonSerializer.Serialize(
+                    _target,
+                    new JsonSerializerOptions { WriteIndented = true }
+                ));
 
                 return _target;
             }
@@ -86,6 +83,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             {
                 SetAttributeDelta.Execute(_target, attributeName, value);
             }
+
+            _tracer.Trace("SetDelta _target[{0}] set to: {1}", attributeName, _target.GetAttributeValue<T>(attributeName));
         }
     }
 }

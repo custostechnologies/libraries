@@ -22,5 +22,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string StatusReason = "statuscode";
         public const string IgnoreSync = "pgrowth_ignoresync";
         public const string ErrorMessage = "pgrowth_errormessage";
+        public const string ForcePlugin = "pgrowth_forceplugin";
     }
 }

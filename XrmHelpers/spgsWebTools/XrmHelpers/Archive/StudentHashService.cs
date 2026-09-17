@@ -1,5 +1,5 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Dtos;
 
 namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {
@@ -23,7 +23,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
         /// <param name="student"></param>
         /// <returns></returns>
 
-        public (string plain, int encoded) Generate(StudentSnapshot student)
+        public (string plain, int encoded) Generate(StudentDto student)
         {
             _tracer.Trace("Entered StudentHashService.Generate");
 
@@ -31,16 +31,15 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
                 new string[] {
                     student.StudentId.ToString() ?? "",
                     student.Age.ToString() ?? "",
-                    student.StudentActiveFlag.ToString() ?? "",
-                    student.StudentCampus ?? "",
-                    student.StudentGender ?? "",
-                    student.StudentGiven1 ?? "",
-                    student.StudentGiven2 ?? "",
-                    student.StudentPreferred ?? "",
-                    student.StudentSurname ?? "",
-                    student.StudentHouse ?? "",
-                    student.StudentYearLevel.ToString() ?? "",
-                    student.StudentPreferred ?? ""
+                    student.IsActive.ToString() ?? "",
+                    student.Campus.value.ToString() ?? "",
+                    student.Gender.value.ToString() ?? "",
+                    student.Given1 ?? "",
+                    student.Given2 ?? "",
+                    student.Preferred ?? "",
+                    student.Surname ?? "",
+                    student.House.value.ToString() ?? "",
+                    student.YearLevel.ToString() ?? ""
                 }.Select(val => val ?? string.Empty)
             );
 
