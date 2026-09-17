@@ -20,5 +20,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string EmploymentApplication = "pgrowth_employmentapplication";
         public const string SynStudent = "pgrowth_synergeticvstudentscurrent";
         public const string CoreStudent = "pgrowth_corestudent";
+        public const string NotificationRequest = "mthomas_notificationrequest";
+        public const string EmailTemplate = "mthomas_emailtemplate";
     }
 }
