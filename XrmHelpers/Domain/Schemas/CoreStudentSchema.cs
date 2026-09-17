@@ -21,7 +21,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 CoreStudentFields.Surname,
                 CoreStudentFields.Preferred,
                 CoreStudentFields.DisplayName,
-                CoreStudentFields.AzureObjectId
+                CoreStudentFields.AzureObjectId,
+                CoreStudentFields.Age,
+                CoreStudentFields.YearLevel,
+                CoreStudentFields.Campus,
+                CoreStudentFields.House
             );
     }
 }

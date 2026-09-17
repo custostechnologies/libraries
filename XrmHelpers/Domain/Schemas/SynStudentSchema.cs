@@ -14,12 +14,19 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
         public static readonly ColumnSet SyncColumns = new ColumnSet
             (
                 SynStudentFields.SynMirrorId,
+                SynStudentFields.StudentId,
                 SynStudentFields.StudentActiveFlag,
                 SynStudentFields.StudentGiven1,
                 SynStudentFields.StudentGiven2,
                 SynStudentFields.StudentSurname,
                 SynStudentFields.StudentPreferred,
-                SynStudentFields.StudentId
+                SynStudentFields.Age,
+                SynStudentFields.StudentCampus,
+                SynStudentFields.StudentGender,
+                SynStudentFields.StudentHouse,
+                SynStudentFields.StudentYearLevel,
+                SynStudentFields.Status,
+                SynStudentFields.StatusReason
             );
 
         /// <summary>
@@ -28,6 +35,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
         public static readonly HashSet<string> TrackedFields = new HashSet<string>
         {
                 SynStudentFields.SynMirrorId,
+                SynStudentFields.StudentId,
                 SynStudentFields.StudentActiveFlag,
                 SynStudentFields.StudentGiven1,
                 SynStudentFields.StudentGiven2,
@@ -36,7 +44,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
                 SynStudentFields.Age,
                 SynStudentFields.StudentCampus,
                 SynStudentFields.StudentHouse,
-                SynStudentFields.StudentYearLevel
+                SynStudentFields.StudentGender,
+                SynStudentFields.StudentYearLevel,
+                SynStudentFields.Status,
+                SynStudentFields.StatusReason
         };
     }
 }

@@ -1,7 +1,10 @@
 using System;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Xrm.Sdk.Messages;
+using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
@@ -11,17 +14,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class SynStudents
     {
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.SynStudent;
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private DataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="service"></param>
         /// <param name="tracer"></param>
-        public SynStudents(IOrganizationService service, ITracingService tracer)
+        public SynStudents(IDataverseContext context)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+
+            _logger = new DataverseLogger(_context.Tracer, nameof(SynStudents));
         }
         /// <summary>
         /// 
@@ -36,9 +40,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Entered SynQueryService.RetrieveAllMetadata");
-                _tracer.Trace("Constructing QueryExpression");
-                _tracer.Trace("Called with synEntityId: {0}", synEntityId.ToString());
+                _logger.WriteLog($"Constructing QueryExpression with synEntityId: {synEntityId.ToString()}");
 
                 QueryExpression query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -57,7 +59,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {
@@ -65,19 +67,64 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("Unable to retrieve Synergetic Student using EntityId: {0}. Returning blank Entity.", synEntityId.ToString());
+                    _logger.WriteLog($"Unable to retrieve Synergetic Student using EntityId: {synEntityId}. Returning blank Entity.");
                     return new Entity(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in SynQueryService.RetrieveAllMetadata: {0}", ex);
+                _logger.WriteLog($"Exception: {ex}");
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("InnerException in SynQueryService.RetrieveAllMetadata: {0}", ex.InnerException.ToString());
+                    _logger.WriteLog($"InnerException: {ex.InnerException}");
                 }
                 throw;
             }
         }
+        /*
+        public (EntityCollection results, TimeSpan duration) FindByStudentId(IQuery<int> query)
+        {
+            try
+            {
+                var entity = query.Metadata.TargetEntityLogicalName;
+                var key = query.Metadata.TargetRecordKey;
+                var attribute = query.Metadata.TargetAttributeLogicalName;
+                var count = query.TopCount;
+                var columns = query.Columns;
+
+                _logger.WriteLog($"Querying TABLE: {entity ?? "<NULL>"}, KEY: {key.ToString() ?? "<NULL>"}, TARGET_ATTRIBUTE: {attribute ?? "<NULL>"} TOP_COUNT: {count ?? "<NULL>"}");
+
+                QueryExpression queryExpression = new QueryExpression(entity)
+                {
+                    ColumnSet = columns,
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                attribute,
+                                ConditionOperator.Equal,
+                                key
+                            )
+                        }
+                    }
+                };
+
+                if (count != null) queryExpression.TopCount = count;
+
+                var results = _context.Service.RetrieveMultiple(queryExpression);
+
+                return (results, TimeSpan.Zero);
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"Exception: {ex}");
+                if (ex.InnerException != null)
+                {
+                    _logger.WriteLog($"InnerException: {ex.InnerException}");
+                }
+                throw;
+            }
+        }*/
     }
 }

@@ -17,6 +17,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Preferred = "pgrowth_preferred";
         public const string Surname = "pgrowth_surname";
         public const string YearLevel = "pgrowth_yearlevel";
+        public const string EmailAddress = "pgrowth_emailaddress";
         public const string Photo = "pgrowth_photo";
         public const string PhotoHash = "pgrowth_photohash";
         public const string PhotoLastModified = "pgrowth_photolastmodified";

@@ -1,0 +1,54 @@
+using Microsoft.Xrm.Sdk;
+using spgsWebTools.XrmHelpers.Domain.Dtos;
+
+namespace spgsWebTools.XrmHelpers.Shared.Hashing
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class StudentHashService
+    {
+        private readonly ITracingService _tracer;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tracer"></param>
+        public StudentHashService(ITracingService tracer)
+        {
+            _tracer = tracer;
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
+
+        public (string plain, int encoded) Generate(StudentDto student)
+        {
+            _tracer.Trace("Entered StudentHashService.Generate");
+
+            string plaintextHash = string.Join("|",
+                new string[] {
+                    student.StudentId.ToString() ?? "",
+                    student.Age.ToString() ?? "",
+                    student.IsActive.ToString() ?? "",
+                    student.Campus.value.ToString() ?? "",
+                    student.Gender.value.ToString() ?? "",
+                    student.Given1 ?? "",
+                    student.Given2 ?? "",
+                    student.Preferred ?? "",
+                    student.Surname ?? "",
+                    student.House.value.ToString() ?? "",
+                    student.YearLevel.ToString() ?? ""
+                }.Select(val => val ?? string.Empty)
+            );
+
+            _tracer.Trace("Plaintext hash: {0}", plaintextHash);
+
+            var encodedHash = GetBKDRHashKey.Calculate(plaintextHash);
+            _tracer.Trace("EncodedHash within StudentHashService.Generate calculated as: {0}. Returning to call source.", encodedHash);
+
+            return (plaintextHash, encodedHash);
+        }
+    }
+}
