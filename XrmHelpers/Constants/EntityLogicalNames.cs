@@ -22,5 +22,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string CoreStudent = "pgrowth_corestudent";
         public const string NotificationRequest = "mthomas_notificationrequest";
         public const string EmailTemplate = "mthomas_emailtemplate";
+        public const string AdaptiveCardTemplate = "mthomas_adaptivecardtemplate";
+        public const string Theme = "mthomas_theme";
     }
 }
