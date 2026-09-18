@@ -4,20 +4,21 @@ using spgsWebTools.XrmHelpers.Constants;
 namespace spgsWebTools.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+
     public class DataverseLookupAttribute : Attribute
     {
         public string KeyProperty { get; }
         public string TargetEntity { get; }
         public string TargetAttribute { get; }
         public DataverseLookupAttribute(
-            string keyProperty,
+            string? keyProperty,
             string targetEntity,
-            string targetAttribute
+            string? targetAttribute
         )
         {
-            KeyProperty = keyProperty;
+            KeyProperty = keyProperty ?? "";
             TargetEntity = targetEntity;
-            TargetAttribute = targetAttribute;
+            TargetAttribute = targetAttribute ?? "";
         }
     }
 }

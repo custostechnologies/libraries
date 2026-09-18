@@ -24,5 +24,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string EmailTemplate = "mthomas_emailtemplate";
         public const string AdaptiveCardTemplate = "mthomas_adaptivecardtemplate";
         public const string Theme = "mthomas_theme";
+        public const string TemplateSnippetIntersect = "mthomas_templatesnippetintersect";
+        public const string HTMLSnippet = "mthomas_htmlsnippet";
     }
 }

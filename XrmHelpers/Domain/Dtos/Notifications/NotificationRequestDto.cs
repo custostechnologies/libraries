@@ -23,7 +23,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public DateTime? ForcePlugin { get; set; } = null;
         public KeyAttributeCollection KeyCollection =>
-            new KeyAttributeCollection{};
+            new KeyAttributeCollection { };
 
         [DataverseLookup(keyProperty: nameof(AdaptiveCardTemplateFields.TemplateKey), targetEntity: EntityLogicalNames.AdaptiveCardTemplate, targetAttribute: AdaptiveCardTemplateFields.TemplateKey)]
         [DataverseLink(srcName: NotificationRequestFields.AdaptiveCardTemplate, srcType: typeof(EntityReference), trgName: NotificationRequestFields.AdaptiveCardTemplate, trgType: typeof(EntityReference))]
@@ -53,7 +53,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(srcName: NotificationRequestFields.NotificationRequestId, srcType: typeof(Guid), trgName: NotificationRequestFields.NotificationRequestId, trgType: typeof(Guid))]
         public Guid? NotificationRequestId { get; set; }
-        
+
         [DataverseLink(srcName: NotificationRequestFields.NotificationType, srcType: typeof(NotificationType), trgName: NotificationRequestFields.NotificationType, trgType: typeof(OptionSetValue))]
         public NotificationType NotificationType { get; set; }
 

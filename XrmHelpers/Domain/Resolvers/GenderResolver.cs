@@ -5,6 +5,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Resolvers
 {
     public class GenderResolver
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
         public static Gender ToEnum(string code)
         {
             try
