@@ -13,5 +13,15 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string CoreStaffCategory = "pgrowth_corestaffcategory";
         public const string UserSyncEvent = "pgrowth_usersyncevent";
         public const string AssignmentSyncEvent = "pgrowth_assignmentsyncevent";
+<<<<<<< HEAD
+=======
+        public const string Organization = "organization";
+        public const string EnvironmentVariableValue = "environmentvariablevalue";
+        public const string EnvironmentVariableDefinition = "environmentvariabledefinition";
+        public const string JobOpportunity = "pgrowth_jobopportunity";
+        public const string EmploymentApplication = "pgrowth_employmentapplication";
+        public const string SynStudent = "pgrowth_synergeticvstudentscurrent";
+        public const string CoreStudent = "pgrowth_corestudent";
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
     }
 }

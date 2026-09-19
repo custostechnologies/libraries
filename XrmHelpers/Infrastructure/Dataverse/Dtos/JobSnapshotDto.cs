@@ -19,9 +19,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
 
         // job position
         public string? SynReportsTo { get; set; }
+<<<<<<< HEAD
 
         // user
         public int StaffId { get; set; }
+=======
+        public string? StaffJobPositionCode { get; set; }
+
+        // user
+        public int StaffId { get; set; }
+        public string? StaffNameInternal { get; set; }
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
 
         // status
         public int IsActive { get; set; }

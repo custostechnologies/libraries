@@ -5,6 +5,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class GetAttributeDelta
     {
+<<<<<<< HEAD
         public static T? Execute<T>(string attributeName, Entity target, Entity? preImage)
         {
             try
@@ -18,6 +19,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
                 {
                     return preImage.GetAttributeValue<T>(attributeName);
                 }
+=======
+        public static T? Execute<T>(string attributeName, Entity a, Entity? b)
+        {
+            try
+            {
+                if (a.Contains(attributeName)) return a.GetAttributeValue<T>(attributeName);
+                if (b != null && b.Contains(attributeName)) return b.GetAttributeValue<T>(attributeName);
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             }
             catch (Exception ex)
             {

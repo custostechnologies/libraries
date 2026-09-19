@@ -1,6 +1,10 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
+<<<<<<< HEAD
+=======
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
@@ -9,6 +13,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
+<<<<<<< HEAD
+=======
+        private bool _forceIncoming = false;
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
         public SynStaffSnaphotFactory(IOrganizationService service, ITracingService tracer)
         {
             _service = service;
@@ -26,6 +34,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _tracer.Trace("In SynStaffMemberFactory.Build, TARGET id: {0}", target.Id);
 
+<<<<<<< HEAD
+=======
+            if (target.Contains(SynStaffMemberFields.MutePlugin))
+            {
+                _forceIncoming = target.GetAttributeValue<bool>(SynStaffMemberFields.MutePlugin);
+                _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
+                preImage = null;
+            }
+
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             if (preImage != null)
             {
                 _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
@@ -72,6 +90,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     : GetAttributeDelta.Execute<string>(SynStaffMemberFields.SourceOfTruthId, target, preImage),
             };
 
+<<<<<<< HEAD
+=======
+            if (string.IsNullOrWhiteSpace(snap.StaffCategory)) snap.StaffCategory = "NOTSEL";
+            if (string.IsNullOrWhiteSpace(snap.StaffDepartment)) snap.StaffDepartment = "NOTSPEC";
+            if (string.IsNullOrWhiteSpace(snap.StaffCampus)) snap.CampusKey = Enums.Campus.OtherOrNone.ToString();
+            if (string.IsNullOrWhiteSpace(snap.Gender)) snap.GenderKey = Enums.Gender.NotSpecified.ToString();
+
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             if (preImage != null)
             {
                 snap.SynMirrorId = preImage.Id;
@@ -79,21 +105,37 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 snap.EncodedHash = GetAttributeDelta.Execute<int>(SynStaffMemberFields.EncodedHash, preImage, null);
             }
             // update status based on values
+<<<<<<< HEAD
             if (
                 ((snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow)
                 || (!snap.ActiveFlag))
                 && (snap.Status == new OptionSetValue((int)status))
             )
             {
+=======
+            _tracer.Trace("Calculating snapshot status based on ActiveFlag and LeavingDate.");
+            if (snap.ActiveFlag == false || (snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow))
+            {
+                _tracer.Trace("Setting snap.Status and snap.StatusReason to INACTIVE.");
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
+<<<<<<< HEAD
+=======
+                _tracer.Trace("Setting snap.Status and snap.StatusReason to status: {0} and statusReason: {1}", status.ToString(), statusReason.ToString());
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
                 snap.Status = new OptionSetValue((int)status);
                 snap.StatusReason = new OptionSetValue((int)statusReason);
             }
 
+<<<<<<< HEAD
+=======
+            _tracer.Trace("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
+
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
                 JsonSerializer.Serialize<StaffMemberSnapshot>(
                     snap,

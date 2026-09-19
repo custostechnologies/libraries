@@ -13,5 +13,10 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SourceOfTruthId = "pgrowth_sourceoftruthid";
         public const string Status = "statecode";
         public const string StatusReason = "statuscode";
+<<<<<<< HEAD
+=======
+        public const string ApprovalIndex = "pgrowth_approvalindex";
+        public const string Campus = "pgrowth_campus";
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
     }
 }

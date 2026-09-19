@@ -29,7 +29,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
 
             // Metadata
             CoreJobPositionFields.FteRequired,
+<<<<<<< HEAD
             CoreJobPositionFields.NextReviewDate
+=======
+            CoreJobPositionFields.NextReviewDate,
+            CoreJobPositionFields.HierarchyDependsOnCampus
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
         );
     }
 }

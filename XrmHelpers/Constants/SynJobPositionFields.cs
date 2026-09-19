@@ -42,5 +42,9 @@ namespace spgsWebTools.XrmHelpers.Constants
         // Sync
         public const string UtcNow = "pgrowth_utcnow";
         public const string ForcePlugin = "pgrowth_forceplugin";
+<<<<<<< HEAD
+=======
+        public const string MutePlugin = "pgrowth_muteplugin";
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
     }
 }

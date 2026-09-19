@@ -28,6 +28,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StaffJobPositionExistsFlag,
             SynJobPositionFields.StaffJobPositionFTE,
             SynJobPositionFields.StaffJobPositionsSeq,
+<<<<<<< HEAD
+=======
+            SynJobPositionFields.ReportsTo,
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
 
             // Hash Values
             SynJobPositionFields.EncodedHash,
@@ -38,7 +42,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StatusReason,
 
             // Sync
+<<<<<<< HEAD
             SynJobPositionFields.UtcNow
+=======
+            SynJobPositionFields.UtcNow,
+            SynJobPositionFields.MutePlugin
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
         );
 
         public static readonly HashSet<string> TrackedFields = new HashSet<string>
@@ -54,6 +63,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SynJobPositionFields.StaffJobPositionExistsFlag,
             SynJobPositionFields.StaffJobPositionFTE,
             SynJobPositionFields.StaffJobPositionsSeq,
+<<<<<<< HEAD
+=======
+            SynJobPositionFields.ReportsTo,
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             "pgrowth_forceplugin"
         };
     }

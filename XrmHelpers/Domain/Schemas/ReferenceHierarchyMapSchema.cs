@@ -18,7 +18,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             ReferenceHierarchyMapFields.ParentJobPosition,
             ReferenceHierarchyMapFields.SourceOfTruthId,
             ReferenceHierarchyMapFields.Status,
+<<<<<<< HEAD
             ReferenceHierarchyMapFields.StatusReason
+=======
+            ReferenceHierarchyMapFields.StatusReason,
+            ReferenceHierarchyMapFields.ApprovalIndex
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
         );
         public static readonly ColumnSet CoreIdentityColumns = new ColumnSet(
             ReferenceHierarchyMapFields.ReferenceHierarchyMapId,

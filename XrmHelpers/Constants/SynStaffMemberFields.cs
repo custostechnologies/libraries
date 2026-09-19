@@ -36,5 +36,9 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string IgnoreSync = "pgrowth_ignoresync";
         public const string ForcePlugin = "pgrowth_forceplugin";
         public const string ErrorMessage = "pgrowth_errormessage";
+<<<<<<< HEAD
+=======
+        public const string MutePlugin = "pgrowth_muteplugin";
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
     }
 }

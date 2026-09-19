@@ -1,6 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Constants;
+<<<<<<< HEAD
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
@@ -10,6 +11,25 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         public static Entity ToCreateEntity(this CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
         {
             var entity = core.ToEntity(true, updatedAttributes);
+=======
+using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
+using Microsoft.VisualBasic;
+
+namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
+{
+    public class CoreJobAssignmentMapper
+    {
+        private readonly string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
+        private readonly ITracingService _tracer;
+        private bool _create = false;
+        public CoreJobAssignmentMapper(ITracingService tracer)
+        {
+            _tracer = tracer;
+        }
+        public Entity ToCreateEntity(CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
+        {
+            var entity = ToEntity(core, true, updatedAttributes);
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
 
             foreach (var a in entity.Attributes)
             {
@@ -22,14 +42,24 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
             return entity;
         }
+<<<<<<< HEAD
         public static Entity ToUpdateEntity(this CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
         {
             if (core.CoreJobAssignmentId == Guid.Empty)
+=======
+        public Entity ToUpdateEntity(CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
+        {
+            if (core == null || core.CoreJobAssignmentId == Guid.Empty)
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             {
                 throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
             }
 
+<<<<<<< HEAD
             var entity = core.ToEntity(false, updatedAttributes);
+=======
+            var entity = ToEntity(core, false, updatedAttributes);
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             entity.Id = core.CoreJobAssignmentId;
 
             foreach (var a in entity.Attributes)
@@ -44,12 +74,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             return entity;
         }
 
+<<<<<<< HEAD
         public static Entity ToEntity(this CoreJobAssignment core, bool create, string[] updatedAttributes)
         {
             var entity = new Entity(ENTITY_LOGICAL_NAME);
 
             // Identity
 
+=======
+        public Entity ToEntity(CoreJobAssignment core, bool create, string[] updatedAttributes)
+        {
+            var entity = new Entity(ENTITY_LOGICAL_NAME);
+            _create = create;
+
+            // Identity
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             MapDelta(
                 entity,
                 updatedAttributes,
@@ -59,7 +98,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             );
 
             if (!string.IsNullOrWhiteSpace(core.SourceOfTruthId) &&
+<<<<<<< HEAD
     updatedAttributes.Contains("pgrowth_sourceoftruthid"))
+=======
+                updatedAttributes.Contains("pgrowth_sourceoftruthid"))
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             {
                 entity[CoreStaffMemberFields.SourceOfTruthId] = core.SourceOfTruthId;
             }
@@ -81,12 +124,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             );
 
             // Status
+<<<<<<< HEAD
             MapDelta(
                 entity,
                 updatedAttributes,
                 SynJobPositionFields.StaffJobPositionActiveFlag,
                 CoreJobAssignmentFields.IsActive,
                 core.IsActive
+=======
+            MapIsActiveDelta(
+                entity,
+                updatedAttributes,
+                core.IsActive ?? false
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             );
 
             if (core.StatusReason != null && !create)
@@ -147,12 +197,43 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 core.SynReportsTo
             );
 
+<<<<<<< HEAD
+=======
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.Status,
+                CoreJobAssignmentFields.Status,
+                core.Status
+            );
+
+            MapDelta(
+                entity,
+                updatedAttributes,
+                SynJobPositionFields.StatusReason,
+                CoreJobAssignmentFields.StatusReason,
+                core.StatusReason
+            );
+
+            var entityStatus = entity.GetAttributeValue<OptionSetValue>("statecode");
+            var entityStatusReason = entity.GetAttributeValue<OptionSetValue>("statuscode");
+
+            _tracer.Trace("entity has status: {0}, statusReason: {1}",
+                ((Enums.Status)entityStatus.Value).ToString(),
+                ((Enums.StatusReason)entityStatusReason.Value).ToString()
+            );
+
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             // Sync data
             entity[CoreJobAssignmentFields.LastSync] = DateTime.UtcNow;
 
             return entity;
         }
+<<<<<<< HEAD
         private static void MapDelta<T>(
+=======
+        private void MapDelta<T>(
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             Entity entity,
             string[] updatedAttributes,
             string sourceAttribute,
@@ -160,10 +241,35 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             T value
         )
         {
+<<<<<<< HEAD
             if (updatedAttributes.Contains(sourceAttribute))
+=======
+            _tracer.Trace("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
+                sourceAttribute, targetAttribute, value
+            );
+            if (_create || updatedAttributes.Contains(sourceAttribute))
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
             {
                 entity[targetAttribute] = value;
             }
         }
+<<<<<<< HEAD
+=======
+        private void MapIsActiveDelta(
+            Entity entity,
+            string[] updatedAttributes,
+            bool value
+        )
+        {
+            _tracer.Trace("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
+            SynJobPositionFields.StaffJobPositionActiveFlag, CoreJobAssignmentFields.IsActive, value
+            );
+            if (_create || updatedAttributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
+            {
+                entity[CoreJobAssignmentFields.IsActive] = value;
+                _tracer.Trace("Set CoreJobAssignmentFields.IsActive to {0}", entity.GetAttributeValue<bool>(CoreJobAssignmentFields.IsActive));
+            }
+        }
+>>>>>>> source-temp/refactor/decouple-xrmhelpers
     }
 }
