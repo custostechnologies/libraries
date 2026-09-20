@@ -146,6 +146,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     )
                 );
 
+                _logger.WriteLog($"_intersects: {JsonSerializer.Serialize(
+                        _intersects,
+                        new JsonSerializerOptions { WriteIndented = true }
+                    )}");
+
                 _intersectDtos = new List<TemplateSnippetIntersectDto>();
 
                 if (_intersects.Entities.Count > 0)
@@ -191,30 +196,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
             }
 
-            _logger.WriteLog($"_emailTemplateDto: {JsonSerializer.Serialize(
-                    _emailTemplateDto,
-                    new JsonSerializerOptions { WriteIndented = true }
-                )}");
-            _logger.WriteLog($"_themeDto: {JsonSerializer.Serialize(
-                    _themeDto,
-                    new JsonSerializerOptions { WriteIndented = true }
-                )}");
-            _logger.WriteLog($"_contentCardHtmlBytes: {JsonSerializer.Serialize(
-                    _contentCardHtmlBytes,
-                    new JsonSerializerOptions { WriteIndented = true }
-                )}");
-            _logger.WriteLog($"_inlineTableHtmlBytes: {JsonSerializer.Serialize(
-                    _inlineTableHtmlBytes,
-                    new JsonSerializerOptions { WriteIndented = true }
-                )}");
-            _logger.WriteLog($"_singleButtonHtmlBytes: {JsonSerializer.Serialize(
-                _singleButtonHtmlBytes,
-                new JsonSerializerOptions { WriteIndented = true }
-            )}");
-            _logger.WriteLog($"_intersectDtos: {JsonSerializer.Serialize(
-                _intersectDtos,
-                new JsonSerializerOptions { WriteIndented = true }
-            )}");
+            _logger.WriteLog($"_intersectDto's: {JsonSerializer.Serialize(
+                        _intersectDtos,
+                        new JsonSerializerOptions { WriteIndented = true }
+                    )}");
 
             return htmlContent;
         }

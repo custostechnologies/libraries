@@ -58,5 +58,26 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public EntityReference? RelatedHTMLSnippet { get; set; }
 
         public HTMLSnippetDto? HTMLSnippet { get; set; }
+
+        [DataverseLink(
+            srcName: $"sn.{HTMLSnippetFields.InjectionTags}",
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null)]
+        public string InjectionTags { get; set; } = string.Empty;
+
+        [DataverseLink(
+            srcName: $"sn.{HTMLSnippetFields.Sequence}",
+            srcType: typeof(int),
+            trgName: null,
+            trgType: null)]
+        public int Sequence { get; set; }
+
+        [DataverseLink(
+            srcName: $"sn.{HTMLSnippetFields.Description}",
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null)]
+        public string Description { get; set; } = string.Empty;
     }
 }
