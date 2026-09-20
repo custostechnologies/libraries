@@ -21,5 +21,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string targetAppDisplayName
         );
         public OperationType ContextOperationType { get; set; }
+        public string HelpMeLink { get; set; }
     }
 }

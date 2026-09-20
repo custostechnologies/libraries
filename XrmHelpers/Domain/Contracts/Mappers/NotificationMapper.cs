@@ -142,6 +142,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             );
 
             _tagResolverEngine.PopulateTag(
+                dto, tags, "inCorrelationId",
+                _context.ExecutionContext.CorrelationId.ToString()
+            );
+
+            _tagResolverEngine.PopulateTag(
                 dto,
                 tags,
                 "inTableHtmlString",

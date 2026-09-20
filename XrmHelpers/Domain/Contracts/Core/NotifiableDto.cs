@@ -21,6 +21,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public virtual string ValidationRuleSet { get; set; } = string.Empty;
         public virtual string SourceEntityLogicalName { get; set; } = string.Empty;
         public virtual string TargetEntityLogicalName { get; set; } = string.Empty;
+        public virtual string HelpMeLink { get; set; } = "https://my.stpauls.nsw.edu.au/homepage/24256";
         public virtual OperationType ContextOperationType { get; set; }
         public virtual DateTime? ForcePlugin { get; set; } = null;
 
@@ -149,10 +150,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             hydratedTags.Sort((a, b) => a.Index.CompareTo(b.Index));
 
-            strBuilder.AppendLine("<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse;'>");
+            strBuilder.AppendLine("<table class=\"table table - dark table - striped\" role=\"presentation\"border = \"0\" cellpadding = \"0\" cellspacing = \"0\"style = \"border-radius: 0px; border-collapse: separate !important; width: 100%; overflow: hidden; border: 1px solid #e2e8f0;\"bgcolor = \"#ffffff\" > ");
 
             strBuilder.AppendLine("<thead>");
-            strBuilder.AppendLine("<tr>");
+            strBuilder.AppendLine("<tr style=\"line - height: 18px; font - size: 12px; margin: 0; padding: 6px; border: 1px solid #e2e8f0;\" align=\"left\" valign=\"top\" scope=\"row\">");
             strBuilder.AppendLine("<th>Key</th>");
             strBuilder.AppendLine("<th>Value</th>");
             strBuilder.AppendLine("</tr>");
@@ -160,10 +161,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             strBuilder.AppendLine("<tbody>");
 
+            int iterator = 0;
+
             foreach (var tag in hydratedTags)
             {
-                strBuilder.AppendLine("<tr>");
-                strBuilder.AppendLine($"<td>{tag.Label}</td>");
+                var bgcolor = iterator % 2 == 0 ? "#F2F2F2" : "";
+                strBuilder.AppendLine($"<tr style=\"line-height: 18px; font-size: 12px; margin: 0; padding: 6px; border: 1px solid #e2e8f0;\" align=\"left\" valign=\"top\" scope=\"row\" bgcolor=\"{bgcolor}\">");
+                strBuilder.AppendLine($"<th style=\"line-height: 18px; font-size: 12px; margin: 0; padding: 6px; border-color: #e2e8f0; border-style: solid; border-width: 1px 1px 2px;\" align=\"center\" valign=\"top\" scope=\"col\">{tag.Label}</th>");
                 strBuilder.AppendLine($"<td>{tag.Value}</td>");
                 strBuilder.AppendLine("</tr>");
             }
