@@ -29,7 +29,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
                     TopCount = 1,
-                    ColumnSet = ThemeSchema.AllColumns,
+                    ColumnSet = EmailTemplateSchema.AllColumns,
                     Criteria =
                     {
                         Conditions =

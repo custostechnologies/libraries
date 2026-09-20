@@ -44,7 +44,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 _logger.WriteLog("Enriching target...");
                 dto = _enricher.Execute(dto);
 
-                _logger.WriteLog("Create HTML object...");
+                _logger.WriteLog("Creating HTML object...");
                 _notificationMapper.CreateHtmlObject(dto);
 
                 _logger.WriteLog("Mapping to NotificationRequest entity...");

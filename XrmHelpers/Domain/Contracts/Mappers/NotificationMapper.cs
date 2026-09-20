@@ -64,6 +64,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         }
         public string CreateHtmlObject(TDto dto)
         {
+            _logger.WriteLog("Entered CreateHtmlObject...");
+
             EmailTemplateDto? _emailTemplateDto = null;
             ThemeDto? _themeDto = null;
             List<TemplateSnippetIntersectDto>? _intersectDtos = null;
@@ -86,6 +88,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             if (!string.IsNullOrWhiteSpace(templateKey))
             {
+                _logger.WriteLog("Retrieving emailTemplateDto...");
+
                 _emailTemplate = _emailTemplateQuery.GetEntityByKey(templateKey);
 
                 if (_emailTemplate == null)
@@ -94,6 +98,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
                 else
                 {
+                    _logger.WriteLog("Creating _emailTemplateDto...");
+
                     _emailTemplateDto = _emailTemplateMapper.MapToDto(_emailTemplate);
                     // Retrieve HTML Template
                     _logger.WriteLog($"Email template retrieved. Downloading HTML Template file attachment.");
@@ -110,9 +116,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
 
             // Retrieve Theme
-            _logger.WriteLog($"Retrieving theme.");
+            _logger.WriteLog($"Retrieving theme...");
             if (_emailTemplateDto != null && _emailTemplateDto.Theme != null)
             {
+                _logger.WriteLog($"_emailTemplateDto.Theme: {JsonSerializer.Serialize(
+                        _emailTemplateDto.Theme,
+                        new JsonSerializerOptions { WriteIndented = true }
+                    )}");
+
+                _logger.WriteLog($"Retrieving theme");
                 _theme = _themeQuery.GetThemeByRef(
                     new EntityReference(
                         EntityLogicalNames.Theme,

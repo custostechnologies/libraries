@@ -99,19 +99,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: EmailTemplateFields.HtmlTemplate,
-            srcType: typeof(Guid),
+            srcType: typeof(EntityReference),
             trgName: null,
             trgType: null
         )]
-        public Guid? HtmlTemplate { get; set; }
-
-        [DataverseLink(
-            srcName: EmailTemplateFields.HtmlTemplate,
-            srcType: typeof(string),
-            trgName: null,
-            trgType: null
-        )]
-        public Guid? HtmtlTemplate_Name { get; set; }
+        public EntityReference? HtmlTemplate { get; set; }
 
         [DataverseLink(
             srcName: EmailTemplateFields.Name,

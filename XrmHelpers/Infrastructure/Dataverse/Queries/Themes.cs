@@ -22,15 +22,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         }
         public Entity? GetThemeByRef(EntityReference entityRef)
         {
-            try
-            {
-                _logger.WriteLog("Building query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME} with ColumnSet: {JsonSerializer.Serialize(ThemeSchema.AllColumns, new JsonSerializerOptions { WriteIndented = false })}");
 
-                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
-                {
-                    TopCount = 1,
-                    ColumnSet = ThemeSchema.AllColumns,
-                    Criteria =
+            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            {
+                TopCount = 1,
+                ColumnSet = ThemeSchema.AllColumns,
+                Criteria =
                     {
                         Conditions =
                         {
@@ -41,29 +39,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                             )
                         }
                     }
-                };
+            };
 
-                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog($"Executing query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
-                _logger.WriteLog("Finished executing query expression, interpreting results...");
+            _logger.WriteLog("Finished executing query expression, interpreting results...");
 
-                if (results.Entities.Count > 0)
-                {
-                    _logger.WriteLog($"{results.Entities.Count} entities returned. Returning results.Entities[0].");
-                    return results.Entities[0];
-                }
-                else
-                {
-                    _logger.WriteLog("No matching entities were found");
-                    return null;
-                }
-            }
-            catch (Exception ex)
+            if (results.Entities.Count > 0)
             {
-                _logger.WriteLog($"Exception: {ex}");
-                throw;
+                _logger.WriteLog($"{results.Entities.Count} entities returned. Returning results.Entities[0].");
+                return results.Entities[0];
+            }
+            else
+            {
+                _logger.WriteLog("No matching entities were found");
+                return null;
             }
         }
     }
