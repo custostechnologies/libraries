@@ -35,11 +35,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             if (dto == null || token == null) return;
+            Console.WriteLine($"PopulateDataverseTag with token: {token} and value: {value}");
 
             var idx = tags.IndexOf(
                 tags.FirstOrDefault(
                     tag => tag.InjectionToken == token)
             );
+
+            var tag = tags.FirstOrDefault(tag => tag.InjectionToken == token);
+
+            Console.WriteLine($"tag idx: {idx}");
+            Console.WriteLine($"tag InjectionToken: {tag.InjectionToken}");
 
             tags[idx].Value = value;
         }

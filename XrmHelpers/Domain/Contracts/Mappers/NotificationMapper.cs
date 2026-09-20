@@ -101,7 +101,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _tagResolverEngine.PopulateDataverseTag<TDto>(
                 dto,
                 tags,
-                "inHtmlTableString",
+                "inTableHtmlString",
                 dto.GenerateSummaryTable(
                     _context,
                     dto.SourceEntityLogicalName,
