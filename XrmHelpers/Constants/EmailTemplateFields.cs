@@ -3,7 +3,7 @@ namespace spgsWebTools.XrmHelpers.Constants
     public static class EmailTemplateFields
     {
         // Identity
-        public const string EmailTemplateId = "mthomas_emailtemplate";
+        public const string EmailTemplateId = "mthomas_emailtemplateid";
 
         // Core Fields
         public const string Name = "mthomas_name";
