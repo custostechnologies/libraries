@@ -19,29 +19,56 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     public class TemplateSnippetIntersectDto : IDto
     {
         public string SourceEntityLogicalName => EntityLogicalNames.TemplateSnippetIntersect;
-        public string TargetEntityLogicalName => EntityLogicalNames.TemplateSnippetIntersect;
-
-        [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
+        public string TargetEntityLogicalName => "";
         public DateTime? ForcePlugin { get; set; } = null;
-        public KeyAttributeCollection KeyCollection =>
-            new KeyAttributeCollection{};
 
+        public KeyAttributeCollection KeyCollection =>
+            new KeyAttributeCollection { };
+
+        [DataverseLink(
+            srcName: TemplateSnippetIntersectFields.InjectionOrder,
+            srcType: typeof(int),
+            trgName: null,
+            trgType: null)]
         public int InjectionOrder { get; set; } = 0;
 
-        public string Name  { get; set; } = string.Empty;
-        
+        [DataverseLink(
+            srcName: TemplateSnippetIntersectFields.Name,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null)]
+        public string Name { get; set; } = string.Empty;
+
         [DataverseLookup(
-            keyProperty: null, 
-            targetEntity: EntityLogicalNames.EmailTemplate, 
+            keyProperty: null,
+            targetEntity: EntityLogicalNames.EmailTemplate,
             targetAttribute: null)]
         [DataverseLink(
-            srcName: TemplateSnippetIntersectFields.RelatedEmailTemplate, 
-            srcType: typeof(EntityReference), 
-            trgName: null, 
+            srcName: TemplateSnippetIntersectFields.RelatedEmailTemplate,
+            srcType: typeof(EntityReference),
+            trgName: null,
             trgType: null)]
         public EntityReference? RelatedEmailTemplate { get; set; }
 
-        [DataverseLink(srcName: TemplateSnippetIntersectFields.RelatedHTMLSnippet, srcType: typeof(EntityReference), trgName: null, trgType: null)]
-        public EntityReference? RelatedHTMLSnippet  { get; set; }
+        [DataverseLink(
+            srcName: TemplateSnippetIntersectFields.RelatedHTMLSnippet,
+            srcType: typeof(EntityReference),
+            trgName: null,
+            trgType: null)]
+        public EntityReference? RelatedHTMLSnippet { get; set; }
+
+        [DataverseLink(
+            srcName: TemplateSnippetIntersectFields.Status,
+            srcType: typeof(OptionSetValue),
+            trgName: null,
+            trgType: null)]
+        public string Status { get; set; } = string.Empty;
+
+        [DataverseLink(
+            srcName: TemplateSnippetIntersectFields.StatusReason,
+            srcType: typeof(OptionSetValue),
+            trgName: null,
+            trgType: null)]
+        public string StatusReason { get; set; } = string.Empty;
     }
 }

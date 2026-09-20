@@ -13,13 +13,34 @@ using spgsWebTools.XrmHelpers.Domain.Schemas;
 using System.Text.Json;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 using System.Text;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class NotificationMapper<TDto> : INotificationMapper<TDto> where TDto : IDto, new()
     {
+        private static readonly Dictionary<Type, string> TemplateKeys = new()
+        {
+            { typeof(SafetyIncidentDto), "newSafetyIncident" }
+        };
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
+        private EmailTemplates _emailTemplateQuery;
+        private Themes _themeQuery;
+        private TemplateSnippetIntersects _intersectQuery;
+        private string htmlContent = string.Empty;
+        private string templateKey = string.Empty;
+
+        private DataverseMapper<EmailTemplateDto> _emailTemplateMapper;
+        private DataverseMapper<ThemeDto> _themeMapper;
+        private DataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
+        private DataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
+
+
+        private FileDownloaderService _downloaderService;
+
+
+
         private readonly DataverseLogger _logger;
         public NotificationMapper(
             IDataverseContext context,
@@ -27,67 +48,157 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             _context = context;
-            _logger = new DataverseLogger(_context.Tracer, typeof(DataverseMapper<TDto>).Name);
+            _logger = new DataverseLogger(_context.Tracer, typeof(NotificationMapper<TDto>).Name);
             _lookupEngine = lookupEngine;
+
+            _emailTemplateQuery = new EmailTemplates(_context);
+            _themeQuery = new Themes(_context);
+            _intersectQuery = new TemplateSnippetIntersects(_context);
+
+            _downloaderService = new FileDownloaderService(_context);
+
+            _emailTemplateMapper = new DataverseMapper<EmailTemplateDto>(_context, _lookupEngine);
+            _themeMapper = new DataverseMapper<ThemeDto>(_context, _lookupEngine);
+            _htmlSnippetMapper = new DataverseMapper<HTMLSnippetDto>(_context, _lookupEngine);
+            _intersectMapper = new DataverseMapper<TemplateSnippetIntersectDto>(_context, _lookupEngine);
         }
         public string CreateHtmlObject(TDto dto)
         {
-            string htmlContent = string.Empty;
-            string templateKey = string.Empty;
+            EmailTemplateDto? _emailTemplateDto = null;
+            ThemeDto? _themeDto = null;
+            List<TemplateSnippetIntersectDto>? _intersectDtos = null;
 
-            EntityCollection queryResults;
-            Entity emailTemplate;
-            byte[] htmlTemplateBytes;
-
-            FileDownloaderService downloaderService = new FileDownloaderService(_context);
+            EntityCollection? _intersects = null;
+            Entity? _emailTemplate = null;
+            Entity? _theme = null;
+            byte[] _htmlTemplateBytes;
+            string _contentCardHtmlBytes = string.Empty;
+            string _inlineTableHtmlBytes = string.Empty;
+            string _singleButtonHtmlBytes = string.Empty;
 
             // retrieve email template
-            if (dto.GetType() == typeof(SafetyIncidentDto))
+            if (!TemplateKeys.TryGetValue(dto.GetType(), out templateKey))
             {
-                templateKey = "newSafetyIncident";
+                throw new InvalidPluginExecutionException(
+                    $"No template configured for {dto.GetType().Name}"
+                );
             }
-
-            QueryExpression queryExpression = new QueryExpression(EntityLogicalNames.EmailTemplate)
-            {
-                TopCount = 1,
-                ColumnSet = EmailTemplateSchema.AllColumns,
-                Criteria = new FilterExpression()
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(
-                            EmailTemplateFields.EmailTemplateKey,
-                            ConditionOperator.Equal,
-                            templateKey
-                        )
-                    }
-                }
-            };
 
             if (!string.IsNullOrWhiteSpace(templateKey))
             {
-                queryResults = _context.Service.RetrieveMultiple(queryExpression);
-                if (queryResults.Entities.Count == 0)
+                _emailTemplate = _emailTemplateQuery.GetEntityByKey(templateKey);
+
+                if (_emailTemplate == null)
                 {
-                    _logger.WriteLog("No email templates returned.");
-                    throw new Exception("No email templates returned.");
+                    throw new Exception("Email template returned null.");
                 }
                 else
                 {
-                    emailTemplate = queryResults.Entities[0];
-
+                    _emailTemplateDto = _emailTemplateMapper.MapToDto(_emailTemplate);
+                    // Retrieve HTML Template
                     _logger.WriteLog($"Email template retrieved. Downloading HTML Template file attachment.");
 
-                    htmlTemplateBytes = downloaderService.Execute(
-                        new EntityReference(EntityLogicalNames.EmailTemplate, emailTemplate.Id),
+                    _htmlTemplateBytes = _downloaderService.Execute(
+                        new EntityReference(EntityLogicalNames.EmailTemplate, _emailTemplate.Id),
                         EmailTemplateFields.HtmlTemplate
                     );
 
-                    htmlContent = Encoding.UTF8.GetString(htmlTemplateBytes);
+                    htmlContent = Encoding.UTF8.GetString(_htmlTemplateBytes);
 
-                    _logger.WriteLog($"htmlContent: {htmlContent}");
+                    _logger.WriteLog($"HTML template content retrieved...");
                 }
             }
+
+            // Retrieve Theme
+            _logger.WriteLog($"Retrieving theme.");
+            if (_emailTemplateDto != null && _emailTemplateDto.Theme != null)
+            {
+                _theme = _themeQuery.GetThemeByRef(_emailTemplateDto.Theme);
+
+                if (_theme != null) _themeDto = _themeMapper.MapToDto(_theme);
+            }
+
+            // retrieve template-snippet intersects
+            _logger.WriteLog($"Retrieving intersects.");
+            if (_emailTemplateDto != null)
+            {
+                _intersects = _intersectQuery.GetIntersectsByTemplateRef(
+                    new EntityReference(
+                        EntityLogicalNames.EmailTemplate,
+                        _emailTemplateDto.EmailTemplateId ?? Guid.Empty
+                    )
+                );
+
+                _intersectDtos = new List<TemplateSnippetIntersectDto>();
+
+                if (_intersects.Entities.Count > 0)
+                {
+                    foreach (Entity entity in _intersects.Entities)
+                    {
+                        var intersectDto = _intersectMapper.MapToDto(entity);
+
+                        if (intersectDto != null) _intersectDtos.Add(intersectDto);
+
+                        var snippetRef = intersectDto != null
+                            ? intersectDto.RelatedHTMLSnippet
+                            : null;
+
+                        if (snippetRef == null)
+                        {
+                            _logger.WriteLog("snippetRef is null, continue.");
+                            continue;
+                        }
+
+                        byte[] snippetBytes = _downloaderService.Execute(
+                                snippetRef,
+                                HTMLSnippetFields.HTMLFile
+                            );
+
+                        if (intersectDto == null)
+                        {
+                            continue;
+                        }
+                        else if (intersectDto.Name.Contains("Content Card"))
+                        {
+                            _contentCardHtmlBytes = Encoding.UTF8.GetString(snippetBytes);
+                        }
+                        else if (intersectDto.Name.Contains("Table"))
+                        {
+                            _inlineTableHtmlBytes = Encoding.UTF8.GetString(snippetBytes);
+                        }
+                        if (intersectDto.Name.Contains("Single Button"))
+                        {
+                            _singleButtonHtmlBytes = Encoding.UTF8.GetString(snippetBytes);
+                        }
+                    }
+                }
+            }
+
+            _logger.WriteLog($"_emailTemplateDto: {JsonSerializer.Serialize(
+                    _emailTemplateDto,
+                    new JsonSerializerOptions { WriteIndented = true }
+                )}");
+            _logger.WriteLog($"_themeDto: {JsonSerializer.Serialize(
+                    _themeDto,
+                    new JsonSerializerOptions { WriteIndented = true }
+                )}");
+            _logger.WriteLog($"_contentCardHtmlBytes: {JsonSerializer.Serialize(
+                    _contentCardHtmlBytes,
+                    new JsonSerializerOptions { WriteIndented = true }
+                )}");
+            _logger.WriteLog($"_inlineTableHtmlBytes: {JsonSerializer.Serialize(
+                    _inlineTableHtmlBytes,
+                    new JsonSerializerOptions { WriteIndented = true }
+                )}");
+            _logger.WriteLog($"_singleButtonHtmlBytes: {JsonSerializer.Serialize(
+                _singleButtonHtmlBytes,
+                new JsonSerializerOptions { WriteIndented = true }
+            )}");
+            _logger.WriteLog($"_intersectDtos: {JsonSerializer.Serialize(
+                _intersectDtos,
+                new JsonSerializerOptions { WriteIndented = true }
+            )}");
+
             return htmlContent;
         }
         public Entity MapToNotificationRequest(TDto dto)
@@ -114,8 +225,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     if (value == null) continue;
 
-                    var targetType = link.TargetType;
-                    var srcType = link.SourceType;
+                    var targetType = Nullable.GetUnderlyingType(link.TargetType) ?? link.TargetType;
+                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
                     var dtoValueType = property.PropertyType;
 
                     if (link.TargetLogicalName == null)
@@ -125,7 +236,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     if (property.PropertyType.IsEnum)
                     {
-                        setValue = setValue = new OptionSetValue(Convert.ToInt32(value));
+                        setValue = new OptionSetValue(Convert.ToInt32(value));
                     }
                     else if (dtoValueType == targetType)
                     {

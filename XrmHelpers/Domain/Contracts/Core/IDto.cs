@@ -7,6 +7,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         string SourceEntityLogicalName { get; }
         string TargetEntityLogicalName { get; }
         DateTime? ForcePlugin { get; set; }
-        KeyAttributeCollection KeyCollection { get; }
+        KeyAttributeCollection? KeyCollection { get; }
     }
 }

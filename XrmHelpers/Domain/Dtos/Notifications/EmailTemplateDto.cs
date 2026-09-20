@@ -18,58 +18,131 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     public class EmailTemplateDto : IDto
     {
         public string SourceEntityLogicalName => EntityLogicalNames.EmailTemplate;
-        public string TargetEntityLogicalName => EntityLogicalNames.EmailTemplate;
-
-        [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
+        public string TargetEntityLogicalName => "";
 
         public DateTime? ForcePlugin { get; set; } = null;
-        
-        public KeyAttributeCollection KeyCollection =>
-            new KeyAttributeCollection{};
 
-        [DataverseLink(srcName: EmailTemplateFields.CC, srcType: typeof(string), trgName: EmailTemplateFields.CC, trgType: typeof(string))]
+        public KeyAttributeCollection KeyCollection =>
+            new KeyAttributeCollection { };
+
+        [DataverseLink(
+            srcName: EmailTemplateFields.CC,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? CC { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.ContentBodyText, srcType: typeof(string), trgName: EmailTemplateFields.ContentBodyText, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.ContentBodyText,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? ContentBodyText { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.ContentCardHeader, srcType: typeof(string), trgName: EmailTemplateFields.ContentCardHeader, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.ContentCardHeader,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? ContentCardHeader { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.EmailTemplateId, srcType: typeof(Guid), trgName: EmailTemplateFields.EmailTemplateId, trgType: typeof(Guid))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.EmailTemplateId,
+            srcType: typeof(Guid),
+            trgName: null,
+            trgType: null
+        )]
         public Guid? EmailTemplateId { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.EmailTemplateKey, srcType: typeof(string), trgName: EmailTemplateFields.EmailTemplateKey, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.EmailTemplateKey,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? EmailTemplateKey { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.FetchXmlQuery, srcType: typeof(Guid), trgName: EmailTemplateFields.FetchXmlQuery, trgType: typeof(File))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.FetchXmlQuery,
+            srcType: typeof(Guid),
+            trgName: null,
+            trgType: null
+        )]
         public Guid? FetchXmlQuery { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.FetchXmlQuery, srcType: typeof(string), trgName: EmailTemplateFields.FetchXmlQuery, trgType: typeof(File))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.FetchXmlQuery,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public Guid? FetchXmlQuery_Name { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.HeaderSubtitle, srcType: typeof(string), trgName: EmailTemplateFields.HeaderSubtitle, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.HeaderSubtitle,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? HeaderSubtitle { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.HeaderTitle, srcType: typeof(string), trgName: EmailTemplateFields.HeaderTitle, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.HeaderTitle,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? HeaderTitle { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.HtmlTemplate, srcType: typeof(Guid), trgName: EmailTemplateFields.HtmlTemplate, trgType: typeof(File))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.HtmlTemplate,
+            srcType: typeof(Guid),
+            trgName: null,
+            trgType: null
+        )]
         public Guid? HtmlTemplate { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.HtmlTemplate, srcType: typeof(string), trgName: EmailTemplateFields.HtmlTemplate, trgType: typeof(File))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.HtmlTemplate,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public Guid? HtmtlTemplate_Name { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.Name, srcType: typeof(string), trgName: EmailTemplateFields.Name, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.Name,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? Name { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.SendFrom, srcType: typeof(string), trgName: EmailTemplateFields.SendFrom, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.SendFrom,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? SendFrom { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.Subject, srcType: typeof(string), trgName: EmailTemplateFields.Subject, trgType: typeof(string))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.Subject,
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
         public string? Subject { get; set; }
 
-        [DataverseLink(srcName: EmailTemplateFields.Theme, srcType: typeof(EntityReference), trgName: EmailTemplateFields.Theme, trgType: typeof(EntityReference))]
+        [DataverseLink(
+            srcName: EmailTemplateFields.Theme,
+            srcType: typeof(EntityReference),
+            trgName: null,
+            trgType: null
+        )]
         public EntityReference? Theme { get; set; }
     }
 }

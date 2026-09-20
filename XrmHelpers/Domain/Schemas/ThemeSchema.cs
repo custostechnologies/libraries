@@ -6,7 +6,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
     /// <summary>
     /// 
     /// </summary>
-    public static class ThemSchema
+    public static class ThemeSchema
     {
         /// <summary>
         /// 
