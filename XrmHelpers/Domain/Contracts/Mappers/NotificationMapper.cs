@@ -11,6 +11,8 @@ using spgsWebTools.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Domain.Schemas;
 using System.Text.Json;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using System.Text;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -35,6 +37,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             EntityCollection queryResults;
             Entity emailTemplate;
+            byte[] htmlTemplateBytes;
+
+            FileDownloaderService downloaderService = new FileDownloaderService(_context);
 
             // retrieve email template
             if (dto.GetType() == typeof(SafetyIncidentDto))
@@ -71,10 +76,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 {
                     emailTemplate = queryResults.Entities[0];
 
-                    _logger.WriteLog($"Email template: {JsonSerializer.Serialize(
-                            emailTemplate,
-                            new JsonSerializerOptions { WriteIndented = true }
-                        )}");
+                    _logger.WriteLog($"Email template retrieved. Downloading HTML Template file attachment.");
+
+                    htmlTemplateBytes = downloaderService.Execute(
+                        new EntityReference(EntityLogicalNames.EmailTemplate, emailTemplate.Id),
+                        EmailTemplateFields.HtmlTemplate
+                    );
+
+                    htmlContent = Encoding.UTF8.GetString(htmlTemplateBytes);
+
+                    _logger.WriteLog($"htmlContent: {htmlContent}");
                 }
             }
             return htmlContent;

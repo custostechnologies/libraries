@@ -10,10 +10,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
     {
         private ITracingService _tracer;
         private IOrganizationService _service;
-        private string _exportContent = null;
-        private string _fileAttributeName = null;
-        private string _exportFileName = null;
-        private EntityReference _target = null;
+        private string _exportContent = string.Empty;
+        private string _fileAttributeName = string.Empty;
+        private string _exportFileName = string.Empty;
+        private EntityReference? _target;
         public FileUploaderService(
             ITracingService tracer,
             IOrganizationService service
