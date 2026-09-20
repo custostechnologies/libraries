@@ -7,6 +7,7 @@ using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Resolvers;
+using Microsoft.Extensions.Options;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -234,7 +235,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
                     if (link == null) continue;
                     var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
-                    _logger.WriteLog($"srcType: {srcType.Name}");
+                    if (srcType != null) _logger.WriteLog($"srcType: {srcType.Name}");
 
                     var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
                     _logger.WriteLog($"dtoValueType: {dtoValueType.Name}");
@@ -258,6 +259,67 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         if (srcType == dtoValueType)
                         {
                             setValue = value;
+                        }
+                        else if (property.PropertyType.IsEnum && srcType == typeof(OptionSetValue))
+                        {
+                            var optionValue = ((OptionSetValue)value).Value;
+                            switch (dtoValueType.Name)
+                            {
+                                case "AdmittedToHospital":
+                                    setValue = (AdmittedToHospital)optionValue;
+                                    break;
+                                case "CustomIncidentStatus":
+                                    setValue = (CustomIncidentStatus)optionValue;
+                                    break;
+                                case "CustomIncidentStatusReason":
+                                    setValue = (CustomIncidentStatusReason)optionValue;
+                                    break;
+                                case "IncidentCategory":
+                                    setValue = (IncidentCategory)optionValue;
+                                    break;
+                                case "IncidentSeverity":
+                                    setValue = (IncidentSeverity)optionValue;
+                                    break;
+                                case "IncidentTimeframe":
+                                    setValue = (IncidentTimeframe)optionValue;
+                                    break;
+                                case "IncidentType":
+                                    setValue = (IncidentType)optionValue;
+                                    break;
+                                case "InjuredPersonType":
+                                    setValue = (InjuredPersonType)optionValue;
+                                    break;
+                                case "InjuryBodyPart":
+                                    setValue = (InjuryBodyPart)optionValue;
+                                    break;
+                                case "InjuryType":
+                                    setValue = (InjuryType)optionValue;
+                                    break;
+                                case "Location":
+                                    setValue = (Location)optionValue;
+                                    break;
+                                case "RecordSource":
+                                    setValue = (RecordSource)optionValue;
+                                    break;
+                                case "RelevantSport":
+                                    setValue = (RelevantSport)optionValue;
+                                    break;
+                                case "ResponsePriority":
+                                    setValue = (ResponsePriority)optionValue;
+                                    break;
+                                case "SubmitterPosition":
+                                    setValue = (SubmitterPosition)optionValue;
+                                    break;
+                                case "Campus":
+                                    setValue = (Campus)optionValue;
+                                    break;
+                                case "Gender":
+                                    setValue = (Gender)optionValue;
+                                    break;
+                                default:
+                                    setValue = Enum.Parse(dtoValueType, optionValue.ToString());
+                                    break;
+                            }
                         }
                         else if (property.PropertyType.IsEnum)
                         {
