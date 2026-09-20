@@ -113,7 +113,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _logger.WriteLog($"Retrieving theme.");
             if (_emailTemplateDto != null && _emailTemplateDto.Theme != null)
             {
-                _theme = _themeQuery.GetThemeByRef(_emailTemplateDto.Theme);
+                _theme = _themeQuery.GetThemeByRef(
+                    new EntityReference(
+                        EntityLogicalNames.Theme,
+                        _emailTemplateDto.Theme.Id
+                    )
+                );
 
                 if (_theme != null) _themeDto = _themeMapper.MapToDto(_theme);
             }
