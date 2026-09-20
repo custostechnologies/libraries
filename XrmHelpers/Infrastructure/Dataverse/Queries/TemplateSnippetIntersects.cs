@@ -36,7 +36,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                             new ConditionExpression(
                                 TemplateSnippetIntersectFields.RelatedEmailTemplate,
                                 ConditionOperator.Equal,
-                                entityRef
+                                entityRef.Id
                             )
                         }
                     }
