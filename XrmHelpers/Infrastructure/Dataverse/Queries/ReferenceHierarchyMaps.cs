@@ -1,15 +1,9 @@
-<<<<<<< HEAD
-=======
 using System.Security.Claims;
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Schemas;
-<<<<<<< HEAD
-=======
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
@@ -172,34 +166,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw;
             }
         }
-<<<<<<< HEAD
-        public List<EntityReference> GetReferenceMapsByPositionId(Guid coreJobPositionId)
-=======
         public List<EntityReference> GetReferenceMapsByPositionId(Guid coreJobPositionId, Enums.Campus? campus)
->>>>>>> source-temp/refactor/decouple-xrmhelpers
         {
             try
             {
                 _tracer.Trace("Building GetReferenceMapsByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
-<<<<<<< HEAD
-
-                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
-                {
-                    ColumnSet = ReferenceHierarchyMapSchema.AllSyncColumns,
-                    Criteria =
-                    {
-                        Conditions =
-                        {
-                            new ConditionExpression(
-                                ReferenceHierarchyMapFields.CoreJobPosition,
-                                ConditionOperator.Equal,
-                                coreJobPositionId
-                            )
-                        }
-                    }
-                };
-
-=======
                 if (campus != null) _tracer.Trace("CAMPUS value passed in to method call, using as a LogicalOperator.And CONDITION");
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -221,7 +192,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     );
                 }
 
->>>>>>> source-temp/refactor/decouple-xrmhelpers
                 _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);

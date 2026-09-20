@@ -7,6 +7,12 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SourceOfTruthId = "pgrowth_sourceoftruthid";
         public const string StaffId = "pgrowth_staffid";
         public const string User = "pgrowth_user";
+        public const string CoreStaffMemberId = "pgrowth_corestaffmemberid";
+
+        // Profile Photo
+        public const string Photo = "pgrowth_photo";
+        public const string PhotoLastModified = "pgrowth_photolastmodified";
+        public const string PhotoHash = "pgrowth_photohash";
 
         // Status
         public const string IsActive = "pgrowth_isactive";

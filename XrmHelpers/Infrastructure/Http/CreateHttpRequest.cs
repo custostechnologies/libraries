@@ -3,10 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Microsoft.Xrm.Sdk;
 using System.Text.Json;
-<<<<<<< HEAD
-=======
 using System.Net;
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Http
 {
@@ -23,11 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
         {
             _tracer = tracer;
         }
-<<<<<<< HEAD
-        public string TriggerAnonFlow(
-=======
         public (HttpStatusCode status, string body) TriggerAnonFlow(
->>>>>>> source-temp/refactor/decouple-xrmhelpers
             string endpoint,
             string upn,
             string correlationId
@@ -47,20 +40,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
                     "application/json");
 
                 var response = client.PostAsync(endpoint, content).Result;
-<<<<<<< HEAD
-                var responseBody = response.Content.ReadAsStringAsync().Result;
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    var error =
-                        response.Content.ReadAsStringAsync().Result;
-
-                    throw new Exception(
-                        $"Flow call failed. Status: {response.StatusCode}. Response: {error}");
-                }
-
-                return responseBody;
-=======
 
                 if (response != null)
                 {
@@ -84,7 +63,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
                     return (response.StatusCode, responseBody);
                 }
                 return (HttpStatusCode.SeeOther, "");
->>>>>>> source-temp/refactor/decouple-xrmhelpers
             }
         }
         /*

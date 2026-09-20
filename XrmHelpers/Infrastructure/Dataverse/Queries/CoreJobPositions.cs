@@ -99,8 +99,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return new EntityReference(ENTITY_LOGICAL_NAME);
             }
         }
-<<<<<<< HEAD
-=======
         public string GetEntityNameById(Guid id)
         {
             _tracer.Trace("Building GetEntityNameById query expression on {0}", ENTITY_LOGICAL_NAME);
@@ -138,7 +136,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return null;
             }
         }
->>>>>>> source-temp/refactor/decouple-xrmhelpers
         public Entity GetEntityById(Guid id)
         {
             _tracer.Trace("Building GetEntityById query expression on {0}", ENTITY_LOGICAL_NAME);
@@ -213,8 +210,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
-<<<<<<< HEAD
-=======
         public Entity GetPropertyValues(Guid recordId, string[] attributeNames)
         {
             _tracer.Trace("Building GetPropertyValue query expression on {0}", ENTITY_LOGICAL_NAME);
@@ -259,6 +254,5 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return null;
             }
         }
->>>>>>> source-temp/refactor/decouple-xrmhelpers
     }
 }

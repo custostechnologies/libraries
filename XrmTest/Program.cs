@@ -56,7 +56,7 @@ namespace XrmLocalTest
             }
 
             // test GetMultipleRecords
-            EntityCollection testCollection = XrmHelpers.GetMultipleRecords<EntityCollection>(
+            /*EntityCollection testCollection = spgsWebTools.XrmHelpers.GetMultipleRecords<EntityCollection>(
                 "mthomas_coreuser",
                 "Matthew Thomas",
                 "mthomas_userdisplayname",
@@ -107,7 +107,7 @@ namespace XrmLocalTest
                 serviceClient
             );
 
-            Console.WriteLine($"Updated Staff ID: {testCollectionAfterUpdate.Entities[0].GetAttributeValue<int>("mthomas_staffid")}");
+            Console.WriteLine($"Updated Staff ID: {testCollectionAfterUpdate.Entities[0].GetAttributeValue<int>("mthomas_staffid")}");*/
 
             Console.WriteLine("Press a key to continue...");
             Console.ReadKey();

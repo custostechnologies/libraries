@@ -6,20 +6,12 @@ using spgsWebTools.XrmHelpers.Shared.Utilities;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-<<<<<<< HEAD
-    public class Businessunits
-=======
     public class BusinessUnits
->>>>>>> source-temp/refactor/decouple-xrmhelpers
     {
         private readonly string ENTITY_LOGICAL_NAME = "businessunits";
         private readonly IOrganizationService _service;
         private readonly ITracingService _tracer;
-<<<<<<< HEAD
-        public Businessunits(IOrganizationService service, ITracingService tracer)
-=======
         public BusinessUnits(IOrganizationService service, ITracingService tracer)
->>>>>>> source-temp/refactor/decouple-xrmhelpers
         {
             _service = service;
             _tracer = tracer;

@@ -30,7 +30,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             );
         }
         // MAP SOURCE -> SOURCE
-        public Entity ExecuteInbound(Entity target, Entity? preImage)
+        public Entity? ExecuteInbound(Entity target, Entity? preImage)
         {
             DeltaComparison<TDto>? delta = null;
             TDto current;

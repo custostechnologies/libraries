@@ -38,11 +38,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 SetDelta(SynJobPositionFields.StaffJobPositionActiveFlag, snap.IsActive);
                 SetDelta(SynJobPositionFields.StaffJobPositionStartDate, snap.StartDate);
                 SetDelta(SynJobPositionFields.StaffJobPositionEndDate, snap.EndDate);
-<<<<<<< HEAD
-=======
                 SetDelta(SynJobPositionFields.SourceOfTruthId, snap.SourceOfTruthId);
 
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
                 // status (calculated in snapshot factory)
                 SetDelta(SynStaffMemberFields.Status, snap.Status);

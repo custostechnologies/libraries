@@ -5,10 +5,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using System.Text.Json;
-<<<<<<< HEAD
-=======
 using System.Security.Claims;
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -20,10 +17,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private Systemusers? _systemuserQuery;
         private CoreJobAssignments? _assignmentQuery;
         private OperationalHierarchyMaps? _operationalMapQuery;
-<<<<<<< HEAD
-=======
         private CoreJobPositions? _coreJobPositionQuery;
->>>>>>> source-temp/refactor/decouple-xrmhelpers
         private string ENTITY_LOGICAL_NAME = EntityLogicalNames.OperationalHierarchyMap;
         public OperationalHierarchyMapFactory(
             IOrganizationService service,
@@ -38,10 +32,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             // position id is PARENT if isParent true
             _assignmentQuery = new CoreJobAssignments(_service, _tracer);
             _operationalMapQuery = new OperationalHierarchyMaps(_service, _tracer);
-<<<<<<< HEAD
-=======
             _coreJobPositionQuery = new CoreJobPositions(_service, _tracer);
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
             EntityReference parentAssignmentRef;
             EntityReference childAssignmentRef;
@@ -55,14 +46,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw new InvalidPluginExecutionException("No assignment found for position {0}");
             }
 
-<<<<<<< HEAD
-            childAssignmentRef = new EntityReference(
-                    EntityLogicalNames.CoreJobAssignment,
-                    assignment.Id
-            );
-
-            var existing = _operationalMapQuery.GetByCompositeKey(childAssignmentRef.Id, parentAssignmentRef.Id);
-=======
             if (assignment.Id == Guid.Empty)
             {
                 throw new InvalidPluginExecutionException("assignment has Guid.Empty");
@@ -84,19 +67,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             string? campusName = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus) != null
                 ? ((Enums.Campus)referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus).Value).ToString()
                 : null;
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
             if (existing == null || existing.Id == Guid.Empty)
             {
                 Entity createMap = new Entity(ENTITY_LOGICAL_NAME);
 
-<<<<<<< HEAD
-                createMap[OperationalHierarchyMapFields.ChildJobAssignment] = childAssignmentRef;
-                createMap[OperationalHierarchyMapFields.ChildJobAssignmentIdx] = childAssignmentRef.Id.ToString();
-=======
                 createMap[OperationalHierarchyMapFields.ChildJobAssignment] = assignment.ToEntityReference();
                 createMap[OperationalHierarchyMapFields.ChildJobAssignmentIdx] = assignment.Id.ToString();
->>>>>>> source-temp/refactor/decouple-xrmhelpers
                 createMap[OperationalHierarchyMapFields.CoreJobAssignment] = assignment.ToEntityReference();
                 createMap[OperationalHierarchyMapFields.CoreJobAssignmentIdx] = assignment.Id.ToString();
                 createMap[OperationalHierarchyMapFields.ParentJobAssignment] = parentAssignmentRef;
@@ -111,12 +88,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 createMap[OperationalHierarchyMapFields.IsActive] = true;
                 createMap[OperationalHierarchyMapFields.LinkType] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.LinkType);
-<<<<<<< HEAD
-                createMap[OperationalHierarchyMapFields.Name] = $"OPERATIONAL MAP: {referenceMapEntity.GetAttributeValue<string>(ReferenceHierarchyMapFields.Name)}";
-                createMap[OperationalHierarchyMapFields.SourceOfTruthId] = Guid.NewGuid().ToString();
-                createMap[OperationalHierarchyMapFields.Status] = new OptionSetValue((int)Enums.Status.Active);
-                createMap[OperationalHierarchyMapFields.StatusReason] = new OptionSetValue((int)Enums.StatusReason.Active);
-=======
                 createMap[OperationalHierarchyMapFields.Name] = campusName == null
                     ? $"OPERATIONAL MAP: [Child: {childPositionName}] [Parent: {parentPositionName}]"
                     : $"OPERATIONAL MAP: [Child: {childPositionName}] [Campus: {campusName}] [Parent: {parentPositionName}]";
@@ -128,7 +99,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 if (referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex) != null) createMap[OperationalHierarchyMapFields.ApprovalIndex] = referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex);
 
                 if (referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus) != null) createMap[OperationalHierarchyMapFields.Campus] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus);
->>>>>>> source-temp/refactor/decouple-xrmhelpers
 
                 var createMapJson = JsonSerializer.Serialize(
                     createMap,
@@ -139,27 +109,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );
 
                 _tracer.Trace("createMap entity: {0}", createMapJson);
-
-<<<<<<< HEAD
-                if (assignment.Id == Guid.Empty)
-                {
-                    throw new InvalidPluginExecutionException("assignment has Guid.Empty");
-                }
-
-                if (parentAssignmentRef == null)
-                {
-                    throw new InvalidPluginExecutionException("parentAssignment is null");
-                }
-
-                if (parentAssignmentRef.Id == Guid.Empty)
-                {
-                    throw new InvalidPluginExecutionException("parentAssignment has Guid.Empty");
-                }
-
-                if (childAssignmentRef.Id == Guid.Empty)
-                {
-                    throw new InvalidPluginExecutionException("childAssignment has Guid.Empty");
-                }
 
 =======
 >>>>>>> source-temp/refactor/decouple-xrmhelpers
