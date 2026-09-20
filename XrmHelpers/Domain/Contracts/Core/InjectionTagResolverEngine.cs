@@ -27,5 +27,21 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
             }
         }
+        public void PopulateDataverseTag<TDto>(
+            TDto dto,
+            IList<IInjectionTag> tags,
+            string token,
+            string value
+        )
+        {
+            if (dto == null || token == null) return;
+
+            var idx = tags.IndexOf(
+                tags.FirstOrDefault(
+                    tag => tag.InjectionToken == token)
+            );
+
+            tags[idx].Value = value;
+        }
     }
 }

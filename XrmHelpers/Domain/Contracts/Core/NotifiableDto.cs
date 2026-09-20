@@ -1,0 +1,180 @@
+using spgsWebTools.XrmHelpers.Domain.Attributes;
+using spgsWebTools.XrmHelpers.Domain.Enums;
+using System.Text;
+using System.Reflection;
+using System.Net;
+using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk.Organization;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+
+namespace spgsWebTools.XrmHelpers.Domain.Contracts
+{
+    public class NotifiableDto<TDto> : INotifiableDto
+    {
+        private IDataverseContext _context;
+        private DataverseLogger _logger;
+        public NotifiableDto(IDataverseContext context)
+        {
+            _context = context;
+            _logger = new DataverseLogger(
+                _context.Tracer,
+                nameof(TDto)
+            );
+        }
+        public virtual Guid EntityId { get; set; }
+        public virtual string TargetAppDisplayName { get; set; } = string.Empty;
+        public virtual string _srcEntityName { get; set; } = string.Empty;
+        public virtual string _targetEntityName { get; set; } = string.Empty;
+        public virtual string ValidationRuleSet { get; set; } = string.Empty;
+        public virtual string SourceEntityLogicalName { get; set; } = string.Empty;
+        public virtual string TargetEntityLogicalName { get; set; } = string.Empty;
+        public virtual OperationType ContextOperationType { get; set; }
+        public virtual DateTime? ForcePlugin { get; set; } = null;
+
+        public virtual KeyAttributeCollection KeyCollection =>
+            new KeyAttributeCollection { };
+
+        public class HydratedTag
+        {
+            public HydratedTag(string val, string label, int idx)
+            {
+                Value = val;
+                Label = label;
+                Index = idx;
+            }
+            public string Value { get; set; } = string.Empty;
+            public string Label { get; set; } = string.Empty;
+            public int Index { get; set; }
+        }
+        public virtual string LinkToRecord(
+            string entityLogicalName,
+            Guid entityId,
+            string targetAppDisplayName
+        )
+        {
+            string envUrl = string.Empty;
+            Guid appId = Guid.Empty;
+
+            try
+            {
+                var req = new RetrieveCurrentOrganizationRequest();
+                var response = (RetrieveCurrentOrganizationResponse)_context.Service.Execute(req);
+
+                if (response.Detail.Endpoints.ContainsKey(EndpointType.WebApplication))
+                {
+                    envUrl = response.Detail.Endpoints[EndpointType.WebApplication];
+                }
+
+                QueryExpression query = new QueryExpression("appmodule")
+                {
+                    ColumnSet = new ColumnSet("appmoduleid"),
+                    Criteria = new FilterExpression()
+                };
+
+                // Filter by the unique name of the model-driven app
+                query.Criteria.AddCondition("name", ConditionOperator.Equal, targetAppDisplayName);
+
+                EntityCollection results = _context.Service.RetrieveMultiple(query);
+
+                if (results.Entities.Count > 0)
+                {
+                    appId = results.Entities[0].Id;
+                }
+                else
+                {
+                    _logger.WriteLog("Unable to resolve app id from appmodule table");
+                }
+
+                var appIdString = appId == Guid.Empty ? $"appid={appId}&" : "";
+
+                return $"{envUrl}main.aspx?{appIdString}pagetype=entityrecord&etn={entityLogicalName}&id={entityId}";
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidPluginExecutionException($"Failed to find the environment URL: {ex}");
+            }
+        }
+        public virtual string GenerateSummaryTable(
+            string entityLogicalName,
+            Guid entityId,
+            string targetAppDisplayName
+        )
+        {
+
+            StringBuilder strBuilder = new StringBuilder();
+            List<HydratedTag> hydratedTags = new List<HydratedTag>();
+
+            Type type = this.GetType();
+            OperationType operationType = ContextOperationType;
+
+            foreach (var prop in type.GetProperties())
+            {
+                var notificationAttributes = prop.GetCustomAttributes<NotificationAttribute>();
+                var link = prop.GetCustomAttribute<DataverseLinkAttribute>();
+                string str = string.Empty;
+
+                if (!notificationAttributes.Any() || link == null) continue;
+
+                var attribute = notificationAttributes.FirstOrDefault(attr => attr.OperationType == operationType);
+
+                if (attribute == null) continue;
+
+                var value = prop.GetValue(this);
+                var idx = attribute.Idx;
+                var label = attribute.Label;
+
+                var recordLink = LinkToRecord(
+                    entityLogicalName,
+                    entityId,
+                    targetAppDisplayName
+                );
+
+                if (attribute.Label == "Title")
+                {
+                    str = $"<a href=\"{recordLink}\" target=\"_blank\">{prop.GetValue(this)}</a>";
+                }
+                else
+                {
+                    str = WebUtility.HtmlEncode(value?.ToString() ?? "[NULL]");
+                }
+
+                //rawValues[attribute.Label ?? "[NULL]"] = str;
+                hydratedTags.Add(new HydratedTag(
+                    str, label, idx
+                ));
+
+            }
+
+            hydratedTags.Sort((a, b) => a.Index.CompareTo(b.Index));
+
+            strBuilder.AppendLine("<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse;'>");
+
+            strBuilder.AppendLine("<thead>");
+            strBuilder.AppendLine("<tr>");
+            strBuilder.AppendLine("<th>Key</th>");
+            strBuilder.AppendLine("<th>Value</th>");
+            strBuilder.AppendLine("</tr>");
+            strBuilder.AppendLine("</thead>");
+
+            strBuilder.AppendLine("<tbody>");
+
+            foreach (var tag in hydratedTags)
+            {
+                strBuilder.AppendLine("<tr>");
+                strBuilder.AppendLine($"<td>{tag.Label}</td>");
+                strBuilder.AppendLine($"<td>{tag.Value}</td>");
+                strBuilder.AppendLine("</tr>");
+            }
+
+            strBuilder.AppendLine("</tbody>");
+
+            strBuilder.AppendLine("</table>");
+
+            // create header
+
+            return strBuilder.ToString();
+        }
+    }
+}

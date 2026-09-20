@@ -20,11 +20,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class SafetyIncidentDto : IValidationMetadata, IDto
+    public class SafetyIncidentDto : NotifiableDto<SafetyIncidentDto>, IValidationMetadata, IDto
     {
         private IDataverseContext _context;
         private DataverseLogger _logger;
-        public SafetyIncidentDto(IDataverseContext context)
+        public SafetyIncidentDto(IDataverseContext context) : base(context)
         {
             _context = context;
             _logger = new DataverseLogger(
@@ -32,21 +32,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
                 nameof(SafetyIncidentDto)
             );
         }
-        const OperationType ContextOperationType = OperationType.Create;
-        const string _srcEntityName = EntityLogicalNames.SafetyIncident;
-        const string _targetEntityName = EntityLogicalNames.SafetyIncident;
-        public string ValidationRuleSet => "StrictSafetyIncidentRules";
-        public string SourceEntityLogicalName => EntityLogicalNames.SafetyIncident;
-        public string TargetEntityLogicalName => EntityLogicalNames.SafetyIncident;
+
+        public override string TargetAppDisplayName => "manageCompliance";
 
         [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
-        public DateTime? ForcePlugin { get; set; } = null;
+        public override DateTime? ForcePlugin { get; set; } = null;
 
-        public KeyAttributeCollection KeyCollection =>
-            new KeyAttributeCollection { };
 
         [DataverseLink(srcName: SafetyIncidentFields.SafetyIncidentId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid SafetyIncidentId { get; set; }
+        public override Guid EntityId { get => SafetyIncidentId; set => SafetyIncidentId = value; }
 
         [DataverseLink(srcName: SafetyIncidentFields.ActionToPreventFutureInjuries, srcType: typeof(string), trgName: null, trgType: null)]
         public string? ActionToPreventFutureInjuries { get; set; }
@@ -302,132 +297,22 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.Year, srcType: typeof(int?), trgName: null, trgType: null)]
         public int? Year { get; set; }
 
-        public string LinkToRecord()
+        public override string LinkToRecord(
+            string entityLogicalName,
+            Guid entityId,
+            string targetAppDisplayName
+        )
         {
-            string envUrl = string.Empty;
-            Guid manageComplianceAppId = Guid.Empty;
-
-            try
-            {
-                var req = new RetrieveCurrentOrganizationRequest();
-                var response = (RetrieveCurrentOrganizationResponse)_context.Service.Execute(req);
-
-                if (response.Detail.Endpoints.ContainsKey(EndpointType.WebApplication))
-                {
-                    envUrl = response.Detail.Endpoints[EndpointType.WebApplication];
-                }
-
-                QueryExpression query = new QueryExpression("appmodule")
-                {
-                    ColumnSet = new ColumnSet("appmoduleid"),
-                    Criteria = new FilterExpression()
-                };
-
-                // Filter by the unique name of the model-driven app
-                query.Criteria.AddCondition("name", ConditionOperator.Equal, "manageCompliance");
-
-                EntityCollection results = _context.Service.RetrieveMultiple(query);
-
-                if (results.Entities.Count > 0)
-                {
-                    manageComplianceAppId = results.Entities[0].Id;
-                }
-                else
-                {
-                    _logger.WriteLog("Unable to resolve app id from appmodule table");
-                }
-
-                var appIdString = manageComplianceAppId == Guid.Empty ? $"appid={manageComplianceAppId}&" : "";
-
-                return $"{envUrl}main.aspx?{appIdString}pagetype=entityrecord&etn=cr2d7_safetyincident&id={SafetyIncidentId}";
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidPluginExecutionException($"Failed to find the environment URL: {ex}");
-            }
+            return base.LinkToRecord(entityLogicalName, entityId, targetAppDisplayName);
         }
-        public class HydratedTag
+
+        public override string GenerateSummaryTable(
+            string entityLogicalName,
+            Guid entityId,
+            string targetAppDisplayName
+        )
         {
-            public HydratedTag(string val, string label, int idx)
-            {
-                Value = val;
-                Label = label;
-                Index = idx;
-            }
-            public string Value { get; set; } = string.Empty;
-            public string Label { get; set; } = string.Empty;
-            public int Index { get; set; }
-        }
-        public string GenerateSummaryTable()
-        {
-
-            StringBuilder strBuilder = new StringBuilder();
-            List<HydratedTag> hydratedTags = new List<HydratedTag>();
-
-            Type type = this.GetType();
-            OperationType operationType = ContextOperationType;
-
-            foreach (var prop in type.GetProperties())
-            {
-                var notificationAttributes = prop.GetCustomAttributes<NotificationAttribute>();
-                var link = prop.GetCustomAttribute<DataverseLinkAttribute>();
-                string str = string.Empty;
-
-                if (!notificationAttributes.Any() || link == null) continue;
-
-                var attribute = notificationAttributes.FirstOrDefault(attr => attr.OperationType == operationType);
-
-                if (attribute == null) continue;
-
-                var value = prop.GetValue(this);
-                var idx = attribute.Idx;
-                var label = attribute.Label;
-
-
-                if (attribute.Label == "Title")
-                {
-                    str = $"<a href=\"{LinkToRecord()}\" target=\"_blank\">{AutoGenTitle}</a>";
-                }
-                else
-                {
-                    str = WebUtility.HtmlEncode(value?.ToString() ?? "[NULL]");
-                }
-
-                //rawValues[attribute.Label ?? "[NULL]"] = str;
-                hydratedTags.Add(new HydratedTag(
-                    str, label, idx
-                ));
-
-            }
-
-            hydratedTags.Sort((a, b) => a.Index.CompareTo(b.Index));
-
-            strBuilder.AppendLine("<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse;'>");
-
-            strBuilder.AppendLine("<thead>");
-            strBuilder.AppendLine("<tr>");
-            strBuilder.AppendLine("<th>Key</th>");
-            strBuilder.AppendLine("<th>Value</th>");
-            strBuilder.AppendLine("</tr>");
-            strBuilder.AppendLine("</thead>");
-
-            strBuilder.AppendLine("<tbody>");
-
-            foreach (var tag in hydratedTags)
-            {
-                strBuilder.AppendLine("<tr>");
-                strBuilder.AppendLine($"<td>{tag.Label}</td>");
-                strBuilder.AppendLine($"<td>{tag.Value}</td>");
-                strBuilder.AppendLine("</tr>");
-            }
-
-            strBuilder.AppendLine("</tbody>");
-
-            strBuilder.AppendLine("</table>");
-
-            // create header
-
-            return strBuilder.ToString();
+            return base.GenerateSummaryTable(entityLogicalName, entityId, targetAppDisplayName);
         }
     }
 }

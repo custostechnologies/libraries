@@ -17,7 +17,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class NotificationMapper<TDto> : INotificationMapper<TDto> where TDto : IDto, new()
+    public class NotificationMapper<TDto> : INotificationMapper<TDto> where TDto : INotifiableDto, new()
     {
         private static readonly Dictionary<Type, string> TemplateKeys = new()
         {
@@ -96,6 +96,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _tagResolverEngine.PopulateDataverseTags(
                 dto,
                 tags
+            );
+
+            _tagResolverEngine.PopulateDataverseTag<TDto>(
+                dto,
+                tags,
+                "inHtmlTableString",
+                dto.GenerateSummaryTable(
+                    dto.SourceEntityLogicalName,
+                    dto.EntityId,
+                    dto.TargetAppDisplayName
+                )
             );
 
             if (!string.IsNullOrWhiteSpace(templateKey))
@@ -231,7 +242,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 new JsonSerializerOptions { WriteIndented = true }
             )}");
 
-            return htmlContent;
+            var stringBuilder = new StringBuilder(htmlContent);
+
+            foreach (var tag in tags)
+            {
+                if (tag.Value == null) continue;
+                stringBuilder.Replace(tag.InjectionToken, tag.Value.ToString());
+            }
+
+            return stringBuilder.ToString();
         }
         public Entity MapToNotificationRequest(TDto dto)
         {
