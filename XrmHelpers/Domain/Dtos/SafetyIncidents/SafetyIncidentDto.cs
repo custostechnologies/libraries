@@ -25,6 +25,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public SafetyIncidentDto() : base() { }
         public override string TargetAppDisplayName => "manageCompliance";
 
+        public override string SourceEntityLogicalName => EntityLogicalNames.SafetyIncident;
+
         [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public override DateTime? ForcePlugin { get; set; } = null;
 

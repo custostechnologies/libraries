@@ -8,9 +8,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             new DataverseInjectionTag
             {
-                InjectionToken = "inHeaderTitle",
+                InjectionToken = "inContentTextBody",
                 EntityLogicalName = EntityLogicalNames.EmailTemplate,
-                AttributeLogicalName = EmailTemplateFields.HeaderTitle
+                AttributeLogicalName = EmailTemplateFields.ContentBodyText
+            },
+
+            new DataverseInjectionTag
+            {
+                InjectionToken = "inContentHeader",
+                EntityLogicalName = EntityLogicalNames.EmailTemplate,
+                AttributeLogicalName = EmailTemplateFields.ContentCardHeader
             },
 
             new DataverseInjectionTag
@@ -39,13 +46,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 InjectionToken = "inAlternateHex",
                 EntityLogicalName = EntityLogicalNames.Theme,
                 AttributeLogicalName = ThemeFields.Alternate
-            },
-
-            new DataverseInjectionTag
-            {
-                InjectionToken = "inContentBodyText",
-                EntityLogicalName = EntityLogicalNames.EmailTemplate,
-                AttributeLogicalName = EmailTemplateFields.ContentBodyText
             },
 
             new DataverseInjectionTag
@@ -126,8 +126,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             new ContextInjectionTag
             {
-                InjectionToken = "inFlowRunId",
-                ContextKey = "inFlowRunId"
+                InjectionToken = "inCorrelationId",
+                ContextKey = "inCorrelationId"
             },
 
             new ContextInjectionTag
@@ -147,12 +147,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 InjectionToken = "inHeaderLogoImageUrl",
                 Type = InjectionAssetType.Url,
-                ContextKey = "header-logo"
+                ContextKey = "inHeaderLogoImageUrl"
             },
 
             new AssetSourceInjectionTag
             {
-                InjectionToken = "inFooterLogoImageUrl",
+                InjectionToken = "inFooterImageUrl",
                 Type = InjectionAssetType.Url,
                 ContextKey = "inFooterLogoImageUrl"
             },

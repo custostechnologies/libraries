@@ -25,12 +25,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         };
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
-        private IInjectionTagResolverEngine? _tagResolverEngine;
         private EmailTemplates _emailTemplateQuery;
         private Themes _themeQuery;
         private TemplateSnippetIntersects _intersectQuery;
-        private string htmlContent = string.Empty;
-        private string templateKey = string.Empty;
 
         private DataverseMapper<EmailTemplateDto> _emailTemplateMapper;
         private DataverseMapper<ThemeDto> _themeMapper;
@@ -61,9 +58,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _htmlSnippetMapper = new DataverseMapper<HTMLSnippetDto>(_context, _lookupEngine);
             _intersectMapper = new DataverseMapper<TemplateSnippetIntersectDto>(_context, _lookupEngine);
         }
-        public string CreateHtmlObject(TDto dto)
+        public (string, NotificationRequestDto) CreateHtmlObject(TDto dto)
         {
             _logger.WriteLog("Entered CreateHtmlObject...");
+
+            string templateKey = string.Empty;
+            string htmlContent = string.Empty;
+
+            InjectionTagResolverEngine _tagResolverEngine = new InjectionTagResolverEngine();
 
             EmailTemplateDto? _emailTemplateDto = null;
             ThemeDto? _themeDto = null;
@@ -75,15 +77,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             Entity? _emailTemplate;
             Entity? _theme;
             byte[] _htmlTemplateBytes;
-            string _contentCardHtmlBytes;
-            string _inlineTableHtmlBytes;
-            string _singleButtonHtmlBytes;
+            string _contentCardHtmlString = string.Empty;
+            string _inlineTableHtmlString = string.Empty;
+            string _singleButtonHtmlString = string.Empty;
 
             List<IInjectionTag> tags = new EmailInjectionTags().Tags;
-            _tagResolverEngine = new InjectionTagResolverEngine();
+            _logger.WriteLog($"Constructed tags list, tags.Count: {tags.Count}");
 
             // retrieve email template
             _logger.WriteLog("Retrieving email template...");
+
             if (!TemplateKeys.TryGetValue(dto.GetType(), out templateKey))
             {
                 throw new InvalidPluginExecutionException(
@@ -95,10 +98,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             // inject tags values based on incoming dto (regarding obj)
             _logger.WriteLog("Using _tagResolverEngine to inject dto values into tag list.");
+
             _tagResolverEngine.PopulateDataverseTags(
                 dto,
                 tags
             );
+
+            _logger.WriteLog($"Generating record link from dto class with: dto.SourceEntityLogicalName");
 
             var recordLink = dto.LinkToRecord(
                 _context,
@@ -108,7 +114,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             );
 
             _tagResolverEngine.PopulateTag(
-                dto, tags, "inButtonTargetUrl", recordLink
+                dto, tags, "inButtonTargetUrl", recordLink ?? "https://www.google.com"
             );
 
             var linkText =
@@ -126,7 +132,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             );
 
             _tagResolverEngine.PopulateTag(
-                dto, tags, "inFooterLogoImageUrl",
+                dto, tags, "inFooterImageUrl",
                 "https://spgswebresources.blob.core.windows.net/assets/crest_main_20260217.png"
             );
 
@@ -175,6 +181,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     requestDto.Importance = 0;
                     requestDto.Subject = _emailTemplateDto.Subject;
                     requestDto.SendFrom = _emailTemplateDto.SendFrom;
+                    requestDto.NotificationType = NotificationType.Email;
 
                     _htmlTemplateBytes = _downloaderService.Execute(
                         new EntityReference(EntityLogicalNames.EmailTemplate, _emailTemplate.Id),
@@ -272,19 +279,55 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
                         else if (intersectDto.Name.Contains("Content Card"))
                         {
-                            _contentCardHtmlBytes = Encoding.UTF8.GetString(snippetBytes);
+                            _contentCardHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
                         else if (intersectDto.Name.Contains("Table"))
                         {
-                            _inlineTableHtmlBytes = Encoding.UTF8.GetString(snippetBytes);
+                            _inlineTableHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
                         if (intersectDto.Name.Contains("Single Button"))
                         {
-                            _singleButtonHtmlBytes = Encoding.UTF8.GetString(snippetBytes);
+                            _singleButtonHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
                     }
                 }
             }
+
+            var contentCardStringBuilder = new StringBuilder(_contentCardHtmlString);
+
+            var inlineTableStringBuilder = new StringBuilder(_inlineTableHtmlString);
+
+            var singleButtonStringBuilder = new StringBuilder(_singleButtonHtmlString);
+
+            foreach (var tag in tags)
+            {
+                if (tag.Value == null) continue;
+
+                var adjustedTag = string.Concat(
+                    "{{",
+                    tag.InjectionToken,
+                    "}}"
+                );
+
+                contentCardStringBuilder.Replace(adjustedTag, tag.Value.ToString());
+                inlineTableStringBuilder.Replace(adjustedTag, tag.Value.ToString());
+                singleButtonStringBuilder.Replace(adjustedTag, tag.Value.ToString());
+            }
+
+            var emailContentHtml = $@"
+                {contentCardStringBuilder}
+                {inlineTableStringBuilder}
+                {singleButtonStringBuilder}
+            ";
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inEmailContentHtml",
+                emailContentHtml
+            );
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inEnvId", _context.ExecutionContext.OrganizationId.ToString()
+            );
 
             var stringBuilder = new StringBuilder(htmlContent);
 
@@ -301,20 +344,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 stringBuilder.Replace(adjustedTag, tag.Value.ToString());
             }
 
-            _tagResolverEngine.PopulateTag(
-                dto, tags, "inEnvId", _context.ExecutionContext.OrganizationId.ToString()
-            );
-
-
-            return stringBuilder.ToString();
+            return (stringBuilder.ToString(), requestDto);
         }
-        public Guid MapToNotificationRequest(TDto dto, string htmlContent)
+        public Guid MapToNotificationRequest(NotificationRequestDto dto, string htmlContent)
         {
             Entity notificationRequest = new Entity(EntityLogicalNames.NotificationRequest);
 
-            _logger.WriteLog($"\nEntered MapToNotificationRequest with typeof(Dto).Name: {typeof(TDto).Name}");
+            _logger.WriteLog($"\nEntered MapToNotificationRequest with typeof(Dto).Name: {typeof(NotificationRequestDto).Name}");
 
-            var properties = typeof(TDto).GetProperties();
+            var properties = dto.GetType().GetProperties();
             _logger.WriteLog($"Retrieved DTO properties, length: {properties.Length}");
 
             foreach (var property in properties)
@@ -326,19 +364,29 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     var link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
+
+                    if (string.IsNullOrWhiteSpace(link.TargetLogicalName))
+                    {
+                        continue;
+                    }
+
                     _logger.WriteLog($"Mapping property: {link.TargetLogicalName}");
 
                     var value = property.GetValue(dto);
 
                     if (value == null) continue;
 
+                    if (link.TargetType == null)
+                    {
+                        _logger.WriteLog($"TargetType null for property {property.Name}");
+                        continue;
+                    }
+
                     var targetType = Nullable.GetUnderlyingType(link.TargetType) ?? link.TargetType;
                     var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                     if (link.TargetLogicalName == null)
                         continue;
-
-                    var targetAttribute = link.TargetLogicalName;
 
                     if (property.PropertyType.IsEnum)
                     {
@@ -358,7 +406,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
                     else if (dtoValueType == typeof(string) && targetType == typeof(Guid))
                     {
-                        setValue = Guid.Parse(value.ToString());
+                        if (!Guid.TryParse(
+                            value?.ToString(),
+                            out Guid guidValue))
+                        {
+                            continue;
+                        }
+
+                        setValue = guidValue;
                     }
                     else
                     {

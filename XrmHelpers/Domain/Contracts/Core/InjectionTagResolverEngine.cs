@@ -35,7 +35,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             if (dto == null || token == null) return;
-            Console.WriteLine($"PopulateTag with token: {token} and value: {value}");
+            if (value == null)
+            {
+                Console.WriteLine($"In PopulateTag, value is null for token: {token}");
+                return;
+            }
+
+            Console.WriteLine($"PopulateTag with token: {token} and value: {new string(value.Take(25).ToArray())}");
 
             var idx = tags.IndexOf(
                 tags.FirstOrDefault(
@@ -43,6 +49,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             );
 
             var tag = tags.FirstOrDefault(tag => tag.InjectionToken == token);
+
+            if (tag == null)
+            {
+                Console.WriteLine($"tag cannot be found for token: {token}");
+                return;
+            }
 
             Console.WriteLine($"tag idx: {idx}");
             Console.WriteLine($"tag InjectionToken: {tag.InjectionToken}");

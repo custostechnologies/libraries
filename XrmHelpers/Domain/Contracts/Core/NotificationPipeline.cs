@@ -45,10 +45,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto = _enricher.Execute(dto);
 
                 _logger.WriteLog("Creating HTML object...");
-                var htmlContent = _notificationMapper.CreateHtmlObject(dto);
+                var output = _notificationMapper.CreateHtmlObject(dto);
+
+                NotificationRequestDto requestDto = output.Item2;
 
                 _logger.WriteLog("Mapping to NotificationRequest entity...");
-                return _notificationMapper.MapToNotificationRequest(dto, htmlContent);
+                return _notificationMapper.MapToNotificationRequest(output.Item2, output.Item1);
             }
             catch (Exception ex)
             {

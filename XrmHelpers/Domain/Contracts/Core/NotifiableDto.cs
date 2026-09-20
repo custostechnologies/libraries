@@ -85,7 +85,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     _logger.WriteLog("Unable to resolve app id from appmodule table");
                 }
 
-                var appIdString = appId == Guid.Empty ? $"appid={appId}&" : "";
+                var appIdString = appId != Guid.Empty ? $"appid={appId}&" : "";
 
                 return $"{envUrl}main.aspx?{appIdString}pagetype=entityrecord&etn={entityLogicalName}&id={entityId}";
             }

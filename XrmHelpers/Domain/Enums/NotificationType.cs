@@ -2,7 +2,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Enums
 {
     public enum NotificationType
     {
-        Email = 386630000,
-        TeamsAdaptiveCard = 386630001
+        Email = 384810000,
+        TeamsAdaptiveCard = 384810001
     }
 }
