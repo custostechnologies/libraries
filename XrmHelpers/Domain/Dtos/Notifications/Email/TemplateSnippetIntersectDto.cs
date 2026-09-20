@@ -61,21 +61,21 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: $"sn.{HTMLSnippetFields.InjectionTags}",
-            srcType: typeof(string),
+            srcType: typeof(AliasedValue),
             trgName: null,
             trgType: null)]
         public string InjectionTags { get; set; } = string.Empty;
 
         [DataverseLink(
             srcName: $"sn.{HTMLSnippetFields.Sequence}",
-            srcType: typeof(int),
+            srcType: typeof(AliasedValue),
             trgName: null,
             trgType: null)]
         public int Sequence { get; set; }
 
         [DataverseLink(
             srcName: $"sn.{HTMLSnippetFields.Description}",
-            srcType: typeof(string),
+            srcType: typeof(AliasedValue),
             trgName: null,
             trgType: null)]
         public string Description { get; set; } = string.Empty;

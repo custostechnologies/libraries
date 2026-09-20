@@ -250,6 +250,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     var value = srcEntity[srcName];
                     _logger.WriteLog($"value: {value}");
 
+                    if (value is AliasedValue av)
+                    {
+                        value = av.Value;
+                        srcType = value?.GetType();
+                    }
+
                     if (value == null)
                     {
                         continue;

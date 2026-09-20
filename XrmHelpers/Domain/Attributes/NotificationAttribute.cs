@@ -1,21 +1,20 @@
 using System;
 using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Domain.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
+    [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotificationAttribute : Attribute
     {
-        /*public string? SourceLogicalName { get; }
-        public string? TargetLogicalName { get; }
-        public Type? SourceType { get; }
-        public Type? TargetType { get; }
-        public NotificationAttribute(string? srcName, Type? srcType, string? trgName, Type? trgType)
+        public OperationType OperationType { get; set; }
+        public string Label { get; set; }
+        public int Idx { get; set; }
+        public NotificationAttribute(OperationType operationType, string label, int index)
         {
-            SourceLogicalName = srcName;
-            SourceType = srcType;
-            TargetLogicalName = trgName;
-            TargetType = trgType;
-        }*/
+            OperationType = operationType;
+            Label = label;
+            Idx = index;
+        }
     }
 }

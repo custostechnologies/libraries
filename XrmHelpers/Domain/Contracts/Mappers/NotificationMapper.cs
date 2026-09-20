@@ -25,6 +25,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         };
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
+        private IInjectionTagResolverEngine? _tagResolverEngine;
         private EmailTemplates _emailTemplateQuery;
         private Themes _themeQuery;
         private TemplateSnippetIntersects _intersectQuery;
@@ -36,9 +37,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private DataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
         private DataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
 
-
         private FileDownloaderService _downloaderService;
-
 
 
         private readonly DataverseLogger _logger;
@@ -78,13 +77,26 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string _inlineTableHtmlBytes = string.Empty;
             string _singleButtonHtmlBytes = string.Empty;
 
+            List<IInjectionTag> tags = new EmailInjectionTags().Tags;
+            _tagResolverEngine = new InjectionTagResolverEngine();
+
             // retrieve email template
+            _logger.WriteLog("Retrieving email template...");
             if (!TemplateKeys.TryGetValue(dto.GetType(), out templateKey))
             {
                 throw new InvalidPluginExecutionException(
                     $"No template configured for {dto.GetType().Name}"
                 );
             }
+
+            _logger.WriteLog($"TemplateKey: {templateKey}");
+
+            // inject tags values based on incoming dto (regarding obj)
+            _logger.WriteLog("Using _tagResolverEngine to inject dto values into tag list.");
+            _tagResolverEngine.PopulateDataverseTags(
+                dto,
+                tags
+            );
 
             if (!string.IsNullOrWhiteSpace(templateKey))
             {
@@ -115,6 +127,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
             }
 
+            // populate tags from emailTemplate
+            if (_emailTemplateDto != null)
+            {
+                _tagResolverEngine.PopulateDataverseTags(
+                    _emailTemplateDto,
+                    tags
+                );
+            }
+
             // Retrieve Theme
             _logger.WriteLog($"Retrieving theme...");
             if (_emailTemplateDto != null && _emailTemplateDto.Theme != null)
@@ -133,6 +154,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 );
 
                 if (_theme != null) _themeDto = _themeMapper.MapToDto(_theme);
+
+                // populate tags from emailTemplate
+                if (_themeDto != null)
+                {
+                    _tagResolverEngine.PopulateDataverseTags(
+                        _themeDto,
+                        tags
+                    );
+                }
             }
 
             // retrieve template-snippet intersects
@@ -197,9 +227,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
 
             _logger.WriteLog($"_intersectDto's: {JsonSerializer.Serialize(
-                        _intersectDtos,
-                        new JsonSerializerOptions { WriteIndented = true }
-                    )}");
+                _intersectDtos,
+                new JsonSerializerOptions { WriteIndented = true }
+            )}");
 
             return htmlContent;
         }

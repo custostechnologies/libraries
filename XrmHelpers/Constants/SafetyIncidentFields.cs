@@ -2,6 +2,7 @@ namespace spgsWebTools.XrmHelpers.Constants
 {
     public static class SafetyIncidentFields
     {
+        public const string SafetyIncidentId = "cr2d7_safetyincidentid";
         public const string ActionToPreventFutureInjuries = "cr2d7_actiontopreventfutureinjuries";
         public const string AdmittedToHospital = "cr2d7_admittedtohospital";
         public const string AmbulanceCalled = "cr2d7_ambulancecalled";
