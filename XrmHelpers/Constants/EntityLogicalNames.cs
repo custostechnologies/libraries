@@ -26,5 +26,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Theme = "mthomas_theme";
         public const string TemplateSnippetIntersect = "mthomas_templatesnippetintersect";
         public const string HTMLSnippet = "mthomas_htmlsnippet";
+        public const string SafetyIncident = "cr2d7_safetyincident";
+        public const string ChildProtectionConcern = "cr2d7_childprotectionconcern";
     }
 }

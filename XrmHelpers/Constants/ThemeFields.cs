@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string Alternate = "mthomas_alternate";
 
         // Status
-        public const string StateCode = "statecode";
-        public const string StatusCode = "statuscode";
+        public const string Status = "statecode";
+        public const string StatusReason = "statuscode";
     }
 }
