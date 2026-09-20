@@ -109,9 +109,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );
 
                 _tracer.Trace("createMap entity: {0}", createMapJson);
-
-=======
->>>>>>> source-temp/refactor/decouple-xrmhelpers
                 var mapId = _service.Create(createMap);
 
                 _tracer.Trace("Created {0} with Id: {1}", ENTITY_LOGICAL_NAME, mapId);

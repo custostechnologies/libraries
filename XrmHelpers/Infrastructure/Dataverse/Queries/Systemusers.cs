@@ -57,33 +57,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 query.Criteria.AddFilter(filter);
             }
 
-=======
-                )
-            };
-
-            var upnCondition = new ConditionExpression(
-                "internalemailaddress",
-                ConditionOperator.Equal,
-                upn
-            );
-
-            var usernameCondition = new ConditionExpression(
-                "domainname",
-                ConditionOperator.Equal,
-                username
-            );
-
-            if (string.IsNullOrWhiteSpace(upn) && username != null) query.Criteria.AddCondition(usernameCondition);
-            if (upn != null && string.IsNullOrWhiteSpace(username)) query.Criteria.AddCondition(upnCondition);
-            if (upn != null && username != null)
-            {
-                var filter = new FilterExpression(LogicalOperator.Or);
-                filter.AddCondition(usernameCondition);
-                filter.AddCondition(upnCondition);
-                query.Criteria.AddFilter(filter);
-            }
-
->>>>>>> source-temp/refactor/decouple-xrmhelpers
             _tracer.Trace("Executing RetrieveReference query expression on systemuser");
 
             var results = _service.RetrieveMultiple(query);
