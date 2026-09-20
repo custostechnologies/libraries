@@ -24,7 +24,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _logger.WriteLog("Building query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -42,7 +42,24 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Adding LinkEntity...");
+
+                LinkEntity snippetLink = query.AddLink(
+                    linkToEntityName: EntityLogicalNames.HTMLSnippet,
+                    linkFromAttributeName: TemplateSnippetIntersectFields.RelatedHTMLSnippet,
+                    linkToAttributeName: HTMLSnippetFields.HTMLSnippetId,
+                    joinOperator: JoinOperator.Inner
+                );
+
+                snippetLink.Columns.AddColumns(
+                    HTMLSnippetFields.Description,
+                    HTMLSnippetFields.InjectionTags,
+                    HTMLSnippetFields.Sequence
+                );
+
+                snippetLink.EntityAlias = "sn";
+
+                _logger.WriteLog($"Executing query expression on {ENTITY_LOGICAL_NAME}");
 
                 var results = _context.Service.RetrieveMultiple(query);
 

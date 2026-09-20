@@ -14,7 +14,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
         public static readonly ColumnSet AllColumns = new ColumnSet(
             TemplateSnippetIntersectFields.InjectionOrder,
             TemplateSnippetIntersectFields.Name,
-            TemplateSnippetIntersectFields.RelatedEmailTemplate,
             TemplateSnippetIntersectFields.RelatedHTMLSnippet,
             TemplateSnippetIntersectFields.TemplateSnippetIntersectId,
             TemplateSnippetIntersectFields.Status,

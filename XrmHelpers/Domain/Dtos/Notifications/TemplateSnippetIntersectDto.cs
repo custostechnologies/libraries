@@ -56,5 +56,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public EntityReference? RelatedHTMLSnippet { get; set; }
+
+        public HTMLSnippetDto? HTMLSnippet { get; set; }
     }
 }
