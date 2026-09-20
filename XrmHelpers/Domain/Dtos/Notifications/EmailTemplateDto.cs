@@ -65,7 +65,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         )]
         public string? EmailTemplateKey { get; set; }
 
-        [DataverseLink(
+        /*[DataverseLink(
             srcName: EmailTemplateFields.FetchXmlQuery,
             srcType: typeof(Guid),
             trgName: null,
@@ -79,7 +79,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null
         )]
-        public Guid? FetchXmlQuery_Name { get; set; }
+        public Guid? FetchXmlQuery_Name { get; set; }*/
 
         [DataverseLink(
             srcName: EmailTemplateFields.HeaderSubtitle,
@@ -99,11 +99,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: EmailTemplateFields.HtmlTemplate,
-            srcType: typeof(EntityReference),
+            srcType: typeof(Guid),
             trgName: null,
             trgType: null
         )]
-        public EntityReference? HtmlTemplate { get; set; }
+        public Guid? HtmlTemplate { get; set; }
 
         [DataverseLink(
             srcName: EmailTemplateFields.Name,
@@ -131,9 +131,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: EmailTemplateFields.Theme,
-            srcType: typeof(EntityReference),
+            srcType: typeof(Guid),
             trgName: null,
             trgType: null
+        )]
+        [DataverseReference(
+            targetEntity: EntityLogicalNames.Theme
         )]
         public EntityReference? Theme { get; set; }
     }

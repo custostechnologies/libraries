@@ -349,9 +349,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         {
                             setValue = Convert.ToInt32(value);
                         }
-                        else if (dtoValueType == typeof(EntityReference))
+                        else if (dtoValueType == typeof(EntityReference) && srcType == typeof(Guid))
                         {
-                            continue;
+                            var referenceAttribute = property.GetCustomAttribute<DataverseReferenceAttribute>();
+                            setValue = new EntityReference(
+                                referenceAttribute.TargetEntity,
+                                Guid.Parse(value.ToString())
+                            );
                         }
                         else
                         {
