@@ -27,6 +27,8 @@ namespace spgsWebTools.XrmHelpers.Domain
 
             services.AddSingleton(typeof(IDataverseMapper<>), typeof(DataverseMapper<>));
 
+            services.AddSingleton(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
+
             services.AddSingleton(typeof(ILookupEnricher<>), typeof(LookupEnricher<>));
 
             services.AddSingleton(typeof(IHashService<>), typeof(HashService<>));

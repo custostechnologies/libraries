@@ -23,7 +23,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string SourceEntityLogicalName => EntityLogicalNames.SafetyIncident;
         public string TargetEntityLogicalName => EntityLogicalNames.SafetyIncident;
 
-        [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public DateTime? ForcePlugin { get; set; } = null;
 
         public KeyAttributeCollection KeyCollection =>
