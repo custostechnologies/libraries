@@ -32,6 +32,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
                 nameof(SafetyIncidentDto)
             );
         }
+        public SafetyIncidentDto() : base(default!)
+        {
+            _context = null!;
+            _logger = null!;
+        }
+
+        public void Initialise(IDataverseContext context)
+        {
+            _context = context;
+            _logger = new DataverseLogger(
+                _context.Tracer,
+                nameof(SafetyIncidentDto)
+            );
+        }
 
         public override string TargetAppDisplayName => "manageCompliance";
 
