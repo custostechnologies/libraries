@@ -59,19 +59,5 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public string Alternate { get; set; } = string.Empty;
-
-        [DataverseLink(
-            srcName: ThemeFields.Status,
-            srcType: typeof(OptionSetValue),
-            trgName: null,
-            trgType: null)]
-        public string Status { get; set; } = string.Empty;
-
-        [DataverseLink(
-            srcName: ThemeFields.StatusReason,
-            srcType: typeof(OptionSetValue),
-            trgName: null,
-            trgType: null)]
-        public string StatusReason { get; set; } = string.Empty;
     }
 }

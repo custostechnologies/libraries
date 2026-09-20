@@ -56,19 +56,5 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public EntityReference? RelatedHTMLSnippet { get; set; }
-
-        [DataverseLink(
-            srcName: TemplateSnippetIntersectFields.Status,
-            srcType: typeof(OptionSetValue),
-            trgName: null,
-            trgType: null)]
-        public string Status { get; set; } = string.Empty;
-
-        [DataverseLink(
-            srcName: TemplateSnippetIntersectFields.StatusReason,
-            srcType: typeof(OptionSetValue),
-            trgName: null,
-            trgType: null)]
-        public string StatusReason { get; set; } = string.Empty;
     }
 }

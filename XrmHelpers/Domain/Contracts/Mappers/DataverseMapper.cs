@@ -8,6 +8,7 @@ using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Resolvers;
 using Microsoft.Extensions.Options;
+using System.Text.Json;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -263,6 +264,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         else if (property.PropertyType.IsEnum && srcType == typeof(OptionSetValue))
                         {
                             var optionValue = ((OptionSetValue)value).Value;
+
+                            _logger.WriteLog($"Evaluating property = {property.Name}");
+
                             switch (dtoValueType.Name)
                             {
                                 case "AdmittedToHospital":
@@ -351,6 +355,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
                         else if (dtoValueType == typeof(EntityReference) && srcType == typeof(Guid))
                         {
+                            _logger.WriteLog("else if branch dtoValueType EntityReference and srcType Guid.");
+                            _logger.WriteLog($"incoming value: {JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true })}");
                             var referenceAttribute = property.GetCustomAttribute<DataverseReferenceAttribute>();
                             setValue = new EntityReference(
                                 referenceAttribute.TargetEntity,
@@ -363,10 +369,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
 
                         _logger.WriteLog(
-                            $"Setting property={property.Name}" +
-                            $" PropertyType={property.PropertyType.FullName}" +
-                            $" SetValueType={setValue?.GetType().FullName}" +
-                            $" Value={setValue}"
+                            $"Setting property = {property.Name}" +
+                            $" PropertyType = {property.PropertyType.FullName}" +
+                            $" SetValueType = {setValue?.GetType().FullName}" +
+                            $" Value = {setValue}"
                         );
                         property.SetValue(dto, setValue);
                     }

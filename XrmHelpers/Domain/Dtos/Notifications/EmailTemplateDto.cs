@@ -131,7 +131,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: EmailTemplateFields.Theme,
-            srcType: typeof(Guid),
+            srcType: typeof(EntityReference),
             trgName: null,
             trgType: null
         )]
