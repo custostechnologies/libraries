@@ -13,16 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class NotifiableDto<TDto> : INotifiableDto
     {
-        private IDataverseContext _context;
-        private DataverseLogger _logger;
-        public NotifiableDto(IDataverseContext context)
-        {
-            _context = context;
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                nameof(TDto)
-            );
-        }
+        protected NotifiableDto() : base() { }
         public virtual Guid EntityId { get; set; }
         public virtual string TargetAppDisplayName { get; set; } = string.Empty;
         public virtual string _srcEntityName { get; set; } = string.Empty;
@@ -49,6 +40,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             public int Index { get; set; }
         }
         public virtual string LinkToRecord(
+            IDataverseContext context,
             string entityLogicalName,
             Guid entityId,
             string targetAppDisplayName
@@ -56,6 +48,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             string envUrl = string.Empty;
             Guid appId = Guid.Empty;
+
+            var _context = context;
+            var _logger = new DataverseLogger(
+                context.Tracer,
+                nameof(NotifiableDto<>)
+            );
 
             try
             {
@@ -97,12 +95,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
         }
         public virtual string GenerateSummaryTable(
+            IDataverseContext context,
             string entityLogicalName,
             Guid entityId,
             string targetAppDisplayName
         )
         {
-
+            var _context = context;
             StringBuilder strBuilder = new StringBuilder();
             List<HydratedTag> hydratedTags = new List<HydratedTag>();
 
@@ -126,6 +125,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var label = attribute.Label;
 
                 var recordLink = LinkToRecord(
+                    _context,
                     entityLogicalName,
                     entityId,
                     targetAppDisplayName

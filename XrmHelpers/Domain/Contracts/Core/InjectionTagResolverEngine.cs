@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             if (dto == null) return;
 
-            foreach (DataverseInjectionTag tag in tags)
+            foreach (DataverseInjectionTag tag in tags.OfType<DataverseInjectionTag>())
             {
                 foreach (var prop in dto.GetType().GetProperties())
                 {

@@ -20,33 +20,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class SafetyIncidentDto : NotifiableDto<SafetyIncidentDto>, IValidationMetadata, IDto
+    public class SafetyIncidentDto : NotifiableDto<SafetyIncidentDto>, IValidationMetadata
     {
-        private IDataverseContext _context;
-        private DataverseLogger _logger;
-        public SafetyIncidentDto(IDataverseContext context) : base(context)
-        {
-            _context = context;
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                nameof(SafetyIncidentDto)
-            );
-        }
-        public SafetyIncidentDto() : base(default!)
-        {
-            _context = null!;
-            _logger = null!;
-        }
-
-        public void Initialise(IDataverseContext context)
-        {
-            _context = context;
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                nameof(SafetyIncidentDto)
-            );
-        }
-
+        public SafetyIncidentDto() : base() { }
         public override string TargetAppDisplayName => "manageCompliance";
 
         [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
@@ -312,21 +288,31 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public int? Year { get; set; }
 
         public override string LinkToRecord(
+            IDataverseContext context,
             string entityLogicalName,
             Guid entityId,
             string targetAppDisplayName
         )
         {
-            return base.LinkToRecord(entityLogicalName, entityId, targetAppDisplayName);
+            return base.LinkToRecord(
+                context,
+                entityLogicalName,
+                entityId,
+                targetAppDisplayName);
         }
 
         public override string GenerateSummaryTable(
+            IDataverseContext context,
             string entityLogicalName,
             Guid entityId,
             string targetAppDisplayName
         )
         {
-            return base.GenerateSummaryTable(entityLogicalName, entityId, targetAppDisplayName);
+            return base.GenerateSummaryTable(
+                context,
+                entityLogicalName,
+                entityId,
+                targetAppDisplayName);
         }
     }
 }

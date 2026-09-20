@@ -103,6 +103,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 tags,
                 "inHtmlTableString",
                 dto.GenerateSummaryTable(
+                    _context,
                     dto.SourceEntityLogicalName,
                     dto.EntityId,
                     dto.TargetAppDisplayName
