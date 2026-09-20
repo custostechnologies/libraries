@@ -170,13 +170,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 strBuilder.AppendLine($"<th style=\"line-height: 18px; font-size: 12px; margin: 0; padding: 6px; border-color: #e2e8f0; border-style: solid; border-width: 1px 1px 2px;\" align=\"center\" valign=\"top\" scope=\"col\">{tag.Label}</th>");
                 strBuilder.AppendLine($"<td>{tag.Value}</td>");
                 strBuilder.AppendLine("</tr>");
+
+                iterator++;
             }
 
+            iterator = 0;
+
             strBuilder.AppendLine("</tbody>");
-
             strBuilder.AppendLine("</table>");
-
-            // create header
 
             return strBuilder.ToString();
         }

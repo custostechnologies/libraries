@@ -132,6 +132,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             );
 
             _tagResolverEngine.PopulateTag(
+                dto, tags, "inHelpMeLinkUrl",
+                dto.HelpMeLink
+            );
+
+            _tagResolverEngine.PopulateTag(
                 dto, tags, "inFooterImageUrl",
                 "https://spgswebresources.blob.core.windows.net/assets/crest_main_20260217.png"
             );
