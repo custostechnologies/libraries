@@ -35,6 +35,8 @@ namespace spgsWebTools.XrmHelpers.Domain
 
             services.AddSingleton(typeof(ISyncPipeline<>), typeof(SyncPipeline<>));
 
+            services.AddSingleton(typeof(INotificationPipeline<>), typeof(NotificationPipeline<>));
+
             return services;
         }
     }
