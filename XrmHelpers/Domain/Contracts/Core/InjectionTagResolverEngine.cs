@@ -27,7 +27,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
             }
         }
-        public void PopulateDataverseTag<TDto>(
+        public void PopulateTag<TDto>(
             TDto dto,
             IList<IInjectionTag> tags,
             string token,
@@ -35,7 +35,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             if (dto == null || token == null) return;
-            Console.WriteLine($"PopulateDataverseTag with token: {token} and value: {value}");
+            Console.WriteLine($"PopulateTag with token: {token} and value: {value}");
 
             var idx = tags.IndexOf(
                 tags.FirstOrDefault(

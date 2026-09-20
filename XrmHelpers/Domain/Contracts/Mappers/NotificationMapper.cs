@@ -67,15 +67,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             EmailTemplateDto? _emailTemplateDto = null;
             ThemeDto? _themeDto = null;
-            List<TemplateSnippetIntersectDto>? _intersectDtos = null;
+            List<TemplateSnippetIntersectDto>? _intersectDtos;
 
-            EntityCollection? _intersects = null;
-            Entity? _emailTemplate = null;
-            Entity? _theme = null;
+            NotificationRequestDto requestDto = new NotificationRequestDto();
+
+            EntityCollection? _intersects;
+            Entity? _emailTemplate;
+            Entity? _theme;
             byte[] _htmlTemplateBytes;
-            string _contentCardHtmlBytes = string.Empty;
-            string _inlineTableHtmlBytes = string.Empty;
-            string _singleButtonHtmlBytes = string.Empty;
+            string _contentCardHtmlBytes;
+            string _inlineTableHtmlBytes;
+            string _singleButtonHtmlBytes;
 
             List<IInjectionTag> tags = new EmailInjectionTags().Tags;
             _tagResolverEngine = new InjectionTagResolverEngine();
@@ -98,7 +100,42 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 tags
             );
 
-            _tagResolverEngine.PopulateDataverseTag<TDto>(
+            var recordLink = dto.LinkToRecord(
+                _context,
+                dto.SourceEntityLogicalName,
+                dto.EntityId,
+                dto.TargetAppDisplayName
+            );
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inButtonTargetUrl", recordLink
+            );
+
+            var linkText =
+                dto.ContextOperationType == OperationType.Create
+                ? "Help Me"
+                : $"Open in {dto.TargetAppDisplayName}";
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inButtonText", linkText
+            );
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inReceiverFirstName",
+                "IN DEV."
+            );
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inFooterLogoImageUrl",
+                "https://spgswebresources.blob.core.windows.net/assets/crest_main_20260217.png"
+            );
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inHeaderLogoImageUrl",
+                "https://spgswebresources.blob.core.windows.net/assets/spgsWebTools_logo_noName_72ppi.png"
+            );
+
+            _tagResolverEngine.PopulateTag(
                 dto,
                 tags,
                 "inTableHtmlString",
@@ -127,6 +164,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     _emailTemplateDto = _emailTemplateMapper.MapToDto(_emailTemplate);
                     // Retrieve HTML Template
                     _logger.WriteLog($"Email template retrieved. Downloading HTML Template file attachment.");
+
+                    requestDto.RequestTitle = _emailTemplateDto.Name ?? "";
+                    requestDto.EmailTemplate = new EntityReference(
+                        EntityLogicalNames.EmailTemplate,
+                        _emailTemplate.Id
+                    );
+                    requestDto.RegardingRecordId = dto.EntityId;
+                    requestDto.CCString = _emailTemplateDto.CC;
+                    requestDto.Importance = 0;
+                    requestDto.Subject = _emailTemplateDto.Subject;
+                    requestDto.SendFrom = _emailTemplateDto.SendFrom;
 
                     _htmlTemplateBytes = _downloaderService.Execute(
                         new EntityReference(EntityLogicalNames.EmailTemplate, _emailTemplate.Id),
@@ -238,30 +286,36 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
             }
 
-            _logger.WriteLog($"_intersectDto's: {JsonSerializer.Serialize(
-                _intersectDtos,
-                new JsonSerializerOptions { WriteIndented = true }
-            )}");
-
             var stringBuilder = new StringBuilder(htmlContent);
 
             foreach (var tag in tags)
             {
                 if (tag.Value == null) continue;
-                stringBuilder.Replace(tag.InjectionToken, tag.Value.ToString());
+                _logger.WriteLog($"Replacing {tag.InjectionToken} with {tag.Value}");
+                var adjustedTag = string.Concat(
+                    "{{",
+                    tag.InjectionToken,
+                    "}}"
+                );
+
+                stringBuilder.Replace(adjustedTag, tag.Value.ToString());
             }
+
+            _tagResolverEngine.PopulateTag(
+                dto, tags, "inEnvId", _context.ExecutionContext.OrganizationId.ToString()
+            );
+
 
             return stringBuilder.ToString();
         }
-        public Entity MapToNotificationRequest(TDto dto)
+        public Guid MapToNotificationRequest(TDto dto, string htmlContent)
         {
             Entity notificationRequest = new Entity(EntityLogicalNames.NotificationRequest);
 
             _logger.WriteLog($"\nEntered MapToNotificationRequest with typeof(Dto).Name: {typeof(TDto).Name}");
 
-            _logger.WriteLog($"Creating new entity for EntityLogicalName: {dto.TargetEntityLogicalName}");
-
             var properties = typeof(TDto).GetProperties();
+            _logger.WriteLog($"Retrieved DTO properties, length: {properties.Length}");
 
             foreach (var property in properties)
             {
@@ -272,14 +326,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     var link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
+                    _logger.WriteLog($"Mapping property: {link.TargetLogicalName}");
 
                     var value = property.GetValue(dto);
 
                     if (value == null) continue;
 
                     var targetType = Nullable.GetUnderlyingType(link.TargetType) ?? link.TargetType;
-                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
-                    var dtoValueType = property.PropertyType;
+                    var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                     if (link.TargetLogicalName == null)
                         continue;
@@ -322,17 +376,34 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 catch (Exception ex)
                 {
                     _logger.WriteLog($"Exception: {ex}");
-                    if (ex.InnerException != null)
-                    {
-                        _logger.WriteLog($"InnerException: {ex.InnerException}");
-                    }
                     throw;
                 }
             }
 
             _logger.WriteLog($"Constructed new Entity to be sent to Target after determining operation type...");
 
-            return notificationRequest;
+            var newId = _context.Service.Create(notificationRequest);
+
+            if (newId == null || newId == Guid.Empty)
+            {
+                _logger.WriteLog($"Unable to create new notification request entity");
+            }
+            else
+            {
+                FileUploaderService _uploadService = new FileUploaderService(_context);
+
+                _uploadService.Execute(
+                    htmlContent,
+                    new EntityReference(
+                        EntityLogicalNames.NotificationRequest,
+                        newId
+                    ),
+                    NotificationRequestFields.HTMLDocument,
+                    "HtmlContent.html"
+                );
+            }
+
+            return newId;
         }
     }
 }

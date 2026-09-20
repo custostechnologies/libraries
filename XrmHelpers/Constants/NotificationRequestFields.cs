@@ -18,6 +18,9 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string CCString = "mthomas_ccstring";
         public const string ChatId = "mthomas_chatid";
         public const string MessageId = "mthomas_messageid";
+        public const string SendFrom = "pgrowth_sendfrom";
+        public const string Importance = "pgrowth_importance";
+        public const string Subject = "pgrowth_subject";
 
         // Related Records
         public const string RelatedRecordId = "mthomas_relatedrecordid";
@@ -28,6 +31,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string InFlowInputs = "mthomas_inflowinputs";
         public const string InFlowInputsObject = "mthomas_inflowinputsobject";
         public const string InParentFlowInstanceId = "mthomas_inparentflowinstanceid";
+        public const string HTMLDocument = "pgrowth_htmldocument";
 
         // Status
         public const string StateCode = "statecode";

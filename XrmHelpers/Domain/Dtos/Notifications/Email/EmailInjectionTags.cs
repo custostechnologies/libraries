@@ -96,13 +96,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             new ContextInjectionTag
             {
                 InjectionToken = "inButtonBorderSizeInt",
-                ContextKey = "inButtonBorderSizeInt"
-            },
-
-            new ContextInjectionTag
-            {
-                InjectionToken = "inButtonText",
-                ContextKey = "inButtonText"
+                ContextKey = "inButtonBorderSizeInt",
+                Value = "5"
             },
 
             new ContextInjectionTag
@@ -159,7 +154,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 InjectionToken = "inFooterLogoImageUrl",
                 Type = InjectionAssetType.Url,
-                ContextKey = "footer-logo"
+                ContextKey = "inFooterLogoImageUrl"
             },
 
             new AssetSourceInjectionTag

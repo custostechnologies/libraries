@@ -145,5 +145,29 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(string)
         )]
         public string? RequestTitle { get; set; }
+
+        [DataverseLink(
+            srcName: null,
+            srcType: null,
+            trgName: NotificationRequestFields.Importance,
+            trgType: typeof(int)
+        )]
+        public int Importance { get; set; }
+
+        [DataverseLink(
+            srcName: null,
+            srcType: null,
+            trgName: NotificationRequestFields.Subject,
+            trgType: typeof(string)
+        )]
+        public string? Subject { get; set; }
+
+        [DataverseLink(
+            srcName: null,
+            srcType: null,
+            trgName: NotificationRequestFields.SendFrom,
+            trgType: typeof(string)
+        )]
+        public string? SendFrom { get; set; }
     }
 }

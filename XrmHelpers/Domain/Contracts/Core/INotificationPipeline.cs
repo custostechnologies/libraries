@@ -4,7 +4,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface INotificationPipeline<TDto>
     {
-        Entity BuildEmailNotification(Entity target);
+        Guid BuildEmailNotification(Entity target);
         //Entity BuildTeamsNotification(Entity target);
     }
 }

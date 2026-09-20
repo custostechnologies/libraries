@@ -6,7 +6,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TDto dto,
             IList<IInjectionTag> tags
         );
-        void PopulateDataverseTag<TDto>(
+        void PopulateTag<TDto>(
             TDto dto,
             IList<IInjectionTag> tags,
             string token,

@@ -8,19 +8,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public class FileUploaderService
     {
-        private ITracingService _tracer;
-        private IOrganizationService _service;
+        private IDataverseContext _context;
+        private DataverseLogger _logger;
         private string _exportContent = string.Empty;
         private string _fileAttributeName = string.Empty;
         private string _exportFileName = string.Empty;
         private EntityReference? _target;
         public FileUploaderService(
-            ITracingService tracer,
-            IOrganizationService service
+            IDataverseContext context
         )
         {
-            _tracer = tracer;
-            _service = service;
+            _context = context;
+
+            _logger = new DataverseLogger(
+                _context.Tracer,
+                nameof(FileUploaderService)
+            );
         }
 
         public void Execute(
@@ -46,7 +49,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                     FileName = _exportFileName
                 };
 
-                var initResponse = (InitializeFileBlocksUploadResponse)_service.Execute(initRequest);
+                var initResponse = (InitializeFileBlocksUploadResponse)_context.Service.Execute(initRequest);
                 string fileContinuationToken = initResponse.FileContinuationToken;
 
                 int offset = 0;
@@ -72,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                         BlockId = encodedBlockId
                     };
 
-                    _service.Execute(uploadBlockRequest);
+                    _context.Service.Execute(uploadBlockRequest);
 
                     offset += currentBlockSize;
                     blockNumber++;
@@ -87,12 +90,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                     MimeType = "text/plain"
                 };
 
-                _service.Execute(commitRequest);
-                _tracer.Trace("File successfully written to Dataverse column.");
+                _context.Service.Execute(commitRequest);
+                _logger.WriteLog("File successfully written to Dataverse column.");
             }
             catch (Exception ex)
             {
-                _tracer.Trace($"Upload failed: {ex.Message}");
+                _logger.WriteLog($"Upload failed: {ex.Message}");
                 throw new InvalidPluginExecutionException($"Error saving file: {ex.Message}");
             }
         }

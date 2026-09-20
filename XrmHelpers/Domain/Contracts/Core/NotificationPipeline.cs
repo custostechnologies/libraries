@@ -32,7 +32,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 typeof(SyncPipeline<TDto>).Name
             );
         }
-        public Entity BuildEmailNotification(Entity target)
+        public Guid BuildEmailNotification(Entity target)
         {
             TDto dto;
 
@@ -45,10 +45,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto = _enricher.Execute(dto);
 
                 _logger.WriteLog("Creating HTML object...");
-                _notificationMapper.CreateHtmlObject(dto);
+                var htmlContent = _notificationMapper.CreateHtmlObject(dto);
 
                 _logger.WriteLog("Mapping to NotificationRequest entity...");
-                return _notificationMapper.MapToNotificationRequest(dto);
+                return _notificationMapper.MapToNotificationRequest(dto, htmlContent);
             }
             catch (Exception ex)
             {

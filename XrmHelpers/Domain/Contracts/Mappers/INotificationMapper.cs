@@ -5,6 +5,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public interface INotificationMapper<TDto>
     {
         string CreateHtmlObject(TDto dto);
-        Entity MapToNotificationRequest(TDto dto);
+        Guid MapToNotificationRequest(TDto dto, string htmlContent);
     }
 }
