@@ -4,10 +4,18 @@ using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.XrmHelpers
 {
-    public class DataverseLogger(ITracingService tracer, string className)
+    public class DataverseLogger : ICustomLogger
     {
-        private readonly ITracingService _tracer = tracer;
-        private readonly string _className = className;
+        private readonly ITracingService _tracer;
+        private readonly string _className;
+        public DataverseLogger(
+            ITracingService tracer,
+            string className
+        )
+        {
+            _tracer = tracer;
+            _className = className;
+        }
         public void WriteLog()
         {
             _tracer.Trace("Logger.WriteLog() called with no arguments.");

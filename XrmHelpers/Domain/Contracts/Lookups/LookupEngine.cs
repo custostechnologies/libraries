@@ -8,17 +8,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public class LookupEngine : ILookupEngine
     {
         private readonly IServiceProvider _services;
-        private readonly IDataverseContext _context;
-        private DataverseLogger _logger;
+        private readonly ICustomLogger _logger;
         public LookupEngine(
-            IDataverseContext context,
+            ICustomLogger logger,
             IServiceProvider services
         )
         {
-            _context = context;
             _services = services;
-            _logger = new DataverseLogger(_context.Tracer, nameof(LookupEngine));
-
+            _logger = logger;
             _logger.WriteLog("Class instantiated via constructor.");
         }
         public ILookupResult<TKey> Execute<TKey>(ILookupMetadata<TKey> metadata)

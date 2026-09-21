@@ -36,7 +36,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
         private FileDownloaderService _downloaderService;
 
-
         private readonly DataverseLogger _logger;
         public NotificationMapper(
             IDataverseContext context,
@@ -53,10 +52,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _downloaderService = new FileDownloaderService(_context);
 
-            _emailTemplateMapper = new DataverseMapper<EmailTemplateDto>(_context, _lookupEngine);
-            _themeMapper = new DataverseMapper<ThemeDto>(_context, _lookupEngine);
-            _htmlSnippetMapper = new DataverseMapper<HTMLSnippetDto>(_context, _lookupEngine);
-            _intersectMapper = new DataverseMapper<TemplateSnippetIntersectDto>(_context, _lookupEngine);
+            _emailTemplateMapper = new DataverseMapper<EmailTemplateDto>(_logger, _lookupEngine);
+            _themeMapper = new DataverseMapper<ThemeDto>(_logger, _lookupEngine);
+            _htmlSnippetMapper = new DataverseMapper<HTMLSnippetDto>(_logger, _lookupEngine);
+            _intersectMapper = new DataverseMapper<TemplateSnippetIntersectDto>(_logger, _lookupEngine);
         }
         public (string, NotificationRequestDto) CreateHtmlObject(TDto dto)
         {
@@ -130,7 +129,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto, tags, "inReceiverFirstName",
                 "IN DEV."
             );
-
             _tagResolverEngine.PopulateTag(
                 dto, tags, "inHelpMeLinkUrl",
                 dto.HelpMeLink

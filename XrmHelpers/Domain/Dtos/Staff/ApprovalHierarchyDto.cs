@@ -113,7 +113,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: $"map.{OperationalHierarchyMapFields.ParentJobAssignment}",
-            srcType: typeof(string),
+            srcType: typeof(EntityReference),
             trgName: null,
             trgType: null
         )]

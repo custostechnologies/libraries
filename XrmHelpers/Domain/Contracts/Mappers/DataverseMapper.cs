@@ -14,16 +14,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class DataverseMapper<TDto> : IDataverseMapper<TDto> where TDto : IDto, new()
     {
-        private readonly IDataverseContext _context;
+        private readonly ICustomLogger _logger;
         private readonly ILookupEngine _lookupEngine;
-        private readonly DataverseLogger _logger;
         public DataverseMapper(
-            IDataverseContext context,
+            ICustomLogger logger,
             ILookupEngine lookupEngine
         )
         {
-            _context = context;
-            _logger = new DataverseLogger(_context.Tracer, typeof(DataverseMapper<TDto>).Name);
+            _logger = logger;
             _lookupEngine = lookupEngine;
         }
         public Entity MapToSource(TDto dto)
@@ -231,190 +229,154 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 try
                 {
-                    var srcName = string.Empty;
-
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
 
-                    var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                    if (string.IsNullOrWhiteSpace(link.SourceLogicalName)) continue;
 
-                    _logger.WriteLog($"dtoValueType: {dtoValueType.Name}");
-
-                    if (link.SourceLogicalName == null)
-                        continue;
-
-                    srcName = link.SourceLogicalName;
+                    var srcName = link.SourceLogicalName;
 
                     if (!srcEntity.Contains(srcName)) continue;
 
                     var value = NormaliseAlias(srcEntity[srcName]);
 
-                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
+                    if (value == null) continue;
 
-                    if (srcType != null) _logger.WriteLog($"srcType: {srcType.Name}");
+                    var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
-                    _logger.WriteLog($"value: {value}");
+                    _logger.WriteLog(
+                        $"Property={property.Name} " +
+                        $"SrcName={srcName} " +
+                        $"DtoType={dtoValueType.Name} " +
+                        $"ValueType={value.GetType().Name}"
+                    );
 
-                    if (value == null)
+                    object setValue;
+
+                    if (value is EntityReference reference)
                     {
-                        continue;
+                        if (dtoValueType == typeof(Guid)) setValue = reference.Id;
+
+                        else if (dtoValueType == typeof(string)) setValue = reference.Name ?? string.Empty;
+
+                        else if (dtoValueType == typeof(EntityReference)) setValue = reference;
+
+                        else throw new InvalidOperationException($"Can't map EntityReference to {dtoValueType.Name} for property: {property.Name}");
                     }
+
+                    else if (value is OptionSetValue osv && dtoValueType.IsEnum)
+                    {
+                        var optionValue = osv.Value;
+                        switch (dtoValueType.Name)
+                        {
+                            case "AdmittedToHospital":
+                                setValue = (AdmittedToHospital)optionValue;
+                                break;
+                            case "CustomIncidentStatus":
+                                setValue = (CustomIncidentStatus)optionValue;
+                                break;
+                            case "CustomIncidentStatusReason":
+                                setValue = (CustomIncidentStatusReason)optionValue;
+                                break;
+                            case "IncidentCategory":
+                                setValue = (IncidentCategory)optionValue;
+                                break;
+                            case "IncidentSeverity":
+                                setValue = (IncidentSeverity)optionValue;
+                                break;
+                            case "IncidentTimeframe":
+                                setValue = (IncidentTimeframe)optionValue;
+                                break;
+                            case "IncidentType":
+                                setValue = (IncidentType)optionValue;
+                                break;
+                            case "InjuredPersonType":
+                                setValue = (InjuredPersonType)optionValue;
+                                break;
+                            case "InjuryBodyPart":
+                                setValue = (InjuryBodyPart)optionValue;
+                                break;
+                            case "InjuryType":
+                                setValue = (InjuryType)optionValue;
+                                break;
+                            case "Location":
+                                setValue = (Location)optionValue;
+                                break;
+                            case "RecordSource":
+                                setValue = (RecordSource)optionValue;
+                                break;
+                            case "RelevantSport":
+                                setValue = (RelevantSport)optionValue;
+                                break;
+                            case "ResponsePriority":
+                                setValue = (ResponsePriority)optionValue;
+                                break;
+                            case "SubmitterPosition":
+                                setValue = (SubmitterPosition)optionValue;
+                                break;
+                            case "Campus":
+                                setValue = (Campus)optionValue;
+                                break;
+                            case "Gender":
+                                setValue = (Gender)optionValue;
+                                break;
+                            default:
+                                setValue = Enum.Parse(dtoValueType, optionValue.ToString());
+                                break;
+                        }
+                    }
+                    else if (dtoValueType.IsEnum)
+                    {
+                        _logger.WriteLog($"Entered PropertyType.IsEnum with dtoValueType: {dtoValueType.Name}");
+
+                        switch (dtoValueType.Name)
+                        {
+                            case "Campus":
+                                setValue = CampusResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            case "House":
+                                setValue = HouseResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            case "Gender":
+                                setValue = GenderResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            default:
+                                setValue = Enum.Parse(dtoValueType, value.ToString() ?? "");
+                                break;
+                        }
+                    }
+
+                    else if (value is OptionSetValue optionSetValue && dtoValueType == typeof(int))
+                    {
+                        setValue = optionSetValue.Value;
+                    }
+
+                    else if (dtoValueType == typeof(Guid))
+                    {
+                        if (value is Guid guid) setValue = guid;
+
+                        else if (Guid.TryParse(value.ToString(), out Guid id)) setValue = id;
+
+                        else throw new InvalidOperationException($"Can't map {value} with type {value.GetType().Name} to Guid for property: {property.Name}");
+                    }
+                    else if (dtoValueType == typeof(int))
+                    {
+                        setValue = Convert.ToInt32(value);
+                    }
+                    else if (dtoValueType == typeof(bool)) setValue = Convert.ToBoolean(value);
+                    else if (dtoValueType == typeof(string)) setValue = value.ToString() ?? string.Empty;
+                    else if (dtoValueType == value.GetType()) setValue = value;
                     else
                     {
-                        object setValue;
-                        if (srcType == dtoValueType)
-                        {
-                            setValue = value;
-                        }
-                        else if (dtoValueType.IsEnum && srcType == typeof(OptionSetValue))
-                        {
-                            var optionValue = ((OptionSetValue)value).Value;
-
-                            _logger.WriteLog($"Evaluating property = {property.Name}");
-
-                            switch (dtoValueType.Name)
-                            {
-                                case "AdmittedToHospital":
-                                    setValue = (AdmittedToHospital)optionValue;
-                                    break;
-                                case "CustomIncidentStatus":
-                                    setValue = (CustomIncidentStatus)optionValue;
-                                    break;
-                                case "CustomIncidentStatusReason":
-                                    setValue = (CustomIncidentStatusReason)optionValue;
-                                    break;
-                                case "IncidentCategory":
-                                    setValue = (IncidentCategory)optionValue;
-                                    break;
-                                case "IncidentSeverity":
-                                    setValue = (IncidentSeverity)optionValue;
-                                    break;
-                                case "IncidentTimeframe":
-                                    setValue = (IncidentTimeframe)optionValue;
-                                    break;
-                                case "IncidentType":
-                                    setValue = (IncidentType)optionValue;
-                                    break;
-                                case "InjuredPersonType":
-                                    setValue = (InjuredPersonType)optionValue;
-                                    break;
-                                case "InjuryBodyPart":
-                                    setValue = (InjuryBodyPart)optionValue;
-                                    break;
-                                case "InjuryType":
-                                    setValue = (InjuryType)optionValue;
-                                    break;
-                                case "Location":
-                                    setValue = (Location)optionValue;
-                                    break;
-                                case "RecordSource":
-                                    setValue = (RecordSource)optionValue;
-                                    break;
-                                case "RelevantSport":
-                                    setValue = (RelevantSport)optionValue;
-                                    break;
-                                case "ResponsePriority":
-                                    setValue = (ResponsePriority)optionValue;
-                                    break;
-                                case "SubmitterPosition":
-                                    setValue = (SubmitterPosition)optionValue;
-                                    break;
-                                case "Campus":
-                                    setValue = (Campus)optionValue;
-                                    break;
-                                case "Gender":
-                                    setValue = (Gender)optionValue;
-                                    break;
-                                default:
-                                    setValue = Enum.Parse(dtoValueType, optionValue.ToString());
-                                    break;
-                            }
-                        }
-                        else if (dtoValueType.IsEnum)
-                        {
-                            _logger.WriteLog($"Entered PropertyType.IsEnum with dtoValueType: {dtoValueType.Name}");
-
-                            switch (dtoValueType.Name)
-                            {
-                                case "Campus":
-                                    setValue = CampusResolver.ToEnum(value.ToString());
-                                    break;
-                                case "House":
-                                    setValue = HouseResolver.ToEnum(value.ToString());
-                                    break;
-                                case "Gender":
-                                    setValue = GenderResolver.ToEnum(value.ToString());
-                                    break;
-                                default:
-                                    setValue = Enum.Parse(dtoValueType, value.ToString());
-                                    break;
-                            }
-                        }
-                        else if (dtoValueType == typeof(Guid))
-                        {
-                            if (value is Guid guid) setValue = guid;
-                            else setValue = Guid.Parse(value.ToString());
-                        }
-                        else if (dtoValueType == typeof(int))
-                        {
-                            setValue = Convert.ToInt32(value);
-                        }
-                        else if (dtoValueType == typeof(EntityReference) && srcType == typeof(Guid))
-                        {
-                            _logger.WriteLog("else if branch dtoValueType EntityReference and srcType Guid.");
-                            _logger.WriteLog($"incoming value: {JsonSerializer.Serialize(value, new JsonSerializerOptions { WriteIndented = true })}");
-                            var referenceAttribute = property.GetCustomAttribute<DataverseReferenceAttribute>();
-                            setValue = new EntityReference(
-                                referenceAttribute.TargetEntity,
-                                Guid.Parse(value.ToString())
-                            );
-                        }
-                        else if (dtoValueType == typeof(Guid) && srcType == typeof(EntityReference))
-                        {
-                            if (value as EntityReference != null)
-                            {
-                                var reference = (EntityReference)value;
-                                setValue = reference.Id;
-                            }
-                            else
-                            {
-                                setValue = Guid.Empty;
-                            }
-                        }
-                        else if (dtoValueType == typeof(string) && srcType == typeof(EntityReference))
-                        {
-                            if (value as EntityReference != null)
-                            {
-                                var reference = (EntityReference)value;
-                                setValue = reference.Name;
-                            }
-                            else
-                            {
-                                setValue = string.Empty;
-                            }
-                        }
-                        else
-                        {
-                            setValue = Convert.ChangeType(value, dtoValueType);
-                        }
-
-                        _logger.WriteLog(
-                            $"Setting property = {property.Name}" +
-                            $" PropertyType = {property.PropertyType.FullName}" +
-                            $" SetValueType = {setValue?.GetType().FullName}" +
-                            $" Value = {setValue}"
-                        );
-                        property.SetValue(dto, setValue);
+                        setValue = Convert.ChangeType(value, dtoValueType);
                     }
+
+                    property.SetValue(dto, setValue);
                 }
                 catch (Exception ex)
                 {
                     _logger.WriteLog($"Exception: {ex}");
-                    /*if (ex.InnerException != null)
-                    {
-                        _logger.WriteLog($"InnerException: {ex.InnerException}");
-                    }*/
                     throw;
                 }
             }
