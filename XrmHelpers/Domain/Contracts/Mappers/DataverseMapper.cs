@@ -321,6 +321,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             case "Gender":
                                 setValue = (Gender)optionValue;
                                 break;
+                            case "LinkType":
+                                setValue = (LinkType)optionValue;
+                                break;
                             default:
                                 setValue = Enum.Parse(dtoValueType, optionValue.ToString());
                                 break;
@@ -377,6 +380,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 catch (Exception ex)
                 {
                     _logger.WriteLog($"Exception: {ex}");
+
                     throw;
                 }
             }

@@ -14,21 +14,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class ApprovalHierarchyDto : IValidationMetadata, IDto
+    public class ApprovalHierarchyDto
     {
-        const string _srcEntityName = EntityLogicalNames.SynStaffMember;
-        const string _targetEntityName = EntityLogicalNames.CoreStaffMember;
-        public string ValidationRuleSet => "StrictStaffMemberRules";
-        public string SourceEntityLogicalName => EntityLogicalNames.SynStaffMember;
-        public string TargetEntityLogicalName => EntityLogicalNames.CoreStaffMember;
-
-        public KeyAttributeCollection KeyCollection =>
-            new KeyAttributeCollection
-            { };
-
-        [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
-        public DateTime? ForcePlugin { get; set; } = null;
-
         [DataverseLink(
             srcName: CoreJobAssignmentFields.CoreJobAssignmentId,
             srcType: typeof(Guid),
@@ -102,38 +89,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: null
         )]
         public Guid? OperationalHierarchyMapId { get; set; }
-
-        [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.ParentJobAssignment}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public Guid ParentJobAssignmentId { get; set; }
-
-        [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.ParentJobAssignment}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public string? ParentJobAssignmentName { get; set; }
-
-        [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.ChildJobAssignment}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public Guid? ChildJobAssignmentId { get; set; }
-
-        [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.ChildJobAssignment}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public string? ChildJobAssignmentName { get; set; }
 
         [DataverseLink(
             srcName: $"map.{OperationalHierarchyMapFields.LinkType}",
