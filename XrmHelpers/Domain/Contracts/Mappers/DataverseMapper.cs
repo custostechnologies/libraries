@@ -234,11 +234,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     var srcName = string.Empty;
 
                     DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
+
                     if (link == null) continue;
-                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
-                    if (srcType != null) _logger.WriteLog($"srcType: {srcType.Name}");
 
                     var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
                     _logger.WriteLog($"dtoValueType: {dtoValueType.Name}");
 
                     if (link.SourceLogicalName == null)
@@ -247,14 +247,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     srcName = link.SourceLogicalName;
 
                     if (!srcEntity.Contains(srcName)) continue;
-                    var value = srcEntity[srcName];
-                    _logger.WriteLog($"value: {value}");
 
-                    if (value is AliasedValue av)
-                    {
-                        value = av.Value;
-                        srcType = value?.GetType();
-                    }
+                    var value = NormaliseAlias(srcEntity[srcName]);
+
+                    var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
+
+                    if (srcType != null) _logger.WriteLog($"srcType: {srcType.Name}");
+
+                    _logger.WriteLog($"value: {value}");
 
                     if (value == null)
                     {
@@ -267,7 +267,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         {
                             setValue = value;
                         }
-                        else if (property.PropertyType.IsEnum && srcType == typeof(OptionSetValue))
+                        else if (dtoValueType.IsEnum && srcType == typeof(OptionSetValue))
                         {
                             var optionValue = ((OptionSetValue)value).Value;
 
@@ -331,7 +331,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                                     break;
                             }
                         }
-                        else if (property.PropertyType.IsEnum)
+                        else if (dtoValueType.IsEnum)
                         {
                             _logger.WriteLog($"Entered PropertyType.IsEnum with dtoValueType: {dtoValueType.Name}");
 
@@ -353,7 +353,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
                         else if (dtoValueType == typeof(Guid))
                         {
-                            setValue = Guid.Parse(value.ToString());
+                            if (value is Guid guid) setValue = guid;
+                            else setValue = Guid.Parse(value.ToString());
                         }
                         else if (dtoValueType == typeof(int))
                         {
@@ -368,6 +369,30 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                                 referenceAttribute.TargetEntity,
                                 Guid.Parse(value.ToString())
                             );
+                        }
+                        else if (dtoValueType == typeof(Guid) && srcType == typeof(EntityReference))
+                        {
+                            if (value as EntityReference != null)
+                            {
+                                var reference = (EntityReference)value;
+                                setValue = reference.Id;
+                            }
+                            else
+                            {
+                                setValue = Guid.Empty;
+                            }
+                        }
+                        else if (dtoValueType == typeof(string) && srcType == typeof(EntityReference))
+                        {
+                            if (value as EntityReference != null)
+                            {
+                                var reference = (EntityReference)value;
+                                setValue = reference.Name;
+                            }
+                            else
+                            {
+                                setValue = string.Empty;
+                            }
                         }
                         else
                         {
@@ -396,6 +421,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _logger.WriteLog($"Returning DTO to caller...");
             return dto;
+        }
+        private static object? NormaliseAlias(object? value)
+        {
+            if (value is AliasedValue alias) value = alias.Value;
+
+            return value;
         }
     }
 }
