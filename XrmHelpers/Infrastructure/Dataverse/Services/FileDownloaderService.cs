@@ -1,9 +1,5 @@
-using System;
-using System.Text;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
-using System.Collections.Generic;
-using System.Windows.Forms;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
 {
