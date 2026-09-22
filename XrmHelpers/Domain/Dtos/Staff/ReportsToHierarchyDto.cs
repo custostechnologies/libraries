@@ -14,7 +14,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class ApprovalHierarchyDto
+    public class ReportsToHierarchyDto
     {
         [DataverseLink(
             srcName: CoreJobAssignmentFields.CoreJobAssignmentId,
@@ -99,46 +99,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public LinkType LinkType { get; set; }
 
         [DataverseLink(
+            srcName: $"map.{OperationalHierarchyMapFields.LinkType}",
+            srcType: typeof(OptionSetValue),
+            trgName: null,
+            trgType: null
+        )]
+        public string? LinkTypeName { get; set; }
+
+        [DataverseLink(
             srcName: $"map.{OperationalHierarchyMapFields.ApprovalIndex}",
             srcType: typeof(int),
             trgName: null,
             trgType: null
         )]
         public int ApprovalIndex { get; set; }
-
-        /* LINK ENTITY -> CORE JOB ASSIGNMENTS [DIRECT REPORTS] */
-
-        [DataverseLink(
-            srcName: $"dr.{CoreJobAssignmentFields.CoreStaffMember}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public Guid? DirectReportCoreStaffMemberId { get; set; }
-
-        [DataverseLink(
-            srcName: $"dr.{CoreJobAssignmentFields.CoreStaffMember}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public string? DirectReportCoreStaffMemberName { get; set; }
-
-        [DataverseLink(
-            srcName: $"dr.{CoreJobAssignmentFields.CoreJobPosition}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public Guid? DirectReportCoreJobPositionId { get; set; }
-
-        [DataverseLink(
-            srcName: $"dr.{CoreJobAssignmentFields.CoreJobPosition}",
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null
-        )]
-        public string? DirectReportCoreJobPositionName { get; set; }
 
         /* LINK ENTITY -> CORE JOB ASSIGNMENTS [REPORTS TO] */
 
