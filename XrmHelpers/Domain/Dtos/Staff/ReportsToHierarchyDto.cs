@@ -14,7 +14,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class ReportsToHierarchyDto
+    public class ReportsToHierarchyDto : IQueryDto
     {
         [DataverseLink(
             srcName: CoreJobAssignmentFields.CoreJobAssignmentId,
