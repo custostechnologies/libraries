@@ -16,7 +16,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// </summary>
     public class ReportsToHierarchyDto : IQueryDto
     {
-        [DataverseLink(
+        /*[DataverseLink(
             srcName: CoreJobAssignmentFields.CoreJobAssignmentId,
             srcType: typeof(Guid),
             trgName: null,
@@ -78,12 +78,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null
         )]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; }*/
 
         /* LINK ENTITY: OPERATIONAL HIERARCHY MAPS */
 
         [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.OperationalHierarchyMapId}",
+            srcName: OperationalHierarchyMapFields.OperationalHierarchyMapId,
             srcType: typeof(Guid),
             trgName: null,
             trgType: null
@@ -91,23 +91,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public Guid? OperationalHierarchyMapId { get; set; }
 
         [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.LinkType}",
+            srcName: OperationalHierarchyMapFields.LinkType,
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null
         )]
-        public LinkType LinkType { get; set; }
+        public int LinkType { get; set; }
 
         [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.LinkType}",
+            srcName: OperationalHierarchyMapFields.LinkType,
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null
         )]
-        public string? LinkTypeName { get; set; }
+        public string LinkTypeName { get; set; } = string.Empty;
 
         [DataverseLink(
-            srcName: $"map.{OperationalHierarchyMapFields.ApprovalIndex}",
+            srcName: OperationalHierarchyMapFields.ApprovalIndex,
             srcType: typeof(int),
             trgName: null,
             trgType: null

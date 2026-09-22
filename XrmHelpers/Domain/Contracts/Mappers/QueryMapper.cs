@@ -161,6 +161,18 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         setValue = optionSetValue.Value;
                     }
 
+                    else if (value is OptionSetValue opsetvalue && dtoValueType == typeof(string))
+                    {
+                        if (property.Name == "LinkTypeName")
+                        {
+                            setValue = LinkTypeResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else
+                        {
+                            setValue = opsetvalue.Value;
+                        }
+                    }
+
                     else if (dtoValueType == typeof(Guid))
                     {
                         if (value is Guid guid) setValue = guid;
