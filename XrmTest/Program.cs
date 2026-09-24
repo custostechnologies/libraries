@@ -1,117 +1,121 @@
-﻿using System;
-using spgsWebTools.XrmHelpers;
-using System.Configuration;
-using Microsoft.PowerPlatform.Dataverse.Client;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Extensions.Configuration;
-using Microsoft.VisualBasic;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
+using spgsWebTools.XrmHelpers.Domain.Services;
+using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers.Serialisation;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using Xunit;
+using Moq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Collections.Generic;
 
-namespace XrmLocalTest
+var services = new ServiceCollection();
+
+var dictionary = new Dictionary<Guid, Entity>();
+
+var entity = new Entity(EntityLogicalNames.SynStudent)
 {
-    public class Program
+    Id = Guid.NewGuid()
+};
+
+entity[SynStudentFields.StudentId] = 283224;
+entity[SynStudentFields.StudentGiven1] = "Matt";
+entity[SynStudentFields.StudentSurname] = "Thomas";
+entity[SynStudentFields.Age] = 26;
+entity[SynStudentFields.StudentYearLevel] = 12;
+entity[SynStudentFields.StudentCampus] = "S";
+entity[SynStudentFields.StudentGender] = "M";
+entity[SynStudentFields.StudentHouse] = "CA";
+
+dictionary[entity.Id] = entity;
+
+var previousEntity = new Entity(EntityLogicalNames.SynStudent)
+{
+    Id = entity.Id
+};
+
+previousEntity[SynStudentFields.StudentId] = 283224;
+previousEntity[SynStudentFields.StudentGiven1] = "Matthew"; // old value
+previousEntity[SynStudentFields.StudentSurname] = "Thomas";
+previousEntity[SynStudentFields.Age] = 26;
+
+dictionary[previousEntity.Id] = previousEntity;
+
+// create mock services
+var service = new Mock<IOrganizationService>();
+var context = new Mock<IExecutionContext>();
+var tracer = new Mock<ITracingService>();
+
+// configure mock services
+service
+    .Setup(x => x.RetrieveMultiple(It.IsAny<QueryBase>()))
+    .Returns((QueryBase query) =>
     {
+        return new EntityCollection(dictionary.Values.ToList());
+    });
 
-        static void Main(string[] args)
-        {
-            IConfigurationRoot _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+tracer
+    .Setup(x => x.Trace(It.IsAny<string>(), It.IsAny<object[]>()))
+    .Callback<string, object[]>((msg, args) =>
+        Console.WriteLine(string.Format(msg, args)));
 
-            var serialiserOptions = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                ReferenceHandler = ReferenceHandler.IgnoreCycles
-            };
+// core Dataverse service registrations
+services.AddSingleton<IOrganizationService>(service.Object);
+services.AddSingleton<IExecutionContext>(context.Object);
+services.AddSingleton<ITracingService>(tracer.Object);
 
-            string? _clientId = _config["appSettings:ClientId"];
-            string? _clientSecret = _config["appSettings:ClientSecret"];
-            string? _instanceUri = _config["appSettings:InstanceUri"];
+// IDataverseContext registration
+services.AddSingleton<IDataverseContext, DataverseContext>();
 
-            string connectionString = $@"
-                AuthType=ClientSecret;
-                Url={_instanceUri};
-                ClientId={_clientId};
-                ClientSecret={_clientSecret};
-            ";
+// ValidationEngine registration
+services.AddSingleton<IValidationEngine, ValidationEngine>();
+services.AddSingleton<IValidationRuleSetProvider<StudentDto>, StrictStudentRuleSet>();
 
-            var serviceClient = new ServiceClient(connectionString);
+// IDataverseMapper registration
+services.AddSingleton<IDataverseMapper<StudentDto>, DataverseMapper<StudentDto>>();
 
-            if (serviceClient.IsReady)
-            {
-                Console.WriteLine("Connection attempt successful.");
+// ILookupEnricher registration
+services.AddSingleton<ILookupEnricher<StudentDto>, LookupEnricher<StudentDto>>();
 
-                var whoAmI = (WhoAmIResponse) serviceClient.Execute(
-                    new WhoAmIRequest()
-                );
+// LookupMetadataFactory registration
+services.AddSingleton<ILookupMetadataFactory, LookupMetadataFactory>();
 
-                Console.WriteLine($"User ID: {whoAmI.UserId}");
-                Console.WriteLine($"Organisation ID: {whoAmI.OrganizationId}");
-            } 
-            else
-            {
-                Console.WriteLine("Connection Failed:");
-                Console.WriteLine(serviceClient.LastError);    
-            }
+// LookupEngine registration
+services.AddSingleton<ILookupEngine, LookupEngine>();
 
-            // test GetMultipleRecords
-            EntityCollection testCollection = XrmHelpers.GetMultipleRecords<EntityCollection>(
-                "mthomas_coreuser",
-                "Matthew Thomas",
-                "mthomas_userdisplayname",
-                ["mthomas_userdisplayname", "mthomas_staffid"],
-                1,
-                1,
-                "",
-                false,
-                serviceClient
-            );
-            Console.WriteLine($"Number of records found: {testCollection.TotalRecordCount}");
-            foreach (Entity entity in testCollection.Entities)
-            {
-                Console.WriteLine($"UDN: {entity.GetAttributeValue<string>("mthomas_userdisplayname")}");
-            }
-            Console.WriteLine($"Serialised JSON: {JsonSerializer.Serialize(testCollection.Entities, serialiserOptions)}");
+// ChangeDetectionService registration
+services.AddSingleton<IChangeDetectionService<StudentDto>, ChangeDetectionService<StudentDto>>();
 
-            Console.WriteLine($"Existing Staff ID: {testCollection.Entities[0].GetAttributeValue<int>("mthomas_staffid")}");
+// HashService registration
+services.AddSingleton<IHashService<StudentDto>, HashService<StudentDto>>();
 
-            Guid coreUserGuid = testCollection.Entities[0].Id;
+// add Resolvers
+services.AddTransient(
+    typeof(ILookupResolver<>),
+    typeof(LookupResolver<>));
 
-            // test UpdateTargetAttributes
+var serviceProvider = services.AddXrmSerializationEngine().BuildServiceProvider();
 
-            // instantiate test dictionary
-            Dictionary<string, object> testDictionary = new Dictionary<string, object>
-            {
-                { "mthomas_staffid", 283224 }
-            };
+Console.WriteLine("Start Dry Run...");
 
-            EntityReference testReference = testCollection.Entities[0].ToEntityReference();
+// call mapper
+var dataverseMapper = serviceProvider.GetRequiredService<IDataverseMapper<StudentDto>>();
+var validationEngine = serviceProvider.GetRequiredService<IValidationEngine>();
+var lookupEngine = serviceProvider.GetRequiredService<ILookupEngine>();
+var enricher = serviceProvider.GetRequiredService<ILookupEnricher<StudentDto>>();
+var changeDetectionService = serviceProvider.GetRequiredService<IChangeDetectionService<StudentDto>>();
 
-            XrmHelpers.UpdateTargetAttributes(
-                "mthomas_coreuser",
-                testReference,
-                testDictionary,
-                serviceClient
-            );
+var oldDto = dataverseMapper.MapToDto(previousEntity);
+var newDto = dataverseMapper.MapToDto(entity);
 
-            EntityCollection testCollectionAfterUpdate = XrmHelpers.GetMultipleRecords<EntityCollection>(
-                "mthomas_coreuser",
-                "Matthew Thomas",
-                "mthomas_userdisplayname",
-                ["mthomas_userdisplayname", "mthomas_staffid"],
-                1,
-                1,
-                "",
-                false,
-                serviceClient
-            );
+oldDto = enricher.Execute(oldDto);
+newDto = enricher.Execute(newDto);
 
-            Console.WriteLine($"Updated Staff ID: {testCollectionAfterUpdate.Entities[0].GetAttributeValue<int>("mthomas_staffid")}");
+var comparison = changeDetectionService.Compare(oldDto, newDto);
 
-            Console.WriteLine("Press a key to continue...");
-            Console.ReadKey();
-            serviceClient.Dispose();
-        }
-    }
-}
+Entity targetEntity = comparison.HasChanged
+    ? dataverseMapper.MapToTarget(newDto)
+    : dataverseMapper.MapToTarget(oldDto);

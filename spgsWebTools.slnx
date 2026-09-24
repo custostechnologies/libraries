@@ -1,4 +1,0 @@
-<Solution>
-  <Project Path="XrmHelpers/XrmHelpers.csproj" />
-  <Project Path="XrmTest/XrmTest.csproj" />
-</Solution>
