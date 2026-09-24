@@ -4,7 +4,7 @@ using Microsoft.Xrm.Sdk.Query;
 
 namespace spgsWebTools.FunctionHelpers.Utilities
 {
-    public static class EntityQueryExpression
+    public static class EntityQueries
     {
         public static async Task<Entity?> Build<T>(
             ServiceClient client,
