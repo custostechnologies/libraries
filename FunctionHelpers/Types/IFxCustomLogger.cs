@@ -1,0 +1,14 @@
+using System.Runtime.CompilerServices;
+using Microsoft.Extensions.Logging;
+
+namespace spgsWebTools.FunctionHelpers.Logging
+{
+    public interface IFxCustomLogger : ILogger
+    {
+        void WriteLog();
+        void WriteLog(
+            string message,
+            [CallerMemberName] string memberName = ""
+        );
+    }
+}
