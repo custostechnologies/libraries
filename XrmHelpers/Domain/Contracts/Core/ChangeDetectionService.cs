@@ -15,10 +15,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         {
             _context = context;
             _hashService = hashService;
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                typeof(ChangeDetectionService<TDto>).Name
-            );
+            _logger = _context.GetLogger<ChangeDetectionService<TDto>>();
         }
         public DeltaComparison<TDto> Compare(TDto prev, TDto next)
         {

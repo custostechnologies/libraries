@@ -81,5 +81,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string WhoWasInjured = "cr2d7_whowasinjured";
         public const string WitnessDetails = "cr2d7_witnessdetails";
         public const string Year = "pgrowth_year";
+        public const string Status = "statecode";
+        public const string StatusReason = "statuscode";
     }
 }

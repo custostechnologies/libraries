@@ -1,4 +1,5 @@
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
@@ -6,18 +7,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
     {
         public DataverseContext(
             IOrganizationService service,
-            ITracingService tracer,
+            ILogger logger,
             IPluginExecutionContext executionContext
         )
         {
             Service = service;
-            Tracer = tracer;
+            Logger = logger;
             ExecutionContext = executionContext;
 
-            tracer.Trace("[DataverseContext] Instantiated DataverseContext class.");
+            logger.LogInformation("[DataverseContext] Instantiated DataverseContext class.");
         }
         public IOrganizationService Service { get; }
-        public ITracingService Tracer { get; }
+        public ILogger Logger { get; }
         public IPluginExecutionContext ExecutionContext { get; }
     }
 }

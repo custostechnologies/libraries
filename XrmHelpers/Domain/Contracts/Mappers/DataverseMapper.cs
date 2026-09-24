@@ -14,10 +14,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class DataverseMapper<TDto> : IDataverseMapper<TDto> where TDto : IDto, new()
     {
-        private readonly ICustomLogger _logger;
+        private readonly DataverseLogger _logger;
         private readonly ILookupEngine _lookupEngine;
         public DataverseMapper(
-            ICustomLogger logger,
+            DataverseLogger logger,
             ILookupEngine lookupEngine
         )
         {

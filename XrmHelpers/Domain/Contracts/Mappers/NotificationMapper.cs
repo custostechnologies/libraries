@@ -43,7 +43,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             _context = context;
-            _logger = new DataverseLogger(_context.Tracer, typeof(NotificationMapper<TDto>).Name);
+            _logger = new DataverseLogger(_context.Logger, typeof(NotificationMapper<TDto>).Name);
             _lookupEngine = lookupEngine;
 
             _emailTemplateQuery = new EmailTemplates(_context);

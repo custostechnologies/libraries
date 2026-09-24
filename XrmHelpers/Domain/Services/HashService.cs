@@ -18,10 +18,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Services
         )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                typeof(HashService<TDto>).Name
-            );
+            _logger = _context.GetLogger<HashService<TDto>>();
         }
         public HashResult Generate(TDto dto)
         {

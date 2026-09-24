@@ -25,7 +25,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             _context = context;
 
-            _logger = new DataverseLogger(_context.Tracer, nameof(SynStudents));
+            _logger = new DataverseLogger(_context.Logger, nameof(SynStudents));
         }
         /// <summary>
         /// 

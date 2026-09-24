@@ -27,10 +27,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _enricher = enricher;
             _changeDetector = changeDetector;
 
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                typeof(SyncPipeline<TDto>).Name
-            );
+            _logger = _context.GetLogger<NotificationPipeline<TDto>>();
         }
         public Guid BuildEmailNotification(Entity target)
         {

@@ -1,11 +1,19 @@
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public interface IDataverseContext
     {
         IOrganizationService Service { get; }
-        ITracingService Tracer { get; }
+        ILogger Logger { get; }
         IPluginExecutionContext ExecutionContext { get; }
+        public DataverseLogger GetLogger<T>()
+        {
+            return new DataverseLogger(
+                Logger,
+                typeof(T).Name
+            );
+        }
     }
 }

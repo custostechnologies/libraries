@@ -14,10 +14,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class QueryMapper<TDto> : IQueryMapper<TDto> where TDto : IQueryDto, new()
     {
-        private readonly ICustomLogger _logger;
+        private readonly DataverseLogger _logger;
         private readonly ILookupEngine _lookupEngine;
         public QueryMapper(
-            ICustomLogger logger,
+            DataverseLogger logger,
             ILookupEngine lookupEngine
         )
         {

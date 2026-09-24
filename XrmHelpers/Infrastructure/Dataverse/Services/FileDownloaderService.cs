@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
         {
             _context = context;
             _logger = new DataverseLogger(
-                _context.Tracer,
+                _context.Logger,
                 nameof(FileDownloaderService)
             );
         }

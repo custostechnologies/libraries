@@ -1,28 +1,41 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.XrmHelpers
 {
-    public class DataverseLogger : ICustomLogger
+    public class DataverseLogger : IPluginCustomLogger
     {
-        private readonly ITracingService _tracer;
+        private readonly ILogger _baseLogger;
         private readonly string _className;
         public DataverseLogger(
-            ITracingService tracer,
+            ILogger baseLogger,
             string className
         )
         {
-            _tracer = tracer;
+            _baseLogger = baseLogger ?? throw new ArgumentNullException(nameof(baseLogger));
             _className = className;
+        }
+        public DataverseLogger GetLogger<T>()
+        {
+            return new DataverseLogger(
+                _baseLogger,
+                typeof(T).Name
+            );
         }
         public void WriteLog()
         {
-            _tracer.Trace("Logger.WriteLog() called with no arguments.");
+            _baseLogger.LogInformation(
+                "Logger.WriteLog() called with no arguments."
+            );
         }
         public void WriteLog(string message, [CallerMemberName] string memberName = "")
         {
-            _tracer.Trace($"[{_className}.{memberName}] {message}");
+            _baseLogger.LogInformation(
+                $"[{_className}.{memberName}] {message}"
+            );
         }
     }
 }

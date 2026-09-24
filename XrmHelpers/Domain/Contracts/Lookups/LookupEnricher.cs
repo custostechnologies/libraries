@@ -22,7 +22,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             _context = context;
-            _logger = new DataverseLogger(_context.Tracer, typeof(LookupEnricher<TDto>).Name);
+            _logger = new DataverseLogger(_context.Logger, typeof(LookupEnricher<TDto>).Name);
             _lookupEngine = lookupEngine;
             _metadataFactory = lookupMetadataFactory;
         }

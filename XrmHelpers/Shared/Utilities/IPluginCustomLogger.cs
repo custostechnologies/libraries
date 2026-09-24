@@ -1,10 +1,8 @@
-using System;
-using Microsoft.Xrm.Sdk;
 using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.XrmHelpers
 {
-    public interface ICustomLogger
+    public interface IPluginCustomLogger
     {
         void WriteLog();
         void WriteLog(

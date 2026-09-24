@@ -14,7 +14,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
         {
             _context = dataverseContext;
 
-            _logger = new DataverseLogger(_context.Tracer, typeof(LookupResolver<TKey>).Name);
+            _logger = new DataverseLogger(_context.Logger, typeof(LookupResolver<TKey>).Name);
         }
         //public bool CanResolve(ILookupMetadata<TKey> metadata);
         public ILookupResult<TKey> Resolve(ILookupMetadata<TKey> metadata)

@@ -1,16 +1,5 @@
-using System;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.ServiceModel;
-using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using Enum = spgsWebTools.XrmHelpers.Domain.Enums;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -28,10 +17,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _context = context;
             _correlationId = correlationId;
 
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                typeof(SyncEventFactory).Name
-            );
+            _logger = _context.GetLogger<SyncEventFactory>();
             _service = _context.Service;
         }
         public Entity Build(
@@ -48,8 +34,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 syncEvent["pgrowth_sourceentity"] = sourceEntityLogicalName;
                 syncEvent["pgrowth_targetentity"] = targetEntityLogicalName;
                 syncEvent["pgrowth_message"] = "update";
-                syncEvent["statecode"] = new OptionSetValue((int)Enum.Status.Active);
-                syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Pending);
+                syncEvent["statecode"] = new OptionSetValue((int)Status.Active);
+                syncEvent["statuscode"] = new OptionSetValue((int)SyncEventStatusReason.Pending);
                 syncEvent["pgrowth_sourcerecordid"] = synMirrorId;
                 syncEvent["pgrowth_correlationid"] = _correlationId;
                 //syncEvent["pgrowth_exitearly"] = exitEarly;
@@ -77,7 +63,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 _logger.WriteLog("Marking syncEvent status as error");
 
-                syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Error);
+                syncEvent["statuscode"] = new OptionSetValue((int)SyncEventStatusReason.Error);
                 syncEvent["pgrowth_errormessage"] = errorMessage;
 
                 _logger.WriteLog("Updating syncEvent");
@@ -102,8 +88,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 _logger.WriteLog("Marking syncEvent status as complete");
 
-                syncEvent["statecode"] = new OptionSetValue((int)Enum.Status.Inactive);
-                syncEvent["statuscode"] = new OptionSetValue((int)Enum.SyncEventStatusReason.Complete);
+                syncEvent["statecode"] = new OptionSetValue((int)Status.Inactive);
+                syncEvent["statuscode"] = new OptionSetValue((int)SyncEventStatusReason.Complete);
 
                 _logger.WriteLog("Updating syncEvent from SyncEventFactory.MarkComplete()");
 

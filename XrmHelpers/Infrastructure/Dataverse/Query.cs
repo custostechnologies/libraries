@@ -18,10 +18,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
             Metadata = metadata;
             _context = context;
 
-            _logger = new DataverseLogger(
-                _context.Tracer,
-                typeof(Query<TKey>).Name
-            );
+            _logger = _context.GetLogger<Query<TKey>>();
         }
         public ILookupMetadata<TKey> Metadata { get; }
         public QueryExpression Build()
