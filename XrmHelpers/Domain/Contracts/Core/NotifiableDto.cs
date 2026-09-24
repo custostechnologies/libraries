@@ -51,10 +51,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             Guid appId = Guid.Empty;
 
             var _context = context;
-            var _logger = new DataverseLogger(
-                context.Tracer,
-                nameof(NotifiableDto<>)
-            );
+            var _logger = _context.GetLogger<NotifiableDto<TDto>>();
 
             try
             {

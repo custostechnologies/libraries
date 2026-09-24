@@ -8,12 +8,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
         IOrganizationService Service { get; }
         ILogger Logger { get; }
         IPluginExecutionContext ExecutionContext { get; }
-        public DataverseLogger GetLogger<T>()
-        {
-            return new DataverseLogger(
-                Logger,
-                typeof(T).Name
-            );
-        }
+        DataverseLogger GetLogger<T>();
     }
 }
