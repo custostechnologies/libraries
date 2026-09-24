@@ -10,17 +10,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class SynStaffMembers
     {
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_synergetic_vstaff_community_leftjoin";
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="service"></param>
         /// <param name="tracer"></param>
-        public SynStaffMembers(IOrganizationService service, ITracingService tracer)
+        public SynStaffMembers(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         /// <summary>
         /// 
@@ -56,7 +56,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {

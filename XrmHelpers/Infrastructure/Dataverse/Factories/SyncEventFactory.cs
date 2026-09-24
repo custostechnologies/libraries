@@ -1,12 +1,13 @@
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Domain.Enums;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SyncEventFactory
     {
         private readonly IDataverseContext _context;
-        private readonly IOrganizationService _service;
         private readonly DataverseLogger _logger;
         private readonly string _correlationId;
         public SyncEventFactory(
@@ -18,7 +19,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _correlationId = correlationId;
 
             _logger = _context.GetLogger<SyncEventFactory>();
-            _service = _context.Service;
         }
         public Entity Build(
             string synMirrorId,
@@ -45,7 +45,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );*/
                 //syncEvent["pgrowth_syncallattributes"] = syncAll;
 
-                var result = _service.Create(syncEvent);
+                var result = _context.Service.Create(syncEvent);
 
                 syncEvent[$"{syncEntityLogicalName}id"] = result;
 
@@ -68,7 +68,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _logger.WriteLog("Updating syncEvent");
 
-                _service.Update(syncEvent);
+                _context.Service.Update(syncEvent);
 
                 _logger.WriteLog("syncEvent updated from MarkError");
             }
@@ -93,7 +93,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _logger.WriteLog("Updating syncEvent from SyncEventFactory.MarkComplete()");
 
-                _service.Update(syncEvent);
+                _context.Service.Update(syncEvent);
 
                 _logger.WriteLog("_syncEvent updated from MarkComplete");
             }

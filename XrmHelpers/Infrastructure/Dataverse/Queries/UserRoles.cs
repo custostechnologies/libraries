@@ -1,17 +1,19 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.NewUserSyncEvent.Queries
 {
     public class CheckUserRoleQueryService
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private Entity _role = new Entity("role");
-        public CheckUserRoleQueryService(IOrganizationService service, ITracingService tracer)
+        public CheckUserRoleQueryService(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public bool HasRole(Guid systemuserid, string roleName)
         {
@@ -32,7 +34,7 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
                 }
             };
 
-            EntityCollection roles = _service.RetrieveMultiple(roleQuery);
+            EntityCollection roles = _context.Service.RetrieveMultiple(roleQuery);
 
             if (roles.Entities.Count > 0)
             {
@@ -80,7 +82,7 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
                     }
                 };
 
-                EntityCollection results = _service.RetrieveMultiple(userHasRoleQuery);
+                EntityCollection results = _context.Service.RetrieveMultiple(userHasRoleQuery);
 
                 return results.Entities.Count > 0;
             }

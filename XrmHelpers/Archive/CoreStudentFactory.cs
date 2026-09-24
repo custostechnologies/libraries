@@ -12,22 +12,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreStudentFactory
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private readonly string _correlationId;
         private bool _resolutionFailed = false;
         private CoreStudents? _coreStudentQuery;
         private bool _create = false;
-        public CoreStudentFactory(IOrganizationService service, ITracingService tracer, string correlationId)
+        public CoreStudentFactory(IDataverseContext context, DataverseLogger logger, string correlationId)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
             _correlationId = correlationId;
         }
         public (CoreStudent student, bool createAsInactive, string? error) Build(StudentDto snap, string[] attributes)
         {
             _logger.WriteLog("Entered CoreStudentFactory.Build");
-            _coreStudentQuery = new CoreStudents(_service, _tracer);
+            _coreStudentQuery = new CoreStudents(_context, _logger);
 
             if (snap.StudentId == null) throw new InvalidPluginExecutionException("StudentDto has no StudentID key.");
             int _studentId = (int)snap.StudentId;

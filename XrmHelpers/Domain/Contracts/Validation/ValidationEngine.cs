@@ -4,17 +4,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
      public class ValidationEngine : IValidationEngine
      {
-          private readonly IServiceProvider _serviceProvider;
+          private readonly IServiceProvider _provider;
           public ValidationEngine(
                IServiceProvider serviceProvider
           )
           {
-               _serviceProvider = serviceProvider;
+               _provider = serviceProvider;
           }
           public ValidationResult Validate<T>(T payload) where T : IValidationMetadata
           {
                var result = new ValidationResult();
-               var ruleSet = _serviceProvider
+               var ruleSet = _provider
                     .GetServices<IValidationRuleSetProvider<T>>()
                     .FirstOrDefault(
                          set => set.RuleSetName == payload.ValidationRuleSet

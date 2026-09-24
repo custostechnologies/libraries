@@ -17,19 +17,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class EmploymentApplicationFactory
     {
-        private readonly ITracingService _tracer;
-        private readonly IOrganizationService _service;
+        private readonly DataverseLogger _logger;
+        private readonly IDataverseContext _context;
         private Entity _newApplication;
         private EmploymentApplication _dto = null;
         private CoreJobPositions _coreJobPositionsQuery = null;
         private EntityReference? _coreJobPositionRef = null;
         public EmploymentApplicationFactory(
-            ITracingService tracer,
-            IOrganizationService service
+            IDataverseContext context,
+          DataverseLogger logger
         )
         {
-            _tracer = tracer;
-            _service = service;
+            _logger = logger;
+            _context = context;
         }
         public Guid Create(EmploymentApplication application)
         {
@@ -37,7 +37,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _newApplication = new Entity(EntityLogicalNames.EmploymentApplication);
             _dto = application;
 
-            _coreJobPositionsQuery = new CoreJobPositions(_service, _tracer);
+            _coreJobPositionsQuery = new CoreJobPositions(_context, _logger);
 
             try
             {
@@ -98,7 +98,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 MapApplicationType(_coreJobPositionRef.Id);
                 _newApplication[EmploymentApplicationFields.SubmissionDate] = DateTime.UtcNow;
 
-                return _service.Create(_newApplication);
+                return _context.Service.Create(_newApplication);
             }
             catch (Exception ex)
             {
@@ -154,7 +154,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private void MapJobLookUps(int webFormOptionValue)
         {
             // query and set entity reference (parent job opp.)
-            var _jobOpportunityQuery = new JobOpportunities(_service, _tracer);
+            var _jobOpportunityQuery = new JobOpportunities(_context, _logger);
             var entity = _jobOpportunityQuery.GetEntityByCode(webFormOptionValue);
 
             if (entity == null) throw new InvalidPluginExecutionException("Job Opportunity entity returned to MapJobLookups in EmploymentApplicationFactory is null. Exiting.");

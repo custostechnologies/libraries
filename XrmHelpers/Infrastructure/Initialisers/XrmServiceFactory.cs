@@ -5,23 +5,28 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
 {
     public class XrmServiceFactory
     {
-        private readonly ITracingService _tracer;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly DataverseLogger _logger;
+        private readonly IServiceProvider _provider;
         public XrmServiceFactory(
-            ITracingService tracer,
+            DataverseLogger logger,
             IServiceProvider provider
         )
         {
-            _tracer = tracer;
-            _serviceProvider = provider;
+            _logger = logger;
+            _provider = provider;
         }
         public IOrganizationServiceFactory Init()
         {
+            if (_provider == null)
+            {
+                throw new Exception("Null service provider");
+            }
+            ;
             try
             {
                 _logger.WriteLog("Initialising organisation service factory");
 
-                var orgServiceFactory = (IOrganizationServiceFactory)_serviceProvider.GetService(typeof(IOrganizationServiceFactory));
+                var orgServiceFactory = (IOrganizationServiceFactory)_provider.GetService(typeof(IOrganizationServiceFactory))!;
 
                 _logger.WriteLog("Organisation service factory initialised");
 
@@ -30,10 +35,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in XrmServiceFactory.Init(): {0}", ex);
-                if (ex.InnerException.Message != null)
-                {
-                    _logger.WriteLog("Inner Exception in XrmServiceFactory.Init(): {0}", ex.InnerException.Message);
-                }
                 throw;
             }
         }

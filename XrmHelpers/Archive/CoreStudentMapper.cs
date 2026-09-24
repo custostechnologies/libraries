@@ -9,10 +9,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public class CoreStudentMapper
     {
         private const string ENTITY_LOGICAL_NAME = EntityLogicalNames.CoreStudent;
-        private readonly ITracingService _tracer;
-        public CoreStudentMapper(ITracingService tracer)
+        private readonly DataverseLogger _logger;
+        public CoreStudentMapper(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         public Entity ToCreateEntity(CoreStudent core, string[] updatedAttributes)
         {

@@ -37,6 +37,13 @@ namespace spgsWebTools.XrmHelpers
                 $"[{_className}.{memberName}] {message}"
             );
         }
+        public void WriteLog(string message, params object?[] args)
+        {
+            _baseLogger.LogInformation(
+                $"[{_className}] {message}",
+                args
+            );
+        }
         public void WriteLog(Exception ex, string message, params object?[] args)
         {
             var eventId = new EventId(5000, "UnhandledException");

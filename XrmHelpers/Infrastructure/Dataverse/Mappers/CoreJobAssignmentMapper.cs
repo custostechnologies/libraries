@@ -9,19 +9,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public class CoreJobAssignmentMapper
     {
         private readonly string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
-        private readonly ITracingService _tracer;
+        private readonly DataverseLogger _logger;
         private bool _create = false;
-        public CoreJobAssignmentMapper(ITracingService tracer)
+        public CoreJobAssignmentMapper(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
-        public Entity ToCreateEntity(CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
+        public Entity ToCreateEntity(CoreJobAssignment core, DataverseLogger logger, string[] updatedAttributes)
         {
             var entity = ToEntity(core, true, updatedAttributes);
 
             foreach (var a in entity.Attributes)
             {
-                tracer.Trace(
+                logger.WriteLog(
                     "{0} = {1}",
                     a.Key,
                     a.Value?.ToString() ?? "<null>"
@@ -30,7 +30,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
             return entity;
         }
-        public Entity ToUpdateEntity(CoreJobAssignment core, ITracingService tracer, string[] updatedAttributes)
+        public Entity ToUpdateEntity(CoreJobAssignment core, DataverseLogger logger, string[] updatedAttributes)
         {
             if (core == null || core.CoreJobAssignmentId == Guid.Empty)
             {
@@ -42,7 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
             foreach (var a in entity.Attributes)
             {
-                tracer.Trace(
+                logger.WriteLog(
                     "{0} = {1}",
                     a.Key,
                     a.Value?.ToString() ?? "<null>"

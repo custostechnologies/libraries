@@ -4,10 +4,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Resolvers
 {
     public class BusinessUnitResovler
     {
-        private ITracingService _tracer;
-        public BusinessUnitResolver(ITracingService tracer)
+        private DataverseLogger _logger;
+        public BusinessUnitResolver(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         public string GetCode()
     }

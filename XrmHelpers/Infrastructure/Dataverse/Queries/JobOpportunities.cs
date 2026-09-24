@@ -6,13 +6,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class JobOpportunities
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.JobOpportunity;
-        public JobOpportunities(IOrganizationService service, ITracingService tracer)
+        public JobOpportunities(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public Entity GetEntityByCode(int webFormOptionValue)
         {
@@ -44,7 +44,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing query expression");
 

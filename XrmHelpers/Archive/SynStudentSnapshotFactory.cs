@@ -10,10 +10,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStudentSnapshotFactory
     {
-        private readonly ITracingService _tracer;
-        public SynStudentSnapshotFactory(ITracingService tracer)
+        private readonly DataverseLogger _logger;
+        public SynStudentSnapshotFactory(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         public StudentDto Build(Entity target, Entity? preImage)
         {

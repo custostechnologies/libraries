@@ -6,13 +6,15 @@ using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using System.Text.Json;
 using System.Security.Claims;
+using spgsWebTools.XrmHelpers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class OperationalHierarchyMapFactory
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
         private CoreJobAssignments? _assignmentQuery;
@@ -20,19 +22,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private CoreJobPositions? _coreJobPositionQuery;
         private string ENTITY_LOGICAL_NAME = EntityLogicalNames.OperationalHierarchyMap;
         public OperationalHierarchyMapFactory(
-            IOrganizationService service,
-            ITracingService
-        tracer)
+            IDataverseContext context,
+            DataverseLogger logger
+        )
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public Guid Build(Entity assignment, Entity referenceMapEntity)
         {
             // position id is PARENT if isParent true
-            _assignmentQuery = new CoreJobAssignments(_service, _tracer);
-            _operationalMapQuery = new OperationalHierarchyMaps(_service, _tracer);
-            _coreJobPositionQuery = new CoreJobPositions(_service, _tracer);
+            _assignmentQuery = new CoreJobAssignments(_context);
+            _operationalMapQuery = new OperationalHierarchyMaps(_context, _logger);
+            _coreJobPositionQuery = new CoreJobPositions(_context, _logger);
 
             EntityReference parentAssignmentRef;
             EntityReference childAssignmentRef;
@@ -109,7 +111,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );
 
                 _logger.WriteLog("createMap entity: {0}", createMapJson);
-                var mapId = _service.Create(createMap);
+                var mapId = _context.Service.Create(createMap);
 
                 _logger.WriteLog("Created {0} with Id: {1}", ENTITY_LOGICAL_NAME, mapId);
 

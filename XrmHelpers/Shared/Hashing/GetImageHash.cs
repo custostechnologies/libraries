@@ -7,10 +7,10 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {
     public class ImageHashService
     {
-        private ITracingService _tracer;
-        public ImageHashService(ITracingService tracer)
+        private DataverseLogger _logger;
+        public ImageHashService(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         public string Calculate(byte[] image)
         {

@@ -11,12 +11,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class CoreJobAssignments
     {
         private readonly string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
-        public CoreJobAssignments(IOrganizationService service, ITracingService tracer)
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
+        public CoreJobAssignments(
+            IDataverseContext context
+        )
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = new DataverseLogger(
+                _context.Logger,
+                nameof(CoreJobAssignments)
+            );
         }
         public EntityReference GetReferenceBySeq(int seq)
         {
@@ -44,9 +49,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _logger.WriteLog("Executing query expression on {0} with STAFF JOB POSITION SEQ: {1}", ENTITY_LOGICAL_NAME, seq);
+            _logger.WriteLog($"Executing query expression on {ENTITY_LOGICAL_NAME} with STAFF JOB POSITION SEQ: {seq}");
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -88,7 +93,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -133,7 +138,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -175,7 +180,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -217,7 +222,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -255,7 +260,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -298,7 +303,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 
@@ -315,7 +320,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         public EntityReference GetMostRecentReferenceByPositionId(Guid jobPositionId)
         {
             _logger.WriteLog("Building GetMostRecentReferenceByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
-            _logger.WriteLog("With jobPositionId={0}", jobPositionId);
+            _logger.WriteLog($"With jobPositionId={jobPositionId}");
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -348,7 +353,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression");
 

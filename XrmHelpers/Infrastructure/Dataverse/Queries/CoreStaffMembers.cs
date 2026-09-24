@@ -9,13 +9,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class CoreStaffMembers
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        public CoreStaffMembers(IOrganizationService service, ITracingService tracer)
+        public CoreStaffMembers(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public Entity GetEntityByTruth(string truthId)
         {
@@ -42,7 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {0}", results.Entities.Count);
 
@@ -102,7 +102,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate query expression");
 
@@ -158,7 +158,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing GetReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId query expression");
 

@@ -5,12 +5,12 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {
     public class JobSnapshotHashService
     {
-        private readonly ITracingService _tracer;
+        private readonly DataverseLogger _logger;
         public JobSnapshotHashService(
-            ITracingService tracer
+            DataverseLogger logger
         )
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         public (string plain, int encoded) Generate(JobPositionSnapshot snap)
         {

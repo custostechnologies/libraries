@@ -7,16 +7,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
     {
         private readonly IPluginExecutionContext _pluginExecutionContext;
         private readonly IOrganizationServiceFactory _organisationServiceFactory;
-        private readonly ITracingService _tracer;
+        private readonly DataverseLogger _logger;
         public XrmOrganisationService(
             IPluginExecutionContext context,
             IOrganizationServiceFactory factory,
-            ITracingService tracer
+            DataverseLogger logger
         )
         {
             _pluginExecutionContext = context;
             _organisationServiceFactory = factory;
-            _tracer = tracer;
+            _logger = logger;
         }
         public IOrganizationService Init()
         {

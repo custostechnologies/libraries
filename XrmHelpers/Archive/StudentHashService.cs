@@ -8,14 +8,14 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
     /// </summary>
     public class StudentHashService
     {
-        private readonly ITracingService _tracer;
+        private readonly DataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tracer"></param>
-        public StudentHashService(ITracingService tracer)
+        public StudentHashService(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         /// <summary>
         /// 

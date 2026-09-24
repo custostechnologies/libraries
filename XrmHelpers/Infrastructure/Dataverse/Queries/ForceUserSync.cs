@@ -8,12 +8,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class ForceUserSync
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
-        public ForceUserSync(IOrganizationService service, ITracingService tracer)
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
+        public ForceUserSync(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public Guid? Execute(string upn)
         {
@@ -24,7 +24,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     ["Email"] = upn
                 };
 
-                OrganizationResponse response = _service.Execute(request);
+                OrganizationResponse response = _context.Service.Execute(request);
 
                 if (response.Results.Contains("SystemUserId"))
                 {

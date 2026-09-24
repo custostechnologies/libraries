@@ -9,15 +9,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
     public class EnvironmentVariableValues
     {
-        private readonly ITracingService _tracer;
-        private readonly IOrganizationService _service;
+        private readonly DataverseLogger _logger;
+        private readonly IDataverseContext _context;
         public EnvironmentVariableValues(
-            ITracingService tracer,
-            IOrganizationService service
+            IDataverseContext context,
+          DataverseLogger logger
         )
         {
-            _tracer = tracer;
-            _service = service;
+            _logger = logger;
+            _context = context;
         }
         public EnvironmentVariable<string> GetValue(string schemaName)
         {
@@ -58,7 +58,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 query.LinkEntities.Add(link);
 
-                EntityCollection results = _service.RetrieveMultiple(query);
+                EntityCollection results = _context.Service.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {

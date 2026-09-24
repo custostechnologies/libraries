@@ -9,13 +9,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class CoreStudents
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.CoreStudent;
-        public CoreStudents(IOrganizationService service, ITracingService tracer)
+        public CoreStudents(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public Entity GetEntityByStudentId(int studentId)
         {
@@ -42,7 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate query expression");
 
@@ -98,7 +98,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing GetReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
 
-                var results = _service.RetrieveMultiple(query);
+                var results = _context.Service.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate CoreStudents.GetReferenceByStudentId query expression");
 

@@ -13,12 +13,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
     }
     public class CreateHttpRequest
     {
-        private readonly ITracingService _tracer;
+        private readonly DataverseLogger _logger;
         public CreateHttpRequest(
-            ITracingService tracer
+            DataverseLogger logger
         )
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         public (HttpStatusCode status, string body) TriggerAnonFlow(
             string endpoint,

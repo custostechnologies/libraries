@@ -6,14 +6,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class ReferenceHierarchyMapFactory
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private CoreStaffMembers? _coreStaffQuery;
         private Systemusers? _systemuserQuery;
-        public ReferenceHierarchyMapFactory(IOrganizationService service, ITracingService tracer)
+        public ReferenceHierarchyMapFactory(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
     }
 }

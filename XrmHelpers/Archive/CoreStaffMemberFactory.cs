@@ -30,8 +30,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     }
     public class CoreStaffMemberFactory
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private readonly string _correlationId;
         private bool _resolutionFailed = false;
         private CoreStaffMembers? _coreStaffQuery;
@@ -42,18 +42,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private bool _create = false;
         private string ENDPOINT_ENV_VAR_SCHEMA_NAME = "pgrowth_XrmHelpers_FlowEndpoint_ForceUserSync";
         private string SYNC_FLOW_ENDPOINT = "";
-        public CoreStaffMemberFactory(IOrganizationService service, ITracingService tracer, string correlationId)
+        public CoreStaffMemberFactory(IDataverseContext context, DataverseLogger logger, string correlationId)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
             _correlationId = correlationId;
         }
         public (CoreStaffMember staff, bool createAsInactive, string? error) Build(StaffMemberSnapshot syn, string[] attributes)
         {
             _logger.WriteLog("Entered CoreStaffMemberFactory.Build");
-            _coreStaffQuery = new CoreStaffMembers(_service, _tracer);
-            _systemuserQuery = new Systemusers(_service, _tracer);
-            _envVarQuery = new EnvironmentVariableValues(_tracer, _service);
+            _coreStaffQuery = new CoreStaffMembers(_context, _logger);
+            _systemuserQuery = new Systemusers(_context, _logger);
+            _envVarQuery = new EnvironmentVariableValues(_logger, _context);
 
             Entity core;
 
@@ -110,7 +110,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _logger.WriteLog("Create HttpRequest");
 
-                _httpRequest = new CreateHttpRequest(_tracer);
+                _httpRequest = new CreateHttpRequest(_logger);
 
                 _logger.WriteLog("Calling flow and retrieving response");
                 var response = _httpRequest.TriggerAnonFlow(
@@ -398,7 +398,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _logger.WriteLog("In MapDepartment.");
             if (_create || attributes.Contains(SynStaffMemberFields.StaffDepartment))
             {
-                var _departmentQuery = new CoreDepartments(_service, _tracer);
+                var _departmentQuery = new CoreDepartments(_context, _logger);
 
                 EntityReference coreDeptRef;
 
@@ -430,7 +430,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _logger.WriteLog("In MapCategory.");
             if (_create || attributes.Contains(SynStaffMemberFields.StaffCategory))
             {
-                var _categoryQuery = new CoreStaffCategories(_service, _tracer);
+                var _categoryQuery = new CoreStaffCategories(_context, _logger);
 
                 EntityReference coreCategoryRef;
 

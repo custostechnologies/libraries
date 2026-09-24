@@ -9,16 +9,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreJobAssignmentFactory
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
         private CoreJobAssignments? _coreJobAssignmentQuery;
         private CoreJobPositions? _coreJobPositionQuery;
         private CoreStaffMembers? _coreStaffMemberQuery;
         private bool _create = false;
-        public CoreJobAssignmentFactory(IOrganizationService service, ITracingService tracer)
+        public CoreJobAssignmentFactory(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public CoreJobAssignment Build(JobPositionSnapshot snap, string[] attributes)
         {
@@ -27,11 +27,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _logger.WriteLog("Entered CoreJobAssignmentFactory.Build");
             _logger.WriteLog("Initialising query obejcts");
 
-            _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
-            _coreJobPositionQuery = new CoreJobPositions(_service, _tracer);
-            _coreStaffMemberQuery = new CoreStaffMembers(_service, _tracer);
+            _coreJobAssignmentQuery = new CoreJobAssignments(_context);
+            _coreJobPositionQuery = new CoreJobPositions(_context, _logger);
+            _coreStaffMemberQuery = new CoreStaffMembers(_context, _logger);
 
-            _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
+            _coreJobAssignmentQuery = new CoreJobAssignments(_context);
 
             if (snap.StaffJobPositionsSeq != null)
             {

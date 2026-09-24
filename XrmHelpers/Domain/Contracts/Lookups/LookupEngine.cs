@@ -7,14 +7,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class LookupEngine : ILookupEngine
     {
-        private readonly IServiceProvider _services;
+        private readonly IServiceProvider _provider;
         private readonly DataverseLogger _logger;
         public LookupEngine(
             DataverseLogger logger,
-            IServiceProvider services
+            IServiceProvider provider
         )
         {
-            _services = services;
+            _provider = provider;
             _logger = logger;
             _logger.WriteLog("Class instantiated via constructor.");
         }
@@ -23,7 +23,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             var entityName = metadata.TargetEntityLogicalName;
             _logger.WriteLog($"Execution starting to retrieve a record from {metadata.TargetEntityLogicalName}");
 
-            var resolver = _services
+            var resolver = _provider
                 .GetRequiredService<ILookupResolver<TKey>>();
 
             if (resolver == null)

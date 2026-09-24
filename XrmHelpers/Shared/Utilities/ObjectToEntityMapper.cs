@@ -8,7 +8,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
 {
     public class ObjectToEntityMapper
     {
-        private readonly ITracingService _tracer;
-        
+        private readonly DataverseLogger _logger;
+
     }
 }

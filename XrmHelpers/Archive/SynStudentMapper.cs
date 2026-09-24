@@ -6,12 +6,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStudentMapper
     {
-        private ITracingService _tracer;
+        private DataverseLogger _logger;
         private AttributeCollection _attributes;
         private Entity _target;
-        public SynStudentMapper(ITracingService tracer, Entity target, AttributeCollection attributes)
+        public SynStudentMapper(DataverseLogger logger, Entity target, AttributeCollection attributes)
         {
-            _tracer = tracer;
+            _logger = logger;
             _target = target;
             _attributes = attributes;
         }

@@ -8,12 +8,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class Systemusers
     {
-        private readonly IOrganizationService _service;
-        private readonly ITracingService _tracer;
-        public Systemusers(IOrganizationService service, ITracingService tracer)
+        private readonly IDataverseContext _context;
+        private readonly DataverseLogger _logger;
+        public Systemusers(IDataverseContext context, DataverseLogger logger)
         {
-            _service = service;
-            _tracer = tracer;
+            _context = context;
+            _logger = logger;
         }
         public EntityReference GetReferenceByMetadata(string upn, string username)
         {
@@ -59,7 +59,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing RetrieveReference query expression on systemuser");
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing RetrieveReference query expression");
 
@@ -116,7 +116,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing GetReferenceByAzureId query expression on systemuser");
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing RetrieveReference query expression");
 
@@ -174,7 +174,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing RetrieveMetadata query expression on systemuser");
 
-            var results = _service.RetrieveMultiple(query);
+            var results = _context.Service.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing RetrieveMetadata query expression");
 
@@ -209,7 +209,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 Target = upsertUser
             };
 
-            return (UpsertResponse)_service.Execute(request);
+            return (UpsertResponse)_context.Service.Execute(request);
         }
     }
 }

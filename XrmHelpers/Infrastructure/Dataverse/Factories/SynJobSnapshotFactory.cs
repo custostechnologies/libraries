@@ -12,16 +12,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     /// </summary>
     public class SynJobSnapshotFactory
     {
-        private readonly ITracingService _tracer;
+        private readonly DataverseLogger _logger;
         private bool? _forceIncoming = false;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_synergetic_vstaffjobpositions";
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tracer"></param>
-        public SynJobSnapshotFactory(ITracingService tracer)
+        public SynJobSnapshotFactory(DataverseLogger logger)
         {
-            _tracer = tracer;
+            _logger = logger;
         }
         /// <summary>
         /// 
