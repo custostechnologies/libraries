@@ -56,20 +56,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 CoreStaffMemberFields.IsActive,
                 core.IsActive);
 
-            _tracer.Trace($"create is: {create}");
+            _logger.WriteLog($"create is: {create}");
             if (create == false)
             {
                 MapDelta(entity, updatedAttributes,
                     SynStaffMemberFields.Status,
                     CoreStaffMemberFields.Status,
                     core.Status);
-                _tracer.Trace("Mapped core.Status: {0}, Enum: {1}", core.Status.ToString(), ((Enums.Status)core.Status.Value).ToString());
+                _logger.WriteLog("Mapped core.Status: {0}, Enum: {1}", core.Status.ToString(), ((Enums.Status)core.Status.Value).ToString());
 
                 MapDelta(entity, updatedAttributes,
                     SynStaffMemberFields.StatusReason,
                     CoreStaffMemberFields.StatusReason,
                     core.StatusReason);
-                _tracer.Trace("Mapped core.StatusReason: {0}, Enum: {1}", core.StatusReason.ToString(), ((Enums.StatusReason)core.StatusReason.Value).ToString());
+                _logger.WriteLog("Mapped core.StatusReason: {0}, Enum: {1}", core.StatusReason.ToString(), ((Enums.StatusReason)core.StatusReason.Value).ToString());
             }
 
             // Job metadata
@@ -175,7 +175,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 entity[CoreStaffMemberFields.StaffEmailAddressFlag] = core.StaffEmailAddressFlag;
 
             entity[CoreStaffMemberFields.LastSync] = DateTime.UtcNow;
-            _tracer.Trace("Serialised before exiting mapper: {0}",
+            _logger.WriteLog("Serialised before exiting mapper: {0}",
                 JsonSerializer.Serialize(
                     core,
                     new JsonSerializerOptions
@@ -184,7 +184,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                     }
                 )
             );
-            _tracer.Trace("Exiting CoreStaffMemberMapper");
+            _logger.WriteLog("Exiting CoreStaffMemberMapper");
             return entity;
         }
         private void MapDelta<T>(
@@ -195,7 +195,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             T value
         )
         {
-            _tracer.Trace("MapDelta src: {0}, target: {1}, value: {2}",
+            _logger.WriteLog("MapDelta src: {0}, target: {1}, value: {2}",
                 sourceAttribute,
                 targetAttribute,
                 value
@@ -206,7 +206,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 entity[targetAttribute] = value;
             }
 
-            _tracer.Trace("MapDelta complete, returning to caller.");
+            _logger.WriteLog("MapDelta complete, returning to caller.");
         }
     }
 }

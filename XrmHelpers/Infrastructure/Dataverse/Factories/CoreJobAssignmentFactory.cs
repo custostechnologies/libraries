@@ -24,8 +24,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         {
             Entity existingCoreAssignment = null;
 
-            _tracer.Trace("Entered CoreJobAssignmentFactory.Build");
-            _tracer.Trace("Initialising query obejcts");
+            _logger.WriteLog("Entered CoreJobAssignmentFactory.Build");
+            _logger.WriteLog("Initialising query obejcts");
 
             _coreJobAssignmentQuery = new CoreJobAssignments(_service, _tracer);
             _coreJobPositionQuery = new CoreJobPositions(_service, _tracer);
@@ -35,19 +35,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (snap.StaffJobPositionsSeq != null)
             {
-                _tracer.Trace("Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
+                _logger.WriteLog("Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
                 existingCoreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
             }
             if (existingCoreAssignment == null && !string.IsNullOrWhiteSpace(snap.SourceOfTruthId))
             {
-                _tracer.Trace("existingCoreAssignment is still null and has Source truth id Core Job Assignment. Searching by TRUTH");
+                _logger.WriteLog("existingCoreAssignment is still null and has Source truth id Core Job Assignment. Searching by TRUTH");
                 existingCoreAssignment = _coreJobAssignmentQuery.GetEntityByTruth(snap.SourceOfTruthId!);
             }
 
             _create = existingCoreAssignment == null;
             if (existingCoreAssignment != null) _create = existingCoreAssignment.Id == Guid.Empty;
 
-            if (_create == false && existingCoreAssignment != null) _tracer.Trace("Core Assignment returned with Id: {0} AND _create set to FALSE", existingCoreAssignment.Id);
+            if (_create == false && existingCoreAssignment != null) _logger.WriteLog("Core Assignment returned with Id: {0} AND _create set to FALSE", existingCoreAssignment.Id);
 
             CoreJobAssignment coreAssignment;
 
@@ -75,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             MapSynReportsTo(snap, coreAssignment, attributes);
             MapStatus(snap, coreAssignment, attributes);
 
-            _tracer.Trace("coreAssignment CoreJobAssignment IsCreate: {0}, StaffId: {1}, StaffJobPositionSeq: {2}",
+            _logger.WriteLog("coreAssignment CoreJobAssignment IsCreate: {0}, StaffId: {1}, StaffJobPositionSeq: {2}",
                 coreAssignment.IsCreate,
                 coreAssignment.StaffId,
                 coreAssignment.StaffJobPositionSeq
@@ -161,7 +161,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapIsActive(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            _tracer.Trace("MapIsActive: snap.IsActive: {0}, attributes.Contains(staffJobPosActiveFlag): {1}",
+            _logger.WriteLog("MapIsActive: snap.IsActive: {0}, attributes.Contains(staffJobPosActiveFlag): {1}",
                 snap.IsActive,
                 attributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag)
             );
@@ -179,7 +179,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapStatus(JobPositionSnapshot snap, CoreJobAssignment target, string[] attributes)
         {
-            _tracer.Trace("MapStatus Called. _create: {0}, attributes.Contains(statecode): {1}, attributes.Contains(statuscode): {2}",
+            _logger.WriteLog("MapStatus Called. _create: {0}, attributes.Contains(statecode): {1}, attributes.Contains(statuscode): {2}",
                 _create,
                 attributes.Contains("statecode"),
                 attributes.Contains("statecode")
@@ -188,7 +188,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 target.Status = snap.Status;
                 target.StatusReason = snap.StatusReason;
-                _tracer.Trace("target.Status: {0}, target.StatusReason: {1}",
+                _logger.WriteLog("target.Status: {0}, target.StatusReason: {1}",
                     ((Enums.Status)target.Status.Value).ToString(),
                     ((Enums.StatusReason)target.StatusReason.Value).ToString()
                 );

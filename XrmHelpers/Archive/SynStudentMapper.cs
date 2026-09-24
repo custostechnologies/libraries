@@ -17,8 +17,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         }
         public Entity ToEntity(StudentDto dto)
         {
-            _tracer.Trace("in SynStudentMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
-            _tracer.Trace("Hash key discrepancy detected via ChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", dto.StudentId, dto.EncodedHash);
+            _logger.WriteLog("in SynStudentMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
+            _logger.WriteLog("Hash key discrepancy detected via ChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", dto.StudentId, dto.EncodedHash);
             try
             {
                 if (dto.SourceRecordId != Guid.Empty)
@@ -51,14 +51,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 _target[SynStudentFields.PlaintextHash] = dto.PlaintextHash;
                 _target[SynStudentFields.LastSuccessfulSync] = DateTime.UtcNow;
 
-                _tracer.Trace("Update or create request entity mapped from snapshot");
-                _tracer.Trace("Target attributes set  via StudentChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", dto.StudentId, dto.EncodedHash);
-                _tracer.Trace(
+                _logger.WriteLog("Update or create request entity mapped from snapshot");
+                _logger.WriteLog("Target attributes set  via StudentChangeDetection plugin for row with Student ID: {0}, New Hash: {1}", dto.StudentId, dto.EncodedHash);
+                _logger.WriteLog(
                     "Final encoded hash in target: {0}",
                     _target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
 
-                _tracer.Trace("_TARGET AT END OF SynStudentMapper: {0}", JsonSerializer.Serialize(
+                _logger.WriteLog("_TARGET AT END OF SynStudentMapper: {0}", JsonSerializer.Serialize(
                     _target,
                     new JsonSerializerOptions { WriteIndented = true }
                 ));
@@ -67,24 +67,24 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Error SynStudentMapper.ToEntity: {0}", ex);
+                _logger.WriteLog("Error SynStudentMapper.ToEntity: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("InnerException SynStudentMapper.ToEntity: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("InnerException SynStudentMapper.ToEntity: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
         }
         private void SetDelta<T>(string attributeName, T value)
         {
-            _tracer.Trace("SetDelta(attributeName: {0}, value: {1}) called.", attributeName, value);
+            _logger.WriteLog("SetDelta(attributeName: {0}, value: {1}) called.", attributeName, value);
 
             if (_attributes.Contains(attributeName))
             {
                 SetAttributeDelta.Execute(_target, attributeName, value);
             }
 
-            _tracer.Trace("SetDelta _target[{0}] set to: {1}", attributeName, _target.GetAttributeValue<T>(attributeName));
+            _logger.WriteLog("SetDelta _target[{0}] set to: {1}", attributeName, _target.GetAttributeValue<T>(attributeName));
         }
     }
 }

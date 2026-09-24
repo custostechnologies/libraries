@@ -172,7 +172,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             var entityStatus = entity.GetAttributeValue<OptionSetValue>("statecode");
             var entityStatusReason = entity.GetAttributeValue<OptionSetValue>("statuscode");
 
-            _tracer.Trace("entity has status: {0}, statusReason: {1}",
+            _logger.WriteLog("entity has status: {0}, statusReason: {1}",
                 ((Enums.Status)entityStatus.Value).ToString(),
                 ((Enums.StatusReason)entityStatusReason.Value).ToString()
             );
@@ -190,7 +190,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             T value
         )
         {
-            _tracer.Trace("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
+            _logger.WriteLog("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
                 sourceAttribute, targetAttribute, value
             );
             if (_create || updatedAttributes.Contains(sourceAttribute))
@@ -204,13 +204,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             bool value
         )
         {
-            _tracer.Trace("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
+            _logger.WriteLog("MapDelta srcAttribute: {0}, targetAttribute: {1}, value: {2}",
             SynJobPositionFields.StaffJobPositionActiveFlag, CoreJobAssignmentFields.IsActive, value
             );
             if (_create || updatedAttributes.Contains(SynJobPositionFields.StaffJobPositionActiveFlag))
             {
                 entity[CoreJobAssignmentFields.IsActive] = value;
-                _tracer.Trace("Set CoreJobAssignmentFields.IsActive to {0}", entity.GetAttributeValue<bool>(CoreJobAssignmentFields.IsActive));
+                _logger.WriteLog("Set CoreJobAssignmentFields.IsActive to {0}", entity.GetAttributeValue<bool>(CoreJobAssignmentFields.IsActive));
             }
         }
     }

@@ -20,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         }
         public EntityReference GetReferenceBySeq(int seq)
         {
-            _tracer.Trace("Building GetReferenceBySeq query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetReferenceBySeq query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -44,11 +44,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0} with STAFF JOB POSITION SEQ: {1}", ENTITY_LOGICAL_NAME, seq);
+            _logger.WriteLog("Executing query expression on {0} with STAFF JOB POSITION SEQ: {1}", ENTITY_LOGICAL_NAME, seq);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -56,13 +56,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new EntityReference(ENTITY_LOGICAL_NAME);
             }
         }
         public EntityReference GetReferenceByTruth(string truth)
         {
-            _tracer.Trace("Building GetReferenceByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetReferenceByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -86,11 +86,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -101,13 +101,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new EntityReference(ENTITY_LOGICAL_NAME);
             }
         }
         public Entity GetEntityByTruth(string truth)
         {
-            _tracer.Trace("Building GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -131,11 +131,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -143,13 +143,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
         public Entity GetEntityBySeq(int seq)
         {
-            _tracer.Trace("Building GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -173,11 +173,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -185,13 +185,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
         public EntityReference GetReferenceById(Guid id)
         {
-            _tracer.Trace("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -215,11 +215,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -227,14 +227,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new EntityReference(ENTITY_LOGICAL_NAME);
             }
         }
         public Entity GetEntityByPositionId(Guid id)
         {
             // should throw error if more than one entity is found
-            _tracer.Trace("Building GetEntityByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetEntityByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -253,11 +253,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count == 0)
             {
@@ -265,19 +265,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else if (results.Entities.Count > 0)
             {
-                _tracer.Trace("More than one Core Job Assignment returned.");
+                _logger.WriteLog("More than one Core Job Assignment returned.");
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
         public Entity GetEntityById(Guid id)
         {
             // should throw error if more than one entity is found
-            _tracer.Trace("Building GetEntityById query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Building GetEntityById query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -296,11 +296,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -308,14 +308,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new Entity(ENTITY_LOGICAL_NAME);
             }
         }
         public EntityReference GetMostRecentReferenceByPositionId(Guid jobPositionId)
         {
-            _tracer.Trace("Building GetMostRecentReferenceByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
-            _tracer.Trace("With jobPositionId={0}", jobPositionId);
+            _logger.WriteLog("Building GetMostRecentReferenceByPositionId query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("With jobPositionId={0}", jobPositionId);
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -346,11 +346,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+            _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing query expression");
+            _logger.WriteLog("Finished executing query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -358,7 +358,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return new EntityReference(ENTITY_LOGICAL_NAME);
             }
         }

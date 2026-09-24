@@ -20,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             // check if syn reports to position is defined for the given Core Job Position
             try
             {
-                _tracer.Trace("Building GetByCompositeKey query expression to return EntityReference on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetByCompositeKey query expression to return EntityReference on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -44,11 +44,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -56,16 +56,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new EntityReference();
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in OperationalHierarchyMaps.GetDefaultByCoreJobPositionId: {0}", ex);
+                _logger.WriteLog("Exception in OperationalHierarchyMaps.GetDefaultByCoreJobPositionId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in OperationalHierarchyMaps.GetDefaultByCoreJobPositionId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in OperationalHierarchyMaps.GetDefaultByCoreJobPositionId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
@@ -75,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             // check if syn reports to position is defined for the given Core Job Position
             try
             {
-                _tracer.Trace("Building GetOperationalMapsByAssignmentId query expression to return EntityReference on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetOperationalMapsByAssignmentId query expression to return EntityReference on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -93,11 +93,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -105,16 +105,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new List<Entity>();
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in OperationalHierarchyMaps.GetOperationalMapsByAssignmentId: {0}", ex);
+                _logger.WriteLog("Exception in OperationalHierarchyMaps.GetOperationalMapsByAssignmentId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in OperationalHierarchyMaps.GetOperationalMapsByAssignmentId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in OperationalHierarchyMaps.GetOperationalMapsByAssignmentId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }

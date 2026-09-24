@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -40,15 +40,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing ExecuteAlternate query expression");
+                _logger.WriteLog("Finished executing ExecuteAlternate query expression");
 
                 if (results.Entities.Count > 0)
                 {
-                    _tracer.Trace("ExecuteAlternate results.Entities[0]: ",
+                    _logger.WriteLog("ExecuteAlternate results.Entities[0]: ",
                         JsonSerializer.Serialize(
                             results.Entities[0],
                             new JsonSerializerOptions
@@ -61,13 +61,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing CoreStudents were found");
+                    _logger.WriteLog("No existing CoreStudents were found");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("CoreStudents.GetEntityByStudentId Exception: {0}", ex.Message);
+                _logger.WriteLog("CoreStudents.GetEntityByStudentId Exception: {0}", ex.Message);
                 throw;
             }
         }
@@ -75,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -96,31 +96,31 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing GetReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing GetReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing ExecuteAlternate CoreStudents.GetReferenceByStudentId query expression");
+                _logger.WriteLog("Finished executing ExecuteAlternate CoreStudents.GetReferenceByStudentId query expression");
 
                 if (results.Entities.Count > 0)
                 {
-                    _tracer.Trace("ExecuteAlternate CoreStudents.GetReferenceByStudentId results.Entities.Count: ", results.Entities.Count);
+                    _logger.WriteLog("ExecuteAlternate CoreStudents.GetReferenceByStudentId results.Entities.Count: ", results.Entities.Count);
                     return results.Entities[0].ToEntityReference();
                 }
                 else
                 {
-                    _tracer.Trace("No existing CoreStudents were found");
+                    _logger.WriteLog("No existing CoreStudents were found");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("GetEntityReferenceByStudentId Exception:");
-                _tracer.Trace(ex.ToString());
+                _logger.WriteLog("GetEntityReferenceByStudentId Exception:");
+                _logger.WriteLog(ex.ToString());
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("Inner Exception:");
-                    _tracer.Trace(ex.InnerException.ToString());
+                    _logger.WriteLog("Inner Exception:");
+                    _logger.WriteLog(ex.InnerException.ToString());
                 }
                 throw;
             }

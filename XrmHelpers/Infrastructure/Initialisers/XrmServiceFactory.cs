@@ -19,20 +19,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
         {
             try
             {
-                _tracer.Trace("Initialising organisation service factory");
+                _logger.WriteLog("Initialising organisation service factory");
 
                 var orgServiceFactory = (IOrganizationServiceFactory)_serviceProvider.GetService(typeof(IOrganizationServiceFactory));
 
-                _tracer.Trace("Organisation service factory initialised");
+                _logger.WriteLog("Organisation service factory initialised");
 
                 return orgServiceFactory;
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in XrmServiceFactory.Init(): {0}", ex);
+                _logger.WriteLog("Exception in XrmServiceFactory.Init(): {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in XrmServiceFactory.Init(): {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in XrmServiceFactory.Init(): {0}", ex.InnerException.Message);
                 }
                 throw;
             }

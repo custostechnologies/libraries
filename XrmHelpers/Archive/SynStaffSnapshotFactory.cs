@@ -18,7 +18,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public StaffMemberSnapshot Build(Entity target, Entity? preImage)
         {
-            _tracer.Trace("Entered SynStaffSnapshotFactory.Build() with targetId: {0} and preImageId: {1}",
+            _logger.WriteLog("Entered SynStaffSnapshotFactory.Build() with targetId: {0} and preImageId: {1}",
                 target.Id,
                 preImage?.Id
             );
@@ -26,18 +26,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             Enums.Status status = Enums.Status.Active;
             Enums.StatusReason statusReason = Enums.StatusReason.Active;
 
-            _tracer.Trace("In SynStaffMemberFactory.Build, TARGET id: {0}", target.Id);
+            _logger.WriteLog("In SynStaffMemberFactory.Build, TARGET id: {0}", target.Id);
 
             if (target.Contains(SynStaffMemberFields.MutePlugin))
             {
                 _forceIncoming = target.GetAttributeValue<bool>(SynStaffMemberFields.MutePlugin);
-                _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
+                _logger.WriteLog("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
                 preImage = null;
             }
 
             if (preImage != null)
             {
-                _tracer.Trace("Executing SynStaffMemberQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
+                _logger.WriteLog("Executing SynStaffMemberQueryService.RetrieveEntity for preImage Id: {0}", preImage.Id.ToString());
             }
 
             var snap = new StaffMemberSnapshot()
@@ -93,23 +93,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 snap.EncodedHash = GetAttributeDelta.Execute<int>(SynStaffMemberFields.EncodedHash, preImage, null);
             }
             // update status based on values
-            _tracer.Trace("Calculating snapshot status based on ActiveFlag and LeavingDate.");
+            _logger.WriteLog("Calculating snapshot status based on ActiveFlag and LeavingDate.");
             if (snap.ActiveFlag == false || (snap.LeavingDate.HasValue && snap.LeavingDate.Value <= DateTime.UtcNow))
             {
-                _tracer.Trace("Setting snap.Status and snap.StatusReason to INACTIVE.");
+                _logger.WriteLog("Setting snap.Status and snap.StatusReason to INACTIVE.");
                 snap.Status = new OptionSetValue((int)Enums.Status.Inactive);
                 snap.StatusReason = new OptionSetValue((int)Enums.StatusReason.Inactive);
             }
             else
             {
-                _tracer.Trace("Setting snap.Status and snap.StatusReason to status: {0} and statusReason: {1}", status.ToString(), statusReason.ToString());
+                _logger.WriteLog("Setting snap.Status and snap.StatusReason to status: {0} and statusReason: {1}", status.ToString(), statusReason.ToString());
                 snap.Status = new OptionSetValue((int)status);
                 snap.StatusReason = new OptionSetValue((int)statusReason);
             }
 
-            _tracer.Trace("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
+            _logger.WriteLog("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
 
-            _tracer.Trace("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
+            _logger.WriteLog("In SynStaffMemberFactory.Build, syn staff member SNAPSHOT object returned: {0}",
                 JsonSerializer.Serialize<StaffMemberSnapshot>(
                     snap,
                     new JsonSerializerOptions

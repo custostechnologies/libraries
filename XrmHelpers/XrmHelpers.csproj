@@ -5,17 +5,12 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <!-- <RepositoryUrl>https://github.com/stpaulsgrammar/spgswebtools_nuget_packages</RepositoryUrl> -->
-
     <RootNamespace>spgsWebTools</RootNamespace>
-
-    <!-- NuGet Metadata Settings -->
     <packageId>spgsWebTools.XrmHelpers</packageId>
     <Version>1.0.6</Version>
     <Authors>Matthew Thomas</Authors>
     <Company>St. Paul's Grammar School</Company>
     <Description>Custom helpers to interact with the Xrm SDK.</Description>
-    <!-- <PackageLicenseExpression></PackageLicenseExpression> -->
     <PackageTags>utility;helper'tools</PackageTags>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>../../spgswebtools-key.snk</AssemblyOriginatorKeyFile>
@@ -26,8 +21,10 @@
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" />
     <PackageReference Include="Microsoft.Bcl.Cryptography" />
     <PackageReference Include="Microsoft.Extensions.Configuration" />
-    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.PowerPlatform.Dataverse.Client"
+      PrivateAssets="All" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
+      PrivateAssets="All" />
     <PackageReference Include="System.Security.Cryptography.Xml" />
   </ItemGroup>
 

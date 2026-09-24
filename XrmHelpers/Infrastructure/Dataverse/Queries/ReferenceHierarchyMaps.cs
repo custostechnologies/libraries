@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetDirectReportsByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetDirectReportsByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -39,11 +39,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -53,16 +53,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new List<EntityReference>();
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex);
+                _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
@@ -72,7 +72,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetReportsToByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetReportsToByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -90,11 +90,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -104,16 +104,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new List<EntityReference>();
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex);
+                _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
@@ -122,7 +122,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetReportsToByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetReportsToByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -140,11 +140,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -152,16 +152,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new EntityReference(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex);
+                _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
@@ -170,8 +170,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetReferenceMapsByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
-                if (campus != null) _tracer.Trace("CAMPUS value passed in to method call, using as a LogicalOperator.And CONDITION");
+                _logger.WriteLog("Building GetReferenceMapsByPositionId query expression to return EntityReferenceCollection on {0}", ENTITY_LOGICAL_NAME);
+                if (campus != null) _logger.WriteLog("CAMPUS value passed in to method call, using as a LogicalOperator.And CONDITION");
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
                     ColumnSet = ReferenceHierarchyMapSchema.AllSyncColumns
@@ -192,11 +192,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     );
                 }
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -206,16 +206,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new List<EntityReference>();
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in ReferenceHierarchyMaps.GetReferenceMapsByPositionId: {0}", ex);
+                _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetReferenceMapsByPositionId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in ReferenceHierarchyMaps.GetReferenceMapsByPositionId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetReferenceMapsByPositionId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
@@ -224,7 +224,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetEntityById query expression to return Entity on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetEntityById query expression to return Entity on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -243,11 +243,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -255,16 +255,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new Entity(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex);
+                _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex.InnerException.Message);
                 }
                 throw;
             }

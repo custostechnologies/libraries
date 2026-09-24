@@ -16,13 +16,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         }
         public Entity ToCreateEntity(CoreStudent core, string[] updatedAttributes)
         {
-            _tracer.Trace("ToCreateEntity called with updatedAttributes: {0}", string.Join(",", updatedAttributes));
+            _logger.WriteLog("ToCreateEntity called with updatedAttributes: {0}", string.Join(",", updatedAttributes));
             var entity = ToEntity(core, true, updatedAttributes);
             return entity;
         }
         public Entity ToUpdateEntity(CoreStudent core, string[] updatedAttributes)
         {
-            _tracer.Trace("ToUpdateEntity called with updatedAttributes: {0}", string.Join(",", updatedAttributes));
+            _logger.WriteLog("ToUpdateEntity called with updatedAttributes: {0}", string.Join(",", updatedAttributes));
             if (core.CoreStudentId == Guid.Empty)
             {
                 throw new InvalidPluginExecutionException("Can't build update entity without existing record.");
@@ -35,8 +35,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
         public Entity ToEntity(CoreStudent core, bool create, string[] updatedAttributes)
         {
-            _tracer.Trace("ToEntity called with core: {0}, create: {1}, and updatedAttributes: {2}",
-               JsonSerializer.Serialize(core, new JsonSerializerOptions{WriteIndented=true}),
+            _logger.WriteLog("ToEntity called with core: {0}, create: {1}, and updatedAttributes: {2}",
+               JsonSerializer.Serialize(core, new JsonSerializerOptions { WriteIndented = true }),
                create,
                string.Join(",", updatedAttributes)
            );
@@ -54,7 +54,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 CoreStudentFields.ActiveFlag,
                 core.ActiveFlag);
 
-            _tracer.Trace($"create is: {create}");
+            _logger.WriteLog($"create is: {create}");
             if (create == false)
             {
                 entity[CoreStudentFields.CoreStudentId] = core.CoreStudentId;
@@ -62,13 +62,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                     SynStudentFields.Status,
                     CoreStudentFields.Status,
                     core.Status);
-                _tracer.Trace("Mapped core.Status: {0}, Enum: {1}", core.Status.ToString(), ((Enums.Status)core.Status.Value).ToString());
+                _logger.WriteLog("Mapped core.Status: {0}, Enum: {1}", core.Status.ToString(), ((Enums.Status)core.Status.Value).ToString());
 
                 MapDelta(entity, updatedAttributes,
                     SynStudentFields.StatusReason,
                     CoreStudentFields.StatusReason,
                     core.StatusReason);
-                _tracer.Trace("Mapped core.StatusReason: {0}, Enum: {1}", core.StatusReason.ToString(), ((Enums.StatusReason)core.StatusReason.Value).ToString());
+                _logger.WriteLog("Mapped core.StatusReason: {0}, Enum: {1}", core.StatusReason.ToString(), ((Enums.StatusReason)core.StatusReason.Value).ToString());
             }
 
             MapDelta(entity, updatedAttributes,
@@ -118,7 +118,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 core.Age);
 
             entity[CoreStudentFields.LastSync] = DateTime.UtcNow;
-            _tracer.Trace("Serialised before exiting mapper: {0}",
+            _logger.WriteLog("Serialised before exiting mapper: {0}",
                 JsonSerializer.Serialize(
                     core,
                     new JsonSerializerOptions
@@ -127,7 +127,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                     }
                 )
             );
-            _tracer.Trace("Exiting CoreStudentMapper");
+            _logger.WriteLog("Exiting CoreStudentMapper");
             return entity;
         }
         private void MapDelta<T>(
@@ -138,7 +138,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             T value
         )
         {
-            _tracer.Trace("MapDelta sourceAttribute = {0}, targetAttribute = {1}, value = {2}",
+            _logger.WriteLog("MapDelta sourceAttribute = {0}, targetAttribute = {1}, value = {2}",
                 sourceAttribute,
                 targetAttribute,
                 value
@@ -149,7 +149,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 entity[targetAttribute] = value;
             }
 
-            _tracer.Trace("MapDelta complete, returning to caller.");
+            _logger.WriteLog("MapDelta complete, returning to caller.");
         }
     }
 }

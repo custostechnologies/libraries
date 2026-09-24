@@ -17,7 +17,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetReferenceByCode query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetReferenceByCode query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -41,11 +41,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -53,16 +53,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new EntityReference(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in CoreDepartments.GetReferenceByCode: {0}", ex);
+                _logger.WriteLog("Exception in CoreDepartments.GetReferenceByCode: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in CoreDepartments.GetReferenceByCode: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in CoreDepartments.GetReferenceByCode: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
@@ -71,7 +71,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetReferenceById query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -95,11 +95,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 };
 
-                _tracer.Trace("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing query expression");
+                _logger.WriteLog("Finished executing query expression");
 
                 if (results.Entities.Count > 0)
                 {
@@ -107,16 +107,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing entities were found");
+                    _logger.WriteLog("No existing entities were found");
                     return new EntityReference(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in CoreDepartments.GetReferenceById: {0}", ex);
+                _logger.WriteLog("Exception in CoreDepartments.GetReferenceById: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("Inner Exception in CoreDepartments.GetReferenceById: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("Inner Exception in CoreDepartments.GetReferenceById: {0}", ex.InnerException.Message);
                 }
                 throw;
             }

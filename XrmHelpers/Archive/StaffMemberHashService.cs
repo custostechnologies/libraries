@@ -25,7 +25,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 
         public (string plain, int encoded) Generate(StaffMemberSnapshot staff)
         {
-            _tracer.Trace("Entered StaffMemberHashService.Generate");
+            _logger.WriteLog("Entered StaffMemberHashService.Generate");
 
             string plaintextHash = string.Join("|",
                 new string[] {
@@ -54,10 +54,10 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
                 }.Select(val => val ?? string.Empty)
             );
 
-            _tracer.Trace("Plaintext hash: {0}", plaintextHash);
+            _logger.WriteLog("Plaintext hash: {0}", plaintextHash);
 
             var encodedHash = GetBKDRHashKey.Calculate(plaintextHash);
-            _tracer.Trace("EncodedHash within StaffBDKRHashService.Generate calculated as: {0}. Returning to call source.", encodedHash);
+            _logger.WriteLog("EncodedHash within StaffBDKRHashService.Generate calculated as: {0}. Returning to call source.", encodedHash);
 
             return (plaintextHash, encodedHash);
         }

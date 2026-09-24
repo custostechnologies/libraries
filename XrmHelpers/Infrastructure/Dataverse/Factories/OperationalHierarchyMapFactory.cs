@@ -108,16 +108,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     }
                 );
 
-                _tracer.Trace("createMap entity: {0}", createMapJson);
+                _logger.WriteLog("createMap entity: {0}", createMapJson);
                 var mapId = _service.Create(createMap);
 
-                _tracer.Trace("Created {0} with Id: {1}", ENTITY_LOGICAL_NAME, mapId);
+                _logger.WriteLog("Created {0} with Id: {1}", ENTITY_LOGICAL_NAME, mapId);
 
                 return mapId;
             }
             else
             {
-                _tracer.Trace("Existing Operational Hierarchy Map with the same Child Assignment Id and Parent Assignment Id was detected. Exiting this method.");
+                _logger.WriteLog("Existing Operational Hierarchy Map with the same Child Assignment Id and Parent Assignment Id was detected. Exiting this method.");
                 return Guid.Empty;
             }
         }

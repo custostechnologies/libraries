@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -40,15 +40,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {0}", results.Entities.Count);
+                _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {0}", results.Entities.Count);
 
                 if (results.Entities.Count > 0)
                 {
-                    _tracer.Trace("ExecuteAlternate results.Entities[0]: ",
+                    _logger.WriteLog("ExecuteAlternate results.Entities[0]: ",
                         JsonSerializer.Serialize(
                             results.Entities[0],
                             new JsonSerializerOptions
@@ -61,18 +61,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing CoreStaffMembers were found");
+                    _logger.WriteLog("No existing CoreStaffMembers were found");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("ExecuteAlternate Exception:");
-                _tracer.Trace(ex.ToString());
+                _logger.WriteLog("ExecuteAlternate Exception:");
+                _logger.WriteLog(ex.ToString());
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("Inner Exception:");
-                    _tracer.Trace(ex.InnerException.ToString());
+                    _logger.WriteLog("Inner Exception:");
+                    _logger.WriteLog(ex.InnerException.ToString());
                 }
                 throw;
             }
@@ -81,7 +81,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -100,15 +100,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing ExecuteAlternate query expression");
+                _logger.WriteLog("Finished executing ExecuteAlternate query expression");
 
                 if (results.Entities.Count > 0)
                 {
-                    _tracer.Trace("ExecuteAlternate results.Entities[0]: ",
+                    _logger.WriteLog("ExecuteAlternate results.Entities[0]: ",
                         JsonSerializer.Serialize(
                             results.Entities[0],
                             new JsonSerializerOptions
@@ -121,13 +121,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("No existing CoreStaffMembers were found");
+                    _logger.WriteLog("No existing CoreStaffMembers were found");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("CoreStaffMembers.GetEntityByStaffId Exception: {0}", ex.Message);
+                _logger.WriteLog("CoreStaffMembers.GetEntityByStaffId Exception: {0}", ex.Message);
                 throw;
             }
         }
@@ -135,7 +135,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -156,31 +156,31 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _tracer.Trace("Executing GetReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing GetReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
 
                 var results = _service.RetrieveMultiple(query);
 
-                _tracer.Trace("Finished executing ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId query expression");
+                _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId query expression");
 
                 if (results.Entities.Count > 0)
                 {
-                    _tracer.Trace("ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId results.Entities.Count: ", results.Entities.Count);
+                    _logger.WriteLog("ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId results.Entities.Count: ", results.Entities.Count);
                     return results.Entities[0].ToEntityReference();
                 }
                 else
                 {
-                    _tracer.Trace("No existing CoreStaffMembers were found");
+                    _logger.WriteLog("No existing CoreStaffMembers were found");
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("GetEntityReferenceByStaffId Exception:");
-                _tracer.Trace(ex.ToString());
+                _logger.WriteLog("GetEntityReferenceByStaffId Exception:");
+                _logger.WriteLog(ex.ToString());
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("Inner Exception:");
-                    _tracer.Trace(ex.InnerException.ToString());
+                    _logger.WriteLog("Inner Exception:");
+                    _logger.WriteLog(ex.InnerException.ToString());
                 }
                 throw;
             }

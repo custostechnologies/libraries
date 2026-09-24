@@ -38,8 +38,8 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
             {
                 _role = roles.Entities[0];
 
-                _tracer.Trace("Found role: {0}", roleName);
-                _tracer.Trace("Checking for association with given user");
+                _logger.WriteLog("Found role: {0}", roleName);
+                _logger.WriteLog("Checking for association with given user");
 
                 LinkEntity systemUserRoleLink = new LinkEntity()
                 {
@@ -86,7 +86,7 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
             }
             else
             {
-                _tracer.Trace("Unable to find role.");
+                _logger.WriteLog("Unable to find role.");
                 throw new InvalidPluginExecutionException();
             }
         }

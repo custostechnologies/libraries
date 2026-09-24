@@ -28,7 +28,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
                     }.Select(val => val ?? string.Empty)
                 );
 
-            _tracer.Trace("Plaintext hash: {0}", plaintextHash);
+            _logger.WriteLog("Plaintext hash: {0}", plaintextHash);
 
             var encodedHash = GetBKDRHashKey.Calculate(plaintextHash);
 

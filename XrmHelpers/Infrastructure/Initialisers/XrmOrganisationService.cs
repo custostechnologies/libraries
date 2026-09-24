@@ -22,7 +22,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
         {
             var orgService = _organisationServiceFactory.CreateOrganizationService(_pluginExecutionContext.UserId);
 
-            _tracer.Trace("Organisation service initialised, returning to caller...");
+            _logger.WriteLog("Organisation service initialised, returning to caller...");
 
             return orgService;
 

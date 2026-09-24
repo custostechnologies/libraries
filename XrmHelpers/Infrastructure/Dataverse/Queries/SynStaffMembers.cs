@@ -35,9 +35,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _tracer.Trace("Entered SynQueryService.RetrieveAllMetadata");
-                _tracer.Trace("Constructing QueryExpression");
-                _tracer.Trace("Called with synEntityId: {0}", synEntityId.ToString());
+                _logger.WriteLog("Entered SynQueryService.RetrieveAllMetadata");
+                _logger.WriteLog("Constructing QueryExpression");
+                _logger.WriteLog("Called with synEntityId: {0}", synEntityId.ToString());
 
                 QueryExpression query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -64,16 +64,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
                 else
                 {
-                    _tracer.Trace("Unable to retrieve Synergetic Staff Member using EntityId: {0}. Returning blank Entity.", synEntityId.ToString());
+                    _logger.WriteLog("Unable to retrieve Synergetic Staff Member using EntityId: {0}. Returning blank Entity.", synEntityId.ToString());
                     return new Entity(ENTITY_LOGICAL_NAME);
                 }
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Exception in SynQueryService.RetrieveAllMetadata: {0}", ex);
+                _logger.WriteLog("Exception in SynQueryService.RetrieveAllMetadata: {0}", ex);
                 if (ex.InnerException != null)
                 {
-                    _tracer.Trace("InnerException in SynQueryService.RetrieveAllMetadata: {0}", ex.InnerException.ToString());
+                    _logger.WriteLog("InnerException in SynQueryService.RetrieveAllMetadata: {0}", ex.InnerException.ToString());
                 }
                 throw;
             }

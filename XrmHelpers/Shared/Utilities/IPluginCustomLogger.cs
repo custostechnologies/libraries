@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 namespace spgsWebTools.XrmHelpers
 {
@@ -8,6 +9,11 @@ namespace spgsWebTools.XrmHelpers
         void WriteLog(
             string message,
             [CallerMemberName] string memberName = ""
+        );
+        void WriteLog(
+            Exception ex,
+            string message,
+            params object?[] args
         );
     }
 }

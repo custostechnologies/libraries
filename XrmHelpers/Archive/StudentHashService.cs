@@ -25,7 +25,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 
         public (string plain, int encoded) Generate(StudentDto student)
         {
-            _tracer.Trace("Entered StudentHashService.Generate");
+            _logger.WriteLog("Entered StudentHashService.Generate");
 
             string plaintextHash = string.Join("|",
                 new string[] {
@@ -43,10 +43,10 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
                 }.Select(val => val ?? string.Empty)
             );
 
-            _tracer.Trace("Plaintext hash: {0}", plaintextHash);
+            _logger.WriteLog("Plaintext hash: {0}", plaintextHash);
 
             var encodedHash = GetBKDRHashKey.Calculate(plaintextHash);
-            _tracer.Trace("EncodedHash within StudentHashService.Generate calculated as: {0}. Returning to call source.", encodedHash);
+            _logger.WriteLog("EncodedHash within StudentHashService.Generate calculated as: {0}. Returning to call source.", encodedHash);
 
             return (plaintextHash, encodedHash);
         }

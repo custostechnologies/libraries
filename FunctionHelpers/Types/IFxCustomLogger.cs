@@ -10,5 +10,10 @@ namespace spgsWebTools.FunctionHelpers.Logging
             string message,
             [CallerMemberName] string memberName = ""
         );
+        void WriteLog(
+            Exception ex,
+            string message,
+            params object?[] args
+        );
     }
 }

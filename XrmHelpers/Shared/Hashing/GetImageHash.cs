@@ -14,7 +14,7 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
         }
         public string Calculate(byte[] image)
         {
-            _tracer.Trace("In ImageHashService.Calculate, calculating new SHA256 hash.");
+            _logger.WriteLog("In ImageHashService.Calculate, calculating new SHA256 hash.");
 
             var sha256 = SHA256.Create();
             byte[] hash = sha256.ComputeHash(image);
@@ -22,13 +22,13 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
                 hash.Select(bit => bit.ToString("X2"))
             );
 
-            _tracer.Trace("Returning to caller with hash: {0}.", hexHash);
+            _logger.WriteLog("Returning to caller with hash: {0}.", hexHash);
             return hexHash;
         }
 
         public bool Compare(string existing, string incoming)
         {
-            _tracer.Trace("In ImageHashService.Compare, performing hash comparison between existing: {0} and incoming: {1}", existing, incoming);
+            _logger.WriteLog("In ImageHashService.Compare, performing hash comparison between existing: {0} and incoming: {1}", existing, incoming);
 
             return existing == incoming;
         }

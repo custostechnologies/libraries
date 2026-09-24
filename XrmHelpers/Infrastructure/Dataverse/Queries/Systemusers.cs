@@ -17,11 +17,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         }
         public EntityReference GetReferenceByMetadata(string upn, string username)
         {
-            _tracer.Trace("Building RetrieveReference query expression on systemuser");
+            _logger.WriteLog("Building RetrieveReference query expression on systemuser");
 
             if (string.IsNullOrWhiteSpace(upn) && string.IsNullOrWhiteSpace(username))
             {
-                _tracer.Trace("Systemusers.GetReferenceByMetadata called with null upn and username");
+                _logger.WriteLog("Systemusers.GetReferenceByMetadata called with null upn and username");
                 throw new Exception();
             }
 
@@ -57,11 +57,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 query.Criteria.AddFilter(filter);
             }
 
-            _tracer.Trace("Executing RetrieveReference query expression on systemuser");
+            _logger.WriteLog("Executing RetrieveReference query expression on systemuser");
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing RetrieveReference query expression");
+            _logger.WriteLog("Finished executing RetrieveReference query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -70,7 +70,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     results.Entities[0].Id
                 );
 
-                _tracer.Trace("SystemUserQueryService.RetrieveReference systemUserRef: {0}",
+                _logger.WriteLog("SystemUserQueryService.RetrieveReference systemUserRef: {0}",
                     JsonSerializer.Serialize(
                         systemUserRef,
                         new JsonSerializerOptions
@@ -84,13 +84,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found, returning empty EntityReference");
+                _logger.WriteLog("No existing entities were found, returning empty EntityReference");
                 return null;
             }
         }
         public EntityReference GetReferenceByAzureId(string azureId)
         {
-            _tracer.Trace("Building GetReferenceByAzureId query expression on systemuser");
+            _logger.WriteLog("Building GetReferenceByAzureId query expression on systemuser");
 
             var query = new QueryExpression("systemuser")
             {
@@ -114,11 +114,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing GetReferenceByAzureId query expression on systemuser");
+            _logger.WriteLog("Executing GetReferenceByAzureId query expression on systemuser");
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing RetrieveReference query expression");
+            _logger.WriteLog("Finished executing RetrieveReference query expression");
 
             if (results.Entities.Count > 0)
             {
@@ -127,7 +127,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     results.Entities[0].Id
                 );
 
-                _tracer.Trace("SystemUserQueryService.RetrieveReference systemUserRef: {0}",
+                _logger.WriteLog("SystemUserQueryService.RetrieveReference systemUserRef: {0}",
                     JsonSerializer.Serialize(
                         systemUserRef,
                         new JsonSerializerOptions
@@ -141,13 +141,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found, returning empty EntityReference");
+                _logger.WriteLog("No existing entities were found, returning empty EntityReference");
                 return null;
             }
         }
         public Entity GetMetadataById(Guid systemuserid)
         {
-            _tracer.Trace("Building RetrieveMetadata query expression on systemuser");
+            _logger.WriteLog("Building RetrieveMetadata query expression on systemuser");
 
             var query = new QueryExpression("systemuser")
             {
@@ -172,15 +172,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 }
             };
 
-            _tracer.Trace("Executing RetrieveMetadata query expression on systemuser");
+            _logger.WriteLog("Executing RetrieveMetadata query expression on systemuser");
 
             var results = _service.RetrieveMultiple(query);
 
-            _tracer.Trace("Finished executing RetrieveMetadata query expression");
+            _logger.WriteLog("Finished executing RetrieveMetadata query expression");
 
             if (results.Entities.Count > 0)
             {
-                _tracer.Trace("SystemUserQueryService.RetrieveMetadata results.Entities[0]: {0}",
+                _logger.WriteLog("SystemUserQueryService.RetrieveMetadata results.Entities[0]: {0}",
                     JsonSerializer.Serialize(
                         results.Entities[0],
                         new JsonSerializerOptions
@@ -193,7 +193,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             else
             {
-                _tracer.Trace("No existing entities were found");
+                _logger.WriteLog("No existing entities were found");
                 return null;
             }
         }

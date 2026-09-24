@@ -16,8 +16,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         }
         public Entity ToEntity(StaffMemberSnapshot snap)
         {
-            _tracer.Trace("in SynStaffMemberMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
-            _tracer.Trace("Hash key discrepancy detected via ChangeDetection plugin for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
+            _logger.WriteLog("in SynStaffMemberMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
+            _logger.WriteLog("Hash key discrepancy detected via ChangeDetection plugin for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
             try
             {
                 if (snap.SynMirrorId != Guid.Empty)
@@ -68,16 +68,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 _target[SynStaffMemberFields.PlaintextHash] = snap.PlaintextHash;
                 _target[SynStaffMemberFields.LastSuccessfulSync] = DateTime.UtcNow;
 
-                _tracer.Trace("Update or create request entity mapped from snapshot");
-                _tracer.Trace("Target attributes set  via StaffChangeDetection plugin for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
-                _tracer.Trace(
+                _logger.WriteLog("Update or create request entity mapped from snapshot");
+                _logger.WriteLog("Target attributes set  via StaffChangeDetection plugin for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
+                _logger.WriteLog(
                     "Final encoded hash in target: {0}",
                     _target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
 
                 foreach (var a in _attributes)
                 {
-                    _tracer.Trace(
+                    _logger.WriteLog(
                         "{0} = {1}",
                         a.Key,
                         a.Value?.ToString() ?? "<null>"
@@ -88,17 +88,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             }
             catch (Exception ex)
             {
-                _tracer.Trace("Error SynStaffMemberMapper.ToEntity: {0}", ex);
+                _logger.WriteLog("Error SynStaffMemberMapper.ToEntity: {0}", ex);
                 if (ex.InnerException.Message != null)
                 {
-                    _tracer.Trace("InnerException SynStaffMemberMapper.ToEntity: {0}", ex.InnerException.Message);
+                    _logger.WriteLog("InnerException SynStaffMemberMapper.ToEntity: {0}", ex.InnerException.Message);
                 }
                 throw;
             }
         }
         private void SetDelta<T>(string attributeName, T value)
         {
-            _tracer.Trace("SetDelta(attributeName: {0}, value: {1}) called.", attributeName, value);
+            _logger.WriteLog("SetDelta(attributeName: {0}, value: {1}) called.", attributeName, value);
 
             if (_attributes.Contains(attributeName))
             {
@@ -107,7 +107,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         }
         private void SetDeltaKey<T>(string attributeName, string keyAttributeName, T? value, string? key)
         {
-            _tracer.Trace(
+            _logger.WriteLog(
                 "SetDeltaKey(attributeName: {0}, keyAttributeName: {1}, value: {2}, key: {3}) called.",
                 attributeName,
                 keyAttributeName,

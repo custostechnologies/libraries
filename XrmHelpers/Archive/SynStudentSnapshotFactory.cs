@@ -17,14 +17,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public StudentDto Build(Entity target, Entity? preImage)
         {
-            _tracer.Trace("Entered SynStudentSnapshotFactory.Build() with Entity target ID: {0} and Entity preImage ID: {1}",
+            _logger.WriteLog("Entered SynStudentSnapshotFactory.Build() with Entity target ID: {0} and Entity preImage ID: {1}",
                 target.Id,
                 preImage?.Id
             );
 
             if (target.Contains(SynStudentFields.MutePlugin) && target.GetAttributeValue<bool>(SynStudentFields.MutePlugin))
             {
-                _tracer.Trace("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
+                _logger.WriteLog("MutePlugin is TRUE, setting preImage to NULL to force update using incoming values.");
                 preImage = null;
             }
 
@@ -63,7 +63,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (!string.IsNullOrWhiteSpace(snap.StudentHouse))
             {
-                _tracer.Trace($"snap.StudentHouse: {snap.StudentHouse}");
+                _logger.WriteLog($"snap.StudentHouse: {snap.StudentHouse}");
                 var house = Resolvers.HouseResolver.ToEnum(snap.StudentHouse!);
                 snap.StudentHouseKey = ((int)house).ToString();
             }
@@ -76,7 +76,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
 
             // update status based on values
-            _tracer.Trace("Calculating snapshot status based on StudentActiveFlag.");
+            _logger.WriteLog("Calculating snapshot status based on StudentActiveFlag.");
             if (snap.StudentActiveFlag == false)
             {
                 snap.Status = new OptionSetValue((int)Status.Inactive);
@@ -88,9 +88,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 snap.StatusReason = new OptionSetValue((int)StatusReason.Inactive);
             }
 
-            _tracer.Trace("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
+            _logger.WriteLog("snap.Status: {0}, snap.StatusReason: {1}", snap.Status.Value, snap.StatusReason.Value);
 
-            _tracer.Trace("In SynStudentFactory.Build, syn staff member SNAPSHOT object returned: {0}",
+            _logger.WriteLog("In SynStudentFactory.Build, syn staff member SNAPSHOT object returned: {0}",
                 JsonSerializer.Serialize<StudentSnapshot>(
                     snap,
                     new JsonSerializerOptions

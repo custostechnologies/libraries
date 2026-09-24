@@ -26,7 +26,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public (CoreStudent student, bool createAsInactive, string? error) Build(StudentDto snap, string[] attributes)
         {
-            _tracer.Trace("Entered CoreStudentFactory.Build");
+            _logger.WriteLog("Entered CoreStudentFactory.Build");
             _coreStudentQuery = new CoreStudents(_service, _tracer);
 
             if (snap.StudentId == null) throw new InvalidPluginExecutionException("StudentDto has no StudentID key.");
@@ -36,7 +36,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _create = core == null;
 
             CoreStudent coreStudent;
-            if (core != null) _tracer.Trace("core not null and _create = true, entered coreStudent and setting IsCreate to false", core.Id);
+            if (core != null) _logger.WriteLog("core not null and _create = true, entered coreStudent and setting IsCreate to false", core.Id);
             // create new DTO with only dirty attributes
             coreStudent = core != null
                 ? new CoreStudent()
@@ -65,7 +65,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             MapLastSync(coreStudent);
             if (_create && snap.StudentActiveFlag == false)
             {
-                _tracer.Trace("CREATE CoreStudent with a status of INACTIVE. Returning with createAsInactive = TRUE to perform subsequent UPDATE operation to inactive the record afyter CREATE.");
+                _logger.WriteLog("CREATE CoreStudent with a status of INACTIVE. Returning with createAsInactive = TRUE to perform subsequent UPDATE operation to inactive the record afyter CREATE.");
                 return (coreStudent, true, null);
             }
             return (coreStudent, false, null);
@@ -81,58 +81,58 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
         private void MapStudentCampus(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapStudentCampus");
+            _logger.WriteLog("In MapStudentCampus");
             if (_create || attributes.Contains(SynStudentFields.StudentCampus))
             {
-                _tracer.Trace("snap.StudentCampusKey: {0}", snap.StudentCampusKey);
+                _logger.WriteLog("snap.StudentCampusKey: {0}", snap.StudentCampusKey);
                 var campusKey = int.TryParse(snap.StudentCampusKey, out int key) ? key : 384810005; // represets Resolution Error option
-                _tracer.Trace("campusKey parsed to: {0}", key);
+                _logger.WriteLog("campusKey parsed to: {0}", key);
                 core.Campus = new OptionSetValue(campusKey);
             }
         }
         private void MapStudentGender(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapGender");
+            _logger.WriteLog("In MapGender");
             if (_create || attributes.Contains(SynStudentFields.StudentGender))
             {
-                _tracer.Trace("snap.StudentGenderKey: {0}", snap.StudentGenderKey);
+                _logger.WriteLog("snap.StudentGenderKey: {0}", snap.StudentGenderKey);
                 var genderKey = int.TryParse(snap.StudentGenderKey, out int key) ? key : 384810005; // represets Resolution Error option
-                _tracer.Trace("genderKey parsed to: {0}", key);
+                _logger.WriteLog("genderKey parsed to: {0}", key);
                 core.Gender = new OptionSetValue(genderKey);
             }
         }
         private void MapStudentHouse(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapStudentHouse");
+            _logger.WriteLog("In MapStudentHouse");
             if (_create || attributes.Contains(SynStudentFields.StudentHouse))
             {
-                _tracer.Trace("snap.StudentHouseKey: {0}", snap.StudentHouseKey);
+                _logger.WriteLog("snap.StudentHouseKey: {0}", snap.StudentHouseKey);
                 var houseKey = int.TryParse(snap.StudentHouseKey, out int key) ? key : 384810005; // represets Resolution Error option
-                _tracer.Trace("houseKey parsed to: {0}", key);
+                _logger.WriteLog("houseKey parsed to: {0}", key);
                 core.House = new OptionSetValue(houseKey);
             }
         }
         private void MapAge(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapAge.");
+            _logger.WriteLog("In MapAge.");
             if (_create || attributes.Contains(SynStudentFields.Age))
             {
                 core.Age = snap.Age;
-                _tracer.Trace("Set core.Age to: {0}", core.Age);
+                _logger.WriteLog("Set core.Age to: {0}", core.Age);
             }
         }
         private void MapStudentYearLevel(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapStudentYearLevel.");
+            _logger.WriteLog("In MapStudentYearLevel.");
             if (_create || attributes.Contains(SynStudentFields.StudentYearLevel))
             {
                 core.YearLevel = snap.StudentYearLevel;
-                _tracer.Trace("Set core.YearLevel to: {0}", core.YearLevel);
+                _logger.WriteLog("Set core.YearLevel to: {0}", core.YearLevel);
             }
         }
         private void MapStudentName(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapName");
+            _logger.WriteLog("In MapName");
             bool contains = attributes.Contains(SynStudentFields.StudentGiven1)
                 || attributes.Contains(SynStudentFields.StudentGiven2)
                 || attributes.Contains(SynStudentFields.StudentSurname)
@@ -145,7 +145,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 core.Surname = snap.StudentSurname;
                 core.Preferred = snap.StudentPreferred;
                 core.DisplayName = $"{snap.StudentPreferred} {snap.StudentSurname}";
-                _tracer.Trace("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}",
+                _logger.WriteLog("MapName set GivenName1: {0}, GivenName2: {1}, LastName: {2}, PreferredName: {3}",
                     core.Given1,
                     core.Given2,
                     core.Surname,
@@ -156,17 +156,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         private void MapStatus(StudentDto snap, CoreStudent core)
         {
-            _tracer.Trace("In MapStatus with snap.Status: {0}, snap.StatusReason: {1}", snap.Status, snap.StatusReason);
+            _logger.WriteLog("In MapStatus with snap.Status: {0}, snap.StatusReason: {1}", snap.Status, snap.StatusReason);
             core.Status = snap.Status;
             core.StatusReason = snap.StatusReason;
         }
         private void MapStudentActiveFlag(StudentDto snap, CoreStudent core, string[] attributes)
         {
-            _tracer.Trace("In MapIsActive.");
+            _logger.WriteLog("In MapIsActive.");
             if (_create || attributes.Contains(SynStudentFields.StudentActiveFlag))
             {
                 core.ActiveFlag = snap.StudentActiveFlag ?? false;
-                _tracer.Trace("Set core.IsActive to: {0}", core.ActiveFlag);
+                _logger.WriteLog("Set core.IsActive to: {0}", core.ActiveFlag);
             }
         }
         private void MapLastSync(CoreStudent core)

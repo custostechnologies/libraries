@@ -3,17 +3,14 @@ using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.FunctionHelpers.Logging
 {
-    public class AzureFxCustomLogger : IFxCustomLogger
+    public class AzureFxCustomLogger<T> : IFxCustomLogger
     {
-        private readonly ILogger _baseLogger;
-        private readonly string _className;
+        private readonly ILogger<T> _baseLogger;
         public AzureFxCustomLogger(
-            ILogger baseLogger,
-            string className
+            ILogger<T> baseLogger
         )
         {
             _baseLogger = baseLogger;
-            _className = className;
         }
         #region ILogger Implementation
 
@@ -42,9 +39,20 @@ namespace spgsWebTools.FunctionHelpers.Logging
         }
         public void WriteLog(string message, [CallerMemberName] string memberName = "")
         {
-            var logMessage = $"[{_className}.{memberName}] {message}";
             _baseLogger.LogInformation(
-                $"App Log Message: {logMessage}"
+                "[{Member}] {Message}",
+                memberName,
+                message
+            );
+        }
+        public void WriteLog(Exception ex, string message, params object?[] args)
+        {
+            var eventId = new EventId(5000, "UnhandledException");
+            _baseLogger.LogError(
+                eventId,
+                ex,
+                message,
+                args
             );
         }
     }
