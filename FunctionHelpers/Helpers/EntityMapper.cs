@@ -3,7 +3,7 @@ using Microsoft.Xrm.Sdk;
 
 namespace spgsWebTools.FunctionHelpers.Extensions
 {
-    public static class JsonToEntityMapper
+    public static class EntityMapper
     {
         public static Entity MapJsonToEntity(
             string jsonPayload,
