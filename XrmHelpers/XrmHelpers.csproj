@@ -26,6 +26,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies"
       PrivateAssets="All" />
     <PackageReference Include="System.Security.Cryptography.Xml" />
+    <PackageReference Include="Microsoft.Identity.Client" />
   </ItemGroup>
 
   <ItemGroup>
