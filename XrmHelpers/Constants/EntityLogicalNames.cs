@@ -30,5 +30,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string ChildProtectionConcern = "cr2d7_childprotectionconcern";
         public const string WorkersCompensationClaim = "pgrowth_workerscompensationclaim";
         public const string AutoNumberCounter = "pgrowth_autonumbercounter";
+        public const string PayClaimForm = "pgrowth_payclaimform";
+        public const string PayClaimItem = "pgrowth_payclaimitem";
     }
 }
