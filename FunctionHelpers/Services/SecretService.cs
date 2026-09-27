@@ -11,7 +11,6 @@ namespace spgsWebTools.FunctionHelpers.Services
         private readonly SecretClient _secretClient;
         private readonly IConfiguration _config;
         private TokenCredential _credential;
-        private readonly string APPROVAL_HOOK_SECRET_NAME = "spgswebtools-approval-flow-trigger-endpoint";
         private async Task<string> GetSecretAsync(string secretName)
         {
             Console.WriteLine($"SecretService: retrieving {secretName}");
