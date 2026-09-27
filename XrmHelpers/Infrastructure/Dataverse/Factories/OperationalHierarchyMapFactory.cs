@@ -1,13 +1,8 @@
-using System;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using System.Text.Json;
-using System.Security.Claims;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -15,8 +10,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IDataverseContext _context;
         private readonly DataverseLogger _logger;
-        private CoreStaffMembers? _coreStaffQuery;
-        private Systemusers? _systemuserQuery;
         private CoreJobAssignments? _assignmentQuery;
         private OperationalHierarchyMaps? _operationalMapQuery;
         private CoreJobPositions? _coreJobPositionQuery;
@@ -37,7 +30,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _coreJobPositionQuery = new CoreJobPositions(_context, _logger);
 
             EntityReference parentAssignmentRef;
-            EntityReference childAssignmentRef;
 
             Guid parentPositionId = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition).Id;
 
@@ -98,7 +90,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 createMap[OperationalHierarchyMapFields.StatusReason] = new OptionSetValue((int)Enums.StatusReason.Active);
                 createMap[OperationalHierarchyMapFields.MapVersion] = DateTimeOffset.Now.ToString("yyyyMMddHHmm");
 
-                if (referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex) != null) createMap[OperationalHierarchyMapFields.ApprovalIndex] = referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex);
+                createMap[OperationalHierarchyMapFields.ApprovalIndex] = referenceMapEntity.GetAttributeValue<int>(ReferenceHierarchyMapFields.ApprovalIndex);
 
                 if (referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus) != null) createMap[OperationalHierarchyMapFields.Campus] = referenceMapEntity.GetAttributeValue<OptionSetValue>(ReferenceHierarchyMapFields.Campus);
 

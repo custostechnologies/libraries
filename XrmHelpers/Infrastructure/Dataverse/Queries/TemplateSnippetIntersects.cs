@@ -73,7 +73,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _logger.WriteLog("No matching entities were found");
-                    return null;
+                    return new EntityCollection();
                 }
             }
             catch (Exception ex)

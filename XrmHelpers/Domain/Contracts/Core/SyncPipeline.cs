@@ -27,7 +27,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _logger = _context.GetLogger<SyncPipeline<TDto>>();
         }
         // MAP SOURCE -> SOURCE
-        public Entity? ExecuteInbound(Entity target, Entity? preImage)
+        public Entity ExecuteInbound(Entity target, Entity? preImage)
         {
             DeltaComparison<TDto>? delta = null;
             TDto current;
@@ -69,7 +69,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             if (delta == null || !delta.HasChanged)
             {
-                return null;
+                return new Entity();
             }
             else
             {

@@ -133,7 +133,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _logger.WriteLog("No existing entities were found");
-                return null;
+                return string.Empty;
             }
         }
         public Entity GetEntityById(Guid id)
@@ -251,7 +251,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _logger.WriteLog("No existing entities were found");
-                return null;
+                return new Entity();
             }
         }
     }

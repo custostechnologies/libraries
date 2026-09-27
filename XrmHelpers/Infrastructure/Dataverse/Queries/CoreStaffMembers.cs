@@ -62,7 +62,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _logger.WriteLog("No existing CoreStaffMembers were found");
-                    return null;
+                    return new Entity();
                 }
             }
             catch (Exception ex)
@@ -122,7 +122,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _logger.WriteLog("No existing CoreStaffMembers were found");
-                    return null;
+                    return new Entity();
                 }
             }
             catch (Exception ex)
@@ -170,7 +170,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _logger.WriteLog("No existing CoreStaffMembers were found");
-                    return null;
+                    return new EntityReference();
                 }
             }
             catch (Exception ex)

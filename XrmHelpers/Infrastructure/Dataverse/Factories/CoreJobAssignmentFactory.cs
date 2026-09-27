@@ -22,7 +22,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public CoreJobAssignment Build(JobPositionSnapshot snap, string[] attributes)
         {
-            Entity existingCoreAssignment = null;
+            Entity? existingCoreAssignment;
 
             _logger.WriteLog("Entered CoreJobAssignmentFactory.Build");
             _logger.WriteLog("Initialising query obejcts");
@@ -33,11 +33,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _coreJobAssignmentQuery = new CoreJobAssignments(_context);
 
-            if (snap.StaffJobPositionsSeq != null)
-            {
-                _logger.WriteLog("Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
-                existingCoreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
-            }
+            _logger.WriteLog("Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
+            existingCoreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);
+
             if (existingCoreAssignment == null && !string.IsNullOrWhiteSpace(snap.SourceOfTruthId))
             {
                 _logger.WriteLog("existingCoreAssignment is still null and has Source truth id Core Job Assignment. Searching by TRUTH");
@@ -55,7 +53,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 ? new CoreJobAssignment
                 {
                     IsCreate = false,
-                    CoreJobAssignmentId = existingCoreAssignment.Id
+                    CoreJobAssignmentId = existingCoreAssignment!.Id
                 }
                 : new CoreJobAssignment
                 {
@@ -189,8 +187,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 target.Status = snap.Status;
                 target.StatusReason = snap.StatusReason;
                 _logger.WriteLog("target.Status: {0}, target.StatusReason: {1}",
-                    ((Enums.Status)target.Status.Value).ToString(),
-                    ((Enums.StatusReason)target.StatusReason.Value).ToString()
+                    ((Enums.Status)(target.Status ?? new OptionSetValue(0)).Value).ToString(),
+                    ((Enums.StatusReason)(target.StatusReason ?? new OptionSetValue(0)).Value).ToString()
                 );
             }
         }

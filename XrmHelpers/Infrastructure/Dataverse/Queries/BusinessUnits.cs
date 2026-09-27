@@ -65,7 +65,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in BusinessUnits.GetReferenceByCode: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in BusinessUnits.GetReferenceByCode: {0}", ex.InnerException.Message);
                 }
@@ -118,7 +118,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in BusinessUnits.GetReferenceById: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in BusinessUnits.GetReferenceById: {0}", ex.InnerException.Message);
                 }

@@ -86,7 +86,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             // retrieve email template
             _logger.WriteLog("Retrieving email template...");
 
-            if (!TemplateKeys.TryGetValue(dto.GetType(), out templateKey))
+            if (!TemplateKeys.TryGetValue(dto.GetType(), out string? template))
             {
                 throw new InvalidPluginExecutionException(
                     $"No template configured for {dto.GetType().Name}"
@@ -447,7 +447,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             var newId = _context.Service.Create(notificationRequest);
 
-            if (newId == null || newId == Guid.Empty)
+            if (newId == Guid.Empty)
             {
                 _logger.WriteLog($"Unable to create new notification request entity");
             }

@@ -10,15 +10,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
         public bool ReturnMultipleReferences { get; init; }
 
-        public string TargetEntityLogicalName { get; init; }
+        public required string TargetEntityLogicalName { get; init; }
 
-        public string TargetAttributeLogicalName { get; init; }
+        public required string TargetAttributeLogicalName { get; init; }
 
-        public string SourceEntityLogicalName { get; init; }
+        public required string SourceEntityLogicalName { get; init; }
 
-        public string SourceAttributeLogicalName { get; init; }
+        public required string SourceAttributeLogicalName { get; init; }
 
-        public ColumnSet Columns { get; init; }
+        public required ColumnSet Columns { get; init; }
 
         public int TopCount { get; init; }
     }

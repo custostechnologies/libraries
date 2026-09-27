@@ -34,10 +34,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _logger.WriteLog($"Retrieved TDto properties, entering iteration through properties to find and populate lookup fields.");
 
+            if (_metadataFactory == null)
+            {
+                throw new InvalidPluginExecutionException("Dependency injection failed for MetadataFactory.");
+            }
+
             foreach (var property in properties)
             {
-                DataverseLookupAttribute lookupAttribute = property.GetCustomAttribute<DataverseLookupAttribute>();
-                DataverseLinkAttribute linkAttribute = property.GetCustomAttribute<DataverseLinkAttribute>();
+                DataverseLookupAttribute? lookupAttribute = property.GetCustomAttribute<DataverseLookupAttribute>();
+                DataverseLinkAttribute? linkAttribute = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                 if (lookupAttribute == null || linkAttribute == null) continue;
                 var keyProperty = typeof(TDto).GetProperty(lookupAttribute.KeyProperty);
@@ -73,6 +78,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var srcAttribute = linkAttribute.SourceLogicalName;
                 _logger.WriteLog($"srcAttribute: {srcAttribute}");
 
+                if (srcAttribute == null) throw new InvalidPluginExecutionException("Unable to construct LookupMetadataRequest with null srcAttribute name.");
+
                 var keyType = keyValue.GetType().Name;
                 _logger.WriteLog($"keyType: {keyType}");
 
@@ -101,7 +108,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     $"KeyProperty={keyProperty.Name}, Type={keyProperty.PropertyType}"
                 );
 
-                var metadata = _metadataFactory.Create(
+                var metadata = _metadataFactory!.Create(
                     keyValue,
                     metadataRequest
                 );
@@ -112,7 +119,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 _logger.WriteLog($"\n{luResult.GenerateDetailedLogSummary()}\n");
 
-                property.SetValue(dto, luResult.Successes.FirstOrDefault().References.FirstOrDefault());
+                var firstSuccess = luResult.Successes.FirstOrDefault();
+                if (firstSuccess == null) throw new InvalidPluginExecutionException("LookupEngine failed to retrieve a result from the success metadata.");
+                property.SetValue(dto, firstSuccess.References.FirstOrDefault());
             }
 
             return dto;

@@ -19,9 +19,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly DataverseLogger _logger;
         private readonly IDataverseContext _context;
-        private Entity _newApplication;
-        private EmploymentApplication _dto = null;
-        private CoreJobPositions _coreJobPositionsQuery = null;
+        private Entity? _newApplication;
+        private EmploymentApplication? _dto = null;
+        private CoreJobPositions? _coreJobPositionsQuery = null;
         private EntityReference? _coreJobPositionRef = null;
         public EmploymentApplicationFactory(
             IDataverseContext context,
@@ -37,6 +37,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _newApplication = new Entity(EntityLogicalNames.EmploymentApplication);
             _dto = application;
 
+            if (_dto == null)
+            {
+                _logger.WriteLog("Unable to resolve EmploymentApplication DTO.");
+                throw new Exception();
+            }
+
             _coreJobPositionsQuery = new CoreJobPositions(_context, _logger);
 
             try
@@ -51,7 +57,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _logger.WriteLog("Before preferred name mapping");
 
                 _newApplication[EmploymentApplicationFields.PreferredName] = string.IsNullOrWhiteSpace(_dto.PreferredName)
-                    ? _dto.GivenNames.Split(' ')[0]
+                    ? (_dto.GivenNames ?? "").Split(' ')[0]
                     : _dto.PreferredName;
 
                 // test CPR and First Aid qualifications
@@ -111,9 +117,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _logger.WriteLog("Entered MapApplicationType.");
 
             ApplicationType applicationType = ApplicationType.Other;
-            CMEAType cmeaType = CMEAType.NotApplicable;
 
             string[] attributes = [CoreJobPositionFields.CmeaType, CoreJobPositionFields.PAOSSubType];
+
+            if (_coreJobPositionsQuery == null)
+            {
+                _coreJobPositionsQuery = new CoreJobPositions(_context, _logger);
+            }
+
+            if (_newApplication == null)
+            {
+                _logger.WriteLog("Unable to resolve _newApplication.");
+                throw new InvalidPluginExecutionException();
+            }
 
             _logger.WriteLog("Retrieving CoreJobPosition properties in MapApplicationType.");
             var entity = _coreJobPositionsQuery.GetPropertyValues(coreJobPositionId, attributes) ?? throw new InvalidPluginExecutionException($"Core Job Position {coreJobPositionId} not found.");
@@ -122,7 +138,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var cmeaTypeValue = entity.GetAttributeValue<OptionSetValue>(CoreJobPositionFields.CmeaType) ?? throw new InvalidPluginExecutionException("Core Job Position has no CMEA Type. Unable to set nullable field in new Employment Application Record. Exiting.");
 
             _logger.WriteLog("Casting cmeaTypeValue to CMEAType enum and storing as cmeaType");
-            cmeaType = (CMEAType)cmeaTypeValue.Value;
+            var cmeaType = (CMEAType)cmeaTypeValue.Value;
 
             if (cmeaType == CMEAType.Teaching)
             {
@@ -159,6 +175,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             if (entity == null) throw new InvalidPluginExecutionException("Job Opportunity entity returned to MapJobLookups in EmploymentApplicationFactory is null. Exiting.");
 
+            if (_newApplication == null)
+            {
+                _logger.WriteLog("Unable to resolve _newApplication.");
+                throw new InvalidPluginExecutionException();
+            }
+
             _newApplication[EmploymentApplicationFields.ParentJobOpportunity] = entity.ToEntityReference();
 
             _logger.WriteLog("Retrieving CoreJobPositionRef");
@@ -173,12 +195,25 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private void BuildAddresses()
         {
             _logger.WriteLog("Entered EmploymentApplicationFactory.BuildAddresses()");
+
+            if (_newApplication == null)
+            {
+                _logger.WriteLog("Unable to resolve _newApplication.");
+                throw new InvalidPluginExecutionException();
+            }
+
+            if (_dto == null)
+            {
+                _logger.WriteLog("Unable to resolve _dto.");
+                throw new InvalidPluginExecutionException();
+            }
+
             _logger.WriteLog("Building Address");
             if (_dto.AddressLine1 != null)
             {
                 var address = $@"
                 <p>{_dto.AddressLine1}</p>
-                <p>{_dto.Suburb.ToUpper()} {_dto.State.ToString()} {_dto.Postcode}</p>
+                <p>{(_dto.Suburb ?? "NULL").ToUpper()} {_dto.State} {_dto.Postcode}</p>
                 <p>{_dto.Country}</p>";
 
                 _newApplication[EmploymentApplicationFields.Address] = address;
@@ -189,7 +224,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var address = $@"
                 <p>{_dto.AddressLine1}</p>
-                <p>{_dto.Suburb.ToUpper()} {_dto.State.ToString()} {_dto.Postcode}</p>
+                <p>{(_dto.Suburb ?? "NULL").ToUpper()} {_dto.State} {_dto.Postcode}</p>
                 <p>{_dto.Country}</p>";
 
                 _newApplication[EmploymentApplicationFields.Address] = address;
@@ -200,7 +235,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var address = $@"
                 <p>{_dto.ChurchAddressLine1}</p>
-                <p>{_dto.ChurchSuburb.ToUpper()} {_dto.ChurchState.ToString()} {_dto.ChurchPostcode}</p>
+                <p>{(_dto.ChurchSuburb ?? "NULL").ToUpper()} {_dto.ChurchState} {_dto.ChurchPostcode}</p>
                 <p>{_dto.ChurchCountry}</p>";
 
                 _newApplication[EmploymentApplicationFields.ChurchAddress] = address;
@@ -211,7 +246,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var address = $@"
                 <p>{_dto.CurrentEmployerAddressLine1}</p>
-                <p>{_dto.CurrentEmployerSuburb.ToUpper()} {_dto.CurrentEmployerState.ToString()} {_dto.CurrentEmployerPostcode}</p>
+                <p>{(_dto.CurrentEmployerSuburb ?? "NULL").ToUpper()} {_dto.CurrentEmployerState} {_dto.CurrentEmployerPostcode}</p>
                 <p>{_dto.CurrentEmployerCountry}</p>";
 
                 _newApplication[EmploymentApplicationFields.CurrentEmployerAddress] = address;
@@ -222,7 +257,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var address = $@"
                 <p>{_dto.Referee1AddressLine1}</p>
-                <p>{_dto.Referee1Suburb.ToUpper()} {_dto.Referee1State.ToString()} {_dto.Referee1Postcode}</p>
+                <p>{(_dto.Referee1Suburb ?? "NULL").ToUpper()} {_dto.Referee1State} {_dto.Referee1Postcode}</p>
                 <p>{_dto.Referee1Country}</p>";
 
                 _newApplication[EmploymentApplicationFields.Referee1Address] = address;
@@ -233,7 +268,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var address = $@"
                 <p>{_dto.Referee2AddressLine1}</p>
-                <p>{_dto.Referee2Suburb.ToUpper()} {_dto.Referee2State.ToString()} {_dto.Referee2Postcode}</p>
+                <p>{(_dto.Referee2Suburb ?? "NULL").ToUpper()} {_dto.Referee2State} {_dto.Referee2Postcode}</p>
                 <p>{_dto.Referee2Country}</p>";
 
                 _newApplication[EmploymentApplicationFields.Referee2Address] = address;
@@ -244,7 +279,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 var address = $@"
                 <p>{_dto.Referee3AddressLine1}</p>
-                <p>{_dto.Referee3Suburb.ToUpper()} {_dto.Referee3State.ToString()} {_dto.Referee3Postcode}</p>
+                <p>{(_dto.Referee3Suburb ?? "NULL").ToUpper()} {_dto.Referee3State} {_dto.Referee3Postcode}</p>
                 <p>{_dto.Referee1Country}</p>";
 
                 _newApplication[EmploymentApplicationFields.Referee3Address] = address;

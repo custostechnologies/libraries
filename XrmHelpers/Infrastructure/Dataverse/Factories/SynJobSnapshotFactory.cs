@@ -109,8 +109,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
 
             _logger.WriteLog("Calulated status: {0} and statusReason: {1}",
-                ((Enums.Status)snap.Status?.Value).ToString(),
-                ((Enums.StatusReason)snap.StatusReason?.Value).ToString()
+                ((Enums.Status)snap.Status.Value).ToString(),
+                ((Enums.StatusReason)snap.StatusReason.Value).ToString()
             );
             _logger.WriteLog("SNAP: {0}",
                 JsonSerializer.Serialize(

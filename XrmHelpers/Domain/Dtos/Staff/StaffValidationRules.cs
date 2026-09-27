@@ -84,12 +84,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     {
         public override ValidationResult Validate(StaffMemberDto dto)
         {
-            return dto.Gender == null
+            /*return dto.Gender == null
                 ? Failure(
                     nameof(dto.Gender),
                     "StaffMemberDto.Gender cannot be null."
                 )
-                : Success();
+                : Success();*/
+            return Success();
         }
     }
 
@@ -98,12 +99,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     {
         public override ValidationResult Validate(StaffMemberDto dto)
         {
-            return dto.Campus == null
+            /*return dto.Campus == null
                 ? Failure(
                     nameof(dto.Campus),
                     "StaffMemberDto.Campus cannot be null."
                 )
-                : Success();
+                : Success();*/
+            return Success();
         }
     }
 }

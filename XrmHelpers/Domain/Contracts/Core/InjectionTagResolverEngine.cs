@@ -43,14 +43,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             Console.WriteLine($"PopulateTag with token: {token} and value: {new string(value.Take(25).ToArray())}");
 
-            var idx = tags.IndexOf(
-                tags.FirstOrDefault(
-                    tag => tag.InjectionToken == token)
+            var tag = tags.FirstOrDefault(
+                tag => (
+                    tag.InjectionToken == token
+                )
             );
 
-            var tag = tags.FirstOrDefault(tag => tag.InjectionToken == token);
+            var idx = -1;
 
-            if (tag == null)
+            if (tag != null) idx = tags.IndexOf(tag);
+
+            if (idx == -1 || tag == null)
             {
                 Console.WriteLine($"tag cannot be found for token: {token}");
                 return;

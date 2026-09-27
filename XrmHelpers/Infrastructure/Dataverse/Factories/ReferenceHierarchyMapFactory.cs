@@ -1,3 +1,4 @@
+/*
 using System;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
@@ -17,3 +18,4 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
     }
 }
+*/

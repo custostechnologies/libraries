@@ -55,7 +55,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TopCount = topCount;
         }
         public TKey TargetRecordKey { get; }
-        object ILookupMetadata.TargetRecordKey => TargetRecordKey;
+        object ILookupMetadata.TargetRecordKey => TargetRecordKey ?? throw new InvalidOperationException("TargetRecordKey cannot be null when evaluating metadata.");
         public string TargetKeyType => typeof(TKey).Name;
         public bool AllowMultipleMatches { get; }
         public bool ReturnMultipleReferences { get; }

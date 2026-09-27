@@ -35,7 +35,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 try
                 {
-                    DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                    DataverseLinkAttribute? link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
 

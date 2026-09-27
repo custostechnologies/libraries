@@ -60,7 +60,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex.InnerException.Message);
                 }
@@ -111,7 +111,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex.InnerException.Message);
                 }
@@ -159,7 +159,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetReportsToByPositionId: {0}", ex.InnerException.Message);
                 }
@@ -213,7 +213,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetReferenceMapsByPositionId: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetReferenceMapsByPositionId: {0}", ex.InnerException.Message);
                 }
@@ -262,7 +262,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in ReferenceHierarchyMaps.GetDirectReportsByPositionId: {0}", ex.InnerException.Message);
                 }

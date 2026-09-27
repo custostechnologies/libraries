@@ -85,7 +85,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _logger.WriteLog("No existing entities were found, returning empty EntityReference");
-                return null;
+                return new EntityReference();
             }
         }
         public EntityReference GetReferenceByAzureId(string azureId)
@@ -142,7 +142,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _logger.WriteLog("No existing entities were found, returning empty EntityReference");
-                return null;
+                return new EntityReference();
             }
         }
         public Entity GetMetadataById(Guid systemuserid)
@@ -194,7 +194,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 _logger.WriteLog("No existing entities were found");
-                return null;
+                return new Entity();
             }
         }
         public UpsertResponse Upsert(string objectId, string upn)

@@ -1,6 +1,3 @@
-using System;
-using spgsWebTools.XrmHelpers.Constants;
-
 namespace spgsWebTools.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]

@@ -41,6 +41,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 if (value == null) continue;
 
+                if (link.SourceType == null) throw new InvalidOperationException("DataverseLink attribute source type property cannot be NULL when attempting to MapToSource.");
+
                 var srcType = Nullable.GetUnderlyingType(link.SourceType) ?? link.SourceType;
                 var dtoValueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
 
@@ -82,6 +84,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var hash = property.GetCustomAttribute<HashAttribute>();
                 var link = property.GetCustomAttribute<DataverseLinkAttribute>();
                 var touchDateTime = property.GetCustomAttribute<TouchDateTimeAttribute>();
+
+                if (hash == null || link == null) continue;
+                if (link.SourceType == null) throw new InvalidOperationException("DataverseLink attribute source type property cannot be NULL when attempting to MapToSourceDelta.");
 
                 if (hash.Identifier == "PlaintextHash")
                 {
@@ -162,6 +167,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     if (value == null) continue;
 
+                    if (link.TargetType == null) throw new InvalidOperationException("DataverseLink attribute target type property cannot be NULL when attempting to MapToTarget.");
+
                     var targetType = link.TargetType;
                     var srcType = link.SourceType;
                     var dtoValueType = property.PropertyType;
@@ -189,7 +196,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
                     else if (dtoValueType == typeof(string) && targetType == typeof(Guid))
                     {
-                        setValue = Guid.Parse(value.ToString());
+                        //setValue = Guid.Parse(value.ToString());
+                        setValue = Guid.TryParse(value.ToString(), out Guid result)
+                            ? result
+                            : Guid.Empty;
                     }
                     else
                     {
@@ -229,7 +239,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 try
                 {
-                    DataverseLinkAttribute link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                    if (property == null) continue;
+
+                    DataverseLinkAttribute? link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
 

@@ -70,12 +70,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     {
         public override ValidationResult Validate(StudentDto entity)
         {
-            return entity.House == null
+            /*return entity.House == null
                 ? Failure(
                     nameof(entity.Surname),
                     "StudentDto.House cannot be null."
                 )
-                : Success();
+                : Success();*/
+
+            return Success();
         }
     }
 
@@ -84,12 +86,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     {
         public override ValidationResult Validate(StudentDto entity)
         {
-            return entity.Gender == null
+            /*return entity.Gender == null
                 ? Failure(
                     nameof(entity.Gender),
                     "StudentDto.Gender cannot be null."
                 )
-                : Success();
+                : Success();*/
+            return Success();
         }
     }
 
@@ -98,12 +101,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     {
         public override ValidationResult Validate(StudentDto entity)
         {
-            return entity.Campus == null
+            /*return entity.Campus == null
                 ? Failure(
                     nameof(entity.Campus),
                     "StudentDto.Campus cannot be null."
                 )
-                : Success();
+                : Success();*/
+            return Success();
         }
     }
 

@@ -55,13 +55,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 else
                 {
                     _logger.WriteLog("No existing entities were found");
-                    return null;
+                    return new Entity();
                 }
             }
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in CoreDepartments.GetReferenceByCode: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("Inner Exception in CoreDepartments.GetReferenceByCode: {0}", ex.InnerException.Message);
                 }

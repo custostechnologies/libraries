@@ -68,7 +68,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
             catch (Exception ex)
             {
                 _logger.WriteLog("Error SynStudentMapper.ToEntity: {0}", ex);
-                if (ex.InnerException.Message != null)
+                if (ex.InnerException != null)
                 {
                     _logger.WriteLog("InnerException SynStudentMapper.ToEntity: {0}", ex.InnerException.Message);
                 }
