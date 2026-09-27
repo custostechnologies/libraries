@@ -1,5 +1,6 @@
 using System;
 using spgsWebTools.XrmHelpers.Constants;
+using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 
@@ -15,6 +16,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string TargetEntityLogicalName => TargetEntityName;
 
         public DateTime? ForcePlugin { get; set; }
+        public KeyAttributeCollection KeyCollection => new KeyAttributeCollection();
 
         [DataverseLink(srcName: PayClaimItemFields.PayClaimItemId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid? PayClaimItemId { get; set; }

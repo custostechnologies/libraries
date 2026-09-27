@@ -14,6 +14,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string ValidationRuleSet => "";
         public string SourceEntityLogicalName => EntityLogicalNames.PayClaimForm;
         public string TargetEntityLogicalName => EntityLogicalNames.PayClaimForm;
+        public KeyAttributeCollection KeyCollection => new KeyAttributeCollection();
 
         public DateTime? ForcePlugin { get; set; }
 
@@ -25,18 +26,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(srcName: PayClaimFormFields.CreationId, srcType: typeof(string), trgName: null, trgType: null)]
         public string? CreationId { get; set; }
-
-        [DataverseLink(srcName: PayClaimFormFields.WeekBeginning, srcType: typeof(DateTime), trgName: null, trgType: null)]
-        public DateTime? WeekBeginning { get; set; }
-
-        [DataverseLink(srcName: PayClaimFormFields.WeeklyBreakTotal, srcType: typeof(decimal), trgName: null, trgType: null)]
-        public decimal? WeeklyBreakTotal { get; set; }
-
-        [DataverseLink(srcName: PayClaimFormFields.WeeklyNetTotal, srcType: typeof(decimal), trgName: null, trgType: null)]
-        public decimal? WeeklyNetTotal { get; set; }
-
-        [DataverseLink(srcName: PayClaimFormFields.WeeklyTotal, srcType: typeof(decimal), trgName: null, trgType: null)]
-        public decimal? WeeklyTotal { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.FormType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public int? FormType { get; set; }
