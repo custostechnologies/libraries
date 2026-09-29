@@ -41,7 +41,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string? RelatedApprovalId { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.RespondentType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public int? RespondentType { get; set; }
+        public string? RespondentType { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.RoleCategory, srcType: typeof(EntityReference), trgName: null, trgType: null)]
         public Guid? RoleCategoryId { get; set; }
