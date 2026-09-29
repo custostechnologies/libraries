@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
@@ -33,6 +34,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: PayClaimFormFields.PayPeriod, srcType: typeof(EntityReference), trgName: null, trgType: null)]
         public Guid? PayPeriodId { get; set; }
 
+        [DataverseLink(srcName: PayClaimFormFields.PayPeriod, srcType: typeof(EntityReference), trgName: null, trgType: null)]
+        public string? PayPeriodName { get; set; }
+
         [DataverseLink(srcName: PayClaimFormFields.RelatedApprovalId, srcType: typeof(string), trgName: null, trgType: null)]
         public string? RelatedApprovalId { get; set; }
 
@@ -42,11 +46,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: PayClaimFormFields.RoleCategory, srcType: typeof(EntityReference), trgName: null, trgType: null)]
         public Guid? RoleCategoryId { get; set; }
 
+        [DataverseLink(srcName: PayClaimFormFields.RoleCategory, srcType: typeof(EntityReference), trgName: null, trgType: null)]
+        public string? RoleCategoryName { get; set; }
+
         [DataverseLink(srcName: PayClaimFormFields.SharePointExportPath, srcType: typeof(string), trgName: null, trgType: null)]
         public string? SharePointExportPath { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.StaffMember, srcType: typeof(EntityReference), trgName: null, trgType: null)]
         public Guid? StaffMemberId { get; set; }
+
+        [DataverseLink(srcName: PayClaimFormFields.StaffMember, srcType: typeof(EntityReference), trgName: null, trgType: null)]
+        public string? StaffMemberName { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.TargetEnvironmentAddress, srcType: typeof(string), trgName: null, trgType: null)]
         public string? TargetEnvironmentAddress { get; set; }
@@ -62,5 +72,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(srcName: PayClaimFormFields.TotalUnpaidBreakHours, srcType: typeof(decimal), trgName: null, trgType: null)]
         public decimal? TotalUnpaidBreakHours { get; set; }
+
+        [DataverseLink(srcName: PayClaimFormFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public Status Status { get; set; }
+
+        [DataverseLink(srcName: PayClaimFormFields.TotalUnpaidBreakHours, srcType: typeof(decimal), trgName: null, trgType: null)]
+        public PayClaimFormStatusReason StatusReason { get; set; }
     }
 }
