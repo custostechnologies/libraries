@@ -25,5 +25,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Resolvers
                 return Status.Inactive;
             }
         }
+        public static string ToLabel(int val)
+        {
+            try
+            {
+                string result = (uint)val switch
+                {
+                    0 => "Active",
+                    1 => "Inactive",
+                    _ => "Unknown"
+                };
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Resolver error StatusResolver");
+            }
+        }
     }
 }

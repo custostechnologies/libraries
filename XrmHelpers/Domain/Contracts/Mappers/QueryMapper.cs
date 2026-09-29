@@ -177,6 +177,22 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         {
                             setValue = LinkTypeResolver.ToLabel(opsetvalue.Value);
                         }
+                        else if (property.Name == "PayClaimFormStatusReasonLabel")
+                        {
+                            setValue = PayClaimFormStatusReasonResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "RespondentTypeLabel")
+                        {
+                            setValue = RespondentTypeResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "FormTypeLabel")
+                        {
+                            setValue = FormTypeResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "StatusLabel")
+                        {
+                            setValue = StatusResolver.ToLabel(opsetvalue.Value);
+                        }
                         else
                         {
                             setValue = opsetvalue.Value;

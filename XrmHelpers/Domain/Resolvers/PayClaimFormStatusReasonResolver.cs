@@ -29,5 +29,27 @@ namespace spgsWebTools.XrmHelpers.Domain.Resolvers
                 return PayClaimFormStatusReason.Active;
             }
         }
+        public static string ToLabel(int val)
+        {
+            try
+            {
+                string result = (uint)val switch
+                {
+                    386630001 => "Submitted",
+                    386630002 => "Complete",
+                    1 => "Active",
+                    386630004 => "Draft",
+                    2 => "Rejected",
+                    386630005 => "Inactive",
+                    _ => "Unknown"
+                };
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Resolver error PayClaimFormStatusReason");
+            }
+        }
     }
 }

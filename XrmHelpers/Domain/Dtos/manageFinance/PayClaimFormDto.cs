@@ -21,6 +21,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: PayClaimFormFields.FormType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public int? FormType { get; set; }
 
+        [DataverseLink(srcName: PayClaimFormFields.FormType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? FormTypeLabel { get; set; }
+
         [DataverseLink(srcName: PayClaimFormFields.PayPeriod, srcType: typeof(EntityReference), trgName: null, trgType: null)]
         public Guid? PayPeriodId { get; set; }
 
@@ -31,7 +34,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string? RelatedApprovalId { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.RespondentType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public string? RespondentType { get; set; }
+        public int? RespondentType { get; set; }
+
+        [DataverseLink(srcName: PayClaimFormFields.RespondentType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? RespondentTypeLabel { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.RoleCategory, srcType: typeof(EntityReference), trgName: null, trgType: null)]
         public Guid? RoleCategoryId { get; set; }
@@ -64,9 +70,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public decimal? TotalUnpaidBreakHours { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public string? Status { get; set; }
+        public int? Status { get; set; }
 
-        [DataverseLink(srcName: PayClaimFormFields.TotalUnpaidBreakHours, srcType: typeof(decimal), trgName: null, trgType: null)]
-        public string? StatusReason { get; set; }
+        [DataverseLink(srcName: PayClaimFormFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? StatusLabel { get; set; }
+
+        [DataverseLink(srcName: PayClaimFormFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public int? StatusReason { get; set; }
+
+        [DataverseLink(srcName: PayClaimFormFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? PayClaimFormStatusReasonLabel { get; set; }
     }
 }
