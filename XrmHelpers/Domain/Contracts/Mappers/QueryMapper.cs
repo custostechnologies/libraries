@@ -148,6 +148,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             case "Gender":
                                 setValue = GenderResolver.ToEnum(value.ToString() ?? "");
                                 break;
+                            case "Status":
+                                setValue = StatusResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            case "StatusReason":
+                                setValue = StatusReasonResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            case "PayClaimFormStatusReason":
+                                setValue = PayClaimFormStatusReasonResolver.ToEnum(value.ToString() ?? "");
+                                break;
                             default:
                                 setValue = Enum.Parse(dtoValueType, value.ToString() ?? "");
                                 break;
