@@ -1,23 +1,13 @@
-using System;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
     public class PayClaimFormDto : IValidationMetadata, IQueryDto
     {
-        const string _srcEntityName = EntityLogicalNames.PayClaimForm;
-        const string _targetEntityName = EntityLogicalNames.PayClaimForm;
-
         public string ValidationRuleSet => "";
-        public string SourceEntityLogicalName => EntityLogicalNames.PayClaimForm;
-        public string TargetEntityLogicalName => EntityLogicalNames.PayClaimForm;
-        public KeyAttributeCollection KeyCollection => new KeyAttributeCollection();
-
-        public DateTime? ForcePlugin { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.PayClaimFormId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid? PayClaimFormId { get; set; }
