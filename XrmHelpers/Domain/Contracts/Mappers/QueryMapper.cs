@@ -128,6 +128,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             case "LinkType":
                                 setValue = (LinkType)optionValue;
                                 break;
+                            case "PayClaimFormStatusReason":
+                                setValue = (PayClaimFormStatusReason)optionValue;
+                                break;
                             default:
                                 setValue = Enum.Parse(dtoValueType, optionValue.ToString());
                                 break;
