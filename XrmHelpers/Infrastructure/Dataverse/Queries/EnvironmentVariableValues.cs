@@ -9,11 +9,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
     public class EnvironmentVariableValues
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly IDataverseContext _context;
         public EnvironmentVariableValues(
             IDataverseContext context,
-          DataverseLogger logger
+          IDataverseLogger logger
         )
         {
             _logger = logger;
@@ -26,7 +26,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 string value = "";
                 string dValue = "";
 
-                _logger.WriteLog("Entered EnvironmentVariableValues.GetValue with schemaName: {0}", schemaName);
+                _logger.WriteLog($"Entered EnvironmentVariableValues.GetValue with schemaName: {schemaName}");
 
                 var query = new QueryExpression(EntityLogicalNames.EnvironmentVariableDefinition)
                 {
@@ -62,14 +62,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog("EnvironmentVariableValues.GetValue query returned results.Entities.Count: {0}", results.Entities.Count);
+                    _logger.WriteLog($"EnvironmentVariableValues.GetValue query returned results.Entities.Count: {results.Entities.Count}");
 
                     Entity envVar = results.Entities[0];
                     value = envVar.GetAttributeValue<AliasedValue>("value.value")?.Value?.ToString() ?? "";
 
                     dValue = envVar.GetAttributeValue<string>("defaultvalue");
 
-                    _logger.WriteLog("value set to: {0}", value);
+                    _logger.WriteLog($"value set to: {value}");
                 }
 
                 return new EnvironmentVariable<string>()
@@ -80,7 +80,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog("Exception encountered in EnvironmentVariableValues.GetValue(). Exiting. Exception Message: {0}", ex.Message);
+                _logger.WriteLog($"Exception encountered in EnvironmentVariableValues.GetValue(). Exiting. Exception Message: {ex}");
                 throw;
             }
         }

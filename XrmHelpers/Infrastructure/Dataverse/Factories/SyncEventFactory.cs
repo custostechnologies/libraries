@@ -8,7 +8,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class SyncEventFactory
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string _correlationId;
         public SyncEventFactory(
             IDataverseContext context,
@@ -53,7 +53,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Error constructing User Sync Event: {ex}");
+                _logger.WriteLog($"Error constructing User Sync Event: ", ex);
                 throw;
             }
         }
@@ -99,7 +99,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Error encountered when setting syncEvent status to Inactive and statusReason to Complete: {ex}");
+                _logger.WriteLog($"Error encountered when setting syncEvent status to Inactive and statusReason to Complete: ", ex);
                 if (ex.InnerException != null)
                 {
                     _logger.WriteLog($"InnerException: {ex.InnerException}");

@@ -7,8 +7,8 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {
     public class ImageHashService
     {
-        private DataverseLogger _logger;
-        public ImageHashService(DataverseLogger logger)
+        private IDataverseLogger _logger;
+        public ImageHashService(IDataverseLogger logger)
         {
             _logger = logger;
         }

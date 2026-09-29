@@ -89,7 +89,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
             catch (Exception ex)
             {
-                throw new InvalidPluginExecutionException($"Failed to find the environment URL: {ex}");
+                throw new InvalidPluginExecutionException($"Failed to find the environment URL: ", ex);
             }
         }
         public virtual string GenerateSummaryTable(

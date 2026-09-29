@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Services
     public class HtmlEnricherService<TDto> : IHtmlEnricherService<TDto>
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private ThemeDto? _theme;
         private List<TemplateSnippetIntersectDto>? _intersects;
         public HtmlEnricherService(

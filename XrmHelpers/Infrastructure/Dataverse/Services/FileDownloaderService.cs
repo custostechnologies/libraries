@@ -67,8 +67,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Upload failed: {ex.Message}");
-                throw new InvalidPluginExecutionException($"Error saving file: {ex.Message}");
+                _logger.WriteLog($"Upload failed: ", ex);
+                throw new InvalidPluginExecutionException($"Error saving file: ", ex);
             }
         }
     }

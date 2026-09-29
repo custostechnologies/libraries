@@ -17,7 +17,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class EmploymentApplicationFactory
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly IDataverseContext _context;
         private Entity? _newApplication;
         private EmploymentApplication? _dto = null;
@@ -25,7 +25,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private EntityReference? _coreJobPositionRef = null;
         public EmploymentApplicationFactory(
             IDataverseContext context,
-          DataverseLogger logger
+          IDataverseLogger logger
         )
         {
             _logger = logger;

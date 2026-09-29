@@ -9,9 +9,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class SynStaffSnaphotFactory
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private bool _forceIncoming = false;
-        public SynStaffSnaphotFactory(IDataverseContext context, DataverseLogger logger)
+        public SynStaffSnaphotFactory(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;

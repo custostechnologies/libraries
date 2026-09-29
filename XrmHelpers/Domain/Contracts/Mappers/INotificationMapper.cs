@@ -1,4 +1,3 @@
-using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts

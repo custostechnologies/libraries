@@ -8,7 +8,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public class SyncPipeline<TDto> : ISyncPipeline<TDto> where TDto : IDto, new()
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly IDataverseMapper<TDto> _mapper;
         private readonly ILookupEnricher<TDto> _enricher;
         private readonly IChangeDetectionService<TDto> _changeDetector;
@@ -63,7 +63,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 throw;
             }
 
@@ -94,7 +94,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 throw;
             }
         }

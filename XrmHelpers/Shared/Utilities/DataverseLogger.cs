@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.XrmHelpers
 {
-    public class DataverseLogger : IPluginCustomLogger
+    public class DataverseLogger : IDataverseLogger
     {
         private readonly ILogger _baseLogger;
         private readonly string _className;
@@ -31,6 +31,18 @@ namespace spgsWebTools.XrmHelpers
                 "Logger.WriteLog() called with no arguments."
             );
         }
+        public void WriteLog(string message)
+        {
+            _baseLogger.LogInformation(
+                $"Log: {message}"
+            );
+        }
+        public void WriteLog(Exception ex, string message)
+        {
+            _baseLogger.LogInformation(
+                $"Log: {ex} - {message}"
+            );
+        }
         public void WriteLog(string message, [CallerMemberName] string memberName = "")
         {
             _baseLogger.LogInformation(
@@ -41,7 +53,7 @@ namespace spgsWebTools.XrmHelpers
         {
             _baseLogger.LogInformation(
                 $"[{_className}] {message}",
-                args
+                args ?? []
             );
         }
         public void WriteLog(Exception ex, string message, params object?[] args)

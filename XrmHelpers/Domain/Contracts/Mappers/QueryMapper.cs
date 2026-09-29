@@ -1,9 +1,7 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Resolvers;
@@ -14,10 +12,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class QueryMapper<TDto> : IQueryMapper<TDto> where TDto : IQueryDto, new()
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly ILookupEngine _lookupEngine;
         public QueryMapper(
-            DataverseLogger logger,
+            IDataverseLogger logger,
             ILookupEngine lookupEngine
         )
         {

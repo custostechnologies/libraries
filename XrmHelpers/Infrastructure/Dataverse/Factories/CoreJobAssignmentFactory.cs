@@ -10,12 +10,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class CoreJobAssignmentFactory
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private CoreJobAssignments? _coreJobAssignmentQuery;
         private CoreJobPositions? _coreJobPositionQuery;
         private CoreStaffMembers? _coreStaffMemberQuery;
         private bool _create = false;
-        public CoreJobAssignmentFactory(IDataverseContext context, DataverseLogger logger)
+        public CoreJobAssignmentFactory(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;

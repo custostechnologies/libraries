@@ -73,7 +73,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 if (ex.InnerException != null)
                 {
                     _logger.WriteLog($"InnerException: {ex.InnerException}");
@@ -118,7 +118,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 if (ex.InnerException != null)
                 {
                     _logger.WriteLog($"InnerException: {ex.InnerException}");

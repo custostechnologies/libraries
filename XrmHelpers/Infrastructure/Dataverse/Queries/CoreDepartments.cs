@@ -7,8 +7,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_coredepartment";
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
-        public CoreDepartments(IDataverseContext context, DataverseLogger logger)
+        private readonly IDataverseLogger _logger;
+        public CoreDepartments(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;

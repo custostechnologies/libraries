@@ -6,7 +6,7 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
-    public class PayClaimItemDto : IValidationMetadata, IDto
+    public class PayClaimItemDto : IValidationMetadata, IQueryDto
     {
         public const string SrcEntityName = EntityLogicalNames.PayClaimItem;
         public const string TargetEntityName = EntityLogicalNames.PayClaimItem;

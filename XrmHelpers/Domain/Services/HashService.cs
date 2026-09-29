@@ -7,7 +7,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Services
     public class HashService<TDto> : IHashService<TDto>
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public HashService(
             IDataverseContext context
         )

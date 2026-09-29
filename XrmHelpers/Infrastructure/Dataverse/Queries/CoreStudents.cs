@@ -10,9 +10,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class CoreStudents
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.CoreStudent;
-        public CoreStudents(IDataverseContext context, DataverseLogger logger)
+        public CoreStudents(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;
@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _logger.WriteLog("Building GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building GetEntityReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -40,7 +40,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _logger.WriteLog("Executing GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Executing GetEntityReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var results = _context.Service.RetrieveMultiple(query);
 
@@ -48,14 +48,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog("ExecuteAlternate results.Entities[0]: ",
-                        JsonSerializer.Serialize(
+                    _logger.WriteLog($"ExecuteAlternate results.Entities[{JsonSerializer.Serialize(
                             results.Entities[0],
                             new JsonSerializerOptions
                             {
                                 WriteIndented = true
                             }
-                        )
+                        )}"
+
                     );
                     return results.Entities[0];
                 }
@@ -67,7 +67,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog("CoreStudents.GetEntityByStudentId Exception: {0}", ex.Message);
+                _logger.WriteLog($"CoreStudents.GetEntityByStudentId Exception: {ex}");
                 throw;
             }
         }
@@ -75,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _logger.WriteLog("Building GetEntityReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building GetEntityReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -96,7 +96,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _logger.WriteLog("Executing GetReferenceByStudentId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog("Executing GetReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var results = _context.Service.RetrieveMultiple(query);
 
@@ -104,7 +104,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog("ExecuteAlternate CoreStudents.GetReferenceByStudentId results.Entities.Count: ", results.Entities.Count);
+                    _logger.WriteLog($"ExecuteAlternate CoreStudents.GetReferenceByStudentId results.Entities.Count: {results.Entities.Count}");
                     return results.Entities[0].ToEntityReference();
                 }
                 else

@@ -62,7 +62,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 throw;
             }
         }

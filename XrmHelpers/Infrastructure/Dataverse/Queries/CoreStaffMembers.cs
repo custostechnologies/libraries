@@ -10,9 +10,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class CoreStaffMembers
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        public CoreStaffMembers(IDataverseContext context, DataverseLogger logger)
+        public CoreStaffMembers(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;
@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _logger.WriteLog("Building ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -40,23 +40,21 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _logger.WriteLog("Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {ENTITY_LOGICAL_NAME}");
 
                 var results = _context.Service.RetrieveMultiple(query);
 
-                _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {0}", results.Entities.Count);
+                _logger.WriteLog($"Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {results.Entities.Count}");
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog("ExecuteAlternate results.Entities[0]: ",
-                        JsonSerializer.Serialize(
+                    _logger.WriteLog($"ExecuteAlternate results.Entities[0]: {JsonSerializer.Serialize(
                             results.Entities[0],
                             new JsonSerializerOptions
                             {
                                 WriteIndented = true
                             }
-                        )
-                    );
+                        )}");
                     return results.Entities[0];
                 }
                 else
@@ -81,7 +79,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _logger.WriteLog("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building GetEntityReferenceByStaffId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -100,7 +98,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _logger.WriteLog("Executing GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Executing GetEntityReferenceByStaffId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var results = _context.Service.RetrieveMultiple(query);
 
@@ -108,15 +106,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog("ExecuteAlternate results.Entities[0]: ",
-                        JsonSerializer.Serialize(
+                    _logger.WriteLog($"ExecuteAlternate results.Entities[0]: {JsonSerializer.Serialize(
                             results.Entities[0],
                             new JsonSerializerOptions
                             {
                                 WriteIndented = true
                             }
-                        )
-                    );
+                        )}");
                     return results.Entities[0];
                 }
                 else
@@ -127,7 +123,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog("CoreStaffMembers.GetEntityByStaffId Exception: {0}", ex.Message);
+                _logger.WriteLog($"CoreStaffMembers.GetEntityByStaffId Exception: {ex}");
                 throw;
             }
         }
@@ -135,7 +131,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         {
             try
             {
-                _logger.WriteLog("Building GetEntityReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building GetEntityReferenceByStaffId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -156,7 +152,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                _logger.WriteLog("Executing GetReferenceByStaffId query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Executing GetReferenceByStaffId query expression on {ENTITY_LOGICAL_NAME}");
 
                 var results = _context.Service.RetrieveMultiple(query);
 
@@ -164,7 +160,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog("ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId results.Entities.Count: ", results.Entities.Count);
+                    _logger.WriteLog($"ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId results.Entities.Count: {results.Entities.Count}");
                     return results.Entities[0].ToEntityReference();
                 }
                 else

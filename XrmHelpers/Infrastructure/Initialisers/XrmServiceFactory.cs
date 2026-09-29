@@ -5,10 +5,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
 {
     public class XrmServiceFactory
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly IServiceProvider _provider;
         public XrmServiceFactory(
-            DataverseLogger logger,
+            IDataverseLogger logger,
             IServiceProvider provider
         )
         {

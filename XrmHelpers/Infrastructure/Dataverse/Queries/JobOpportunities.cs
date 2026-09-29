@@ -7,9 +7,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class JobOpportunities
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.JobOpportunity;
-        public JobOpportunities(IDataverseContext context, DataverseLogger logger)
+        public JobOpportunities(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;

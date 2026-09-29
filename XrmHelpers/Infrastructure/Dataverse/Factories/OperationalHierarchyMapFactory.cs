@@ -9,14 +9,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class OperationalHierarchyMapFactory
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private CoreJobAssignments? _assignmentQuery;
         private OperationalHierarchyMaps? _operationalMapQuery;
         private CoreJobPositions? _coreJobPositionQuery;
         private string ENTITY_LOGICAL_NAME = EntityLogicalNames.OperationalHierarchyMap;
         public OperationalHierarchyMapFactory(
             IDataverseContext context,
-            DataverseLogger logger
+            IDataverseLogger logger
         )
         {
             _context = context;

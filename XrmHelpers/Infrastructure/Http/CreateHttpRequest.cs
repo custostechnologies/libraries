@@ -13,9 +13,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Http
     }
     public class CreateHttpRequest
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public CreateHttpRequest(
-            DataverseLogger logger
+            IDataverseLogger logger
         )
         {
             _logger = logger;

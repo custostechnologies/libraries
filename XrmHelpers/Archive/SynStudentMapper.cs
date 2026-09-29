@@ -6,10 +6,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStudentMapper
     {
-        private DataverseLogger _logger;
+        private IDataverseLogger _logger;
         private AttributeCollection _attributes;
         private Entity _target;
-        public SynStudentMapper(DataverseLogger logger, Entity target, AttributeCollection attributes)
+        public SynStudentMapper(IDataverseLogger logger, Entity target, AttributeCollection attributes)
         {
             _logger = logger;
             _target = target;

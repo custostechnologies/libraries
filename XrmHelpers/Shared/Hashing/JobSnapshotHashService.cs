@@ -5,9 +5,9 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {
     public class JobSnapshotHashService
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public JobSnapshotHashService(
-            DataverseLogger logger
+            IDataverseLogger logger
         )
         {
             _logger = logger;
