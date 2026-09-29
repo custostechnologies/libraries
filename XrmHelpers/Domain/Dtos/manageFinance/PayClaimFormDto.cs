@@ -74,9 +74,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public decimal? TotalUnpaidBreakHours { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public Status Status { get; set; }
+        public string? Status { get; set; }
 
         [DataverseLink(srcName: PayClaimFormFields.TotalUnpaidBreakHours, srcType: typeof(decimal), trgName: null, trgType: null)]
-        public PayClaimFormStatusReason StatusReason { get; set; }
+        public string? StatusReason { get; set; }
     }
 }
