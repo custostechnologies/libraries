@@ -238,5 +238,110 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             return value;
         }
+        public TDto MapJsonToDto(JsonElement json)
+        {
+            var dto = new TDto();
+
+            foreach (PropertyInfo property in typeof(TDto).GetProperties())
+            {
+                try
+                {
+                    var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+
+                    if (link == null)
+                        continue;
+
+                    if (string.IsNullOrWhiteSpace(link.SourceLogicalName))
+                        continue;
+
+                    if (!json.TryGetProperty(
+                        link.SourceLogicalName,
+                        out JsonElement jsonValue))
+                    {
+                        continue;
+                    }
+
+                    var targetType =
+                        Nullable.GetUnderlyingType(property.PropertyType)
+                        ?? property.PropertyType;
+
+                    object? value = ConvertValue(jsonValue, targetType);
+
+                    if (value != null)
+                    {
+                        property.SetValue(dto, value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.WriteLog(ex,
+                        $"Failed mapping property {property.Name}");
+                    throw;
+                }
+            }
+
+            return dto;
+        }
+
+        private static object? ConvertValue(
+            JsonElement value,
+            Type targetType)
+        {
+            if (value.ValueKind == JsonValueKind.Null)
+                return null;
+
+            if (targetType == typeof(string))
+                return value.GetString();
+
+            if (targetType == typeof(Guid))
+                return Guid.Parse(value.GetString()!);
+
+            if (targetType == typeof(int))
+                return value.GetInt32();
+
+            if (targetType == typeof(decimal))
+                return value.GetDecimal();
+
+            if (targetType == typeof(double))
+                return value.GetDouble();
+
+            if (targetType == typeof(bool))
+                return value.GetBoolean();
+
+            if (targetType == typeof(DateTime))
+            {
+                return value.ValueKind switch
+                {
+                    JsonValueKind.String =>
+                        DateTime.Parse(value.GetString()!),
+
+                    JsonValueKind.Number =>
+                        DateTimeOffset
+                            .FromUnixTimeMilliseconds(value.GetInt64())
+                            .DateTime,
+
+                    _ => null
+                };
+            }
+
+            if (targetType.IsEnum)
+            {
+                if (value.ValueKind == JsonValueKind.Number)
+                {
+                    var enumValue = value.GetInt32();
+                    return Enum.ToObject(targetType, enumValue);
+                }
+
+                return Enum.Parse(
+                    targetType,
+                    value.GetString()!,
+                    true);
+            }
+
+            return JsonSerializer.Deserialize(
+                value.GetRawText(),
+                targetType
+            );
+        }
     }
 }
