@@ -21,7 +21,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             PayClaimFormFields.Title,
             PayClaimFormFields.TotalClockedHours,
             PayClaimFormFields.TotalPayableHours,
-            PayClaimFormFields.TotalUnpaidBreakHours
+            PayClaimFormFields.TotalUnpaidBreakHours,
+            PayClaimFormFields.CreationId
         );
     }
 }

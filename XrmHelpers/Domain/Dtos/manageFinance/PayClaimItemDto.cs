@@ -6,20 +6,23 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
-    public class PayClaimItemDto : IValidationMetadata, IQueryDto
+    public class PayClaimItemDto : IQueryDto
     {
-        public const string SrcEntityName = EntityLogicalNames.PayClaimItem;
-        public const string TargetEntityName = EntityLogicalNames.PayClaimItem;
-
-        public string ValidationRuleSet => string.Empty;
-        public string SourceEntityLogicalName => SrcEntityName;
-        public string TargetEntityLogicalName => TargetEntityName;
-
-        public DateTime? ForcePlugin { get; set; }
-        public KeyAttributeCollection KeyCollection => new KeyAttributeCollection();
 
         [DataverseLink(srcName: PayClaimItemFields.PayClaimItemId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid? PayClaimItemId { get; set; }
+
+        [DataverseLink(srcName: PayClaimItemFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public int? Status { get; set; }
+
+        [DataverseLink(srcName: PayClaimItemFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? StatusLabel { get; set; }
+
+        [DataverseLink(srcName: PayClaimItemFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public int? StatusReason { get; set; }
+
+        [DataverseLink(srcName: PayClaimItemFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? StatusReasonLabel { get; set; }
 
         [DataverseLink(srcName: PayClaimItemFields.AMDuty, srcType: typeof(bool), trgName: null, trgType: null)]
         public bool? AMDuty { get; set; }

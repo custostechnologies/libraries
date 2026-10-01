@@ -21,7 +21,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             PayClaimItemFields.DailyPayableHours,
             PayClaimItemFields.Status,
             PayClaimItemFields.StatusReason,
-            PayClaimItemFields.PayClaimForm
+            PayClaimItemFields.PayClaimForm,
+            PayClaimItemFields.CreationId,
+            PayClaimItemFields.ChildId
         );
     }
 }
