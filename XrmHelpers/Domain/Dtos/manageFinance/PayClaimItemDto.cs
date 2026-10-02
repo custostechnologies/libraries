@@ -15,14 +15,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: PayClaimItemFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public int? Status { get; set; }
 
-        /*[DataverseLink(srcName: PayClaimItemFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public string? StatusLabel { get; set; }*/
+        [DataverseLink(srcName: PayClaimItemFields.Status, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? StatusLabel { get; set; }
 
         [DataverseLink(srcName: PayClaimItemFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public int? StatusReason { get; set; }
 
-        [DataverseLink(srcName: PayClaimItemFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public string? StatusReasonLabel { get; set; }
+        /*[DataverseLink(srcName: PayClaimItemFields.StatusReason, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public string? StatusReasonLabel { get; set; }*/
 
         [DataverseLink(srcName: PayClaimItemFields.AMDuty, srcType: typeof(bool), trgName: null, trgType: null)]
         public bool? AMDuty { get; set; }
