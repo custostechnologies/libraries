@@ -132,6 +132,33 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         )]
         public string? DirectReportCoreStaffMemberName { get; set; }
 
+        // azure id
+        [DataverseLink(
+            srcName: $"staff.{CoreStaffMemberFields.AzureObjectId}",
+            srcType: typeof(Guid),
+            trgName: null,
+            trgType: null
+        )]
+        public Guid? DirectReportAzureObjectId { get; set; }
+
+        // staff id
+        [DataverseLink(
+            srcName: $"staff.{CoreStaffMemberFields.StaffId}",
+            srcType: typeof(int),
+            trgName: null,
+            trgType: null
+        )]
+        public int? DirectReportStaffId { get; set; }
+
+        //email
+        [DataverseLink(
+            srcName: $"dr.{CoreStaffMemberFields.WorkEmail}",
+            srcType: typeof(string),
+            trgName: null,
+            trgType: null
+        )]
+        public string? DirectReportWorkEmail { get; set; }
+
         [DataverseLink(
             srcName: $"dr.{CoreJobAssignmentFields.CoreJobPosition}",
             srcType: typeof(EntityReference),
