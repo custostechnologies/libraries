@@ -27,7 +27,7 @@ namespace spgsWebTools.FunctionHelpers.Services
         }
         public async Task<ServiceClient> GetServiceClientAsync(IAuthValidationResult validationResult, string secretName)
         {
-            _logger.LogInformation("Attempting to create ServiceClient using USER-Assigned Managed Identity.");
+            _logger.LogInformation("Attempting to create ServiceClient using user token.");
 
             try
             {
@@ -36,7 +36,9 @@ namespace spgsWebTools.FunctionHelpers.Services
                     tokenProviderFunction: uri => Task.FromResult(token.Token),
                     instanceUrl: new Uri(_configOptions.EnvironmentUri)
                 );
-                _logger.LogInformation("Returning ServiceClient using ManagedIdentity authentication.");
+
+                _logger.LogInformation("Returning ServiceClient using user authentication.");
+                
                 return client;
             }
             catch (Exception ex)
