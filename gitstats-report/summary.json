@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generated_by": "gitstats 2.8.0",
+  "generated_at": "2026-10-06T20:52:28+11:00",
+  "name": "libraries",
+  "report_path": "index.html",
+  "first_commit": "2026-06-11 17:29:43",
+  "last_commit": "2026-10-06 17:40:54",
+  "age_days": 117,
+  "active_days": 54,
+  "total_commits": 330,
+  "total_authors": 1,
+  "active_authors_12mo": 1,
+  "commits_last_12mo": 330,
+  "total_files": 315,
+  "total_lines": 18101,
+  "lines_added": 63983,
+  "lines_removed": 45882,
+  "total_tags": 2,
+  "era": "birth",
+  "top_authors": [
+    {
+      "name": "Matthew Thomas",
+      "commits": 330
+    }
+  ],
+  "author_commits": {
+    "Matthew Thomas": 330
+  },
+  "commits_by_year": {
+    "2026": 330
+  }
+}
