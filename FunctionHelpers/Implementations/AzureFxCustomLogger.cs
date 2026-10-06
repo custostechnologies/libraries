@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace spgsWebTools.FunctionHelpers.Logging
 {
-    public class AzureFxCustomLogger<T> : IFxCustomLogger
+    public class AzureFxCustomLogger<T> : IFxCustomLogger, ILogger
     {
         private readonly ILogger<T> _baseLogger;
         public AzureFxCustomLogger(

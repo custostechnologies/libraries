@@ -79,7 +79,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: CoreJobAssignmentFields.StartDate, srcType: typeof(DateTime), trgName: null, trgType: null)]
         public DateTime? StartDate { get; set; }
 
-        [DataverseLink(srcName: CoreJobAssignmentFields.StaffId, srcType: typeof(DateTime), trgName: null, trgType: null)]
+        [DataverseLink(srcName: CoreJobAssignmentFields.EndDate, srcType: typeof(DateTime), trgName: null, trgType: null)]
         public DateTime? EndDate { get; set; }
     }
 }
