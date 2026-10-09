@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Constants;
 
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class AutoNumberCounters

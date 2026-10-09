@@ -8,7 +8,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public class NotificationPipeline<TDto> : INotificationPipeline<TDto> where TDto : IDto, new()
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly IDataverseMapper<TDto> _dataverseMapper;
         private readonly INotificationMapper<TDto> _notificationMapper;
         private readonly ILookupEnricher<TDto> _enricher;
@@ -51,7 +51,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 throw;
             }
         }

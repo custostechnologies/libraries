@@ -17,7 +17,7 @@ namespace spgsWebTools.XrmHelpers.Constants
 
         // Relationships
         public const string RelatedCloudFlow = "mthomas_relatedcloudflow";
-        
+
         // Status
         public const string StateCode = "statecode";
         public const string StatusCode = "statuscode";

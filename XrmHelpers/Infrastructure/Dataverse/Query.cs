@@ -9,7 +9,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
     public class Query<TKey> : IQuery<TKey>
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public Query(
             ILookupMetadata<TKey> metadata,
             IDataverseContext context
@@ -48,7 +48,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 throw;
             }
         }
@@ -72,7 +72,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: {ex}");
+                _logger.WriteLog($"Exception: ", ex);
                 throw;
             }
         }

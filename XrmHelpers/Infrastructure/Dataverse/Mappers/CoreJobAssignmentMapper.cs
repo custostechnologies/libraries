@@ -9,13 +9,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public class CoreJobAssignmentMapper
     {
         private readonly string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private bool _create = false;
-        public CoreJobAssignmentMapper(DataverseLogger logger)
+        public CoreJobAssignmentMapper(IDataverseLogger logger)
         {
             _logger = logger;
         }
-        public Entity ToCreateEntity(CoreJobAssignment core, DataverseLogger logger, string[] updatedAttributes)
+        public Entity ToCreateEntity(CoreJobAssignment core, IDataverseLogger logger, string[] updatedAttributes)
         {
             var entity = ToEntity(core, true, updatedAttributes);
 
@@ -30,7 +30,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 
             return entity;
         }
-        public Entity ToUpdateEntity(CoreJobAssignment core, DataverseLogger logger, string[] updatedAttributes)
+        public Entity ToUpdateEntity(CoreJobAssignment core, IDataverseLogger logger, string[] updatedAttributes)
         {
             if (core == null || core.CoreJobAssignmentId == Guid.Empty)
             {

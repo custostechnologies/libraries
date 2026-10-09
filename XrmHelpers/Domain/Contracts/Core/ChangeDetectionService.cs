@@ -9,7 +9,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public class ChangeDetectionService<TDto> : IChangeDetectionService<TDto> where TDto : IDto
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly IHashService<TDto> _hashService;
         public ChangeDetectionService(IDataverseContext context, IHashService<TDto> hashService)
         {

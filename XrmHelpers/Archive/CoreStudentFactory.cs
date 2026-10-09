@@ -13,12 +13,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class CoreStudentFactory
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string _correlationId;
         private bool _resolutionFailed = false;
         private CoreStudents? _coreStudentQuery;
         private bool _create = false;
-        public CoreStudentFactory(IDataverseContext context, DataverseLogger logger, string correlationId)
+        public CoreStudentFactory(IDataverseContext context, IDataverseLogger logger, string correlationId)
         {
             _context = context;
             _logger = logger;

@@ -8,12 +8,12 @@ namespace spgsWebTools.XrmHelpers.Shared.Hashing
     /// </summary>
     public class StaffMemberHashService
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="tracer"></param>
-        public StaffMemberHashService(DataverseLogger logger)
+        public StaffMemberHashService(IDataverseLogger logger)
         {
             _logger = logger;
         }

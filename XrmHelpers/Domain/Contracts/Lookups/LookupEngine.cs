@@ -8,9 +8,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     public class LookupEngine : ILookupEngine
     {
         private readonly IServiceProvider _provider;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public LookupEngine(
-            DataverseLogger logger,
+            IDataverseLogger logger,
             IServiceProvider provider
         )
         {

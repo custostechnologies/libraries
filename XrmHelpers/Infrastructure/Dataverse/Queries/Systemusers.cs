@@ -9,8 +9,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class Systemusers
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
-        public Systemusers(IDataverseContext context, DataverseLogger logger)
+        private readonly IDataverseLogger _logger;
+        public Systemusers(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;

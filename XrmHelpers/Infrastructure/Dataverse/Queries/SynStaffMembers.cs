@@ -11,13 +11,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_synergetic_vstaff_community_leftjoin";
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="service"></param>
         /// <param name="tracer"></param>
-        public SynStaffMembers(IDataverseContext context, DataverseLogger logger)
+        public SynStaffMembers(IDataverseContext context, IDataverseLogger logger)
         {
             _context = context;
             _logger = logger;

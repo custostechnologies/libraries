@@ -10,8 +10,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStudentSnapshotFactory
     {
-        private readonly DataverseLogger _logger;
-        public SynStudentSnapshotFactory(DataverseLogger logger)
+        private readonly IDataverseLogger _logger;
+        public SynStudentSnapshotFactory(IDataverseLogger logger)
         {
             _logger = logger;
         }

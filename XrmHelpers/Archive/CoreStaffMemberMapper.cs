@@ -9,8 +9,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public class CoreStaffMemberMapper
     {
         private const string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        private readonly DataverseLogger _logger;
-        public CoreStaffMemberMapper(DataverseLogger logger)
+        private readonly IDataverseLogger _logger;
+        public CoreStaffMemberMapper(IDataverseLogger logger)
         {
             _logger = logger;
         }

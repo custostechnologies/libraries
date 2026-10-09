@@ -31,7 +31,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     public class CoreStaffMemberFactory
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string _correlationId;
         private bool _resolutionFailed = false;
         private CoreStaffMembers? _coreStaffQuery;
@@ -42,7 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private bool _create = false;
         private string ENDPOINT_ENV_VAR_SCHEMA_NAME = "pgrowth_XrmHelpers_FlowEndpoint_ForceUserSync";
         private string SYNC_FLOW_ENDPOINT = "";
-        public CoreStaffMemberFactory(IDataverseContext context, DataverseLogger logger, string correlationId)
+        public CoreStaffMemberFactory(IDataverseContext context, IDataverseLogger logger, string correlationId)
         {
             _context = context;
             _logger = logger;

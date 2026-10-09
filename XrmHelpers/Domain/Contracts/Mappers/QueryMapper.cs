@@ -1,9 +1,7 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Resolvers;
@@ -14,10 +12,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class QueryMapper<TDto> : IQueryMapper<TDto> where TDto : IQueryDto, new()
     {
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly ILookupEngine _lookupEngine;
         public QueryMapper(
-            DataverseLogger logger,
+            IDataverseLogger logger,
             ILookupEngine lookupEngine
         )
         {
@@ -130,6 +128,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             case "LinkType":
                                 setValue = (LinkType)optionValue;
                                 break;
+                            case "PayClaimFormStatusReason":
+                                setValue = (PayClaimFormStatusReason)optionValue;
+                                break;
                             default:
                                 setValue = Enum.Parse(dtoValueType, optionValue.ToString());
                                 break;
@@ -150,6 +151,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             case "Gender":
                                 setValue = GenderResolver.ToEnum(value.ToString() ?? "");
                                 break;
+                            case "Status":
+                                setValue = StatusResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            case "StatusReason":
+                                setValue = StatusReasonResolver.ToEnum(value.ToString() ?? "");
+                                break;
+                            case "PayClaimFormStatusReason":
+                                setValue = PayClaimFormStatusReasonResolver.ToEnum(value.ToString() ?? "");
+                                break;
                             default:
                                 setValue = Enum.Parse(dtoValueType, value.ToString() ?? "");
                                 break;
@@ -166,6 +176,22 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         if (property.Name == "LinkTypeName")
                         {
                             setValue = LinkTypeResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "PayClaimFormStatusReasonLabel")
+                        {
+                            setValue = PayClaimFormStatusReasonResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "RespondentTypeLabel")
+                        {
+                            setValue = RespondentTypeResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "FormTypeLabel")
+                        {
+                            setValue = FormTypeResolver.ToLabel(opsetvalue.Value);
+                        }
+                        else if (property.Name == "StatusLabel")
+                        {
+                            setValue = StatusResolver.ToLabel(opsetvalue.Value);
                         }
                         else
                         {
@@ -211,6 +237,111 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             if (value is AliasedValue alias) value = alias.Value;
 
             return value;
+        }
+        public TDto MapJsonToDto(JsonElement json)
+        {
+            var dto = new TDto();
+
+            foreach (PropertyInfo property in typeof(TDto).GetProperties())
+            {
+                try
+                {
+                    var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+
+                    if (link == null)
+                        continue;
+
+                    if (string.IsNullOrWhiteSpace(link.SourceLogicalName))
+                        continue;
+
+                    if (!json.TryGetProperty(
+                        link.SourceLogicalName,
+                        out JsonElement jsonValue))
+                    {
+                        continue;
+                    }
+
+                    var targetType =
+                        Nullable.GetUnderlyingType(property.PropertyType)
+                        ?? property.PropertyType;
+
+                    object? value = ConvertValue(jsonValue, targetType);
+
+                    if (value != null)
+                    {
+                        property.SetValue(dto, value);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.WriteLog(ex,
+                        $"Failed mapping property {property.Name}");
+                    throw;
+                }
+            }
+
+            return dto;
+        }
+
+        private static object? ConvertValue(
+            JsonElement value,
+            Type targetType)
+        {
+            if (value.ValueKind == JsonValueKind.Null)
+                return null;
+
+            if (targetType == typeof(string))
+                return value.GetString();
+
+            if (targetType == typeof(Guid))
+                return Guid.Parse(value.GetString()!);
+
+            if (targetType == typeof(int))
+                return value.GetInt32();
+
+            if (targetType == typeof(decimal))
+                return value.GetDecimal();
+
+            if (targetType == typeof(double))
+                return value.GetDouble();
+
+            if (targetType == typeof(bool))
+                return value.GetBoolean();
+
+            if (targetType == typeof(DateTime))
+            {
+                return value.ValueKind switch
+                {
+                    JsonValueKind.String =>
+                        DateTime.Parse(value.GetString()!),
+
+                    JsonValueKind.Number =>
+                        DateTimeOffset
+                            .FromUnixTimeMilliseconds(value.GetInt64())
+                            .DateTime,
+
+                    _ => null
+                };
+            }
+
+            if (targetType.IsEnum)
+            {
+                if (value.ValueKind == JsonValueKind.Number)
+                {
+                    var enumValue = value.GetInt32();
+                    return Enum.ToObject(targetType, enumValue);
+                }
+
+                return Enum.Parse(
+                    targetType,
+                    value.GetString()!,
+                    true);
+            }
+
+            return JsonSerializer.Deserialize(
+                value.GetRawText(),
+                targetType
+            );
         }
     }
 }

@@ -4,8 +4,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Resolvers
 {
     public class BusinessUnitResovler
     {
-        private DataverseLogger _logger;
-        public BusinessUnitResolver(DataverseLogger logger)
+        private IDataverseLogger _logger;
+        public BusinessUnitResolver(IDataverseLogger logger)
         {
             _logger = logger;
         }

@@ -4,6 +4,7 @@ using Azure.Core;
 using Microsoft.Extensions.Logging;
 using spgsWebTools.FunctionHelpers.Types;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
+using System.Diagnostics;
 
 namespace spgsWebTools.FunctionHelpers.Services
 {
@@ -64,7 +65,9 @@ namespace spgsWebTools.FunctionHelpers.Services
 
                 try
                 {
+                    var start = Stopwatch.StartNew();
                     _logger.LogInformation("Executing confidentialClientApp.AcquireTokenOnBehalfOf");
+
                     var authResult = await _confidentialClientApp.AcquireTokenOnBehalfOf(
                         new[]
                         {
@@ -73,7 +76,7 @@ namespace spgsWebTools.FunctionHelpers.Services
                         assertion
                     ).ExecuteAsync();
 
-                    _logger.LogInformation("Returning AccessToken built from authResult to caller.");
+                    _logger.LogInformation($"Token acquired in {start.ElapsedMilliseconds}ms. Returning AccessToken built from authResult to caller.");
 
                     return new AccessToken(
                         authResult.AccessToken,

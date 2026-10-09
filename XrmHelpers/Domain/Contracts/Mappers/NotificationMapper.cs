@@ -36,14 +36,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
         private FileDownloaderService _downloaderService;
 
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public NotificationMapper(
+            IDataverseLogger logger,
             IDataverseContext context,
             ILookupEngine lookupEngine
         )
         {
             _context = context;
-            _logger = new DataverseLogger(_context.Logger, typeof(NotificationMapper<TDto>).Name);
+            _logger = logger;
             _lookupEngine = lookupEngine;
 
             _emailTemplateQuery = new EmailTemplates(_context);

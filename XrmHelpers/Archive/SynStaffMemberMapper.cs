@@ -5,10 +5,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStaffMemberMapper
     {
-        private DataverseLogger _logger;
+        private IDataverseLogger _logger;
         private AttributeCollection _attributes;
         private Entity _target;
-        public SynStaffMemberMapper(DataverseLogger logger, Entity target, AttributeCollection attributes)
+        public SynStaffMemberMapper(IDataverseLogger logger, Entity target, AttributeCollection attributes)
         {
             _logger = logger;
             _target = target;

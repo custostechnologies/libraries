@@ -5,10 +5,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynJobPositionMapper
     {
-        private DataverseLogger _logger;
+        private IDataverseLogger _logger;
         private AttributeCollection _attributes;
         private Entity _target;
-        public SynJobPositionMapper(DataverseLogger logger, Entity target, AttributeCollection attributes)
+        public SynJobPositionMapper(IDataverseLogger logger, Entity target, AttributeCollection attributes)
         {
             _logger = logger;
             _target = target;
