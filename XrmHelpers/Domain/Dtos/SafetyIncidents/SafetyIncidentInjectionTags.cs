@@ -32,12 +32,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
                 ContextKey = nameof(SafetyIncidentDto.NameOfInjuredPerson)
             };
 
+        public static readonly ContextInjectionTag SubmittedBy =
+            new()
+            {
+                InjectionToken = "inSubmittedBy",
+                ContextKey = nameof(SafetyIncidentDto.SubmitterName)
+            };
+
         public static IEnumerable<IInjectionTag> All =>
         [
             IncidentType,
             IncidentDate,
             IncidentLocation,
-            PersonInvolved
+            PersonInvolved,
+            SubmittedBy
         ];
     }
 }

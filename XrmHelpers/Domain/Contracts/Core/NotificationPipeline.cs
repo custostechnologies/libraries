@@ -12,13 +12,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IDataverseMapper<TDto> _dataverseMapper;
         private readonly INotificationMapper<TDto> _notificationMapper;
         private readonly ILookupEnricher<TDto> _enricher;
+        private readonly ISummaryNotificationMapper _summaryMapper;
         private readonly IChangeDetectionService<TDto> _changeDetector;
         public NotificationPipeline(
             IDataverseContext context,
             IDataverseMapper<TDto> dataverseMapper,
             INotificationMapper<TDto> notificationMapper,
             ILookupEnricher<TDto> enricher,
-            IChangeDetectionService<TDto> changeDetector
+            IChangeDetectionService<TDto> changeDetector,
+            ISummaryNotificationMapper summaryMapper
         )
         {
             _context = context;
@@ -26,6 +28,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _notificationMapper = notificationMapper;
             _enricher = enricher;
             _changeDetector = changeDetector;
+            _summaryMapper = summaryMapper;
 
             _logger = _context.GetLogger<NotificationPipeline<TDto>>();
         }

@@ -14,6 +14,7 @@ using System.Text.Json;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 using System.Text;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
+using spgsWebTools.XrmHelpers.Infrastructure.Services;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -154,12 +155,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto,
                 tags,
                 "inTableHtmlString",
-                dto.GenerateSummaryTable(
-                    _context,
-                    dto.SourceEntityLogicalName,
-                    dto.EntityId,
-                    dto.TargetAppDisplayName
-                )
+                SummaryNotificationService.BuildHtmlTable(dto)
             );
 
             if (!string.IsNullOrWhiteSpace(templateKey))

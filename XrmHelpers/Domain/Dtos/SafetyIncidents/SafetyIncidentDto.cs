@@ -49,6 +49,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [Notification(operationType: OperationType.Create, label: "Title", index: 0)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Title", index: 0)]
+        [Notification(operationType: OperationType.SummaryNotification, label: "Title", index: 0)]
         [DataverseLink(srcName: SafetyIncidentFields.AutoGenTitle, srcType: typeof(string), trgName: null, trgType: null)]
         public string? AutoGenTitle { get; set; }
 
@@ -129,6 +130,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [Notification(operationType: OperationType.Create, label: "Incident Type", index: 2)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Type", index: 2)]
+        [Notification(operationType: OperationType.SummaryNotification, label: "Type", index: 4)]
         [DataverseLink(srcName: SafetyIncidentFields.IncidentType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public IncidentType IncidentType { get; set; }
 
@@ -154,6 +156,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [Notification(operationType: OperationType.Create, label: "Name of Person Involved", index: 6)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Name of Person Involved", index: 6)]
+        [Notification(operationType: OperationType.SummaryNotification, label: "Person Involved", index: 2)]
         [DataverseLink(srcName: SafetyIncidentFields.NameOfInjuredPerson, srcType: typeof(string), trgName: null, trgType: null)]
         public string? NameOfInjuredPerson { get; set; }
 
@@ -210,6 +213,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [Notification(operationType: OperationType.Create, label: "Submitter Name", index: 7)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Submitter Name", index: 7)]
+        [Notification(operationType: OperationType.SummaryNotification, label: "Submitted By", index: 3)]
         [DataverseLink(srcName: SafetyIncidentFields.SubmitterName, srcType: typeof(string), trgName: null, trgType: null)]
         public string? SubmitterName { get; set; }
 
