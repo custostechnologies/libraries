@@ -11,13 +11,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
     public class EmailService
     {
         private readonly IDataverseContext _context;
-        private DataverseLogger _logger;
+        private IDataverseLogger _logger;
         public EmailService(
+            IDataverseLoggerFactory loggerFactory,
             IDataverseContext context
         )
         {
             _context = context;
-            _logger = _context.GetLogger<EmailService>();
+            _logger = loggerFactory.Create<EmailService>();
         }
         private string GetGraphToken(
             string tid,

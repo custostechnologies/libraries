@@ -15,11 +15,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IDataverseLogger _logger;
         private readonly ILookupEngine _lookupEngine;
         public QueryMapper(
-            IDataverseLogger logger,
+            IDataverseLoggerFactory loggerFactory,
             ILookupEngine lookupEngine
         )
         {
-            _logger = logger;
+            _logger = loggerFactory.Create<QueryMapper<TDto>>();
             _lookupEngine = lookupEngine;
         }
         public TDto MapToDto(Entity srcEntity)

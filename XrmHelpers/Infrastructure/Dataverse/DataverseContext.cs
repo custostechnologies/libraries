@@ -5,27 +5,32 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class DataverseContext : IDataverseContext
     {
+        private readonly IDataverseLoggerFactory _loggerFactory;
+
         public DataverseContext(
             IOrganizationService service,
             ILogger logger,
-            IPluginExecutionContext executionContext
-        )
+            IPluginExecutionContext executionContext,
+            IDataverseLoggerFactory loggerFactory)
         {
             Service = service;
             Logger = logger;
             ExecutionContext = executionContext;
+            _loggerFactory = loggerFactory;
 
-            logger.LogInformation("[DataverseContext] Instantiated DataverseContext class.");
+            logger.LogInformation(
+                "[DataverseContext] Instantiated DataverseContext class.");
         }
+
         public IOrganizationService Service { get; }
+
         public ILogger Logger { get; }
+
         public IPluginExecutionContext ExecutionContext { get; }
-        public DataverseLogger GetLogger<T>()
+
+        public IDataverseLogger GetLogger<T>()
         {
-            return new DataverseLogger(
-                Logger,
-                typeof(T).Name
-            );
+            return _loggerFactory.Create<T>();
         }
     }
 }

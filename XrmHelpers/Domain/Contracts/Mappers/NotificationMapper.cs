@@ -30,10 +30,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private Themes _themeQuery;
         private TemplateSnippetIntersects _intersectQuery;
 
-        private DataverseMapper<EmailTemplateDto> _emailTemplateMapper;
-        private DataverseMapper<ThemeDto> _themeMapper;
-        private DataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
-        private DataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
+        private IDataverseMapper<EmailTemplateDto> _emailTemplateMapper;
+        private IDataverseMapper<ThemeDto> _themeMapper;
+        private IDataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
+        private IDataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
 
         private FileDownloaderService _downloaderService;
 
@@ -41,7 +41,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public NotificationMapper(
             IDataverseLogger logger,
             IDataverseContext context,
-            ILookupEngine lookupEngine
+            ILookupEngine lookupEngine,
+            IDataverseMapper<EmailTemplateDto> emailTemplateMapper,
+            IDataverseMapper<ThemeDto> themeMapper,
+            IDataverseMapper<HTMLSnippetDto> htmlSnippetMapper,
+            IDataverseMapper<TemplateSnippetIntersectDto> intersectMapper
         )
         {
             _context = context;
@@ -54,10 +58,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _downloaderService = new FileDownloaderService(_context);
 
-            _emailTemplateMapper = new DataverseMapper<EmailTemplateDto>(_logger, _lookupEngine);
-            _themeMapper = new DataverseMapper<ThemeDto>(_logger, _lookupEngine);
-            _htmlSnippetMapper = new DataverseMapper<HTMLSnippetDto>(_logger, _lookupEngine);
-            _intersectMapper = new DataverseMapper<TemplateSnippetIntersectDto>(_logger, _lookupEngine);
+            _emailTemplateMapper = emailTemplateMapper;
+            _themeMapper = themeMapper;
+            _htmlSnippetMapper = htmlSnippetMapper;
+            _intersectMapper = intersectMapper;
         }
         public (string, NotificationRequestDto) CreateHtmlObject(TDto dto)
         {
