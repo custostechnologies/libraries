@@ -10,12 +10,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IServiceProvider _provider;
         private readonly IDataverseLogger _logger;
         public LookupEngine(
-            IDataverseLogger logger,
-            IServiceProvider provider
+            IServiceProvider provider,
+            IDataverseLoggerFactory loggerFactory
         )
         {
             _provider = provider;
-            _logger = logger;
+            _logger = loggerFactory.Create<LookupEngine>();
             _logger.WriteLog("Class instantiated via constructor.");
         }
         public ILookupResult<TKey> Execute<TKey>(ILookupMetadata<TKey> metadata)

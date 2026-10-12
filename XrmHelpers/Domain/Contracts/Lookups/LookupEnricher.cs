@@ -13,16 +13,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     {
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly ILookupMetadataFactory _metadataFactory;
         public LookupEnricher(
+            IDataverseLoggerFactory loggerFactory,
             IDataverseContext context,
             ILookupEngine lookupEngine,
             ILookupMetadataFactory lookupMetadataFactory
         )
         {
             _context = context;
-            _logger = new DataverseLogger(_context.Logger, typeof(LookupEnricher<TDto>).Name);
+            _logger = loggerFactory.Create<LookupEnricher<TDto>>();
             _lookupEngine = lookupEngine;
             _metadataFactory = lookupMetadataFactory;
         }

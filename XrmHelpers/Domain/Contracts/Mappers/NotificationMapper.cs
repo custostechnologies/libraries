@@ -39,7 +39,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
         private readonly IDataverseLogger _logger;
         public NotificationMapper(
-            IDataverseLogger logger,
+            IDataverseLoggerFactory loggerFactory,
             IDataverseContext context,
             ILookupEngine lookupEngine,
             IDataverseMapper<EmailTemplateDto> emailTemplateMapper,
@@ -49,7 +49,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         )
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<NotificationMapper<TDto>>();
             _lookupEngine = lookupEngine;
 
             _emailTemplateQuery = new EmailTemplates(_context);

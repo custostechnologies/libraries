@@ -11,11 +11,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
         private readonly IHashService<TDto> _hashService;
-        public ChangeDetectionService(IDataverseContext context, IHashService<TDto> hashService)
+        public ChangeDetectionService(
+            IDataverseLoggerFactory loggerFactory,
+            IDataverseContext context, 
+            IHashService<TDto> hashService
+        )
         {
             _context = context;
             _hashService = hashService;
-            _logger = _context.GetLogger<ChangeDetectionService<TDto>>();
+            _logger = loggerFactory.Create<ChangeDetectionService<TDto>>();
         }
         public DeltaComparison<TDto> Compare(TDto prev, TDto next)
         {

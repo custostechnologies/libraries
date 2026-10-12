@@ -13,6 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly ILookupEnricher<TDto> _enricher;
         private readonly IChangeDetectionService<TDto> _changeDetector;
         public SyncPipeline(
+            IDataverseLoggerFactory loggerFactory,
             IDataverseContext context,
             IDataverseMapper<TDto> mapper,
             ILookupEnricher<TDto> enricher,
@@ -24,7 +25,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _enricher = enricher;
             _changeDetector = changeDetector;
 
-            _logger = _context.GetLogger<SyncPipeline<TDto>>();
+            _logger = loggerFactory.Create<SyncPipeline<TDto>>();
         }
         // MAP SOURCE -> SOURCE
         public Entity ExecuteInbound(Entity target, Entity? preImage)
