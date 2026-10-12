@@ -21,6 +21,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SendFrom = "pgrowth_sendfrom";
         public const string Importance = "pgrowth_importance";
         public const string Subject = "pgrowth_subject";
+        public const string OperationType = "pgrowth_operationtype";
 
         // Related Records
         public const string RelatedRecordId = "mthomas_relatedrecordid";

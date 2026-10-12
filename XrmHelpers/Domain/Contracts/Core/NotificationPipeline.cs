@@ -32,7 +32,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _logger = _context.GetLogger<NotificationPipeline<TDto>>();
         }
-        public Guid BuildEmailNotification(Entity target)
+        public Guid BuildEmailNotification(Entity target, string to, string? cc)
         {
             TDto dto;
 
@@ -48,6 +48,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var output = _notificationMapper.CreateHtmlObject(dto);
 
                 NotificationRequestDto requestDto = output.Item2;
+
+                requestDto.RecipientString = to;
+                requestDto.CCString = cc;
 
                 _logger.WriteLog("Mapping to NotificationRequest entity...");
                 return _notificationMapper.MapToNotificationRequest(output.Item2, output.Item1);

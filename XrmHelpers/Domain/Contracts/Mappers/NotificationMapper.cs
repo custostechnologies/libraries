@@ -181,8 +181,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         EntityLogicalNames.EmailTemplate,
                         _emailTemplate.Id
                     );
-                    requestDto.RegardingRecordId = dto.EntityId;
-                    requestDto.CCString = _emailTemplateDto.CC;
+                    
+                    // ARGS TO NOTIFICATION PIPELINE CALL
+
+                    if (string.IsNullOrWhiteSpace(requestDto.CCString)) requestDto.CCString = _emailTemplateDto.CC;
+                    //requestDto.RegardingRecordId = dto.EntityId;
+                    //requestDto.CCString = _emailTemplateDto.CC;
+                    
                     requestDto.Importance = 0;
                     requestDto.Subject = _emailTemplateDto.Subject;
                     requestDto.SendFrom = _emailTemplateDto.SendFrom;

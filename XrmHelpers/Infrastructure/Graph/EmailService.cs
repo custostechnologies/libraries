@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
@@ -20,11 +19,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
             _context = context;
             _logger = _context.GetLogger<EmailService>();
         }
-        private string GetGraphToken()
+        private string GetGraphToken(
+            string tid,
+            string cid,
+            string secret
+        )
         {
-            string tenantId = "";
-            string clientId = "";
-            string clientSecret = "";
+            string tenantId = tid;
+            string clientId = cid;
+            string clientSecret = secret;
             string tokenUrl = $"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token";
 
             using (var client = new HttpClient())
@@ -34,7 +37,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                 var keyPairs = new[]
                 {
                     new KeyValuePair<string, string>("client_id", clientId),
-                    new KeyValuePair<string, string>("scope", "https://microsoft.com"),
+                    new KeyValuePair<string, string>("scope", "Mail.Send"),
                     new KeyValuePair<string, string>("client_secret", clientSecret),
                     new KeyValuePair<string, string>("grant_type", "client_credentials")
                 };
@@ -58,8 +61,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                 }
             }
         }
-        private bool SendEmailViaApi(string token, string content)
+        public bool SendEmailViaApi(
+            string tid,
+            string cid,
+            string secret,
+            string content
+        )
         {
+            string token = GetGraphToken(tid, cid, secret);
+
             string endpoint = "https://graph.microsoft.com/v1.0/me/sendMail";
 
             using (var client = new HttpClient())
