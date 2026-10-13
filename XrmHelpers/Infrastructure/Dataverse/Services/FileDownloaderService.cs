@@ -26,6 +26,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
             _target = target;
             _fileAttributeName = fileAttributeName;
 
+            _logger.WriteLog(
+                "Starting file download. Entity={0}, Id={1}, Attribute={2}",
+                target.LogicalName,
+                target.Id,
+                fileAttributeName
+            );
+
             try
             {
                 var initRequest = new InitializeFileBlocksDownloadRequest
@@ -34,10 +41,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                     FileAttributeName = _fileAttributeName
                 };
 
+                _logger.WriteLog(
+            "Sending InitializeFileBlocksDownloadRequest."
+        );
+
                 var initResponse = (InitializeFileBlocksDownloadResponse)_context.Service.Execute(initRequest);
 
                 string fileContinuationToken = initResponse.FileContinuationToken;
                 long fileSize = initResponse.FileSizeInBytes;
+
+                _logger.WriteLog(
+            "Download initialized. FileSize={0} bytes, TokenPresent={1}",
+            fileSize,
+            !string.IsNullOrWhiteSpace(fileContinuationToken)
+        );
 
                 List<byte> fileBytes = new((int)fileSize);
 
@@ -46,8 +63,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
 
                 if (fileSize < blockSize) blockSize = fileSize;
 
+                _logger.WriteLog(
+            "Using block size of {0} bytes.",
+            blockSize
+        );
+
                 while (fileSize > 0)
                 {
+                    _logger.WriteLog(
+                "Downloading block. Offset={0}, BlockLength={1}, Remaining={2}",
+                offset,
+                blockSize,
+                fileSize
+            );
+
                     var downloadBlockRequest = new DownloadBlockRequest
                     {
                         BlockLength = blockSize,
@@ -57,17 +86,30 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
 
                     DownloadBlockResponse response = (DownloadBlockResponse)_context.Service.Execute(downloadBlockRequest);
 
-                    fileBytes.AddRange(response.Data);
+                    _logger.WriteLog(
+                "Block retrieved. BytesReceived={0}",
+                response.Data?.Length ?? 0
+            );
+
+                    fileBytes.AddRange(response.Data ?? []);
 
                     fileSize -= (int)blockSize;
                     offset += blockSize;
                 }
 
+                _logger.WriteLog(
+            "File download completed successfully. TotalBytes={0}",
+            fileBytes.Count
+        );
+
                 return fileBytes.ToArray();
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Upload failed: ", ex);
+                _logger.WriteLog(
+                    ex,
+                    $"File download failed. Entity={_target?.LogicalName}, Id={_target?.Id}, Attribute={_fileAttributeName}"
+                );
                 throw new InvalidPluginExecutionException($"Error saving file: ", ex);
             }
         }
