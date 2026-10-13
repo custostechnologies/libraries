@@ -106,7 +106,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 );
             }
 
-            _logger.WriteLog($"TemplateKey: {templateKey}");
+            templateKey = template;
+            _logger.WriteLog($"TemplateKey resolved to: {templateKey}");
 
             // inject tags values based on incoming dto (regarding obj)
             _logger.WriteLog("Using _tagResolverEngine to inject dto values into tag list.");
