@@ -32,8 +32,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 var srcName = string.Empty;
 
-                var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                var ignore = property.GetCustomAttribute<IgnoreOnCreateAttribute>();
+                if (ignore != null) continue;
 
+                var link = property.GetCustomAttribute<DataverseLinkAttribute>();
                 if (link == null) continue;
 
                 var value = property.GetValue(dto);
@@ -136,6 +138,55 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
 
             return entity;
+        }
+        public TDto MapJsonToDto(string payload)
+        {
+            _logger.WriteLog($"Entered MapJsonToDto with typeof(TDto).Name: {typeof(TDto).Name}");
+
+            var dto = new TDto();
+
+            using var document = JsonDocument.Parse(payload);
+
+            foreach (var property in typeof(TDto).GetProperties())
+            {
+                try
+                {
+                    var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                    
+                    if (link == null)
+                        continue;
+
+                    if (string.IsNullOrWhiteSpace(link.SourceLogicalName))
+                        continue;
+
+                    if (!document.RootElement.TryGetProperty(
+                        link.SourceLogicalName,
+                        out var jsonValue))
+                    {
+                        continue;
+                    }
+
+                    var propertyType =
+                        Nullable.GetUnderlyingType(property.PropertyType)
+                        ?? property.PropertyType;
+
+                    object? value = ConvertJsonValue(
+                        jsonValue,
+                        propertyType);
+
+                    property.SetValue(dto, value);
+                }
+                catch (Exception ex)
+                {
+                    _logger.WriteLog(
+                        $"Failed mapping property {property.Name}. Exception: {ex}"
+                    );
+
+                    throw;
+                }
+            }
+
+            return dto;
         }
         public Entity MapToTarget(TDto dto)
         {
@@ -404,6 +455,97 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             if (value is AliasedValue alias) value = alias.Value;
 
             return value;
+        }
+        private object? ConvertJsonValue(
+            JsonElement element,
+            Type targetType)
+        {
+            if (element.ValueKind == JsonValueKind.Null)
+            {
+                return null;
+            }
+
+            if (targetType.IsEnum)
+            {
+                return Enum.ToObject(
+                    targetType,
+                    element.GetInt32());
+            }
+
+            if (targetType == typeof(string))
+            {
+                return element.GetString();
+            }
+
+            if (targetType == typeof(bool))
+            {
+                return element.GetBoolean();
+            }
+
+            if (targetType == typeof(int))
+            {
+                return element.GetInt32();
+            }
+
+            if (targetType == typeof(long))
+            {
+                return element.GetInt64();
+            }
+
+            if (targetType == typeof(decimal))
+            {
+                return element.GetDecimal();
+            }
+
+            if (targetType == typeof(double))
+            {
+                return element.GetDouble();
+            }
+
+            if (targetType == typeof(Guid))
+            {
+                return Guid.Parse(element.GetString()!);
+            }
+
+            if (targetType == typeof(DateTime))
+            {
+                return element.GetDateTime();
+            }
+
+            if (targetType == typeof(DateTimeOffset))
+            {
+                return element.GetDateTimeOffset();
+            }
+
+            if (targetType == typeof(List<int>))
+            {
+                return element
+                    .EnumerateArray()
+                    .Select(x => x.GetInt32())
+                    .ToList();
+            }
+
+            if (targetType.IsGenericType &&
+                targetType.GetGenericTypeDefinition() == typeof(List<>))
+            {
+                var itemType = targetType.GetGenericArguments()[0];
+
+                var list = (System.Collections.IList)
+                    Activator.CreateInstance(targetType)!;
+
+                foreach (var item in element.EnumerateArray())
+                {
+                    list.Add(
+                        ConvertJsonValue(item, itemType)
+                    );
+                }
+
+                return list;
+            }
+
+            return JsonSerializer.Deserialize(
+                element.GetRawText(),
+                targetType);
         }
     }
 }

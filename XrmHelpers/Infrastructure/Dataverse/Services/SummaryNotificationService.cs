@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
     }
     public static class SummaryNotificationService
     {
-        public static List<SummaryField> Build<TDto>(TDto dto)
+        public static List<SummaryField> Build<TDto>(TDto dto, OperationType type)
         {
             return typeof(TDto)
                 .GetProperties()
@@ -33,39 +33,34 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                         )
                         .Cast<NotificationAttribute>()
                         .Where(
-                            attr =>
-                                attr.OperationType ==
-                                OperationType.SummaryNotification
+                            attr => attr.OperationType == type
                         )
                         .Select(
                             attr => new SummaryField
                             {
                                 Label = attr.Label,
                                 Idx = attr.Idx,
-                                Value = prop.GetValue(dto)
+                                Value = prop.GetValue(dto) switch
+                                {
+                                    null => string.Empty,
+                                    DateTime dt => dt.ToString("dd/MM/yyyy"),
+                                    DateTimeOffset dto => dto.ToString("dd/MM/yyyy HH:mm"),
+                                    Enum e => e.ToString(),
+                                    _ => prop.GetValue(dto)?.ToString()
+                                }
                             }
                         )
                 )
                 .OrderBy(x => x.Idx)
                 .ToList();
         }
-        public static string BuildHtmlTable<TDto>(TDto dto)
+        public static string BuildHtmlTable<TDto>(TDto dto, OperationType type)
         {
-            var fields = Build(dto);
+            var fields = Build(dto, type);
 
             var sb = new StringBuilder();
 
-            sb.AppendLine(@"
-                <table
-                    width='100%'
-                    cellpadding='8'
-                    cellspacing='0'
-                    style='
-                        border-collapse: collapse;
-                        font-family: Segoe UI, Arial, sans-serif;
-                        font-size: 14px;
-                    '>
-            ");
+            sb.AppendLine(@"<table>");
 
             foreach (var field in fields)
             {
@@ -73,22 +68,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 
                 sb.AppendLine($@"
                     <tr>
-                        <td
-                            style='
-                                border:1px solid #e0e0e0;
-                                font-weight:bold;
-                                width:35%;
-                                background-color:#f7f7f7;
-                            '>
-                            {field.Label}
-                        </td>
-
-                        <td
-                            style='
-                                border:1px solid #e0e0e0;
-                            '>
-                            {displayValue}
-                        </td>
+                        <td>{field.Label}</td>
+                        <td>{displayValue}</td>
                     </tr>
                 ");
             }

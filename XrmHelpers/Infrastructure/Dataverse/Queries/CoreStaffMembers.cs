@@ -181,5 +181,57 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw;
             }
         }
+        public Entity GetEntityByOrgEmail(string email)
+        {
+            try
+            {
+                _logger.WriteLog($"Building GetEntityByOrgEmail query expression on {ENTITY_LOGICAL_NAME}");
+
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+                {
+                    TopCount = 1,
+                    ColumnSet = CoreStaffMemberSchema.SyncColumns,
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                CoreStaffMemberFields.WorkEmail,
+                                ConditionOperator.Equal,
+                                email
+                            )
+                        }
+                    }
+                };
+
+                _logger.WriteLog($"Executing GetEntityByOrgEmail query expression on {ENTITY_LOGICAL_NAME}");
+
+                var results = _context.Service.RetrieveMultiple(query);
+
+                _logger.WriteLog("Finished executing RetrieveMultiple query expression");
+
+                if (results.Entities.Count > 0)
+                {
+                    _logger.WriteLog($"ExecuteAlternate results.Entities[0]: {JsonSerializer.Serialize(
+                            results.Entities[0],
+                            new JsonSerializerOptions
+                            {
+                                WriteIndented = true
+                            }
+                        )}");
+                    return results.Entities[0];
+                }
+                else
+                {
+                    _logger.WriteLog("No existing CoreStaffMembers were found");
+                    return new Entity();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"CoreStaffMembers.GetEntityByStaffId Exception: {ex}");
+                throw;
+            }
+        }
     }
 }

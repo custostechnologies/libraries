@@ -6,5 +6,6 @@ namespace spgsWebTools.FunctionHelpers.Types
     public interface IDataverseService
     {
         Task<ServiceClient> GetServiceClientAsync(IAuthValidationResult validationResult, string secretName);
+        Task<bool> ExecuteTest(IAuthValidationResult validationResult);
     }
 }

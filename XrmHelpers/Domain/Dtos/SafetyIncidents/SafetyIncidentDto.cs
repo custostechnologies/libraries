@@ -1,19 +1,10 @@
-using System;
-using System.Diagnostics.Contracts;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
-using System.Collections.Generic;
-using System.Text;
-using System.Web;
-using System.Reflection;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using Microsoft.Crm.Sdk.Messages;
-using Microsoft.Xrm.Sdk.Organization;
-using System.Net;
 
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
@@ -30,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SynStaffMemberFields.ForcePlugin, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public override DateTime? ForcePlugin { get; set; } = null;
 
-
+        [IgnoreOnCreate]
         [DataverseLink(srcName: SafetyIncidentFields.SafetyIncidentId, srcType: typeof(Guid), trgName: null, trgType: null)]
         public Guid SafetyIncidentId { get; set; }
         public override Guid EntityId { get => SafetyIncidentId; set => SafetyIncidentId = value; }
@@ -39,7 +30,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string? ActionToPreventFutureInjuries { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.AdmittedToHospital, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public AdmittedToHospital AdmittedToHospital { get; set; }
+        public AdmittedToHospital? AdmittedToHospital { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.AmbulanceCalled, srcType: typeof(bool?), trgName: null, trgType: null)]
         public bool? AmbulanceCalled { get; set; }
@@ -118,7 +109,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [Notification(operationType: OperationType.Create, label: "Incident Category", index: 3)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Category", index: 3)]
         [DataverseLink(srcName: SafetyIncidentFields.IncidentCategory, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public IncidentCategory IncidentCategory { get; set; }
+        public IncidentCategory? IncidentCategory { get; set; }
 
         [Notification(operationType: OperationType.Create, label: "Incident Date/Time", index: 1)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Date/Time", index: 1)]
@@ -126,19 +117,19 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public DateTime? DateTimeOfIncident { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.IncidentTimeframe, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public IncidentTimeframe IncidentTimeframe { get; set; }
+        public IncidentTimeframe? IncidentTimeframe { get; set; }
 
         [Notification(operationType: OperationType.Create, label: "Incident Type", index: 2)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Type", index: 2)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Type", index: 4)]
         [DataverseLink(srcName: SafetyIncidentFields.IncidentType, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public IncidentType IncidentType { get; set; }
+        public IncidentType? IncidentType { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.InjuredPersonEmailAddress, srcType: typeof(string), trgName: null, trgType: null)]
         public string? InjuredPersonEmailAddress { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.InjuryBodyPart, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public InjuryBodyPart InjuryBodyPart { get; set; }
+        public InjuryBodyPart? InjuryBodyPart { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.InvestigationOfInjuryIncident, srcType: typeof(string), trgName: null, trgType: null)]
         public string? InvestigationOfInjuryIncident { get; set; }
@@ -149,7 +140,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [Notification(operationType: OperationType.Create, label: "Location", index: 5)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Location", index: 5)]
         [DataverseLink(srcName: SafetyIncidentFields.Location, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public Location Location { get; set; }
+        public Location? Location { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.MedicationAdministrationWhatWhen, srcType: typeof(string), trgName: null, trgType: null)]
         public string? MedicationAdministrationWhatWhen { get; set; }
@@ -184,14 +175,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [Notification(operationType: OperationType.Create, label: "Source", index: 11)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Source", index: 11)]
         [DataverseLink(srcName: SafetyIncidentFields.RecordSource, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public RecordSource RecordSource { get; set; }
+        public RecordSource? RecordSource { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.RelevantSport, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public RelevantSport RelevantSport { get; set; }
+        public RelevantSport? RelevantSport { get; set; }
 
         [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10)]
-        [DataverseLink(srcName: SafetyIncidentFields.ResponsePriority, srcType: typeof(int?), trgName: null, trgType: null)]
-        public int? ResponsePriority { get; set; }
+        [DataverseLink(srcName: SafetyIncidentFields.ResponsePriority, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public ResponsePriority? ResponsePriority { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.SafetyManagerNotified, srcType: typeof(bool?), trgName: null, trgType: null)]
         public bool? SafetyManagerNotified { get; set; }
@@ -201,7 +192,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [Notification(operationType: OperationType.UpdateOwner, label: "Severity Classification", index: 9)]
         [DataverseLink(srcName: SafetyIncidentFields.SeverityClassification, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public SeverityLevel SeverityClassification { get; set; }
+        public SeverityLevel? SeverityClassification { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.StatusV2, srcType: typeof(int?), trgName: null, trgType: null)]
         public int? StatusV2 { get; set; }
@@ -217,8 +208,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.SubmitterName, srcType: typeof(string), trgName: null, trgType: null)]
         public string? SubmitterName { get; set; }
 
-        [DataverseLink(srcName: SafetyIncidentFields.SubmitterPosition, srcType: typeof(int?), trgName: null, trgType: null)]
-        public int? SubmitterPosition { get; set; }
+        [DataverseLink(srcName: SafetyIncidentFields.SubmitterPosition, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
+        public SubmitterPosition? SubmitterPosition { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.SubmittingCoreUserId, srcType: typeof(Guid?), trgName: null, trgType: null)]
         public Guid? SubmittingCoreUserId { get; set; }
@@ -239,10 +230,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string? TemporaryRecordId { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.Term, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public Term Term { get; set; }
+        public Term? Term { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.TypeOfInjury, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public InjuryType TypeOfInjury { get; set; }
+        public InjuryType? TypeOfInjury { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.WasAGovtAgencyNotified, srcType: typeof(bool?), trgName: null, trgType: null)]
         public bool? WasAGovtAgencyNotified { get; set; }

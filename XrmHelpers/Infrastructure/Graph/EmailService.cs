@@ -130,7 +130,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
 
             _logger.WriteLog("Graph access token acquired.");
 
-            string endpoint = $"https://graph.microsoft.com/v1.0/{from}/sendMail";
+            string endpoint = $"https://graph.microsoft.com/v1.0/users/{from}/sendMail";
 
             var toRecipients = to.Split(';')
                 .Select(

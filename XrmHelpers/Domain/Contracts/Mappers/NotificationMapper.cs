@@ -26,10 +26,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         };
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
+
+        // queries
         private readonly EmailTemplates _emailTemplateQuery;
         private readonly Themes _themeQuery;
         private readonly TemplateSnippetIntersects _intersectQuery;
+        private readonly CoreStaffMembers _coreStaffQuery;
 
+        // mappers
         private IDataverseMapper<EmailTemplateDto> _emailTemplateMapper;
         private IDataverseMapper<ThemeDto> _themeMapper;
         private IDataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
@@ -43,13 +47,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             IDataverseLoggerFactory loggerFactory,
             IDataverseContext context,
             ILookupEngine lookupEngine,
+
             IDataverseMapper<EmailTemplateDto> emailTemplateMapper,
             IDataverseMapper<ThemeDto> themeMapper,
             IDataverseMapper<HTMLSnippetDto> htmlSnippetMapper,
             IDataverseMapper<TemplateSnippetIntersectDto> intersectMapper,
+
             EmailTemplates emailTemplateQuery,
             Themes themeQuery,
             TemplateSnippetIntersects intersectQuery,
+            CoreStaffMembers coreStaffQuery,
+
             FileDownloaderService downloaderService,
             FileUploaderService uploaderService
         )
@@ -61,6 +69,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _emailTemplateQuery = emailTemplateQuery;
             _themeQuery = themeQuery;
             _intersectQuery = intersectQuery;
+            _coreStaffQuery = coreStaffQuery;
 
             _downloaderService = downloaderService;
             _uploaderService = uploaderService;
@@ -70,7 +79,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _htmlSnippetMapper = htmlSnippetMapper;
             _intersectMapper = intersectMapper;
         }
-        public (string, NotificationRequestDto) CreateHtmlObject(TDto dto)
+        public (string, NotificationRequestDto) CreateHtmlObject(TDto dto, OperationType type, string recipientEmail, string recipientName)
         {
             _logger.WriteLog("Entered CreateHtmlObject...");
 
@@ -112,10 +121,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             // inject tags values based on incoming dto (regarding obj)
             _logger.WriteLog("Using _tagResolverEngine to inject dto values into tag list.");
 
-            _tagResolverEngine.PopulateDataverseTags(
-                dto,
-                tags
-            );
+            _tagResolverEngine.PopulateDataverseTags(dto, tags);
 
             _logger.WriteLog($"Generating record link from dto class with: dto.SourceEntityLogicalName");
 
@@ -126,27 +132,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto.TargetAppDisplayName
             );
 
-            _tagResolverEngine.PopulateTag(
-                dto, tags, "inButtonTargetUrl", recordLink ?? "https://www.google.com"
-            );
+            _tagResolverEngine.PopulateTag(dto, tags, "inButtonTargetUrl", recordLink ?? "https://www.google.com");
 
-            var linkText =
-                dto.ContextOperationType == OperationType.Create
+            var linkText = type == OperationType.Create
                 ? "Help Me"
                 : $"Open in {dto.TargetAppDisplayName}";
 
-            _tagResolverEngine.PopulateTag(
-                dto, tags, "inButtonText", linkText
-            );
+            _tagResolverEngine.PopulateTag(dto, tags, "inButtonText", linkText);
 
-            _tagResolverEngine.PopulateTag(
-                dto, tags, "inReceiverFirstName",
-                "IN DEV."
-            );
-            _tagResolverEngine.PopulateTag(
-                dto, tags, "inHelpMeLinkUrl",
-                dto.HelpMeLink
-            );
+            _tagResolverEngine.PopulateTag(dto, tags, "inHelpMeLinkUrl", dto.HelpMeLink);
+
+            _tagResolverEngine.PopulateTag(dto, tags, "inReceiverFirstName", recipientName);
 
             _tagResolverEngine.PopulateTag(
                 dto, tags, "inFooterImageUrl",
@@ -167,7 +163,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto,
                 tags,
                 "inTableHtmlString",
-                SummaryNotificationService.BuildHtmlTable(dto)
+                SummaryNotificationService.BuildHtmlTable(dto, type)
             );
 
             if (!string.IsNullOrWhiteSpace(templateKey))
@@ -225,14 +221,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 );
             }
 
-            // Retrieve Theme
+            #region /* RETRIEVE THEME */
             _logger.WriteLog($"Retrieving theme...");
             if (_emailTemplateDto != null && _emailTemplateDto.Theme != null)
             {
-                _logger.WriteLog($"_emailTemplateDto.Theme: {JsonSerializer.Serialize(
-                        _emailTemplateDto.Theme,
-                        new JsonSerializerOptions { WriteIndented = true }
-                    )}");
+                _logger.WriteLog($"_emailTemplateDto.Theme.Id: {_emailTemplateDto.Theme.Id}");
 
                 _logger.WriteLog($"Retrieving theme");
                 _theme = _themeQuery.GetThemeByRef(
@@ -253,8 +246,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     );
                 }
             }
+            #endregion
 
-            // retrieve template-snippet intersects
+            #region /* RETRIEVE TEMPLATE-SNIPPET INTERSECTS */
             _logger.WriteLog($"Retrieving intersects.");
             if (_emailTemplateDto != null)
             {
@@ -264,11 +258,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         _emailTemplateDto.EmailTemplateId ?? Guid.Empty
                     )
                 );
-
-                _logger.WriteLog($"_intersects: {JsonSerializer.Serialize(
-                        _intersects,
-                        new JsonSerializerOptions { WriteIndented = true }
-                    )}");
 
                 _intersectDtos = new List<TemplateSnippetIntersectDto>();
 
@@ -314,11 +303,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
                 }
             }
+            #endregion
 
             var contentCardStringBuilder = new StringBuilder(_contentCardHtmlString);
-
             var inlineTableStringBuilder = new StringBuilder(_inlineTableHtmlString);
-
             var singleButtonStringBuilder = new StringBuilder(_singleButtonHtmlString);
 
             foreach (var tag in tags)
@@ -356,7 +344,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             foreach (var tag in tags)
             {
                 if (tag.Value == null) continue;
-                _logger.WriteLog($"Replacing {tag.InjectionToken} with {tag.Value}");
+
+                var logValue = tag.InjectionToken == "inTableHtmlString" || tag.InjectionToken == "inEmailContentHtml"
+                    ? "HTML Omitted"
+                    : tag.Value;
+                    
+                _logger.WriteLog($"Replacing {tag.InjectionToken} with {logValue}");
                 var adjustedTag = string.Concat(
                     "{{",
                     tag.InjectionToken,

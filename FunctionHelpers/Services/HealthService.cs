@@ -18,11 +18,11 @@ namespace spgsWebTools.FunctionHelpers.Services
         private readonly IConfiguration _config;
         private readonly TokenCredential _credential;
         private readonly IAuthorisationService _authService;
-        private readonly DataverseService _dvService;
+        private readonly IDataverseService _dvService;
         public HealthService(
             AzureFxCustomLogger<HealthService> logger,
             IAuthorisationService authService,
-            DataverseService dvService,
+            IDataverseService dvService,
             IConfiguration config,
             TokenCredential credential
         )
