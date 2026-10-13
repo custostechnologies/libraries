@@ -58,10 +58,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                 new KeyValuePair<string, string>("grant_type", "client_credentials")
             };
 
-                    _logger.WriteLog(
-                        "Preparing token request to {0}",
-                        tokenUrl
-                    );
+                    _logger.WriteLog("Preparing token request to {0}", tokenUrl);
 
                     var req = new HttpRequestMessage(HttpMethod.Post, tokenUrl)
                     {
@@ -70,15 +67,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
 
                     req.Headers.ConnectionClose = true;
 
-                    _logger.WriteLog(
-                        "Sending token request."
-                    );
+                    _logger.WriteLog("Sending token request.");
 
-                    HttpResponseMessage resp =
-                        client.SendAsync(req).GetAwaiter().GetResult();
-
-                    string response =
-                        resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    HttpResponseMessage resp = client.SendAsync(req).GetAwaiter().GetResult();
+                    string response = resp.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
                     _logger.WriteLog(
                         "Token endpoint responded. StatusCode={0}",
@@ -87,41 +79,28 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
 
                     if (!resp.IsSuccessStatusCode)
                     {
-                        _logger.WriteLog(
-                            "Token request failed. Response={0}",
-                            response
-                        );
-
-                        throw new InvalidPluginExecutionException(
-                            $"Token generation failed: {resp.StatusCode}"
-                        );
+                        _logger.WriteLog("Token request failed. Response={0}", response);
+                        throw new InvalidPluginExecutionException($"Token generation failed: {resp.StatusCode}");
                     }
 
                     using (JsonDocument doc = JsonDocument.Parse(response))
                     {
-                        _logger.WriteLog(
-                            "Successfully parsed token response."
-                        );
+                        _logger.WriteLog("Successfully parsed token response.");
 
-                        var token =
-                            doc.RootElement
-                                .GetProperty("access_token")
-                                .GetString();
+                        var token = doc.RootElement
+                            .GetProperty("access_token")
+                            .GetString();
 
                         if (string.IsNullOrWhiteSpace(token))
                         {
-                            _logger.WriteLog(
-                                "Access token missing from response."
-                            );
-
+                            _logger.WriteLog("Access token missing from response.");
                             throw new InvalidPluginExecutionException();
                         }
 
-                        _logger.WriteLog(
-                            "Access token retrieved successfully."
-                        );
+                        _logger.WriteLog("Access token retrieved successfully.");
 
-                        return token;
+                        // token assured to be not null due to nullOrWhitespace check above
+                        return token!;
                     }
                 }
             }
@@ -165,22 +144,32 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                 )
                 .ToArray();
 
+            if (string.IsNullOrWhiteSpace(toRecipients[0].emailAddress.address) || toRecipients == null)
+            {
+                throw new InvalidPluginExecutionException("Unable to parse primary recipients.");
+            }
+
+            var ccRecipients = cc.Split(';')
+                .Select(
+                    email => new
+                    {
+                        emailAddress = new
+                        {
+                            address = email.Trim()
+                        }
+                    }
+                )
+                .ToArray();
+
             try
             {
                 using (var client = new HttpClient())
                 {
                     client.Timeout = TimeSpan.FromSeconds(5);
 
-                    _logger.WriteLog(
-                        "HttpClient configured. Endpoint={0}",
-                        endpoint
-                    );
+                    _logger.WriteLog("HttpClient configured. Endpoint={0}", endpoint);
 
-                    var req =
-                        new HttpRequestMessage(
-                            HttpMethod.Post,
-                            endpoint
-                        );
+                    var req = new HttpRequestMessage(HttpMethod.Post, endpoint);
 
                     req.Headers.Authorization =
                         new AuthenticationHeaderValue(
@@ -205,18 +194,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                         saveToSentItems = "true"
                     };
 
-                    _logger.WriteLog(
-                        "Created email payload. ContentLength={0}",
-                        content?.Length ?? 0
-                    );
+                    _logger.WriteLog("Created email payload. ContentLength={0}", content?.Length ?? 0);
 
-                    string jsonPayload =
-                        JsonSerializer.Serialize(payload);
+                    string jsonPayload = JsonSerializer.Serialize(payload);
 
-                    _logger.WriteLog(
-                        "Serialized payload. JsonLength={0}",
-                        jsonPayload.Length
-                    );
+                    _logger.WriteLog("Serialized payload. JsonLength={0}", jsonPayload.Length);
 
                     req.Content = new StringContent(
                         jsonPayload,
@@ -224,30 +206,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                         "application/json"
                     );
 
-                    _logger.WriteLog(
-                        "Sending Graph sendMail request."
-                    );
+                    _logger.WriteLog("Sending Graph sendMail request.");
 
-                    HttpResponseMessage response =
-                        client.SendAsync(req).GetAwaiter().GetResult();
+                    HttpResponseMessage response = client.SendAsync(req).GetAwaiter().GetResult();
 
-                    string responseString =
-                        response.Content
-                            .ReadAsStringAsync()
-                            .GetAwaiter()
-                            .GetResult();
+                    string responseString = response.Content
+                        .ReadAsStringAsync()
+                        .GetAwaiter()
+                        .GetResult();
 
-                    _logger.WriteLog(
-                        "Graph response received. StatusCode={0}",
-                        (int)response.StatusCode
-                    );
+                    _logger.WriteLog("Graph response received. StatusCode={0}", (int)response.StatusCode);
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        _logger.WriteLog(
-                            "Graph sendMail failed. Response={0}",
-                            responseString
-                        );
+                        _logger.WriteLog("Graph sendMail failed. Response={0}", responseString);
 
                         throw new Exception(
                             $"Failed to send email via Graph: " +
@@ -255,19 +227,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                         );
                     }
 
-                    _logger.WriteLog(
-                        "Email sent successfully via Microsoft Graph API."
-                    );
-
+                    _logger.WriteLog("Email sent successfully via Microsoft Graph API.");
                     return true;
                 }
             }
             catch (Exception ex)
             {
-                _logger.WriteLog(
-                    ex,
-                    "Exception encountered while sending email via Microsoft Graph."
-                );
+                _logger.WriteLog(ex, "Exception encountered while sending email via Microsoft Graph.");
                 throw;
             }
         }
