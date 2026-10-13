@@ -1,70 +1,82 @@
-using System;
-using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
-using System.Runtime.CompilerServices;
 
-namespace spgsWebTools.XrmHelpers
+public sealed class DataverseLogger : IDataverseLogger
 {
-    public class DataverseLogger : IDataverseLogger
+    private readonly ITracingService _tracer;
+    private readonly ILogger _telemetry;
+    private readonly string _className;
+
+    public DataverseLogger(
+        ITracingService tracer,
+        ILogger telemetry,
+        string className)
     {
-        private readonly ILogger _baseLogger;
-        private readonly string _className;
-        public DataverseLogger(
-            ILogger baseLogger,
-            string className
-        )
+        _tracer = tracer;
+        _telemetry = telemetry;
+        _className = className;
+    }
+
+    public void WriteLog(string message)
+    {
+        var formatted = $"[{_className}] {message}";
+
+        _tracer.Trace(formatted);
+        _telemetry.LogInformation(formatted);
+    }
+
+    public void WriteLog(Exception ex, string message)
+    {
+        var formatted = $"[{_className}] {message}";
+
+        _tracer.Trace($"{formatted}\n{ex}");
+
+        _telemetry.LogError(
+            new EventId(5000, "UnhandledException"),
+            ex,
+            formatted);
+    }
+    public void WriteLog(string message, params object?[] args)
+    {
+        try
         {
-            _baseLogger = baseLogger ?? throw new ArgumentNullException(nameof(baseLogger));
-            _className = className;
+            message ??= string.Empty;
+            args ??= Array.Empty<object?>();
+
+            string formattedMessage;
+
+            try
+            {
+                formattedMessage = args.Length > 0
+                    ? string.Format(message, args)
+                    : message;
+            }
+            catch
+            {
+                formattedMessage = message;
+            }
+
+            formattedMessage = $"[{_className}] {formattedMessage}";
+
+            // Always write to plugin trace log
+            _tracer.Trace(formattedMessage);
+
+            // Best-effort telemetry
+            try
+            {
+                _telemetry.LogInformation(
+                    "[{ClassName}] " + message,
+                    [_className, .. args]
+                );
+            }
+            catch
+            {
+                // Never fail because telemetry failed
+            }
         }
-        public DataverseLogger GetLogger<T>()
+        catch
         {
-            return new DataverseLogger(
-                _baseLogger,
-                typeof(T).Name
-            );
-        }
-        public void WriteLog()
-        {
-            _baseLogger.LogInformation(
-                "Logger.WriteLog() called with no arguments."
-            );
-        }
-        public void WriteLog(string message)
-        {
-            _baseLogger.LogInformation(
-                $"Log: {message}"
-            );
-        }
-        public void WriteLog(Exception ex, string message)
-        {
-            _baseLogger.LogInformation(
-                $"Log: {ex} - {message}"
-            );
-        }
-        public void WriteLog(string message, [CallerMemberName] string memberName = "")
-        {
-            _baseLogger.LogInformation(
-                $"[{_className}.{memberName}] {message}"
-            );
-        }
-        public void WriteLog(string message, params object?[] args)
-        {
-            _baseLogger.LogInformation(
-                $"[{_className}] {message}",
-                args ?? []
-            );
-        }
-        public void WriteLog(Exception ex, string message, params object?[] args)
-        {
-            var eventId = new EventId(5000, "UnhandledException");
-            _baseLogger.LogError(
-                eventId,
-                ex,
-                message,
-                args
-            );
+            // Logging must never break plugin execution
         }
     }
 }

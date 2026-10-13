@@ -15,17 +15,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.SynStudent;
         private readonly IDataverseContext _context;
-        private DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         /// <summary>
         /// 
         /// </summary>
         /// <param name="service"></param>
         /// <param name="tracer"></param>
-        public SynStudents(IDataverseContext context)
+        public SynStudents(
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
+        )
         {
             _context = context;
-
-            _logger = new DataverseLogger(_context.Logger, nameof(SynStudents));
+            _logger = loggerFactory.Create<SynStudents>();
         }
         /// <summary>
         /// 

@@ -9,12 +9,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
     public class LookupResolver<TKey> : ILookupResolver<TKey>
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
-        public LookupResolver(IDataverseContext dataverseContext)
+        private readonly IDataverseLogger _logger;
+        public LookupResolver(IDataverseContext dataverseContext, IDataverseLoggerFactory loggerFactory)
         {
             _context = dataverseContext;
 
-            _logger = new DataverseLogger(_context.Logger, typeof(LookupResolver<TKey>).Name);
+            _logger = loggerFactory.Create<LookupResolver<TKey>>();
         }
         //public bool CanResolve(ILookupMetadata<TKey> metadata);
         public ILookupResult<TKey> Resolve(ILookupMetadata<TKey> metadata)

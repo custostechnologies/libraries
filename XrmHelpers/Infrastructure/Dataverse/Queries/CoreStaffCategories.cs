@@ -8,16 +8,16 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_corestaffcategory";
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        public CoreStaffCategories(IDataverseContext context, IDataverseLogger logger)
+        public CoreStaffCategories(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<CoreStaffCategories>();
         }
         public EntityReference GetReferenceByCode(string code)
         {
             try
             {
-                _logger.WriteLog("Building query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {
@@ -59,10 +59,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog("Exception in CoreStaffCategories.GetReferenceByCode: {0}", ex);
+                _logger.WriteLog(ex, "Exception in CoreStaffCategories.GetReferenceByCode: ");
                 if (ex.InnerException != null)
                 {
-                    _logger.WriteLog("Inner Exception in CoreStaffCategories.GetReferenceByCode: {0}", ex.InnerException.Message);
+                    _logger.WriteLog(ex.InnerException, "Inner Exception in CoreStaffCategories.GetReferenceByCode: ");
                 }
                 throw;
             }

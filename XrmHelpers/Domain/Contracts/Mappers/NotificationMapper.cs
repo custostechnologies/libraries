@@ -26,16 +26,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         };
         private readonly IDataverseContext _context;
         private readonly ILookupEngine _lookupEngine;
-        private EmailTemplates _emailTemplateQuery;
-        private Themes _themeQuery;
-        private TemplateSnippetIntersects _intersectQuery;
+        private readonly EmailTemplates _emailTemplateQuery;
+        private readonly Themes _themeQuery;
+        private readonly TemplateSnippetIntersects _intersectQuery;
 
         private IDataverseMapper<EmailTemplateDto> _emailTemplateMapper;
         private IDataverseMapper<ThemeDto> _themeMapper;
         private IDataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
         private IDataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
 
-        private FileDownloaderService _downloaderService;
+        private readonly FileDownloaderService _downloaderService;
+        private readonly FileUploaderService _uploaderService;
 
         private readonly IDataverseLogger _logger;
         public NotificationMapper(
@@ -45,18 +46,24 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             IDataverseMapper<EmailTemplateDto> emailTemplateMapper,
             IDataverseMapper<ThemeDto> themeMapper,
             IDataverseMapper<HTMLSnippetDto> htmlSnippetMapper,
-            IDataverseMapper<TemplateSnippetIntersectDto> intersectMapper
+            IDataverseMapper<TemplateSnippetIntersectDto> intersectMapper,
+            EmailTemplates emailTemplateQuery,
+            Themes themeQuery,
+            TemplateSnippetIntersects intersectQuery,
+            FileDownloaderService downloaderService,
+            FileUploaderService uploaderService
         )
         {
             _context = context;
             _logger = loggerFactory.Create<NotificationMapper<TDto>>();
             _lookupEngine = lookupEngine;
 
-            _emailTemplateQuery = new EmailTemplates(_context);
-            _themeQuery = new Themes(_context);
-            _intersectQuery = new TemplateSnippetIntersects(_context);
+            _emailTemplateQuery = emailTemplateQuery;
+            _themeQuery = themeQuery;
+            _intersectQuery = intersectQuery;
 
-            _downloaderService = new FileDownloaderService(_context);
+            _downloaderService = downloaderService;
+            _uploaderService = uploaderService;
 
             _emailTemplateMapper = emailTemplateMapper;
             _themeMapper = themeMapper;
@@ -388,6 +395,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     var value = property.GetValue(dto);
 
+                    _logger.WriteLog(
+                        $"Property={property.Name}, " +
+                        $"Type={property.PropertyType.FullName}, " +
+                        $"Value={value}"
+                    );
+
                     if (value == null) continue;
 
                     if (link.TargetType == null)
@@ -404,6 +417,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     if (property.PropertyType.IsEnum)
                     {
+                        _logger.WriteLog(
+                            $"ENUM: {property.Name}, " +
+                            $"Value={value}, " +
+                            $"IntValue={Convert.ToInt32(value)}"
+                        );
                         setValue = new OptionSetValue(Convert.ToInt32(value));
                     }
                     else if (dtoValueType == targetType)
@@ -457,11 +475,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 _logger.WriteLog($"Unable to create new notification request entity");
             }
-            else
-            {
-                FileUploaderService _uploadService = new FileUploaderService(_context);
-
-                _uploadService.Execute(
+            else {
+                _uploaderService.Execute(
                     htmlContent,
                     new EntityReference(
                         EntityLogicalNames.NotificationRequest,

@@ -10,15 +10,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class TemplateSnippetIntersects
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.TemplateSnippetIntersect;
-        public TemplateSnippetIntersects(IDataverseContext context)
+        public TemplateSnippetIntersects(
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
+        )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(Themes)
-            );
+            _logger = loggerFactory.Create<TemplateSnippetIntersects>();
         }
         public EntityCollection GetIntersectsByTemplateRef(EntityReference entityRef)
         {

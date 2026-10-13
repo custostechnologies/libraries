@@ -9,10 +9,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.JobOpportunity;
-        public JobOpportunities(IDataverseContext context, IDataverseLogger logger)
+        public JobOpportunities(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<JobOpportunities>();
         }
         public Entity GetEntityByCode(int webFormOptionValue)
         {

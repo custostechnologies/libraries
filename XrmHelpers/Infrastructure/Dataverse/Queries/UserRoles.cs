@@ -10,10 +10,13 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
         private Entity _role = new Entity("role");
-        public CheckUserRoleQueryService(IDataverseContext context, IDataverseLogger logger)
+        public CheckUserRoleQueryService(
+            IDataverseContext context, 
+            IDataverseLoggerFactory loggerFactory
+        )
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<CheckUserRoleQueryService>();
         }
         public bool HasRole(Guid systemuserid, string roleName)
         {

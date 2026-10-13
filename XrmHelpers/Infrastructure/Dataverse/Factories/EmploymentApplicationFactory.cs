@@ -1,17 +1,9 @@
-using System.Dynamic;
-using System.Net;
-using System.Net.WebSockets;
 using System.Reflection;
-//using System.Reflection.Metadata;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Xml;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Infrastructure.Http;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -21,15 +13,20 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private readonly IDataverseContext _context;
         private Entity? _newApplication;
         private EmploymentApplication? _dto = null;
-        private CoreJobPositions? _coreJobPositionsQuery = null;
+        private readonly CoreJobPositions _coreJobPositionsQuery;
+        private readonly JobOpportunities _jobOpportunityQuery;
         private EntityReference? _coreJobPositionRef = null;
         public EmploymentApplicationFactory(
             IDataverseContext context,
-          IDataverseLogger logger
+            IDataverseLoggerFactory loggerFactory,
+            CoreJobPositions coreJobPositionsQuery,
+            JobOpportunities jobOpportunityQuery
         )
         {
-            _logger = logger;
+            _logger = loggerFactory.Create<EmploymentApplicationFactory>();
             _context = context;
+            _coreJobPositionsQuery = coreJobPositionsQuery;
+            _jobOpportunityQuery = jobOpportunityQuery;
         }
         public Guid Create(EmploymentApplication application)
         {
@@ -42,8 +39,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 _logger.WriteLog("Unable to resolve EmploymentApplication DTO.");
                 throw new Exception();
             }
-
-            _coreJobPositionsQuery = new CoreJobPositions(_context, _logger);
 
             try
             {
@@ -120,11 +115,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             string[] attributes = [CoreJobPositionFields.CmeaType, CoreJobPositionFields.PAOSSubType];
 
-            if (_coreJobPositionsQuery == null)
-            {
-                _coreJobPositionsQuery = new CoreJobPositions(_context, _logger);
-            }
-
             if (_newApplication == null)
             {
                 _logger.WriteLog("Unable to resolve _newApplication.");
@@ -170,7 +160,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private void MapJobLookUps(int webFormOptionValue)
         {
             // query and set entity reference (parent job opp.)
-            var _jobOpportunityQuery = new JobOpportunities(_context, _logger);
             var entity = _jobOpportunityQuery.GetEntityByCode(webFormOptionValue);
 
             if (entity == null) throw new InvalidPluginExecutionException("Job Opportunity entity returned to MapJobLookups in EmploymentApplicationFactory is null. Exiting.");

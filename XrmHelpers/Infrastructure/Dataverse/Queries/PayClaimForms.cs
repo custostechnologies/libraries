@@ -11,16 +11,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class PayClaimForms
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public PayClaimForms(
-            IDataverseContext context
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
         )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(CoreJobAssignments)
-            );
+            _logger = loggerFactory.Create<PayClaimForms>();
         }
         public EntityCollection GetForms()
         {

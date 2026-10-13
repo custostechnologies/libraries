@@ -10,10 +10,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly string ENTITY_LOGICAL_NAME = "businessunits";
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        public BusinessUnits(IDataverseContext context, IDataverseLogger logger)
+        public BusinessUnits(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<BusinessUnits>();
         }
         public EntityReference GetReferenceByCode(string code)
         {

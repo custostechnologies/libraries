@@ -17,10 +17,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         /// </summary>
         /// <param name="service"></param>
         /// <param name="tracer"></param>
-        public SynStaffMembers(IDataverseContext context, IDataverseLogger logger)
+        public SynStaffMembers(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<SynStaffMembers>();
         }
         /// <summary>
         /// 

@@ -10,25 +10,26 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        private CoreJobAssignments? _assignmentQuery;
-        private OperationalHierarchyMaps? _operationalMapQuery;
-        private CoreJobPositions? _coreJobPositionQuery;
+        private readonly CoreJobAssignments _assignmentQuery;
+        private readonly OperationalHierarchyMaps _operationalMapQuery;
+        private readonly CoreJobPositions _coreJobPositionQuery;
         private string ENTITY_LOGICAL_NAME = EntityLogicalNames.OperationalHierarchyMap;
         public OperationalHierarchyMapFactory(
             IDataverseContext context,
-            IDataverseLogger logger
+            IDataverseLoggerFactory loggerFactory,
+            CoreJobAssignments assignmentQuery,
+            OperationalHierarchyMaps operationalMapQuery,
+            CoreJobPositions coreJobPositionQuery
         )
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<OperationalHierarchyMapFactory>();
+            _assignmentQuery = assignmentQuery;
+            _operationalMapQuery = operationalMapQuery;
+            _coreJobPositionQuery = coreJobPositionQuery;
         }
         public Guid Build(Entity assignment, Entity referenceMapEntity)
         {
-            // position id is PARENT if isParent true
-            _assignmentQuery = new CoreJobAssignments(_context);
-            _operationalMapQuery = new OperationalHierarchyMaps(_context, _logger);
-            _coreJobPositionQuery = new CoreJobPositions(_context, _logger);
-
             EntityReference parentAssignmentRef;
 
             Guid parentPositionId = referenceMapEntity.GetAttributeValue<EntityReference>(ReferenceHierarchyMapFields.ParentJobPosition).Id;

@@ -5,17 +5,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public class FileDownloaderService
     {
-        private IDataverseContext _context;
-        private DataverseLogger _logger;
+        private readonly IDataverseContext _context;
+        private readonly IDataverseLogger _logger;
         private string _fileAttributeName = string.Empty;
         private EntityReference? _target;
-        public FileDownloaderService(IDataverseContext context)
+        public FileDownloaderService(
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
+        )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(FileDownloaderService)
-            );
+            _logger = loggerFactory.Create<FileDownloaderService>();
         }
 
         public byte[] Execute(

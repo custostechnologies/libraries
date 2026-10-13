@@ -9,21 +9,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
     public class FileUploaderService
     {
         private IDataverseContext _context;
-        private DataverseLogger _logger;
+        private IDataverseLogger _logger;
         private string _exportContent = string.Empty;
         private string _fileAttributeName = string.Empty;
         private string _exportFileName = string.Empty;
         private EntityReference? _target;
         public FileUploaderService(
-            IDataverseContext context
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
         )
         {
             _context = context;
-
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(FileUploaderService)
-            );
+            _logger = loggerFactory.Create<FileUploaderService>();
         }
 
         public void Execute(

@@ -9,16 +9,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class AutoNumberCounters
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public AutoNumberCounters(
-            IDataverseContext context
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
         )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(AutoNumberCounters)
-            );
+            _logger = loggerFactory.Create<AutoNumberCounters>();
         }
         public string ReserveIndex(string tableLogicalName)
         {
@@ -57,11 +55,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     var invalidResponses = new Exception("None or multiple counter rows found.");
                     _logger.WriteLog(
                         invalidResponses,
-                        "retrieveResponse on table: {TableName} for record with alternate key (counterKey) = {CounterKey} returned {Count} responses.",
-                        EntityLogicalNames.AutoNumberCounter,
-                        tableLogicalName,
-                        retrieveResponse.Responses.Count
-                    );
+                        $"retrieveResponse on table: {tableLogicalName} for record with alternate key (counterKey) = {EntityLogicalNames.AutoNumberCounter} returned {retrieveResponse.Responses.Count} responses.");
                     throw invalidResponses;
                 }
 
@@ -86,12 +80,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             }
             catch (Exception ex)
             {
-                _logger.WriteLog(
-                    ex,
-                    "Exception detected when executing {NameOf} on table {TableName}.",
-                    nameof(ReserveIndex),
-                    tableLogicalName
-                );
+                _logger.WriteLog(ex, "Exception: ");
                 throw;
             }
         }

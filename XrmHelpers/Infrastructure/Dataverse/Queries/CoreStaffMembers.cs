@@ -12,10 +12,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_corestaffmember";
-        public CoreStaffMembers(IDataverseContext context, IDataverseLogger logger)
+        public CoreStaffMembers(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<CoreStaffMembers>();
         }
         public Entity GetEntityByTruth(string truthId)
         {

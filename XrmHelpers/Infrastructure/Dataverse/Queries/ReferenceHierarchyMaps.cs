@@ -12,10 +12,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.ReferenceHierarchyMap;
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        public ReferenceHierarchyMaps(IDataverseContext context, IDataverseLogger logger)
+        public ReferenceHierarchyMaps(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<ReferenceHierarchyMaps>();
         }
         public List<EntityReference> GetDirectReportsByPositionId(Guid coreJobPositionId)
         {

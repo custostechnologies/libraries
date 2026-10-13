@@ -10,15 +10,15 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class Themes
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.Theme;
-        public Themes(IDataverseContext context)
+        public Themes(
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
+        )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(Themes)
-            );
+            _logger = loggerFactory.Create<Themes>();
         }
         public Entity? GetThemeByRef(EntityReference entityRef)
         {

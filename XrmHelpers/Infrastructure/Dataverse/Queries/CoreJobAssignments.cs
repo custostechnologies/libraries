@@ -12,16 +12,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         public CoreJobAssignments(
-            IDataverseContext context
+            IDataverseContext context,
+            IDataverseLoggerFactory loggerFactory
         )
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(CoreJobAssignments)
-            );
+            _logger = loggerFactory.Create<CoreJobAssignments>();
         }
         public EntityReference GetReferenceBySeq(int seq)
         {

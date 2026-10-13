@@ -10,10 +10,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        public ForceUserSync(IDataverseContext context, IDataverseLogger logger)
+        public ForceUserSync(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<ForceUserSync>();
         }
         public Guid? Execute(string upn)
         {

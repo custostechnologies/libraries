@@ -11,14 +11,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
     {
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        private CoreJobAssignments? _coreJobAssignmentQuery;
-        private CoreJobPositions? _coreJobPositionQuery;
-        private CoreStaffMembers? _coreStaffMemberQuery;
+        private readonly CoreJobAssignments _coreJobAssignmentQuery;
+        private readonly CoreJobPositions _coreJobPositionQuery;
+        private readonly CoreStaffMembers _coreStaffMemberQuery;
         private bool _create = false;
-        public CoreJobAssignmentFactory(IDataverseContext context, IDataverseLogger logger)
+        public CoreJobAssignmentFactory(
+            IDataverseContext context, 
+            IDataverseLoggerFactory loggerFactory,
+            CoreJobAssignments coreJobAssignmentQuery,
+            CoreJobPositions coreJobPositionQuery,
+            CoreStaffMembers coreStaffMemberQuery
+        )
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<CoreJobAssignmentFactory>();
+            _coreJobAssignmentQuery = coreJobAssignmentQuery;
+            _coreJobPositionQuery = coreJobPositionQuery;
+            _coreStaffMemberQuery = coreStaffMemberQuery;
         }
         public CoreJobAssignment Build(JobPositionSnapshot snap, string[] attributes)
         {
@@ -26,12 +35,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
             _logger.WriteLog("Entered CoreJobAssignmentFactory.Build");
             _logger.WriteLog("Initialising query obejcts");
-
-            _coreJobAssignmentQuery = new CoreJobAssignments(_context);
-            _coreJobPositionQuery = new CoreJobPositions(_context, _logger);
-            _coreStaffMemberQuery = new CoreStaffMembers(_context, _logger);
-
-            _coreJobAssignmentQuery = new CoreJobAssignments(_context);
 
             _logger.WriteLog("Searching by STAFF JOB POSITIONS SEQ: {0}", snap.StaffJobPositionsSeq);
             existingCoreAssignment = _coreJobAssignmentQuery.GetEntityBySeq(snap.StaffJobPositionsSeq);

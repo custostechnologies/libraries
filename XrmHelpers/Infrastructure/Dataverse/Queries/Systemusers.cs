@@ -10,10 +10,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        public Systemusers(IDataverseContext context, IDataverseLogger logger)
+        public Systemusers(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = logger;
+            _logger = loggerFactory.Create<Systemusers>();
         }
         public EntityReference GetReferenceByMetadata(string upn, string username)
         {

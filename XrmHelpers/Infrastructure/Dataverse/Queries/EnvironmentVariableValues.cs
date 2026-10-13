@@ -13,10 +13,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         private readonly IDataverseContext _context;
         public EnvironmentVariableValues(
             IDataverseContext context,
-          IDataverseLogger logger
+            IDataverseLoggerFactory loggerFactory
         )
         {
-            _logger = logger;
+            _logger = loggerFactory.Create<EnvironmentVariableValues>();
             _context = context;
         }
         public EnvironmentVariable<string> GetValue(string schemaName)

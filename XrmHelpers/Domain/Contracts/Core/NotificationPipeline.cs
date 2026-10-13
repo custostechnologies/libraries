@@ -54,7 +54,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception: ", ex);
+                _logger.WriteLog(ex, "Exception: ");
                 throw;
             }
         }

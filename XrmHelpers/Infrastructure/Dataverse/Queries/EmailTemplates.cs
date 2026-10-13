@@ -10,21 +10,18 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     public class EmailTemplates
     {
         private readonly IDataverseContext _context;
-        private readonly DataverseLogger _logger;
+        private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.EmailTemplate;
-        public EmailTemplates(IDataverseContext context)
+        public EmailTemplates(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
-            _logger = new DataverseLogger(
-                _context.Logger,
-                nameof(Themes)
-            );
+            _logger = loggerFactory.Create<EmailTemplates>();
         }
         public Entity? GetEntityByKey(string templateKey)
         {
             try
             {
-                _logger.WriteLog("Building query expression on {0}", ENTITY_LOGICAL_NAME);
+                _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME}");
 
                 var query = new QueryExpression(ENTITY_LOGICAL_NAME)
                 {

@@ -1,29 +1,29 @@
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 namespace spgsWebTools.XrmHelpers
 {
-    public class DataverseLoggerFactory : IDataverseLoggerFactory
+    public sealed class DataverseLoggerFactory : IDataverseLoggerFactory
     {
-        private readonly ILogger _baseLogger;
+        private readonly ITracingService _tracer;
+        private readonly ILogger _telemetry;
 
-        public DataverseLoggerFactory(ILogger baseLogger)
+        public DataverseLoggerFactory(
+            ITracingService tracer,
+            ILogger telemetry
+        )
         {
-            _baseLogger = baseLogger
-                ?? throw new ArgumentNullException(nameof(baseLogger));
+            _tracer = tracer;
+            _telemetry = telemetry;
         }
 
         public IDataverseLogger Create<T>()
         {
             return new DataverseLogger(
-                _baseLogger,
-                typeof(T).Name);
-        }
-
-        public IDataverseLogger Create(string className)
-        {
-            return new DataverseLogger(
-                _baseLogger,
-                className);
+                _tracer,
+                _telemetry,
+                typeof(T).Name
+            );
         }
     }
 }
