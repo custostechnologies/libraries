@@ -175,6 +175,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         propertyType);
 
                     property.SetValue(dto, value);
+
+                    _logger.WriteLog($"Set propertyName: {property.Name} of type {propertyType} to {value}");
                 }
                 catch (Exception ex)
                 {

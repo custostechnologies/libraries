@@ -47,7 +47,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [Notification(operationType: OperationType.Create, label: "Campus", index: 4)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Campus", index: 4)]
         [DataverseLink(srcName: SafetyIncidentFields.Campus, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public Campus Campus { get; set; }
+        public IncidentCampus? Campus { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.CommunityId, srcType: typeof(int?), trgName: null, trgType: null)]
         public int? CommunityId { get; set; }
