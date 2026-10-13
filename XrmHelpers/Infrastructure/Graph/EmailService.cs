@@ -21,10 +21,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
             _logger = loggerFactory.Create<EmailService>();
         }
         private string GetGraphToken(
-    string tid,
-    string cid,
-    string secret
-)
+            string tid,
+            string cid,
+            string secret
+        )
         {
             _logger.WriteLog(
                 "Starting GetGraphToken. TenantId={0}, ClientId={1}",
@@ -53,7 +53,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                     var keyPairs = new[]
                     {
                 new KeyValuePair<string, string>("client_id", clientId),
-                new KeyValuePair<string, string>("scope", "Mail.Send"),
+                new KeyValuePair<string, string>("scope", "https://graph.microsoft.com/.default"),
                 new KeyValuePair<string, string>("client_secret", clientSecret),
                 new KeyValuePair<string, string>("grant_type", "client_credentials")
             };
@@ -135,28 +135,35 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
             }
         }
         public bool SendEmailViaApi(
-        string tid,
-        string cid,
-        string secret,
-        string content
-    )
+            string tid,
+            string cid,
+            string secret,
+            string content,
+            string to,
+            string cc,
+            string from,
+            string subject
+        )
         {
-            _logger.WriteLog(
-                "Starting SendEmailViaApi."
-            );
+            _logger.WriteLog("Starting SendEmailViaApi.");
 
-            string token = GetGraphToken(
-                tid,
-                cid,
-                secret
-            );
+            string token = GetGraphToken(tid, cid, secret);
 
-            _logger.WriteLog(
-                "Graph access token acquired."
-            );
+            _logger.WriteLog("Graph access token acquired.");
 
-            string endpoint =
-                "https://graph.microsoft.com/v1.0/me/sendMail";
+            string endpoint = $"https://graph.microsoft.com/v1.0/{from}/sendMail";
+
+            var toRecipients = to.Split(';')
+                .Select(
+                    email => new
+                    {
+                        emailAddress = new
+                        {
+                            address = email.Trim()
+                        }
+                    }
+                )
+                .ToArray();
 
             try
             {
@@ -187,23 +194,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Graph
                     {
                         message = new
                         {
-                            subject = "Automated Alert from Dataverse Plug-in",
+                            subject,
                             body = new
                             {
                                 contentType = "HTML",
                                 content
                             },
-                            toRecipients = new[]
-                            {
-                        new
-                        {
-                            emailAddress = new
-                            {
-                                address =
-                                    "matthew.thomas@stpauls.nsw.edu.au"
-                            }
-                        }
-                    }
+                            toRecipients
                         },
                         saveToSentItems = "true"
                     };
