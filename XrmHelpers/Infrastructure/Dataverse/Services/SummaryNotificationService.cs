@@ -1,7 +1,10 @@
 using System.Text;
+using System.Net;
 using System.Reflection;
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 {
@@ -10,21 +13,33 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
         string Label { get; set; }
         int Idx { get; set; }
         object? Value { get; set; }
+        string? Url { get; set; }
 
     }
-    public class SummaryField
+    public class SummaryField : ISummaryField
     {
         public string Label { get; set; } = string.Empty;
         public int Idx { get; set; }
         public object? Value { get; set; }
+        public string? Url { get; set; } = string.Empty;
 
     }
     public static class SummaryNotificationService
     {
-        public static List<SummaryField> Build<TDto>(TDto dto, OperationType type)
+        private static readonly Dictionary<Type, PropertyInfo[]> _propCache = [];
+        public static List<SummaryField> Build<TDto>(
+            TDto dto, 
+            OperationType type,
+            Dictionary<Guid, string>? links
+        ) where TDto : INotifiableDto
         {
-            return typeof(TDto)
-                .GetProperties()
+            if (_propCache.TryGetValue(typeof(TDto), out var props))
+            {
+                props = typeof(TDto).GetProperties();
+                _propCache[typeof(TDto)] = props;
+            }
+
+            return _propCache[typeof(TDto)]
                 .SelectMany(
                     prop => prop
                         .GetCustomAttributes(
@@ -40,40 +55,108 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                             {
                                 Label = attr.Label,
                                 Idx = attr.Idx,
-                                Value = prop.GetValue(dto) switch
-                                {
-                                    null => string.Empty,
-                                    DateTime dt => dt.ToString("dd/MM/yyyy"),
-                                    DateTimeOffset dto => dto.ToString("dd/MM/yyyy HH:mm"),
-                                    Enum e => e.ToString(),
-                                    _ => prop.GetValue(dto)?.ToString()
-                                }
+                                Value = prop.GetValue(dto),
+                                Url = attr.IsLink
+                                    && links != null
+                                    && links.TryGetValue(dto.EntityId, out var url)
+                                        ? url
+                                        : null
                             }
                         )
                 )
                 .OrderBy(x => x.Idx)
                 .ToList();
         }
-        public static string BuildHtmlTable<TDto>(TDto dto, OperationType type)
+        public static string BuildSingleEntityTable<TDto>(
+            TDto dto, 
+            OperationType type,
+            IStyleProvider styleProvider
+        ) where TDto : INotifiableDto
         {
-            var fields = Build(dto, type);
-
+            var fields = Build(dto, type, null);
             var sb = new StringBuilder();
 
-            sb.AppendLine(@"<table>");
+            sb.AppendLine(@$"<table style='{styleProvider.InlineTableStyle}' >");
 
+            var idx = 0;
             foreach (var field in fields)
             {
-                var displayValue = FormatValue(field.Value);
+                var label = WebUtility.HtmlEncode(field.Label);
+                var displayValue = WebUtility.HtmlEncode(FormatValue(field.Value));
+                bool even = idx % 2 == 0;
+
+                var rowStyle = even ? styleProvider.TableBodyRowEven : styleProvider.TableBodyRowOdd;
 
                 sb.AppendLine($@"
-                    <tr>
-                        <td>{field.Label}</td>
-                        <td>{displayValue}</td>
+                    <tr style='{rowStyle}'>
+                        <th style='{styleProvider.TableHeadColumn}'>{field.Label}</th>
+                        <td style='{styleProvider.TableRowData}'>{displayValue}</td>
                     </tr>
                 ");
+
+                idx++;
             }
 
+            sb.AppendLine("</table>");
+            idx = 0;
+            return sb.ToString();
+        }
+        public static string BuildMultiEntityTable<TDto>(
+            List<TDto> dtos, 
+            Dictionary<Guid, string> links,
+            OperationType type,
+            IStyleProvider styleProvider
+        ) where TDto : INotifiableDto
+        {
+            if (dtos == null || dtos.Count == 0) return string.Empty;
+
+            var headerFields = Build(dtos[0], type, links);
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"<table style='{styleProvider.InlineTableStyle}'>");
+            // append table header row
+            
+            sb.AppendLine("<thead>");
+            sb.AppendLine("<tr>");
+            foreach (var field in headerFields)
+            {
+                var label = WebUtility.HtmlEncode(field.Label);
+                sb.AppendLine($"<th style='{styleProvider.TableHeadColumn}'>{label}</th>");
+            }
+            sb.AppendLine("</tr>");
+            sb.AppendLine("</thead>");
+
+            sb.AppendLine("<tbody>");
+
+            var idx = 0;
+            foreach (var dto in dtos)
+            {
+                var values = Build(dto, type, links);
+                bool even = idx % 2 == 0;
+                var rowStyle = even ? styleProvider.TableBodyRowEven : styleProvider.TableBodyRowOdd;
+                
+                sb.AppendLine($@"<tr style='{rowStyle}'>");
+                
+                foreach (var val in values)
+                {
+                    var displayValue = WebUtility.HtmlEncode(FormatValue(val.Value));
+                    var encodedLink = WebUtility.HtmlEncode(val.Url);
+                    if (!string.IsNullOrWhiteSpace(val.Url))
+                    {
+                        sb.AppendLine($@"<td style='{styleProvider.TableRowData}'>
+                            <a href='{encodedLink}' target='_blank' style='{styleProvider.LinkStyle}'>{displayValue}</a>
+                        </td>");
+                    } else
+                    {
+                        sb.AppendLine($@"<td style='{styleProvider.TableRowData}'>{displayValue}</td>");
+                    }
+                }
+                
+                idx++;
+                sb.AppendLine("</tr>");
+            }
+
+            sb.AppendLine("</tbody>");
             sb.AppendLine("</table>");
 
             return sb.ToString();

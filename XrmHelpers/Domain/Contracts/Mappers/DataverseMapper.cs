@@ -160,7 +160,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         continue;
 
                     if (!document.RootElement.TryGetProperty(
-                        link.SourceLogicalName,
+                        link.SourceLogicalName ?? "",
                         out var jsonValue))
                     {
                         continue;

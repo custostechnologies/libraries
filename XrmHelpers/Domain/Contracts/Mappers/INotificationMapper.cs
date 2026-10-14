@@ -5,7 +5,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public interface INotificationMapper<TDto>
     {
-        (string, NotificationRequestDto) CreateHtmlObject(TDto dto, OperationType type, string recipientEmail, string recipientName);
+        (string html, NotificationRequestDto request) CreateHtmlObject(TDto dto);
+        (string html, NotificationRequestDto request) CreateSummaryHtmlObject(List<TDto> dtos);
+        (string html, NotificationRequestDto request) RenderHtmlObject(
+            NotificationContext context, 
+            OperationType type, 
+            string recipientEmail, 
+            string recipientName
+        );
         Guid MapToNotificationRequest(NotificationRequestDto dto, string htmlContent);
     }
 }
