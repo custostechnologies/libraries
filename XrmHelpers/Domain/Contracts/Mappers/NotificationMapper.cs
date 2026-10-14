@@ -23,6 +23,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly ITemplateResolver _templateResolver;
         private readonly INotificationContextFactory _contextFactory;
         private readonly INotificationRequestFactory _requestFactory;
+        private readonly INotificationRequestRepository _requestRepo;
         private readonly IDataverseLogger _logger;
         private readonly ITagResolver _tagResolver;
         private readonly IEmailRenderer _renderer;
@@ -30,6 +31,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             IDataverseLoggerFactory loggerFactory,
             INotificationContextFactory contextFactory,
             INotificationRequestFactory requestFactory,
+            INotificationRequestRepository requestRepo,
             ITemplateResolver templateResolver,
             ITagResolver tagResolver,
             IEmailRenderer renderer
@@ -39,13 +41,41 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _templateResolver = templateResolver;
             _contextFactory = contextFactory;
             _requestFactory = requestFactory;
+            _requestRepo = requestRepo;
             _tagResolver = tagResolver;
             _renderer = renderer;
         }
-        public (string html, NotificationRequestDto request) CreateHtmlObject(
-            TDto dto,
+        public (string html, NotificationRequestDto request) Render(
+            NotificationContext context,
             OperationType type, 
             string recipientEmail, 
+            string recipientName
+        )
+        {
+            if (context == null) throw new InvalidOperationException("NotificationContext cannot be NULL");
+            if (context.Dto == null) throw new InvalidOperationException("NotificationContext.Dto cannot be NULL");
+
+            var template = _templateResolver.Resolve(context.Dto.GetType());
+            var tags = _tagResolver.BuildTags(context, template);
+            var html = _renderer.Render(template, tags);
+
+            if (template.EmailTemplate == null) throw new Exception("Email Template was resolved to NULL.");
+            var entityId = type == OperationType.SummaryNotification
+                ? Guid.Empty
+                : context.Dto.EntityId;
+
+            var request = _requestFactory.Create(
+                template.EmailTemplate,
+                entityId,
+                recipientEmail
+            );
+
+            return (html, request);
+        }
+        public Guid CreateNotification(
+            TDto dto,
+            OperationType type,
+            string recipientEmail,
             string recipientName
         )
         {
@@ -56,21 +86,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 recipientName
             );
 
-            var template = _templateResolver.Resolve(dto.GetType());
-            var tags = _tagResolver.BuildTags(context, template);
-            var html = _renderer.Render(template, tags);
-
-            if (template.EmailTemplate == null) throw new Exception("Email Template was resolved to NULL.");
-
-            var request = _requestFactory.Create(
-                template.EmailTemplate,
-                dto.EntityId,
-                recipientEmail
-            );
-
-            return (html, request);
+            var notification = Render(context, type, recipientEmail, recipientName);
+            return _requestRepo.SaveRequest(notification.request, notification.html);
         }
-        public (string html, NotificationRequestDto request) CreateSummaryHtmlObject(
+        public Guid CreateSummaryNotification(
             List<TDto> dtos,
             OperationType type,
             string recipientEmail,
@@ -84,21 +103,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 recipientName
             );
 
-            if (context.Dto == null) throw new Exception("Reference DTO unable to be retreived.");
-            
-            var template = _templateResolver.Resolve(context.Dto.GetType());
-            var tags = _tagResolver.BuildTags(context, template);
-            var html = _renderer.Render(template, tags);
-
-            if (template.EmailTemplate == null) throw new Exception("Email Template was resolved to NULL.");
-
-            var request = _requestFactory.Create(
-                template.EmailTemplate,
-                context.Dto.EntityId,
-                recipientEmail
-            );
-
-            return (html, request);
+            var notification = Render(context, type, recipientEmail, recipientName);
+            return _requestRepo.SaveRequest(notification.request, notification.html);
         }
     }
 }
