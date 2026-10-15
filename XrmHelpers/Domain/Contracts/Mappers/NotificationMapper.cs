@@ -67,7 +67,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             var request = _requestFactory.Create(
                 template.EmailTemplate,
                 entityId,
-                recipientEmail
+                recipientEmail,
+                context.CC
             );
 
             return (html, request);
@@ -76,31 +77,41 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TDto dto,
             OperationType type,
             string recipientEmail,
-            string recipientName
+            string recipientName,
+            string cc
         )
         {
             var context = _contextFactory.Create(
                 dto,
                 type,
                 recipientEmail,
+                recipientName,
+                cc
+            );
+
+            var notification = Render(
+                context, 
+                type, 
+                recipientEmail, 
                 recipientName
             );
 
-            var notification = Render(context, type, recipientEmail, recipientName);
             return _requestRepo.SaveRequest(notification.request, notification.html);
         }
         public Guid CreateSummaryNotification(
             List<TDto> dtos,
             OperationType type,
             string recipientEmail,
-            string recipientName
+            string recipientName,
+            string cc
         )
         {
             var context = _contextFactory.CreateSummary(
                 dtos,
                 type,
                 recipientEmail,
-                recipientName
+                recipientName,
+                cc
             );
 
             var notification = Render(context, type, recipientEmail, recipientName);

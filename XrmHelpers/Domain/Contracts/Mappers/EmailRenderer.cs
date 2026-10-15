@@ -2,7 +2,7 @@ using System.Text;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class EmailRenderer
+    public class EmailRenderer : IEmailRenderer
     {
         public readonly IDataverseLogger _logger;
         public EmailRenderer(IDataverseLoggerFactory loggerFactory)

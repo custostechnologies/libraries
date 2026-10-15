@@ -33,13 +33,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             Dictionary<Guid, string>? links
         ) where TDto : INotifiableDto
         {
-            if (_propCache.TryGetValue(typeof(TDto), out var props))
+            var dtoType = typeof(TDto);
+
+            if (!_propCache.TryGetValue(dtoType, out var props))
             {
-                props = typeof(TDto).GetProperties();
-                _propCache[typeof(TDto)] = props;
+                props = dtoType.GetProperties();
+                _propCache[dtoType] = props;
             }
 
-            return _propCache[typeof(TDto)]
+            Console.WriteLine( "Build<{0}> cache contains key={1}",
+                typeof(TDto).Name,
+                _propCache.ContainsKey(typeof(TDto)));
+
+            return _propCache[dtoType]
                 .SelectMany(
                     prop => prop
                         .GetCustomAttributes(
@@ -76,7 +82,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             var fields = Build(dto, type, null);
             var sb = new StringBuilder();
 
-            sb.AppendLine(@$"<table style='{styleProvider.InlineTableStyle}' >");
+            sb.AppendLine(@$"<table {styleProvider.InlineTableStyle}>");
 
             var idx = 0;
             foreach (var field in fields)
@@ -88,9 +94,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 var rowStyle = even ? styleProvider.TableBodyRowEven : styleProvider.TableBodyRowOdd;
 
                 sb.AppendLine($@"
-                    <tr style='{rowStyle}'>
-                        <th style='{styleProvider.TableHeadColumn}'>{field.Label}</th>
-                        <td style='{styleProvider.TableRowData}'>{displayValue}</td>
+                    <tr>
+                        <th {rowStyle} {styleProvider.TableHeadColumn}>{field.Label}</th>
+                        <td {rowStyle} {styleProvider.TableRowData}>{displayValue}</td>
                     </tr>
                 ");
 
@@ -113,7 +119,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             var headerFields = Build(dtos[0], type, links);
             var sb = new StringBuilder();
 
-            sb.AppendLine($"<table style='{styleProvider.InlineTableStyle}'>");
+            sb.AppendLine($"<table {styleProvider.InlineTableStyle}>");
             // append table header row
             
             sb.AppendLine("<thead>");
@@ -121,7 +127,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             foreach (var field in headerFields)
             {
                 var label = WebUtility.HtmlEncode(field.Label);
-                sb.AppendLine($"<th style='{styleProvider.TableHeadColumn}'>{label}</th>");
+                sb.AppendLine($"<th {styleProvider.TableHeadColumn}>{label}</th>");
             }
             sb.AppendLine("</tr>");
             sb.AppendLine("</thead>");
@@ -135,7 +141,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 bool even = idx % 2 == 0;
                 var rowStyle = even ? styleProvider.TableBodyRowEven : styleProvider.TableBodyRowOdd;
                 
-                sb.AppendLine($@"<tr style='{rowStyle}'>");
+                sb.AppendLine($@"<tr>");
                 
                 foreach (var val in values)
                 {
@@ -143,12 +149,12 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                     var encodedLink = WebUtility.HtmlEncode(val.Url);
                     if (!string.IsNullOrWhiteSpace(val.Url))
                     {
-                        sb.AppendLine($@"<td style='{styleProvider.TableRowData}'>
+                        sb.AppendLine($@"<td {rowStyle} {styleProvider.TableRowData}>
                             <a href='{encodedLink}' target='_blank' style='{styleProvider.LinkStyle}'>{displayValue}</a>
                         </td>");
                     } else
                     {
-                        sb.AppendLine($@"<td style='{styleProvider.TableRowData}'>{displayValue}</td>");
+                        sb.AppendLine($@"<td {rowStyle} {styleProvider.TableRowData}>{displayValue}</td>");
                     }
                 }
                 

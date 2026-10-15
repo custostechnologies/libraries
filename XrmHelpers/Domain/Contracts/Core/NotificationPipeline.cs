@@ -36,7 +36,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _coreStaffMemberQuery = coreStaffMemberQuery;
             _logger = loggerFactory.Create<NotificationPipeline<TDto>>();
         }
-        public Guid BuildEmailNotification(Entity target, OperationType type, string to, string? cc, string fallbackName)
+        public Guid BuildEmailNotification(
+            Entity target, 
+            OperationType type, 
+            string to, 
+            string? cc, 
+            string fallbackName
+        )
         {
             TDto dto;
 
@@ -64,15 +70,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 }
                 
                 _logger.WriteLog("Creating HTML object...");
-                var output = _notificationMapper.CreateHtmlObject(dto, type, to, preferred);
 
-                NotificationRequestDto requestDto = output.Item2;
+                var newId = _notificationMapper.CreateNotification(
+                    dto, 
+                    type, 
+                    to, 
+                    preferred, 
+                    cc ?? ""
+                );
 
-                requestDto.RecipientString = to;
-                requestDto.CCString = cc;
-
-                _logger.WriteLog("Mapping to NotificationRequest entity...");
-                return _notificationMapper.MapToNotificationRequest(output.Item2, output.Item1);
+                _logger.WriteLog($"Mapped to NotificationRequest and new Entity created with id: {newId}");
+                return newId;
             }
             catch (Exception ex)
             {
@@ -80,7 +88,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 throw;
             }
         }
-        private (bool resolved, Entity? coreStaffMember) RetrieveCoreStaffMember(string email)
+        private (
+            bool resolved, 
+            Entity? coreStaffMember
+        ) RetrieveCoreStaffMember(string email)
         {
             if (string.IsNullOrWhiteSpace(email))
             {

@@ -9,13 +9,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TDto dto,
             OperationType type, 
             string recipientEmail, 
-            string recipientName
+            string recipientName,
+            string cc
         );
         Guid CreateSummaryNotification(
             List<TDto> dtos,
             OperationType type, 
             string recipientEmail, 
-            string recipientName
+            string recipientName,
+            string cc
         );
         (
             string html, 

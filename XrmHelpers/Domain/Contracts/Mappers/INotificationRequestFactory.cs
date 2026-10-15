@@ -7,7 +7,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         NotificationRequestDto Create(
             EmailTemplateDto template,
             Guid entityId,
-            string recipientEmail
+            string recipientEmail,
+            string cc
         );
     }
 }

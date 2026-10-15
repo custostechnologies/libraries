@@ -5,7 +5,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Services;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class NotificationContextFactory
+    public class NotificationContextFactory : INotificationContextFactory
     {
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
@@ -24,7 +24,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             TDto dto,
             OperationType type,
             string recipientAddress,
-            string recipientName
+            string recipientName,
+            string cc
         ) where TDto : INotifiableDto
         {
             _logger.WriteLog($"Generating record link from dto class with: dto.SourceEntityLogicalName");
@@ -46,6 +47,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 Dto = dto,
                 To = recipientAddress,
+                CC = cc,
                 RecipientName = recipientName,
                 Table = table,
                 ButtonText = $"Open in {dto.TargetAppDisplayName}",
@@ -57,7 +59,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             List<TDto> dtos,
             OperationType type,
             string recipientAddress,
-            string recipientName
+            string recipientName,
+            string cc
         ) where TDto : INotifiableDto
         {
             _logger.WriteLog($"Generating record link from dto class with: dto.SourceEntityLogicalName");
@@ -87,6 +90,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 Dto = dtos[0],
                 To = recipientAddress,
+                CC = cc,
                 RecipientName = recipientName,
                 Table = table,
                 ButtonText = "Help Me",

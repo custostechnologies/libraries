@@ -9,7 +9,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public NotificationRequestDto Create(
             EmailTemplateDto template,
             Guid entityId,
-            string recipientEmail
+            string recipientEmail,
+            string cc
         )
         {
             return new NotificationRequestDto()
@@ -20,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     template.EmailTemplateId ?? Guid.Empty
                 ),
                 RegardingRecordId = entityId,
-                CCString = template.CC,
+                CCString = cc ?? template.CC,
                 Importance = 0,
                 Subject = template.Subject,
                 SendFrom = template.SendFrom,
