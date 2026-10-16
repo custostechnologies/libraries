@@ -55,7 +55,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             if (context == null) throw new InvalidOperationException("NotificationContext cannot be NULL");
             if (context.Dto == null) throw new InvalidOperationException("NotificationContext.Dto cannot be NULL");
 
-            var template = _templateResolver.Resolve(context.Dto.GetType());
+            var template = _templateResolver.Resolve(context.Dto.GetType(), type);
             var tags = _tagResolver.BuildTags(context, template);
             var html = _renderer.Render(template, tags);
 

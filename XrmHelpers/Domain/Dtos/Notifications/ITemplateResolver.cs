@@ -1,4 +1,5 @@
 using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -18,6 +19,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     }
     public interface ITemplateResolver
     {
-        NotificationTemplate Resolve(Type dtoType);
+        NotificationTemplate Resolve(Type dtoType, OperationType operationType);
     }
 }

@@ -2,11 +2,13 @@ using System.Text;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
+    public record EmailTemplate(Type DtoType, OperationType Operation, string TemplateKey);
     public class TemplateResolver : ITemplateResolver
     {
         private readonly EmailTemplates _emailTemplateQuery;
@@ -14,9 +16,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly TemplateSnippetIntersects _intersectQuery;
         private readonly IDataverseLogger _logger;
         private readonly FileDownloaderService _downloaderService;
-        private static readonly Dictionary<Type, string> TemplateKeys = new()
+        private static readonly List<EmailTemplate> EmailTemplates = new()
         {
-            { typeof(SafetyIncidentDto), "newSafetyIncident" }
+            { new EmailTemplate(typeof(SafetyIncidentDto), OperationType.Create, "newSafetyIncident") },
+            { new EmailTemplate(typeof(SafetyIncidentDto), OperationType.UpdateOwner, "updateIncidentOwner") },
+            { new EmailTemplate(typeof(SafetyIncidentDto), OperationType.CloseRecord, "closeSafetyIncident") },
+            { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.Create, "newChildProtectionConcern") },
+            { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.UpdateOwner, "updateConcernOwner") },
+            { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.UpdateOwner, "closeChildProtectionConcern") },
         };
 
         // mappers
@@ -47,7 +54,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _logger = loggerFactory.Create<TemplateResolver>();
         }
-        public NotificationTemplate Resolve(Type dtoType)
+        public NotificationTemplate Resolve(Type dtoType, OperationType operationType)
         {
             EmailTemplateDto? _emailTemplateDto = null;
             ThemeDto? _themeDto = null;
@@ -68,15 +75,22 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             // retrieve email template
             _logger.WriteLog("Retrieving email template...");
-
-            if (!TemplateKeys.TryGetValue(dtoType, out string? template))
+            
+            var template = EmailTemplates
+                .Find(
+                    x => x.DtoType == dtoType && x.Operation == operationType
+                );
+            
+            if (template == null)
             {
                 throw new InvalidPluginExecutionException(
                     $"No template configured for {dtoType.Name}"
                 );
+            } else
+            {
+                templateKey = template.TemplateKey;
             }
-
-            templateKey = template;
+            
             _logger.WriteLog($"TemplateKey resolved to: {templateKey}");
 
             // inject tags values based on incoming dto (regarding obj)

@@ -15,7 +15,7 @@ namespace spgsWebTools.XrmHelpers.Domain
         public static IServiceCollection AddXrmHelpers(
             this IServiceCollection services)
         {
-            services.AddSingleton<IDataverseContext, DataverseContext>();
+            services.AddScoped<IDataverseContext, DataverseContext>();
 
             services.AddSingleton<IValidationEngine, ValidationEngine>();
 
