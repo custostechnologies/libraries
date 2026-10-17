@@ -19,6 +19,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly ILookupEnricher<TDto> _enricher;
         private readonly IChangeDetectionService<TDto> _changeDetector;
         private readonly CoreStaffMembers _coreStaffMemberQuery;
+        private readonly DigestQueryEngine<TDto> _digestQueryEngine;
         public NotificationPipeline(
             IDataverseContext context,
             IDataverseLoggerFactory loggerFactory,
@@ -26,7 +27,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             INotificationMapper<TDto> notificationMapper,
             ILookupEnricher<TDto> enricher,
             IChangeDetectionService<TDto> changeDetector,
-            CoreStaffMembers coreStaffMemberQuery
+            CoreStaffMembers coreStaffMemberQuery,
+            DigestQueryEngine<TDto> digestQueryEngine
         )
         {
             _context = context;
@@ -35,6 +37,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _enricher = enricher;
             _changeDetector = changeDetector;
             _coreStaffMemberQuery = coreStaffMemberQuery;
+            _digestQueryEngine = digestQueryEngine;
             _logger = loggerFactory.Create<NotificationPipeline<TDto>>();
         }
         public Guid BuildEmailNotification(
@@ -135,30 +138,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private List<TDto> BuildDtoList<TDto>(
             EntityCollection collection
         ){
-            EntityCollection entityCollection;
-            // query + cache all open records for the given entity
-            QueryExpression query = new QueryExpression(entityLogicalName.ToString())
-            {
-                ColumnSet = new ColumnSet(
-                    $"{entityLogicalName}id",
-                    "ownerid",
-                    "statecode",
-                    "statuscode"
-                ),
-                Criteria =
-                {
-                    Conditions =
-                    {
-                        new ConditionExpression(
-                            "statecode",
-                            ConditionOperator.Equal,
-                            Status.Active
-                        )
-                    }
-                }
-            };
-
-            var results = _context.Service.RetrieveMultiple(query);
+            
 
             if (results.Entities.Count > 0)
             {
