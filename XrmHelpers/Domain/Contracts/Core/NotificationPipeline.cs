@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
@@ -88,6 +89,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 throw;
             }
         }
+        public List<Guid> BuildDigestEmailNotification(
+            EntityLogicalNames entityLogicalName,
+            OperationType type
+        )
+        {
+            
+
+            // extract list of owners
+            // iterate through owners and build summary notification for each
+        }
         private (
             bool resolved, 
             Entity? coreStaffMember
@@ -119,6 +130,61 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 _logger.WriteLog("Invalid email (non-org). Falling back to default.");
                 return (false, null);
+            }
+        }
+        private List<TDto> BuildDtoList<TDto>(
+            EntityCollection collection
+        ){
+            EntityCollection entityCollection;
+            // query + cache all open records for the given entity
+            QueryExpression query = new QueryExpression(entityLogicalName.ToString())
+            {
+                ColumnSet = new ColumnSet(
+                    $"{entityLogicalName}id",
+                    "ownerid",
+                    "statecode",
+                    "statuscode"
+                ),
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(
+                            "statecode",
+                            ConditionOperator.Equal,
+                            Status.Active
+                        )
+                    }
+                }
+            };
+
+            var results = _context.Service.RetrieveMultiple(query);
+
+            if (results.Entities.Count > 0)
+            {
+                var owners = results.Entities
+                    .Select(
+                        en => en.GetAttributeValue<Guid>("ownerid")
+                    ).ToArray();
+
+                foreach (var owner in owners)
+                {
+                    var filtered = results.Entities
+                        .Select(
+                            en => en.GetAttributeValue<Guid>("ownerid") == owner
+                        ).ToArray();
+
+                    switch (entityLogicalName.ToString())
+                    {
+                        case EntityLogicalNames.SafetyIncident:
+                            List<SafetyIncidentDto> dtos;
+
+                            foreach (var entity in filtered)
+                            {
+                                var dto = _dataverseMapper.MapToDto(entity);
+                            }
+                    }
+                }
             }
         }
     }

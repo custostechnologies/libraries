@@ -33,5 +33,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string PayClaimForm = "pgrowth_payclaimform";
         public const string PayClaimItem = "pgrowth_payclaimitem";
         public const string PayPeriod = "pgrowth_payperiod";
+        public const string Activity = "task";
     }
 }
