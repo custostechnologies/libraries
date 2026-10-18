@@ -49,13 +49,17 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
                 services.AddScoped(typeof(INotificationPipeline<>), typeof(NotificationPipeline<>));
                 services.AddScoped(typeof(DigestQueryEngine<>));
-                services.AddScoped<IDigestConfiguration<SafetyIncidentDto>, SafetyIncidentDigestConfiguration>();
                 services.AddScoped<INotificationContextFactory, NotificationContextFactory>();
                 services.AddScoped<INotificationRequestFactory, NotificationRequestFactory>();
                 services.AddScoped<INotificationRequestRepository, NotificationRequestRepository>();
                 services.AddScoped<IEmailRenderer, EmailRenderer>();
                 services.AddScoped<ITemplateResolver, TemplateResolver>();
                 services.AddScoped<ITagResolver, TagResolver>();
+
+                // digest configurations
+                services.AddScoped<IDigestConfiguration<SafetyIncidentDto>, SafetyIncidentDigestConfiguration>();
+                services.AddScoped<IDigestConfiguration<ChildProtectionConcernDto>, ConcernDigestConfiguration>();
+                services.AddScoped<IDigestConfiguration<TaskDto>, TaskDigestConfiguration>();
 
                 services.AddScoped(typeof(IHashService<>), typeof(HashService<>));
                 services.AddScoped(typeof(IChangeDetectionService<>), typeof(ChangeDetectionService<>));

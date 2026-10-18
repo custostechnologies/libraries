@@ -11,7 +11,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// Dataverse Task notification DTO.
     /// </summary>
-    public class TaskDto : NotifiableDto<TaskDto>
+    public class TaskDto : NotifiableDto<TaskDto>, IQueryDto
     {
         public TaskDto() : base() { }
 

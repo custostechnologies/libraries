@@ -11,7 +11,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class ChildProtectionConcernDto : NotifiableDto<ChildProtectionConcernDto>, IValidationMetadata
+    public class ChildProtectionConcernDto : NotifiableDto<ChildProtectionConcernDto>, IValidationMetadata, IQueryDto
     {
         public ChildProtectionConcernDto() : base() { }
         public override string TargetAppDisplayName => "manageCompliance";
