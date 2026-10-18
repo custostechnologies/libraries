@@ -55,7 +55,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {

@@ -128,7 +128,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _logger.WriteLog($"Constructed new Entity to be sent to Target after determining operation type...");
 
-            var newId = _context.Service.Create(notificationRequest);
+            var newId = _context.Runtime.UserService.Create(notificationRequest);
 
             if (newId == Guid.Empty)
             {

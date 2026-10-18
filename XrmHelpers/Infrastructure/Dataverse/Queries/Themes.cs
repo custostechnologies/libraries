@@ -43,7 +43,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog($"Executing query expression on {ENTITY_LOGICAL_NAME}");
 
-            var results = _context.Service.RetrieveMultiple(query);
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing query expression, interpreting results...");
 

@@ -48,7 +48,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing retrieve request for current counter value and prefix.");
 
-                ExecuteTransactionResponse retrieveResponse = (ExecuteTransactionResponse)_context.Service.Execute(retrieveCounter);
+                ExecuteTransactionResponse retrieveResponse = (ExecuteTransactionResponse)_context.Runtime.UserService.Execute(retrieveCounter);
 
                 if (retrieveResponse.Responses.Count != 1)
                 {
@@ -75,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 string paddedCounter = currentCounterValue.ToString().PadLeft(4, '0');
 
-                _context.Service.Update(counterUpdate);
+                _context.Runtime.UserService.Update(counterUpdate);
                 return $"{prefix}-{paddedCounter}";
             }
             catch (Exception ex)

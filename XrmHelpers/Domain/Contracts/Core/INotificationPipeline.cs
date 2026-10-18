@@ -1,4 +1,6 @@
 using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.Query;
+
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 
@@ -14,8 +16,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string fallbackName
         );
         List<Guid> BuildDigestEmailNotification(
-            EntityLogicalNames entityLogicalName,
-            OperationType type
+            string targetEntity,
+            OperationType type,
+            ColumnSet columns
         );
     }
 }

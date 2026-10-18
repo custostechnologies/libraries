@@ -24,6 +24,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public virtual string HelpMeLink { get; set; } = "https://my.stpauls.nsw.edu.au/homepage/24256";
         public virtual OperationType ContextOperationType { get; set; }
         public virtual DateTime? ForcePlugin { get; set; } = null;
+        public virtual List<DigestMetric> Metrics { get; } = [];
 
         public virtual KeyAttributeCollection KeyCollection =>
             new KeyAttributeCollection { };
@@ -56,7 +57,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             try
             {
                 var req = new RetrieveCurrentOrganizationRequest();
-                var response = (RetrieveCurrentOrganizationResponse)_context.Service.Execute(req);
+                var response = (RetrieveCurrentOrganizationResponse)_context.Runtime.UserService.Execute(req);
 
                 if (response.Detail.Endpoints.ContainsKey(EndpointType.WebApplication))
                 {
@@ -72,7 +73,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 // Filter by the unique name of the model-driven app
                 query.Criteria.AddCondition("name", ConditionOperator.Equal, targetAppDisplayName);
 
-                EntityCollection results = _context.Service.RetrieveMultiple(query);
+                EntityCollection results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {

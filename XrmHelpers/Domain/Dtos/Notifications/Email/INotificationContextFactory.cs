@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         ) where TDto : INotifiableDto;
 
         NotificationContext CreateSummary<TDto>(
-            List<TDto> dtos,
+            IReadOnlyCollection<TDto> dtos,
             OperationType type,
             string recipientAddress,
             string recipientName,

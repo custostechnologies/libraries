@@ -59,7 +59,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing RetrieveReference query expression on systemuser");
 
-            var results = _context.Service.RetrieveMultiple(query);
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing RetrieveReference query expression");
 
@@ -116,7 +116,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing GetReferenceByAzureId query expression on systemuser");
 
-            var results = _context.Service.RetrieveMultiple(query);
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing RetrieveReference query expression");
 
@@ -174,7 +174,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             _logger.WriteLog("Executing RetrieveMetadata query expression on systemuser");
 
-            var results = _context.Service.RetrieveMultiple(query);
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
             _logger.WriteLog("Finished executing RetrieveMetadata query expression");
 
@@ -209,7 +209,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 Target = upsertUser
             };
 
-            return (UpsertResponse)_context.Service.Execute(request);
+            return (UpsertResponse)_context.Runtime.UserService.Execute(request);
         }
     }
 }

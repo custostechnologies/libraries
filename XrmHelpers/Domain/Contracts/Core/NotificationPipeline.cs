@@ -93,14 +93,33 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
         }
         public List<Guid> BuildDigestEmailNotification(
-            EntityLogicalNames entityLogicalName,
-            OperationType type
+            string targetEntity,
+            OperationType type,
+            ColumnSet columns
         )
         {
-            
+            var newIds = new List<Guid>();
+            var digests = _digestQueryEngine.GetDigests(
+                $"Notification Digest for {targetEntity}",
+                "spgsWebTools Overview",
+                targetEntity,
+                columns
+            );
 
-            // extract list of owners
-            // iterate through owners and build summary notification for each
+            foreach (var d in digests)
+            {
+                newIds.Add(
+                    _notificationMapper.CreateSummaryNotification(
+                        d.digest.Records,
+                        OperationType.SummaryNotification,
+                        d.to,
+                        d.digest.TeamName,
+                        "my.workflows@stpauls.nsw.edu.au"
+                    )
+                );
+            }
+
+            return newIds;
         }
         private (
             bool resolved, 
@@ -133,38 +152,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 _logger.WriteLog("Invalid email (non-org). Falling back to default.");
                 return (false, null);
-            }
-        }
-        private List<TDto> BuildDtoList<TDto>(
-            EntityCollection collection
-        ){
-            
-
-            if (results.Entities.Count > 0)
-            {
-                var owners = results.Entities
-                    .Select(
-                        en => en.GetAttributeValue<Guid>("ownerid")
-                    ).ToArray();
-
-                foreach (var owner in owners)
-                {
-                    var filtered = results.Entities
-                        .Select(
-                            en => en.GetAttributeValue<Guid>("ownerid") == owner
-                        ).ToArray();
-
-                    switch (entityLogicalName.ToString())
-                    {
-                        case EntityLogicalNames.SafetyIncident:
-                            List<SafetyIncidentDto> dtos;
-
-                            foreach (var entity in filtered)
-                            {
-                                var dto = _dataverseMapper.MapToDto(entity);
-                            }
-                    }
-                }
             }
         }
     }

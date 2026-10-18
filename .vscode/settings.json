@@ -1,0 +1,13 @@
+{
+    "sarif-viewer.connectToGithubCodeScanning": "off",
+    "chsharp.experimental.roslynAnalysis": true,
+    "cSpell.words": [
+        "internalemailaddress",
+        "ownerid",
+        "statecode",
+        "systemuser",
+        "systemuserid",
+        "teamid",
+        "teammembership"
+    ]
+}

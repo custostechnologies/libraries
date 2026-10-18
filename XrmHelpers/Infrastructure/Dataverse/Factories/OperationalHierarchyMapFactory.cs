@@ -104,7 +104,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );
 
                 _logger.WriteLog("createMap entity: {0}", createMapJson);
-                var mapId = _context.Service.Create(createMap);
+                var mapId = _context.Runtime.UserService.Create(createMap);
 
                 _logger.WriteLog("Created {0} with Id: {1}", ENTITY_LOGICAL_NAME, mapId);
 

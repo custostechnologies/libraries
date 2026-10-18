@@ -99,7 +99,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 MapApplicationType(_coreJobPositionRef.Id);
                 _newApplication[EmploymentApplicationFields.SubmissionDate] = DateTime.UtcNow;
 
-                return _context.Service.Create(_newApplication);
+                return _context.Runtime.UserService.Create(_newApplication);
             }
             catch (Exception ex)
             {

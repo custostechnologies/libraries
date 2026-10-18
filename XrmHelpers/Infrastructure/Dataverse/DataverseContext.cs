@@ -1,32 +1,27 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
 
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public class DataverseContext : IDataverseContext
     {
+        private readonly IPluginRuntime _runtime;
         private readonly IDataverseLoggerFactory _loggerFactory;
 
         public DataverseContext(
-            IOrganizationService service,
-            ILogger logger,
-            IPluginExecutionContext executionContext,
-            IDataverseLoggerFactory loggerFactory)
+            IPluginRuntime runtime,
+            IDataverseLoggerFactory loggerFactory
+        )
         {
-            Service = service;
-            Logger = logger;
-            ExecutionContext = executionContext;
+            _runtime = runtime;
             _loggerFactory = loggerFactory;
 
-            logger.LogInformation(
-                "[DataverseContext] Instantiated DataverseContext class.");
+            _runtime.TracingService.Trace("[DataverseContext] Instantiated DataverseContext class.");
         }
 
-        public IOrganizationService Service { get; }
-
-        public ILogger Logger { get; }
-
-        public IPluginExecutionContext ExecutionContext { get; }
+        public IPluginRuntime Runtime => _runtime;
 
         public IDataverseLogger GetLogger<T>()
         {

@@ -24,7 +24,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     ["Email"] = upn
                 };
 
-                OrganizationResponse response = _context.Service.Execute(request);
+                OrganizationResponse response = _context.Runtime.UserService.Execute(request);
 
                 if (response.Results.Contains("SystemUserId"))
                 {

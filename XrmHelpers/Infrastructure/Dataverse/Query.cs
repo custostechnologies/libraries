@@ -63,7 +63,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
                 _logger.WriteLog("Executing QueryExpression using IOrganizationService provided by IDataverseContext...");
 
                 var stopwatch = Stopwatch.StartNew();
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
                 stopwatch.Stop();
 
                 _logger.WriteLog($"Execution complete [Duration: {stopwatch.Elapsed}]...");

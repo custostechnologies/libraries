@@ -1,13 +1,10 @@
-using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.PluginTelemetry;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
 {
     public interface IDataverseContext
     {
-        IOrganizationService Service { get; }
-        ILogger Logger { get; }
-        IPluginExecutionContext ExecutionContext { get; }
+        IPluginRuntime Runtime { get; }
         IDataverseLogger GetLogger<T>();
     }
 }

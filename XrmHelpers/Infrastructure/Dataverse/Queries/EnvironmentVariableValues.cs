@@ -58,7 +58,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 query.LinkEntities.Add(link);
 
-                EntityCollection results = _context.Service.RetrieveMultiple(query);
+                EntityCollection results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {

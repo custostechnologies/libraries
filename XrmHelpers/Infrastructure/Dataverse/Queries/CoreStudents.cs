@@ -42,7 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog($"Executing GetEntityReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate query expression");
 
@@ -98,7 +98,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing GetReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate CoreStudents.GetReferenceByStudentId query expression");
 

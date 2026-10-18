@@ -42,7 +42,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog($"Executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 _logger.WriteLog($"Finished executing ExecuteAlternate CoreStaffMembers.GetEntityByTruth query expression, results.Entities.Count: {results.Entities.Count}");
 
@@ -100,7 +100,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog($"Executing GetEntityReferenceByStaffId query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate query expression");
 
@@ -154,7 +154,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog($"Executing GetReferenceByStaffId query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId query expression");
 
@@ -206,7 +206,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog($"Executing GetEntityByOrgEmail query expression on {ENTITY_LOGICAL_NAME}");
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 _logger.WriteLog("Finished executing RetrieveMultiple query expression");
 

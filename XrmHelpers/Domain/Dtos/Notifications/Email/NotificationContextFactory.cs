@@ -56,7 +56,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         }
 
         public NotificationContext CreateSummary<TDto>(
-            List<TDto> dtos,
+            IReadOnlyCollection<TDto> dtos,
             OperationType type,
             string recipientAddress,
             string recipientName,
@@ -88,7 +88,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             return new NotificationContext()
             {
-                Dto = dtos[0],
+                Dto = dtos.First(),
                 To = recipientAddress,
                 CC = cc,
                 RecipientName = recipientName,

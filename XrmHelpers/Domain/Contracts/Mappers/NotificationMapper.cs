@@ -99,7 +99,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             return _requestRepo.SaveRequest(notification.request, notification.html);
         }
         public Guid CreateSummaryNotification(
-            List<TDto> dtos,
+            IReadOnlyCollection<TDto> dtos,
             OperationType type,
             string recipientEmail,
             string recipientName,

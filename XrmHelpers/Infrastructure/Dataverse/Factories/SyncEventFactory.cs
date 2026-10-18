@@ -45,7 +45,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 );*/
                 //syncEvent["pgrowth_syncallattributes"] = syncAll;
 
-                var result = _context.Service.Create(syncEvent);
+                var result = _context.Runtime.UserService.Create(syncEvent);
 
                 syncEvent[$"{syncEntityLogicalName}id"] = result;
 
@@ -68,7 +68,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _logger.WriteLog("Updating syncEvent");
 
-                _context.Service.Update(syncEvent);
+                _context.Runtime.UserService.Update(syncEvent);
 
                 _logger.WriteLog("syncEvent updated from MarkError");
             }
@@ -93,7 +93,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 
                 _logger.WriteLog("Updating syncEvent from SyncEventFactory.MarkComplete()");
 
-                _context.Service.Update(syncEvent);
+                _context.Runtime.UserService.Update(syncEvent);
 
                 _logger.WriteLog("_syncEvent updated from MarkComplete");
             }

@@ -108,7 +108,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             return sb.ToString();
         }
         public static string BuildMultiEntityTable<TDto>(
-            List<TDto> dtos, 
+            IReadOnlyCollection<TDto> dtos, 
             Dictionary<Guid, string> links,
             OperationType type,
             IStyleProvider styleProvider
@@ -116,7 +116,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
         {
             if (dtos == null || dtos.Count == 0) return string.Empty;
 
-            var headerFields = Build(dtos[0], type, links);
+            var headerFields = Build(dtos.First(), type, links);
             var sb = new StringBuilder();
 
             sb.AppendLine($"<table {styleProvider.InlineTableStyle}>");

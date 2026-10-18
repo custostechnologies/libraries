@@ -61,7 +61,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     }
                 };
 
-                var results = _context.Service.RetrieveMultiple(query);
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
 
                 if (results.Entities.Count > 0)
                 {
@@ -114,7 +114,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (count != null) queryExpression.TopCount = count;
 
-                var results = _context.Service.RetrieveMultiple(queryExpression);
+                var results = _context.Runtime.UserService.RetrieveMultiple(queryExpression);
 
                 return (results, TimeSpan.Zero);
             }

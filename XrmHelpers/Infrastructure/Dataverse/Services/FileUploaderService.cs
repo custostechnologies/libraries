@@ -46,7 +46,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                     FileName = _exportFileName
                 };
 
-                var initResponse = (InitializeFileBlocksUploadResponse)_context.Service.Execute(initRequest);
+                var initResponse = (InitializeFileBlocksUploadResponse)_context.Runtime.UserService.Execute(initRequest);
                 string fileContinuationToken = initResponse.FileContinuationToken;
 
                 int offset = 0;
@@ -72,7 +72,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                         BlockId = encodedBlockId
                     };
 
-                    _context.Service.Execute(uploadBlockRequest);
+                    _context.Runtime.UserService.Execute(uploadBlockRequest);
 
                     offset += currentBlockSize;
                     blockNumber++;
@@ -87,7 +87,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                     MimeType = "text/plain"
                 };
 
-                _context.Service.Execute(commitRequest);
+                _context.Runtime.UserService.Execute(commitRequest);
                 _logger.WriteLog("File successfully written to Dataverse column.");
             }
             catch (Exception ex)

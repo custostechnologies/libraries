@@ -45,7 +45,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
             "Sending InitializeFileBlocksDownloadRequest."
         );
 
-                var initResponse = (InitializeFileBlocksDownloadResponse)_context.Service.Execute(initRequest);
+                var initResponse = (InitializeFileBlocksDownloadResponse)_context.Runtime.UserService.Execute(initRequest);
 
                 string fileContinuationToken = initResponse.FileContinuationToken;
                 long fileSize = initResponse.FileSizeInBytes;
@@ -84,7 +84,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                         FileContinuationToken = fileContinuationToken
                     };
 
-                    DownloadBlockResponse response = (DownloadBlockResponse)_context.Service.Execute(downloadBlockRequest);
+                    DownloadBlockResponse response = (DownloadBlockResponse)_context.Runtime.UserService.Execute(downloadBlockRequest);
 
                     _logger.WriteLog(
                 "Block retrieved. BytesReceived={0}",

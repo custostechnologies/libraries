@@ -11,7 +11,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
     /// <summary>
     /// 
     /// </summary>
-    public class SafetyIncidentDto : NotifiableDto<SafetyIncidentDto>, IValidationMetadata
+    public class SafetyIncidentDto : NotifiableDto<SafetyIncidentDto>, IValidationMetadata, IQueryDto
     {
         public SafetyIncidentDto() : base() { }
         public override string TargetAppDisplayName => "manageCompliance";

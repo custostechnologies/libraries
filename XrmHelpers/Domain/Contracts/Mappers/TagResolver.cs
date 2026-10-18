@@ -88,7 +88,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _tagResolverEngine.PopulateTag(
                 context.Dto, tags, "inCorrelationId",
-                _context.ExecutionContext.CorrelationId.ToString()
+                _context.Runtime.ExecutionContext.CorrelationId.ToString()
             );
 
             _tagResolverEngine.PopulateTag(
@@ -132,7 +132,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 context.Dto, 
                 tags, 
                 "inEnvId", 
-                _context.ExecutionContext.OrganizationId.ToString()
+                _context.Runtime.ExecutionContext.OrganizationId.ToString()
             );
 
             return tags;

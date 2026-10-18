@@ -37,7 +37,7 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
                 }
             };
 
-            EntityCollection roles = _context.Service.RetrieveMultiple(roleQuery);
+            EntityCollection roles = _context.Runtime.UserService.RetrieveMultiple(roleQuery);
 
             if (roles.Entities.Count > 0)
             {
@@ -85,7 +85,7 @@ namespace spgsWebTools.NewUserSyncEvent.Queries
                     }
                 };
 
-                EntityCollection results = _context.Service.RetrieveMultiple(userHasRoleQuery);
+                EntityCollection results = _context.Runtime.UserService.RetrieveMultiple(userHasRoleQuery);
 
                 return results.Entities.Count > 0;
             }
