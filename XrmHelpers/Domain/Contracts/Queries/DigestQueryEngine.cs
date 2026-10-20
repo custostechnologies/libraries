@@ -76,19 +76,21 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             foreach (var group in groupedEntities)
             {
                 string to = string.Empty;
+                string userName = string.Empty;
                 string teamName = string.Empty;
                 var (logicalName, id) = group.Key;
 
                 // Retrieve USER or TEAM MEMBERS
                 if (logicalName == "systemuser")
                 {
-                    if (!luUsers.TryGetValue(id, out var recipients))
+                    if (!luUsers.TryGetValue(id, out var recipient))
                     {
                         _logger.WriteLog($"No email address found in lookup for user id: {id}");
                         continue;
                     }
 
-                    to = recipients;
+                    userName = recipient.first;
+                    to = recipient.email;
                 }
                 else
                 {
@@ -98,14 +100,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         continue;
                     }
 
-                    if (!luTeamNames.TryGetValue(id, out var name))
+                    if (!luTeamNames.TryGetValue(id, out var luTeamName))
                     {
                         _logger.WriteLog($"No recipients found in lookup for team id: {id}");
                         continue;
                     }
 
                     to = recipients;
-                    teamName = name;
+                    teamName = luTeamName;
                 }
 
                 var dtos = group.ToList()
@@ -117,12 +119,16 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     .SelectMany(metric => metric.BuildMetric(dtos))
                     .ToList();
 
+                var digestName = string.IsNullOrWhiteSpace(teamName)
+                    ? userName
+                    : $"{teamName} team.";
+
                 var digest = new DigestDto<TDto>
                 {
                     Title = title,
                     Description = description,
                     Records = dtos,
-                    TeamName = $"member of the {teamName} team.",
+                    Name = digestName,
                     Metrics = metrics
                 };
 
@@ -218,13 +224,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     group => group.Key,
                     group => string.Join(
                         ";",
-                        group.Select(
+                        /*group.Select(
                             m =>
                             {
-                                return m.Attributes.TryGetValue("user.internalemailaddress", out var value)
-                                    ? ((AliasedValue)value).Value?.ToString()
-                                    : null;
+                                return (
+                                    EmailAddress: m.Attributes.TryGetValue("user.internalemailaddress", out var email)
+                                        ? ((AliasedValue)email).Value?.ToString()
+                                        : null,
+                                    FirstName: m.Attributes.TryGetValue("user.firstname", out var first)
+                                        ? ((AliasedValue)first).Value?.ToString()
+                                        : null
+                                );
                             }
+                        )*/
+                        group.Select(
+                            m => m.Attributes.TryGetValue("user.internalemailaddress", out var email)
+                                        ? ((AliasedValue)email).Value?.ToString()
+                                        : null
                         )
                         .Where(e => !string.IsNullOrWhiteSpace(e))
                         .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -242,7 +258,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             return (membersLu, nameLu);
         }
-        private Dictionary<Guid, string> BuildUsersLookup(IEnumerable<IGrouping<(string LogicalName, Guid Id), Entity>> groupedEntities)
+        private Dictionary<Guid, (string email, string first)> BuildUsersLookup(IEnumerable<IGrouping<(string LogicalName, Guid Id), Entity>> groupedEntities)
         {
             var users = groupedEntities
                 .Where(group => group.Key.LogicalName == "systemuser")
@@ -254,7 +270,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             var userQuery = new QueryExpression("systemuser")
             {
-                ColumnSet = new ColumnSet("systemuserid", "internalemailaddress"),
+                ColumnSet = new ColumnSet("systemuserid", "internalemailaddress", "firstname"),
                 Criteria =
                 {
                     Conditions =
@@ -276,7 +292,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 )
                 .ToDictionary(
                     e => e.Id,
-                    e => e.GetAttributeValue<string>("internalemailaddress")
+                    e => (email: e.GetAttributeValue<string>("internalemailaddress"), first: e.GetAttributeValue<string>("firstname"))
                 );
         }
     }

@@ -120,7 +120,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         element.digest.Records,
                         OperationType.SummaryNotification,
                         element.to,
-                        element.digest.TeamName,
+                        element.digest.Name,
                         "my.workflows@stpauls.nsw.edu.au",
                         metricsTable
                     )

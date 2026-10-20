@@ -8,7 +8,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
     {
         public string Title { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public string TeamName { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public string Recipients { get; set; } = string.Empty;
         public IReadOnlyCollection<TDto> Records { get; set; } = [];
         public int TotalCount => Records.Count;
@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             var sb = new StringBuilder();
 
-            sb.AppendLine(@$"<table style='{styleProvider.InlineTableStyle}' >");
+            sb.AppendLine(@$"<table {styleProvider.InlineTableStyle}>");
 
             var idx = 0;
             foreach (var metric in Metrics)
@@ -34,8 +34,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 sb.AppendLine($@"
                     <tr style='{rowStyle}'>
-                        <th style='{styleProvider.TableHeadColumn}'>{label}</th>
-                        <td style='{styleProvider.TableRowData}'>{value}</td>
+                        <th {styleProvider.TableHeadColumn}>{label}</th>
+                        <td {styleProvider.TableRowData}>{value}</td>
                     </tr>
                 ");
             }
