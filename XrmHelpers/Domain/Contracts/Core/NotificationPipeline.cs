@@ -7,6 +7,8 @@ using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using spgsWebTools.XrmHelpers.Infrastructure.Services;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -20,6 +22,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IChangeDetectionService<TDto> _changeDetector;
         private readonly CoreStaffMembers _coreStaffMemberQuery;
         private readonly DigestQueryEngine<TDto> _digestQueryEngine;
+        private readonly IStyleProvider _styleProvider;
         public NotificationPipeline(
             IDataverseContext context,
             IDataverseLoggerFactory loggerFactory,
@@ -28,7 +31,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             ILookupEnricher<TDto> enricher,
             IChangeDetectionService<TDto> changeDetector,
             CoreStaffMembers coreStaffMemberQuery,
-            DigestQueryEngine<TDto> digestQueryEngine
+            DigestQueryEngine<TDto> digestQueryEngine,
+            IStyleProvider styleProvider
         )
         {
             _context = context;
@@ -38,6 +42,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _changeDetector = changeDetector;
             _coreStaffMemberQuery = coreStaffMemberQuery;
             _digestQueryEngine = digestQueryEngine;
+            _styleProvider = styleProvider;
             _logger = loggerFactory.Create<NotificationPipeline<TDto>>();
         }
         public Guid BuildEmailNotification(
@@ -106,15 +111,18 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 columns
             );
 
-            foreach (var d in digests)
+            foreach (var element in digests)
             {
+                var metricsTable = element.digest.BuildMetricsTable(_styleProvider);
+                
                 newIds.Add(
                     _notificationMapper.CreateSummaryNotification(
-                        d.digest.Records,
+                        element.digest.Records,
                         OperationType.SummaryNotification,
-                        d.to,
-                        d.digest.TeamName,
-                        "my.workflows@stpauls.nsw.edu.au"
+                        element.to,
+                        element.digest.TeamName,
+                        "my.workflows@stpauls.nsw.edu.au",
+                        metricsTable
                     )
                 );
             }

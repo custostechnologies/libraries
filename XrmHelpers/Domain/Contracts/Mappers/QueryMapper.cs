@@ -131,6 +131,18 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             case "PayClaimFormStatusReason":
                                 setValue = (PayClaimFormStatusReason)optionValue;
                                 break;
+                            case "StudentType":
+                                setValue = (StudentType)optionValue;
+                                break;
+                            case "StudentGender":
+                                setValue = (StudentGender)optionValue;
+                                break;
+                            case "ConcernType":
+                                setValue = (ConcernType)optionValue;
+                                break;
+                            case "ConcernFlag":
+                                setValue = (ConcernFlag)optionValue;
+                                break;
                             default:
                                 setValue = Enum.Parse(dtoValueType, optionValue.ToString());
                                 break;
@@ -195,7 +207,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         }
                         else
                         {
-                            setValue = opsetvalue.Value;
+                            setValue = opsetvalue.Value.ToString();
                         }
                     }
 

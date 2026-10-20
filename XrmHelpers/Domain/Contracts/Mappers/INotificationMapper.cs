@@ -17,7 +17,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             OperationType type, 
             string recipientEmail, 
             string recipientName,
-            string cc
+            string cc,
+            string? metricsTableHtml
         );
         (
             string html, 

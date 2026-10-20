@@ -80,7 +80,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? ConcernTypes { get; set; }
+        public ConcernType[]? ConcernTypes { get; set; }
 
         [DataverseLink(
             srcName: ChildProtectionConcernFields.Contact,
@@ -94,14 +94,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? ConcernType { get; set; }
+        public ConcernType? ConcernType { get; set; }
 
         [DataverseLink(
             srcName: ChildProtectionConcernFields.Flag,
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? Flag { get; set; }
+        public ConcernFlag? Flag { get; set; }
 
         [DataverseLink(
             srcName: ChildProtectionConcernFields.HaveActionsBeenAssigned,
@@ -178,7 +178,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? StudentGender { get; set; }
+        public StudentGender? StudentGender { get; set; }
 
         [Notification(operationType: OperationType.Create, label: "Student Name", index: 1, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Student Name", index: 1, false)]
@@ -198,13 +198,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? StudentType { get; set; }
+        public StudentType? StudentType { get; set; }
 
         [Notification(operationType: OperationType.Create, label: "Submitter Name", index: 3, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Submitter Name", index: 4, false)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Submitter Name", index: 4, false)]
         [DataverseLink(
-            srcName: ChildProtectionConcernFields.StudentType,
+            srcName: ChildProtectionConcernFields.SubmitterName,
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]

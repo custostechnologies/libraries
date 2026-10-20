@@ -103,7 +103,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             OperationType type,
             string recipientEmail,
             string recipientName,
-            string cc
+            string cc,
+            string? metricsTableHtml
         )
         {
             var context = _contextFactory.CreateSummary(
@@ -114,7 +115,28 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 cc
             );
 
-            var notification = Render(context, type, recipientEmail, recipientName);
+            var joinedTable = string.IsNullOrWhiteSpace(metricsTableHtml)
+                ? ""
+                : @$"
+                    {metricsTableHtml}
+                    </br></br>
+                    {context.Table}
+                ";
+
+            var joinedContext = context;
+            joinedContext.Table = joinedTable;
+
+            var finalContext = string.IsNullOrWhiteSpace(joinedTable)
+                ? context
+                : joinedContext;
+
+            var notification = Render(
+                finalContext, 
+                type, 
+                recipientEmail, 
+                recipientName
+            );
+
             return _requestRepo.SaveRequest(notification.request, notification.html);
         }
     }

@@ -27,6 +27,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.UpdateOwner, "closeChildProtectionConcern") },
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.SummaryNotification, "childProtectionConcernDigest") },
             { new EmailTemplate(typeof(TaskDto), OperationType.UpdateOwner, "newTaskAssigned") },
+            { new EmailTemplate(typeof(TaskDto), OperationType.SummaryNotification, "taskDigest") },
         };
 
         // mappers

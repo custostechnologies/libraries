@@ -4,6 +4,8 @@ using Microsoft.Xrm.Sdk.Query;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using spgsWebTools.XrmHelpers.Infrastructure.Services;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -12,17 +14,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IDataverseContext _context;
         private readonly IQueryMapper<TDto> _queryMapper;
         private readonly IDigestConfiguration<TDto> _digestConfig;
+        private readonly IStyleProvider _styleProvider;
         public DigestQueryEngine(
             IDataverseLoggerFactory loggerFactory,
             IDataverseContext context,
             IQueryMapper<TDto> queryMapper,
-            IDigestConfiguration<TDto> digestConfig
+            IDigestConfiguration<TDto> digestConfig,
+            IStyleProvider styleProvider
         )
         {
             _context = context;
             _logger = loggerFactory.Create<DigestQueryEngine<TDto>>();
             _queryMapper = queryMapper;
             _digestConfig = digestConfig;
+            _styleProvider = styleProvider;
         }
         public IReadOnlyCollection<(string to, DigestDto<TDto> digest)> GetDigests(
             string title,
@@ -117,7 +122,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     Title = title,
                     Description = description,
                     Records = dtos,
-                    TeamName = teamName,
+                    TeamName = $"member of the {teamName} team.",
                     Metrics = metrics
                 };
 

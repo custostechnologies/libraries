@@ -167,7 +167,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 
             return sb.ToString();
         }
-
         private static string FormatValue(object? value)
         {
             if (value == null)

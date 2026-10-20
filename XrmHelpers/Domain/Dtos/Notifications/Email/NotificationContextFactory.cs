@@ -28,7 +28,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string cc
         ) where TDto : INotifiableDto
         {
-            _logger.WriteLog($"Generating record link from dto class with: dto.SourceEntityLogicalName");
+            _logger.WriteLog($"Generating record link from dto class with: {dto.SourceEntityLogicalName}");
 
             var link = dto.LinkToRecord(
                 _context,
@@ -63,27 +63,42 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             string cc
         ) where TDto : INotifiableDto
         {
-            _logger.WriteLog($"Generating record link from dto class with: dto.SourceEntityLogicalName");
+            _logger.WriteLog($"Generating record links from dtos.");
             Dictionary<Guid, string> links = new Dictionary<Guid, string>();
 
             if (dtos == null || dtos.Count == 0) throw new Exception();
             
             foreach(var dto in dtos)
             {
+                _logger.WriteLog(
+                    $"EntityId: {dto.EntityId}, EntityName: {dto.SourceEntityLogicalName}, TargetAppDisplayName: {dto.TargetAppDisplayName}"
+                );
+
                 var link = dto.LinkToRecord(
                     _context,
                     dto.SourceEntityLogicalName,
                     dto.EntityId,
                     dto.TargetAppDisplayName
                 );
+
+                _logger.WriteLog("Adding link to collection.");
+                
                 links.Add(dto.EntityId, link);
             } 
+
+            _logger.WriteLog("Building HTML table");
 
             var table = SummaryNotificationService.BuildMultiEntityTable(
                 dtos,
                 links,
                 type,
                 _styleProvider
+            );
+
+            // CREATE METRICS TABLE
+
+            _logger.WriteLog(
+                $"Returning new NotificationContext object with To: {recipientAddress}, CC: {cc}, RecipientName: {recipientName}"
             );
 
             return new NotificationContext()
