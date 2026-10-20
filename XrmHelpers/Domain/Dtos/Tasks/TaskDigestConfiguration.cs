@@ -9,6 +9,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public IReadOnlyCollection<IDigestMetricProvider<TaskDto>> Metrics =>
         [
             new OpenRecordsMetricProvider<TaskDto>(),
+            new OverdueTaskMetricProvider<TaskDto>(),
             new TaskTypeMetricProvider<TaskDto>()
         ];
     }
