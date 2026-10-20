@@ -114,7 +114,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 var metrics = _digestConfig
                     .Metrics
-                    .Select(metric => metric.BuildMetric(dtos))
+                    .SelectMany(metric => metric.BuildMetric(dtos))
                     .ToList();
 
                 var digest = new DigestDto<TDto>

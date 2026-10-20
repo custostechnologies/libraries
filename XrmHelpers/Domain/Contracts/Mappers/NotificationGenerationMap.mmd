@@ -1,0 +1,81 @@
+---
+references:
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Contracts/Core/Not\
+    ificationPipeline.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Contracts/Mappers/\
+    INotificationMapper.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Contracts/Mappers/\
+    NotificationMapper.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Contracts/Mappers/\
+    QueryMapper.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Contracts/Queries/\
+    DigestQueryEngine.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Dtos/ChildProtecti\
+    onConcerns/ChildProtectionConcernDto.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Dtos/Notifications\
+    /DigestDto.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Dtos/Notifications\
+    /Email/NotificationContextFactory.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Dtos/Notifications\
+    /Email/TemplateResolver.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Enums/Concerns/Con\
+    cernFlag.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Enums/Concerns/Con\
+    cernType.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Enums/Concerns/Stu\
+    dentGender.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Domain/Enums/Concerns/Stu\
+    dentType.cs"
+  - "File:
+    /home/matthewthomas/src/spgs/libraries/XrmHelpers/Infrastructure/Dataverse/\
+    Services/SummaryNotificationService.cs"
+generationTime: 2026-10-20T00:08:23.106Z
+---
+flowchart TD
+    A(["Start"]) --> B{"Build single or digest notification?"}
+
+    B -->|Single| C["Map Dataverse entity to DTO"]
+    C --> D["Enrich DTO"]
+    D --> E{"Single recipient?"}
+    E -->|Yes| F["Resolve organization staff member and preferred name; otherwise use fallback"]
+    E -->|No| G["Use default recipient name"]
+    F --> H["Create notification context"]
+    G --> H
+
+    B -->|Digest| I["Query active records and ensure owner column is selected"]
+    I --> J{"Any active records?"}
+    J -->|No| K["Return empty ID list"]
+    J -->|Yes| L["Group records by owner and build user or team recipient lookups"]
+    L --> M["For each owner group, map records to DTOs and calculate metrics"]
+    M --> N["Build digest DTO and metrics table"]
+    N --> O["Create summary context, record links, and summary table"]
+
+    H --> P["Resolve template, theme, and snippets; build tags and render HTML"]
+    O --> P
+    P --> Q["Create notification request"]
+    Q --> R[(Save request and HTML)]
+    R --> S{"Digest notification?"}
+    S -->|No| T["Return notification ID"]
+    S -->|Yes| U["Add ID to results"]
+    U --> V{"More owner groups?"}
+    V -->|Yes| M
+    V -->|No| W["Return ID list"]
+
+    C -.-> X["On single-notification exception, log and rethrow"]
+    D -.-> X
+    P -.-> X
+
+    Y["QueryMapper also supports JSON-to-DTO mapping; DTO attributes define mapped fields"]

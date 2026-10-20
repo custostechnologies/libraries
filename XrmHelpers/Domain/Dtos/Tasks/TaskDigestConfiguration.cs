@@ -8,7 +8,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public string Description => "Weekly Task Summary";
         public IReadOnlyCollection<IDigestMetricProvider<TaskDto>> Metrics =>
         [
-            new OpenRecordsMetricProvider<TaskDto>()
+            new OpenRecordsMetricProvider<TaskDto>(),
+            new TaskTypeMetricProvider<TaskDto>()
         ];
     }
 }

@@ -109,17 +109,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public int? Priority { get; set; }
 
         [Notification(
-            operationType: OperationType.Create,
-            label: "Status",
-            index: 3,
-            isLink: false)]
-        [Notification(
             operationType: OperationType.UpdateOwner,
-            label: "Status",
-            index: 3,
-            isLink: false)]
-        [Notification(
-            operationType: OperationType.SummaryNotification,
             label: "Status",
             index: 3,
             isLink: false)]
@@ -131,17 +121,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public int? StatusReason { get; set; }
 
         [Notification(
-            operationType: OperationType.Create,
-            label: "% Complete",
-            index: 4,
-            isLink: false)]
-        [Notification(
             operationType: OperationType.UpdateOwner,
-            label: "% Complete",
-            index: 4,
-            isLink: false)]
-        [Notification(
-            operationType: OperationType.SummaryNotification,
             label: "% Complete",
             index: 4,
             isLink: false)]
@@ -162,11 +142,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             label: "Category",
             index: 5,
             isLink: false)]
-        [Notification(
-            operationType: OperationType.SummaryNotification,
-            label: "Category",
-            index: 5,
-            isLink: false)]
         [DataverseLink(
             srcName: TaskCustomFields.TaskCategory,
             srcType: typeof(OptionSetValue),
@@ -184,11 +159,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             label: "Task Type",
             index: 6,
             isLink: false)]
-        [Notification(
-            operationType: OperationType.SummaryNotification,
-            label: "Task Type",
-            index: 6,
-            isLink: false)]
         [DataverseLink(
             srcName: TaskCustomFields.TaskType,
             srcType: typeof(OptionSetValue),
@@ -203,11 +173,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             isLink: false)]
         [Notification(
             operationType: OperationType.UpdateOwner,
-            label: "Compliance Flag",
-            index: 7,
-            isLink: false)]
-        [Notification(
-            operationType: OperationType.SummaryNotification,
             label: "Compliance Flag",
             index: 7,
             isLink: false)]
