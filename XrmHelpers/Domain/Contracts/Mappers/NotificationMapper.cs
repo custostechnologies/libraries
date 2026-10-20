@@ -118,6 +118,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             var joinedTable = string.IsNullOrWhiteSpace(metricsTableHtml)
                 ? ""
                 : @$"
+                    <h3>Metrics</h3>
                     {metricsTableHtml}
                     </br></br>
                     {context.Table}

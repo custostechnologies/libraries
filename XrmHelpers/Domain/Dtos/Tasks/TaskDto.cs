@@ -1,3 +1,4 @@
+using Microsoft.VisualBasic;
 using Microsoft.Xrm.Sdk;
 
 using spgsWebTools.XrmHelpers.Constants;
@@ -106,7 +107,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? Priority { get; set; }
+        public TaskPriority? Priority { get; set; }
 
         [Notification(
             operationType: OperationType.UpdateOwner,
@@ -203,6 +204,33 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public string? RegardingName { get; set; }
+
+        [Notification(
+            operationType: OperationType.SummaryNotification,
+            label: "Days Until Due",
+            index: 3,
+            isLink: false)]
+        public string DaysUntilDue => SetDaysUntilDue();
+        
+        private string SetDaysUntilDue()
+        {
+            var due = DueDate;
+            if (due != null)
+            {
+                TimeSpan diff = (TimeSpan)(DateTime.Now - due);
+                int wholeDays = diff.Days;
+
+                if (due <= DateTime.Now)
+                {
+                    return $"Due in {wholeDays} days";
+                }
+                else
+                {
+                    return $"Overdue by {Math.Abs(wholeDays)} days";
+                }
+            }
+            return "0";
+        }
 
         public override string LinkToRecord(
             IDataverseContext context,

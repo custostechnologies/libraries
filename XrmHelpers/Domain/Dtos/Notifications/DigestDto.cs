@@ -21,7 +21,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             var sb = new StringBuilder();
 
-            sb.AppendLine(@$"<table {styleProvider.InlineTableStyle}>");
+            //sb.AppendLine(@$"<table {styleProvider.InlineTableStyle}>");
 
             var idx = 0;
             foreach (var metric in Metrics)
@@ -32,15 +32,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 var rowStyle = even ? styleProvider.TableBodyRowEven : styleProvider.TableBodyRowOdd;
 
-                sb.AppendLine($@"
+                /*sb.AppendLine($@"
                     <tr style='{rowStyle}'>
                         <th {styleProvider.TableHeadColumn}>{label}</th>
                         <td {styleProvider.TableRowData}>{value}</td>
                     </tr>
+                ");*/
+                sb.AppendLine(@$"
+                    <p style='font-family: Arial, sans-serif; font-size: 16px; color: #333333;'>
+                        {label}
+                        <span style='display: inline-block; background-color: #17457a; color: #ffffff; font-size: 12px; font-weight: bold; padding: 2px 7px; border-radius: 10px; margin-left: 5px; vertical-align: middle;'>
+                            {value}
+                        </span>
+                    </p>
                 ");
             }
 
-            sb.AppendLine("</table>");
+            //sb.AppendLine("</table>");
 
             return sb.ToString();
         }

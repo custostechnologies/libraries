@@ -121,7 +121,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 var digestName = string.IsNullOrWhiteSpace(teamName)
                     ? userName
-                    : $"{teamName} team.";
+                    : teamName.Contains("Team")
+                        ? teamName
+                        : $"{teamName} Team";
 
                 var digest = new DigestDto<TDto>
                 {
