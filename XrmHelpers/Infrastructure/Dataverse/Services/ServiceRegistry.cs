@@ -13,6 +13,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Services;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers.Infrastructure.Graph;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 {
@@ -44,6 +45,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<EmailTemplates>();
                 services.AddScoped<Themes>();
                 services.AddScoped<TemplateSnippetIntersects>();
+                services.AddScoped<Systemusers>();
+                services.AddScoped<Teams>();
 
                 // add notification service registrations
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
@@ -71,6 +74,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 // add file service registrations
                 services.AddScoped<FileUploaderService>();
                 services.AddScoped<FileDownloaderService>();
+
+                // add email service
+                services.AddScoped<EmailService>();
 
                 return services;
             }
