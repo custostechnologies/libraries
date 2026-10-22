@@ -10,7 +10,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
     public static class ChildProtectionConcernSchema
     {
         public static readonly ColumnSet DigestColumns = new ColumnSet(
-            ChildProtectionConcernFields.Name,
+            ChildProtectionConcernFields.AutoGenTitle,
             ChildProtectionConcernFields.StudentType,
             ChildProtectionConcernFields.StudentName,
             ChildProtectionConcernFields.ConcernType,

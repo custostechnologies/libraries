@@ -4,7 +4,7 @@ namespace spgsWebTools.XrmHelpers.Constants
     {
         public const string ChildProtectionConcernId = "cr2d7_childprotectionconcernid";
         public const string AttachmentId = "pgrowth_attachmentid";
-        public const string Name = "cr2d7_name";
+        public const string AutoGenTitle = "cr2d7_name";
         public const string CommunityId = "pgrowth_communityid";
         public const string ConcernDetail = "cr2d7_concerndetail";
         public const string ConcernId = "pgrowth_concernid";

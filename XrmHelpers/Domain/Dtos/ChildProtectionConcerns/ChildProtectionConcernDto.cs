@@ -46,7 +46,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [Notification(operationType: OperationType.UpdateOwner, label: "Title", index: 0, true)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Title", index: 0, true)]
         [DataverseLink(
-            srcName: ChildProtectionConcernFields.Name,
+            srcName: ChildProtectionConcernFields.AutoGenTitle,
             srcType: typeof(string),
             trgName: null,
             trgType: null)]

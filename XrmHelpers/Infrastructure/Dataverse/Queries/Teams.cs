@@ -108,5 +108,38 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 Members = teamMembers
             };
         }
+        public Guid ResolveTeamIdByName(string teamName)
+        {
+            _logger.WriteLog($"Executing ResolveTeamIdByName: {teamName}");
+            QueryExpression query = new QueryExpression("team")
+            {
+                TopCount = 1,
+                ColumnSet = new ColumnSet("teamid", "name"),
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(
+                            "name",
+                            ConditionOperator.Equal,
+                            teamName
+                        )
+                    }
+                }
+            };
+
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
+
+            if (results.Entities == null)
+            {
+                throw new Exception($"No team found with name matching: {teamName}");
+            } else if (results.Entities.Count > 1)
+            {
+                throw new Exception("Multiple teams were found matching the given name.");
+            } else
+            {
+                return results.Entities.First().Id;
+            }
+        }
     }
 }
