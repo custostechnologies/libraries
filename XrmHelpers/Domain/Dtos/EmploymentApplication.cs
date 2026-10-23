@@ -3,8 +3,9 @@ using System.Xml.Serialization;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Enums;
+using spgsWebTools.XrmHelpers.Domain.Attributes;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class EmploymentApplication
     {

@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class ReferenceHierarchyMapDto
     {

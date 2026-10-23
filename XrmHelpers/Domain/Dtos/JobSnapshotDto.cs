@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
         /// <summary>
         /// 

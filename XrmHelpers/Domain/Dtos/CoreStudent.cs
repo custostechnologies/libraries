@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
     public class CoreStudent
     {

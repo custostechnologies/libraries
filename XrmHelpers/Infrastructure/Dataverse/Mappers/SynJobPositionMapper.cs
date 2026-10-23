@@ -1,63 +1,59 @@
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynJobPositionMapper
     {
-        private IDataverseLogger _logger;
-        private AttributeCollection _attributes;
-        private Entity _target;
-        public SynJobPositionMapper(IDataverseLogger logger, Entity target, AttributeCollection attributes)
+        private readonly IDataverseLogger _logger;
+        public SynJobPositionMapper(IDataverseLogger logger)
         {
             _logger = logger;
-            _target = target;
-            _attributes = attributes;
         }
-        public Entity ToEntity(JobPositionSnapshot snap)
+        public Entity ToEntity(Entity target, AttributeCollection attributes, JobPositionSnapshot snap)
         {
-            _logger.WriteLog("in SynJobPositionMapper.ToEntity(), _attributes: {0}", string.Join(", ", _attributes.Keys));
+            _logger.WriteLog("in SynJobPositionMapper.ToEntity(), _attributes: {0}", string.Join(", ", attributes.Keys));
             _logger.WriteLog("Hash key discrepancy detected for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
             try
             {
                 if (snap.SynMirrorId != Guid.Empty)
                 {
-                    SetDelta(SynJobPositionFields.Id, snap.SynMirrorId);
+                    SetDelta(target, attributes, SynJobPositionFields.Id, snap.SynMirrorId);
                 }
 
                 /* SET TARGET DELTAS */
-                SetDelta(SynJobPositionFields.RecordTitle, snap.Name);
-                SetDelta(SynJobPositionFields.JobPositionDescription, snap.JobPositionDescription);
-                SetDelta(SynJobPositionFields.StaffJobPositionsSeq, snap.StaffJobPositionsSeq);
-                SetDelta(SynJobPositionFields.ReportsTo, snap.SynReportsTo);
-                SetDelta(SynJobPositionFields.StaffId, snap.StaffId);
-                SetDelta(SynJobPositionFields.StaffJobPositionFTE, snap.AssignmentFte);
-                SetDelta(SynJobPositionFields.JobPositionFTERequired, snap.FteRequired);
-                SetDelta(SynJobPositionFields.PlaintextHash, snap.PlaintextHash);
-                SetDelta(SynJobPositionFields.EncodedHash, snap.EncodedHash);
-                SetDelta(SynJobPositionFields.StaffJobPositionActiveFlag, snap.IsActive);
-                SetDelta(SynJobPositionFields.StaffJobPositionStartDate, snap.StartDate);
-                SetDelta(SynJobPositionFields.StaffJobPositionEndDate, snap.EndDate);
-                SetDelta(SynJobPositionFields.SourceOfTruthId, snap.SourceOfTruthId);
+                SetDelta(target, attributes, SynJobPositionFields.RecordTitle, snap.Name);
+                SetDelta(target, attributes, SynJobPositionFields.JobPositionDescription, snap.JobPositionDescription);
+                SetDelta(target, attributes, SynJobPositionFields.StaffJobPositionsSeq, snap.StaffJobPositionsSeq);
+                SetDelta(target, attributes, SynJobPositionFields.ReportsTo, snap.SynReportsTo);
+                SetDelta(target, attributes, SynJobPositionFields.StaffId, snap.StaffId);
+                SetDelta(target, attributes, SynJobPositionFields.StaffJobPositionFTE, snap.AssignmentFte);
+                SetDelta(target, attributes, SynJobPositionFields.JobPositionFTERequired, snap.FteRequired);
+                SetDelta(target, attributes, SynJobPositionFields.PlaintextHash, snap.PlaintextHash);
+                SetDelta(target, attributes, SynJobPositionFields.EncodedHash, snap.EncodedHash);
+                SetDelta(target, attributes, SynJobPositionFields.StaffJobPositionActiveFlag, snap.IsActive);
+                SetDelta(target, attributes, SynJobPositionFields.StaffJobPositionStartDate, snap.StartDate);
+                SetDelta(target, attributes, SynJobPositionFields.StaffJobPositionEndDate, snap.EndDate);
+                SetDelta(target, attributes, SynJobPositionFields.SourceOfTruthId, snap.SourceOfTruthId);
 
 
                 // status (calculated in snapshot factory)
-                SetDelta(SynStaffMemberFields.Status, snap.Status);
-                SetDelta(SynStaffMemberFields.StatusReason, snap.StatusReason);
+                SetDelta(target, attributes, SynStaffMemberFields.Status, snap.Status);
+                SetDelta(target, attributes, SynStaffMemberFields.StatusReason, snap.StatusReason);
 
                 // sync metadata
-                _target[SynStaffMemberFields.EncodedHash] = snap.EncodedHash;
-                _target[SynStaffMemberFields.PlaintextHash] = snap.PlaintextHash;
-                _target[SynStaffMemberFields.LastSuccessfulSync] = DateTime.UtcNow;
+                target[SynStaffMemberFields.EncodedHash] = snap.EncodedHash;
+                target[SynStaffMemberFields.PlaintextHash] = snap.PlaintextHash;
+                target[SynStaffMemberFields.LastSuccessfulSync] = DateTime.UtcNow;
 
                 _logger.WriteLog("Update or create request entity mapped from snapshot");
                 _logger.WriteLog("Target attributes set  via SynJobPositionMapper.ToEntity for row with Staff ID: {0}, New Hash: {1}", snap.StaffId, snap.EncodedHash);
                 _logger.WriteLog(
                     "Final encoded hash in target: {0}",
-                    _target.GetAttributeValue<int?>("pgrowth_encodedhash")
+                    target.GetAttributeValue<int?>("pgrowth_encodedhash")
                 );
 
-                return _target;
+                return target;
             }
             catch (Exception ex)
             {
@@ -69,13 +65,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
                 throw;
             }
         }
-        private void SetDelta<T>(string attributeName, T value)
+        private void SetDelta<T>(Entity target, AttributeCollection attributes, string attributeName, T value)
         {
             _logger.WriteLog("SetDelta(attributeName: {0}, value: {1}) called.", attributeName, value);
 
-            if (_attributes.Contains(attributeName))
+            if (attributes.Contains(attributeName))
             {
-                SetAttributeDelta.Execute(_target, attributeName, value);
+                SetAttributeDelta.Execute(target, attributeName, value);
             }
         }
     }

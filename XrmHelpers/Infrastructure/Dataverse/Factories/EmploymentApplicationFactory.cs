@@ -2,7 +2,7 @@ using System.Reflection;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories

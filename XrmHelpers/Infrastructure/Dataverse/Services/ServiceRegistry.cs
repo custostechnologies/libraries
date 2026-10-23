@@ -14,6 +14,7 @@ using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Services;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Graph;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 {
@@ -67,6 +68,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped(typeof(IHashService<>), typeof(HashService<>));
                 services.AddScoped(typeof(IChangeDetectionService<>), typeof(ChangeDetectionService<>));
                 services.AddScoped(typeof(ISyncPipeline<>), typeof(SyncPipeline<>));
+
+                // add mappers
+                services.AddTransient<SynJobPositionMapper>();
 
                 // add style provider registration
                 services.AddScoped<IStyleProvider, StyleProvider>();
