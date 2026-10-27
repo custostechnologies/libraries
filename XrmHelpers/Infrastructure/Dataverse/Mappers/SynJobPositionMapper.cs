@@ -6,9 +6,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
     public class SynJobPositionMapper
     {
         private readonly IDataverseLogger _logger;
-        public SynJobPositionMapper(IDataverseLogger logger)
+        public SynJobPositionMapper(IDataverseLoggerFactory loggerFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.Create<SynJobPositionMapper>();
         }
         public Entity ToEntity(Entity target, AttributeCollection attributes, JobPositionSnapshot snap)
         {

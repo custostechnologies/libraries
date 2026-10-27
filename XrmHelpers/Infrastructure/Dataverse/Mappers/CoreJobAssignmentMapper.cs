@@ -11,9 +11,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
         private readonly string ENTITY_LOGICAL_NAME = "mthomas_corejobassignment";
         private readonly IDataverseLogger _logger;
         private bool _create = false;
-        public CoreJobAssignmentMapper(IDataverseLogger logger)
+        public CoreJobAssignmentMapper(IDataverseLoggerFactory loggerFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.Create<CoreJobAssignmentMapper>();
         }
         public Entity ToCreateEntity(CoreJobAssignment core, IDataverseLogger logger, string[] updatedAttributes)
         {
