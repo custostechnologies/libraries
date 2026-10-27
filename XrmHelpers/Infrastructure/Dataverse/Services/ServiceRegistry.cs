@@ -15,6 +15,7 @@ using spgsWebTools.XrmHelpers.Domain.Services;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
 using spgsWebTools.XrmHelpers.Infrastructure.Graph;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers;
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 {
@@ -64,10 +65,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<IDigestConfiguration<SafetyIncidentDto>, SafetyIncidentDigestConfiguration>();
                 services.AddScoped<IDigestConfiguration<ChildProtectionConcernDto>, ConcernDigestConfiguration>();
                 services.AddScoped<IDigestConfiguration<TaskDto>, TaskDigestConfiguration>();
+                services.AddScoped<IDigestConfiguration<WorkersCompensationClaimDto>, WorkersCompensationClaimDigestConfiguration>();
 
                 services.AddScoped(typeof(IHashService<>), typeof(HashService<>));
                 services.AddScoped(typeof(IChangeDetectionService<>), typeof(ChangeDetectionService<>));
                 services.AddScoped(typeof(ISyncPipeline<>), typeof(SyncPipeline<>));
+
+                // workers comp claim factory
+                services.AddScoped<WorkersCompFactory>();
 
                 // add mappers
                 services.AddTransient<SynJobPositionMapper>();

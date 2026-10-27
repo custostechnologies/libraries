@@ -38,6 +38,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string InvestigationOfInjuryIncident = "cr2d7_investigationofinjuryincident";
         public const string IsARTWProgramRequired = "pgrowth_isartwprogramrequired";
         public const string Location = "cr2d7_location";
+        public const string WorkersCompensationClaimCreated = "pgrowth_workerscompensationclaimcreated";
 
         public const string MedicationAdministrationWhatWhen = "cr2d7_medicationadministrationwhatwhen";
         public const string NameOfInjuredPerson = "cr2d7_nameofinjuredperson";
