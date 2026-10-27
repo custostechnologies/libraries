@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {

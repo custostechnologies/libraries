@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Infrastructure.Http;
 

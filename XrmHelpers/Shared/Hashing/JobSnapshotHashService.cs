@@ -1,5 +1,5 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 
 namespace spgsWebTools.XrmHelpers.Shared.Hashing
 {

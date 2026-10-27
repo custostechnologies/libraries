@@ -3,7 +3,7 @@ using Microsoft.Xrm.Sdk;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Dtos;
+using spgsWebTools.XrmHelpers.Domain.Contracts;
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStaffSnaphotFactory
