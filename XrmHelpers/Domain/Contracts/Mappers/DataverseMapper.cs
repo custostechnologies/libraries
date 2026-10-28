@@ -64,6 +64,19 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 {
                     entity[srcName] = value.ToString() ?? Guid.Empty.ToString();
                 }
+                else if (srcType == typeof(EntityReference) && dtoValueType == typeof(string))
+                {
+                    continue;
+                }
+                else if (srcType == typeof(EntityReference) && dtoValueType == typeof(Guid))
+                {
+                    var refAttr = property.GetCustomAttribute<DataverseReferenceAttribute>();
+                    if (refAttr == null) continue;
+                    
+                    string targetEntity = refAttr.TargetEntity;
+                    Guid id = (Guid)value;
+                    entity[srcName] = new EntityReference(targetEntity, id);
+                }
                 else
                 {
                     entity[srcName] = Convert.ChangeType(value, srcType);

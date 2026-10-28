@@ -117,6 +117,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: null)]
         public PersonType? StaffType { get; set; }
 
+        [IgnoreSrcMapping]
         [DataverseLink(
             srcName: WorkersCompensationClaimFields.RelatedUser,
             srcType: typeof(EntityReference),
@@ -124,6 +125,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: null)]
         public string? RelatedUserName { get; set; }
 
+        [DataverseReference(targetEntity: "systemuser")]
         [DataverseLink(
             srcName: WorkersCompensationClaimFields.RelatedUser,
             srcType: typeof(EntityReference),

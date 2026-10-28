@@ -38,6 +38,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public (Entity newClaim, EntityReference newOwner) Create(Entity incident)
         {
+            _logger.WriteLog($"Creating new WorkersCompensationClaim for SafetyIncident with ID: {incident.Id}");
+            _logger.WriteLog("Building incident DTO");
             // add complex fields
             WorkersCompensationClaimDto claimDto;
             var incidentDto = _incidentMapper.MapToDto(incident);
@@ -55,6 +57,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw new InvalidPluginExecutionException("StaffID and StaffEmail are null, unable to resolve staff member to create a claim.");
             }
 
+            _logger.WriteLog($"Retrieving staff member metadata for StaffID: {staffId}, StaffEmail: {staffEmail}");
             var staffMemberMetadata = staffId != null
                 ? _coreStaffMemberQuery.GetMetadataByStaffId((int)staffId)
                 : _coreStaffMemberQuery.GetMetadataByOrgEmail(staffEmail!);
@@ -64,6 +67,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw new InvalidPluginExecutionException("Unable to resolve staff member to create a claim.");
             }
 
+            _logger.WriteLog($"Retrieved staff member metadata for StaffID: {staffId}, StaffEmail: {staffEmail}");
             claimDto = new WorkersCompensationClaimDto
             {
                 StaffMemberName = staffMemberMetadata.Full,
@@ -75,6 +79,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 Subject = $"CLAIM {staffMemberMetadata.Full} {incidentDto.AutoGenTitle}"
             };
 
+            _logger.WriteLog($"Mapping ClaimDto to Entity for StaffMember: {claimDto.StaffMemberName}, RelatedUserId: {claimDto.RelatedUserId}, Regarding SafetyIncident ID: {incident.Id}");
             var claimEntity = _workersCompMapper.MapToSource(claimDto);
 
             if (claimEntity == null)
@@ -90,6 +95,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var newOwnerRef = new EntityReference("team", newOwnerId);
             claimEntity["ownerid"] = newOwnerRef;
 
+            _logger.WriteLog("Creating new claim entity.");
             var newId = _context.Runtime.UserService.Create(claimEntity);
             _logger.WriteLog($"Created new claim with ID: {newId}");
 
