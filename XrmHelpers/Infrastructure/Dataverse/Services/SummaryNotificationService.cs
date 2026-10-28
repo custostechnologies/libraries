@@ -5,6 +5,7 @@ using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
+using spgsWebTools.XrmHelpers.Shared.Utilities;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 {
@@ -22,6 +23,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
         public int Idx { get; set; }
         public object? Value { get; set; }
         public string? Url { get; set; } = string.Empty;
+        public bool IsHtml { get; set; }
 
     }
     public static class SummaryNotificationService
@@ -66,7 +68,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                                     && links != null
                                     && links.TryGetValue(dto.EntityId, out var url)
                                         ? url
-                                        : null
+                                        : null,
+                                IsHtml = attr.IsHtml
                             }
                         )
                 )
@@ -88,7 +91,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             foreach (var field in fields)
             {
                 var label = WebUtility.HtmlEncode(field.Label);
-                var displayValue = WebUtility.HtmlEncode(FormatValue(field.Value));
+                var formatted = ValueFormatter.Format(field.Value);
+                var displayValue = field.IsHtml 
+                    ? formatted
+                    : WebUtility.HtmlEncode(formatted);
                 bool even = idx % 2 == 0;
 
                 var rowStyle = even ? styleProvider.TableBodyRowEven : styleProvider.TableBodyRowOdd;
@@ -145,7 +151,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 
                 foreach (var val in values)
                 {
-                    var displayValue = WebUtility.HtmlEncode(FormatValue(val.Value));
+                    var formatted = ValueFormatter.Format(val.Value);
+                    var displayValue = val.IsHtml 
+                        ? formatted
+                        : WebUtility.HtmlEncode(formatted);
                     var encodedLink = WebUtility.HtmlEncode(val.Url);
                     if (!string.IsNullOrWhiteSpace(val.Url))
                     {
@@ -166,36 +175,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             sb.AppendLine("</table>");
 
             return sb.ToString();
-        }
-        private static string FormatValue(object? value)
-        {
-            if (value == null)
-            {
-                return string.Empty;
-            }
-
-            if (value is DateTime dateTime)
-            {
-                return dateTime.ToString("dd/MM/yyyy HH:mm");
-            }
-
-            if (value is DateTime? && (value as DateTime?).HasValue)
-            {
-                DateTime val = (DateTime)value;
-                return val.ToString("dd/MM/yyyy HH:mm");
-            }
-
-            if (value is bool boolValue)
-            {
-                return boolValue ? "Yes" : "No";
-            }
-
-            if (value is bool? && (value as bool?).HasValue)
-            {
-                return (bool)value ? "Yes" : "No";
-            }
-
-            return value.ToString() ?? string.Empty;
         }
     }
 }

@@ -1,3 +1,5 @@
+using System.Net;
+
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
@@ -10,14 +12,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
         private readonly IStyleProvider _styleProvider;
+        private readonly IActivityLinkService _activityLinkService;
         public NotificationContextFactory(
             IDataverseContext context,
             IDataverseLoggerFactory loggerFactory,
-            IStyleProvider styleProvider
+            IStyleProvider styleProvider,
+            IActivityLinkService activityLinkService
         )
         {
             _context = context;
             _styleProvider = styleProvider;
+            _activityLinkService = activityLinkService;
             _logger = loggerFactory.Create<NotificationContextFactory>();
         }
         public NotificationContext Create<TDto>(
@@ -36,6 +41,18 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 dto.EntityId,
                 dto.TargetAppDisplayName
             );
+
+            if (dto is IActivityDto activity)
+            {
+                var html = _activityLinkService.CreateLinkHtml(
+                    _context,
+                    activity.RegardingRecordEntityLogicalName,
+                    activity.RegardingRecordName ?? "Link to Record",
+                    activity.RegardingRecordEntityId,
+                    activity.RegardingRecordAppDisplayName
+                );
+                activity.RegardingRecordDisplayLink = html;
+            }
 
             var table = SummaryNotificationService.BuildSingleEntityTable(
                 dto,
