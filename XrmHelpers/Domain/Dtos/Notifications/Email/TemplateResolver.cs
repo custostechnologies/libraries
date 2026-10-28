@@ -24,7 +24,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             { new EmailTemplate(typeof(SafetyIncidentDto), OperationType.SummaryNotification, "safetyIncidentDigest") },
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.Create, "newChildProtectionConcern") },
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.UpdateOwner, "updateConcernOwner") },
-            { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.UpdateOwner, "closeChildProtectionConcern") },
+            { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.CloseRecord, "closeChildProtectionConcern") },
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.SummaryNotification, "childProtectionConcernDigest") },
             { new EmailTemplate(typeof(TaskDto), OperationType.UpdateOwner, "newTaskAssigned") },
             { new EmailTemplate(typeof(TaskDto), OperationType.SummaryNotification, "taskDigest") },
@@ -32,10 +32,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         };
 
         // mappers
-        private IDataverseMapper<EmailTemplateDto> _emailTemplateMapper;
-        private IDataverseMapper<ThemeDto> _themeMapper;
-        private IDataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
-        private IDataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
+        private readonly IDataverseMapper<EmailTemplateDto> _emailTemplateMapper;
+        private readonly IDataverseMapper<ThemeDto> _themeMapper;
+        private readonly IDataverseMapper<HTMLSnippetDto> _htmlSnippetMapper;
+        private readonly IDataverseMapper<TemplateSnippetIntersectDto> _intersectMapper;
         public TemplateResolver(
             EmailTemplates emailTemplateQuery,
             Themes themeQuery,
@@ -61,6 +61,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         }
         public NotificationTemplate Resolve(Type dtoType, OperationType operationType)
         {
+            _logger.WriteLog($"TemplateResolver.Resolve called with dtoType: ${dtoType} and operationType: {operationType}");
+
             EmailTemplateDto? _emailTemplateDto = null;
             ThemeDto? _themeDto = null;
             List<TemplateSnippetIntersectDto>? _intersectDtos;

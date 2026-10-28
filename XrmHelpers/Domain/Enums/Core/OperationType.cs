@@ -6,6 +6,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Enums
         UpdateOwner = 1,
         UpdateField = 2,
         CloseRecord = 3,
-        SummaryNotification = 4
+        SummaryNotification = 4,
+        None = 5
     }
 }
