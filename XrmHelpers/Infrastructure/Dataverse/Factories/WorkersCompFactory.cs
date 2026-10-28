@@ -15,7 +15,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         private readonly IDataverseMapper<SafetyIncidentDto> _incidentMapper;
         private readonly IDataverseMapper<WorkersCompensationClaimDto> _workersCompMapper;
         private readonly CoreStaffMembers _coreStaffMemberQuery;
-        private bool IsDevEnv = false;
+        private readonly EnvironmentVariableValues _envVarQuery;
+        private readonly string _claimTargetTeamNameEnvVarName = "pgrowth_envVar_workersCompensationClaim_targetTeamName";
+        private readonly bool _isDev;
         private readonly Teams _teamsQuery;
         public WorkersCompFactory(
             IDataverseContext context,
@@ -23,6 +25,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             IDataverseMapper<SafetyIncidentDto> incidentMapper,
             IDataverseMapper<WorkersCompensationClaimDto> workersCompMapper,
             CoreStaffMembers coreStaffMemberQuery,
+            EnvironmentVariableValues envVarQuery,
             Teams teamsQuery
         )
         {
@@ -32,9 +35,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             _workersCompMapper = workersCompMapper;
             _coreStaffMemberQuery = coreStaffMemberQuery;
             _teamsQuery = teamsQuery;
+            _envVarQuery = envVarQuery;
 
             string orgName = _context.Runtime.ExecutionContext.OrganizationName;
-            if (orgName.Contains("dev")) IsDevEnv = true;
+            _isDev = orgName.Contains("dev");
         }
         public (Entity newClaim, EntityReference newOwner) Create(Entity incident)
         {
@@ -68,6 +72,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             }
 
             _logger.WriteLog($"Retrieved staff member metadata for StaffID: {staffId}, StaffEmail: {staffEmail}");
+
+            var baseTitle = $"CLAIM {staffMemberMetadata.Full} {incidentDto.AutoGenTitle}";
+            var title = _isDev
+                ? $"TEST {baseTitle}"
+                : baseTitle;
             claimDto = new WorkersCompensationClaimDto
             {
                 StaffMemberName = staffMemberMetadata.Full,
@@ -76,7 +85,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 RelatedUserName = staffMemberMetadata.User.Name,
                 StaffType = PersonType.StaffMember,
                 Regarding = new EntityReference(EntityLogicalNames.SafetyIncident, incident.Id),
-                Subject = $"CLAIM {staffMemberMetadata.Full} {incidentDto.AutoGenTitle}"
+                Subject = title
             };
 
             _logger.WriteLog($"Mapping ClaimDto to Entity for StaffMember: {claimDto.StaffMemberName}, RelatedUserId: {claimDto.RelatedUserId}, Regarding SafetyIncident ID: {incident.Id}");
@@ -87,9 +96,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw new InvalidPluginExecutionException("Unable to map ClaimDto to Entity.");
             }
 
-            var newOwnerTeamName = IsDevEnv
-                ? "Debugging Team"
-                : "People and Culture Manager";
+            var newOwnerTeamName = _envVarQuery.GetValue(_claimTargetTeamNameEnvVarName).Value ?? "Debugging Team";
 
             var newOwnerId = _teamsQuery.ResolveTeamIdByName(newOwnerTeamName);
             var newOwnerRef = new EntityReference("team", newOwnerId);
