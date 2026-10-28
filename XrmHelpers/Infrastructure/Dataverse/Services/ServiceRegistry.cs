@@ -49,6 +49,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<TemplateSnippetIntersects>();
                 services.AddScoped<Systemusers>();
                 services.AddScoped<Teams>();
+                services.AddScoped<ProcessStageMetadata>();
 
                 // add notification service registrations
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
@@ -73,6 +74,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 
                 // workers comp claim factory
                 services.AddScoped<WorkersCompFactory>();
+
+                services.AddScoped<IActivityLinkService, ActivityLinkService>();
+                
 
                 // add mappers
                 services.AddTransient<SynJobPositionMapper>();
