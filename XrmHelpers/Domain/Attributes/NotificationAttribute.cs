@@ -11,12 +11,14 @@ namespace spgsWebTools.XrmHelpers.Domain.Attributes
         public string Label { get; set; }
         public int Idx { get; set; }
         public bool IsLink { get; set; }
-        public NotificationAttribute(OperationType operationType, string label, int index, bool isLink)
+        public bool IsHtml { get; set; } = false;
+        public NotificationAttribute(OperationType operationType, string label, int index, bool isLink, bool isHtml = false)
         {
             OperationType = operationType;
             Label = label;
             Idx = index;
             IsLink = isLink;
+            IsHtml = isHtml;
         }
     }
 }
