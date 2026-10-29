@@ -12,6 +12,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
             IPluginRuntime runtimeContext
         )
         {
+            ServiceProvider provider;
+            IServiceScope scope;
+
             var services = new ServiceCollection();
 
             services.AddScoped<IPluginRuntime>(_ => runtimeContext);
@@ -22,7 +25,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
 
             services.BuildCoreXrmServices();
 
-            var provider = services.BuildServiceProvider(
+            try
+            {
+                provider = services.BuildServiceProvider(
                 new ServiceProviderOptions
                 {
                     ValidateScopes = true,
@@ -30,7 +35,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                 }
             );
 
-            var scope = provider.CreateScope();
+                scope = provider.CreateScope();
+            } catch (Exception ex)
+            {
+                throw new InvalidPluginExecutionException(
+                    $"Dependency Injection Failure: {ex}\n\nInner: {ex.InnerException}"
+                );
+            }
 
             return new PluginServiceScope(provider, scope);
         }

@@ -78,9 +78,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
 
                 // workers comp claim factory
                 services.AddScoped<WorkersCompFactory>();
-
                 services.AddScoped<IActivityLinkService, ActivityLinkService>();
-                
 
                 // add mappers
                 services.AddTransient<SynJobPositionMapper>();

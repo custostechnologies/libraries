@@ -5,6 +5,7 @@ using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
+using System.Text.Json;
 
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
 {
@@ -88,8 +89,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 Subject = title
             };
 
-            _logger.WriteLog($"Mapping ClaimDto to Entity for StaffMember: {claimDto.StaffMemberName}, RelatedUserId: {claimDto.RelatedUserId}, Regarding SafetyIncident ID: {incident.Id}");
-            var claimEntity = _workersCompMapper.MapToSource(claimDto);
+            _logger.WriteLog($"Mapping ClaimDto to TARGET for StaffMember: {claimDto.StaffMemberName}, RelatedUserId: {claimDto.RelatedUserId}, Regarding SafetyIncident ID: {incident.Id}");
+            var claimEntity = _workersCompMapper.MapToTarget(claimDto);
 
             if (claimEntity == null)
             {
@@ -106,8 +107,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var newId = _context.Runtime.UserService.Create(claimEntity);
             _logger.WriteLog($"Created new claim with ID: {newId}");
 
-            claimEntity.Id = newId;
-            return (claimEntity, newOwnerRef);
+            _logger.WriteLog("Retrieving newly created record to pass to notification pipeline");
+            var newClaim = _context.Runtime.UserService.Retrieve(
+                EntityLogicalNames.WorkersCompensationClaim,
+                newId,
+                new Microsoft.Xrm.Sdk.Query.ColumnSet(true)
+            );
+
+            return (newClaim, newOwnerRef);
         }
     }
 }

@@ -11,17 +11,21 @@ using System.Text.Json;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
-    public class DataverseMapper<TDto> : IDataverseMapper<TDto> where TDto : IDto, new()
+    public class DataverseMapper<TDto>
+        : IDataverseMapper<TDto> where TDto : IDto, new()
     {
         private readonly IDataverseLogger _logger;
         private readonly ILookupEngine _lookupEngine;
+        private readonly IActivityLinkService _activityLinkService;
         public DataverseMapper(
             IDataverseLoggerFactory loggerFactory,
-            ILookupEngine lookupEngine
+            ILookupEngine lookupEngine,
+            IActivityLinkService activityLinkService
         )
         {
             _logger = loggerFactory.Create<DataverseMapper<TDto>>();
             _lookupEngine = lookupEngine;
+            _activityLinkService = activityLinkService;
         }
         public Entity MapToSource(TDto dto)
         {
@@ -72,7 +76,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 {
                     var refAttr = property.GetCustomAttribute<DataverseReferenceAttribute>();
                     if (refAttr == null) continue;
-                    
+
                     string targetEntity = refAttr.TargetEntity;
                     Guid id = (Guid)value;
                     entity[srcName] = new EntityReference(targetEntity, id);
@@ -165,7 +169,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 try
                 {
                     var link = property.GetCustomAttribute<DataverseLinkAttribute>();
-                    
+
                     if (link == null)
                         continue;
 
@@ -224,15 +228,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 {
                     object setValue;
 
-                    var link = property.GetCustomAttribute<DataverseLinkAttribute>();
+                    var link = property.
+                        GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
 
                     var value = property.GetValue(dto);
 
                     if (value == null) continue;
-
-                    if (link.TargetType == null) throw new InvalidOperationException("DataverseLink attribute target type property cannot be NULL when attempting to MapToTarget.");
+                    if (link.TargetType == null) continue;
 
                     var targetType = link.TargetType;
                     var srcType = link.SourceType;
@@ -245,7 +249,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     if (property.PropertyType.IsEnum)
                     {
-                        setValue = setValue = new OptionSetValue(Convert.ToInt32(value));
+                        setValue = setValue = new OptionSetValue(
+                            Convert.ToInt32(value)
+                        );
                     }
                     else if (dtoValueType == targetType)
                     {
@@ -254,6 +260,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     else if (targetType == typeof(OptionSetValue))
                     {
                         setValue = value;
+                    }
+                    else if (targetType == typeof(EntityReference) && dtoValueType == typeof(Guid))
+                    {
+                        var refAttr = property.GetCustomAttribute<DataverseReferenceAttribute>();
+
+                        if (refAttr == null) continue;
+
+                        setValue = new EntityReference(
+                            refAttr.TargetEntity,
+                            (Guid)value
+                        );
                     }
                     else if (targetType == typeof(string) && dtoValueType == typeof(Guid))
                     {
@@ -344,89 +361,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     else if (value is OptionSetValue osv && dtoValueType.IsEnum)
                     {
-                        var optionValue = osv.Value;
-                        switch (dtoValueType.Name)
-                        {
-                            case "AdmittedToHospital":
-                                setValue = (AdmittedToHospital)optionValue;
-                                break;
-                            case "CustomIncidentStatus":
-                                setValue = (CustomIncidentStatus)optionValue;
-                                break;
-                            case "CustomIncidentStatusReason":
-                                setValue = (CustomIncidentStatusReason)optionValue;
-                                break;
-                            case "IncidentCategory":
-                                setValue = (IncidentCategory)optionValue;
-                                break;
-                            case "IncidentSeverity":
-                                setValue = (IncidentSeverity)optionValue;
-                                break;
-                            case "IncidentTimeframe":
-                                setValue = (IncidentTimeframe)optionValue;
-                                break;
-                            case "IncidentType":
-                                setValue = (IncidentType)optionValue;
-                                break;
-                            case "InjuredPersonType":
-                                setValue = (InjuredPersonType)optionValue;
-                                break;
-                            case "InjuryBodyPart":
-                                setValue = (InjuryBodyPart)optionValue;
-                                break;
-                            case "InjuryType":
-                                setValue = (InjuryType)optionValue;
-                                break;
-                            case "Location":
-                                setValue = (Location)optionValue;
-                                break;
-                            case "RecordSource":
-                                setValue = (RecordSource)optionValue;
-                                break;
-                            case "RelevantSport":
-                                setValue = (RelevantSport)optionValue;
-                                break;
-                            case "ResponsePriority":
-                                setValue = (ResponsePriority)optionValue;
-                                break;
-                            case "SubmitterPosition":
-                                setValue = (SubmitterPosition)optionValue;
-                                break;
-                            case "Campus":
-                                setValue = (Campus)optionValue;
-                                break;
-                            case "Gender":
-                                setValue = (Gender)optionValue;
-                                break;
-                            case "LinkType":
-                                setValue = (LinkType)optionValue;
-                                break;
-                            default:
-                                setValue = Enum.Parse(dtoValueType, optionValue.ToString());
-                                break;
-                        }
+                        setValue = ToEnum(osv, dtoValueType);
                     }
                     else if (dtoValueType.IsEnum)
                     {
-                        _logger.WriteLog($"Entered PropertyType.IsEnum with dtoValueType: {dtoValueType.Name}");
-
-                        switch (dtoValueType.Name)
-                        {
-                            case "Campus":
-                                setValue = CampusResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "House":
-                                setValue = HouseResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "Gender":
-                                setValue = GenderResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            default:
-                                setValue = Enum.Parse(dtoValueType, value.ToString() ?? "");
-                                break;
-                        }
+                        setValue = ToOptionSet(value);
                     }
-
                     else if (value is OptionSetValue optionSetValue && dtoValueType == typeof(int))
                     {
                         setValue = optionSetValue.Value;
@@ -453,6 +393,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
 
                     property.SetValue(dto, setValue);
+
+                    // if IActivityDto
+                    if (dto is IActivityDto activity)
+                    {
+                        var regardingRecordName = !string.IsNullOrWhiteSpace(activity.RegardingName)
+                            ? activity.RegardingName
+                            : string.IsNullOrWhiteSpace(activity.Regarding?.Name)
+                                ? "Link to Record"
+                                : activity.Regarding.Name;
+
+                        activity.RegardingRecordDisplayLink = _activityLinkService.CreateLinkHtml(
+                            activity.RegardingRecordEntityLogicalName,
+                            regardingRecordName,
+                            activity.RegardingId,
+                            activity.RegardingRecordAppDisplayName
+                        );
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -561,6 +518,111 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             return JsonSerializer.Deserialize(
                 element.GetRawText(),
                 targetType);
+        }
+        private static OptionSetValue ToOptionSet(object value)
+        {
+            return new OptionSetValue(Convert.ToInt32(value));
+        }
+        private static object ToEnum(OptionSetValue value, Type enumType)
+        {
+            return Enum.ToObject(enumType, value.Value);
+        }
+        private object? FormatForDataverse(
+            PropertyInfo prop,
+            object value,
+            DataverseLinkAttribute link
+        )
+        {
+            if (link.TargetType == null)
+                return null;
+
+            var dtoType =
+                Nullable.GetUnderlyingType(prop.PropertyType)
+                ?? prop.PropertyType;
+
+            var targetType =
+                Nullable.GetUnderlyingType(link.TargetType)
+                ?? link.TargetType;
+
+            // Enum -> OptionSetValue
+            if (dtoType.IsEnum &&
+                targetType == typeof(OptionSetValue))
+            {
+                return new OptionSetValue(
+                    Convert.ToInt32(value)
+                );
+            }
+
+            // Guid -> EntityReference
+            if (targetType == typeof(EntityReference))
+            {
+                return CreateEntityReference(
+                    prop,
+                    value);
+            }
+
+            // Guid -> string
+            if (dtoType == typeof(Guid) &&
+                targetType == typeof(string))
+            {
+                return value.ToString();
+            }
+
+            // string -> Guid
+            if (dtoType == typeof(string) &&
+                targetType == typeof(Guid))
+            {
+                return Guid.TryParse(
+                    value.ToString(),
+                    out Guid result)
+                        ? result
+                        : Guid.Empty;
+            }
+
+            if (targetType.IsAssignableFrom(dtoType))
+            {
+                return value;
+            }
+
+            return Convert.ChangeType(
+                value,
+                targetType);
+        }
+        private EntityReference? CreateEntityReference(
+    PropertyInfo property,
+    object value)
+        {
+            if (value is not Guid id)
+                return null;
+
+            var reference =
+                property.GetCustomAttribute<DataverseReferenceAttribute>();
+
+            if (reference == null)
+                return null;
+
+            return new EntityReference(
+                reference.TargetEntity,
+                id);
+        }
+    }
+    public static class EnumExtensions
+    {
+        public static OptionSetValue ToOptionSetValue<T>(
+            this T value)
+            where T : Enum
+        {
+            return new OptionSetValue(
+                Convert.ToInt32(value));
+        }
+
+        public static T ToEnum<T>(
+            this OptionSetValue value)
+            where T : Enum
+        {
+            return (T)Enum.ToObject(
+                typeof(T),
+                value.Value);
         }
     }
 }

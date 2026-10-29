@@ -45,10 +45,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             if (dto is IActivityDto activity)
             {
                 var html = _activityLinkService.CreateLinkHtml(
-                    _context,
                     activity.RegardingRecordEntityLogicalName,
-                    activity.RegardingRecordName ?? "Link to Record",
-                    activity.RegardingRecordEntityId,
+                    activity.RegardingName ?? activity.Regarding?.Name ?? "Link to Record",
+                    activity.RegardingId,
                     activity.RegardingRecordAppDisplayName
                 );
                 activity.RegardingRecordDisplayLink = html;

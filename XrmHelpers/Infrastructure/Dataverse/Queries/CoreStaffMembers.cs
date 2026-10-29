@@ -58,13 +58,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog($"ExecuteAlternate results.Entities[0]: {JsonSerializer.Serialize(
-                            results.Entities[0],
-                            new JsonSerializerOptions
-                            {
-                                WriteIndented = true
-                            }
-                        )}");
                     return results.Entities[0];
                 }
                 else
@@ -116,13 +109,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog($"ExecuteAlternate results.Entities[0]: {JsonSerializer.Serialize(
-                            results.Entities[0],
-                            new JsonSerializerOptions
-                            {
-                                WriteIndented = true
-                            }
-                        )}");
                     return results.Entities[0];
                 }
                 else
@@ -364,13 +350,6 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 if (results.Entities.Count > 0)
                 {
-                    _logger.WriteLog($"ExecuteAlternate results.Entities[0]: {JsonSerializer.Serialize(
-                            results.Entities[0],
-                            new JsonSerializerOptions
-                            {
-                                WriteIndented = true
-                            }
-                        )}");
                     return results.Entities[0];
                 }
                 else

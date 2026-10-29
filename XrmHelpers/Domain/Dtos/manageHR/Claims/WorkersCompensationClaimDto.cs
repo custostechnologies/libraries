@@ -1,13 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Query;
-
 using spgsWebTools.XrmHelpers.Domain.Attributes;
 using spgsWebTools.XrmHelpers.Constants;
 using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-
-using System.Diagnostics;
 
 namespace spgsWebTools.XrmHelpers.Domain.Dtos
 {
@@ -19,12 +15,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public WorkersCompensationClaimDto() : base() { }
 
         public override string TargetAppDisplayName => "manageCompliance";
-
         public string RegardingRecordAppDisplayName => "manageCompliance";
-
-        public Guid RegardingRecordEntityId => RegardingRecordId;
         public string RegardingRecordEntityLogicalName => EntityLogicalNames.SafetyIncident;
-
         public override string SourceEntityLogicalName => EntityLogicalNames.WorkersCompensationClaim;
 
         [IgnoreOnCreate]
@@ -128,8 +120,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(
             srcName: WorkersCompensationClaimFields.RelatedUser,
             srcType: typeof(EntityReference),
-            trgName: WorkersCompensationClaimFields.RelatedUser,
-            trgType: typeof(EntityReference))]
+            trgName: null,
+            trgType: null)]
         public string? RelatedUserName { get; set; }
 
         [DataverseReference(targetEntity: "systemuser")]
@@ -159,7 +151,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [Notification(OperationType.Create, "Regarding Record", 3, false, isHtml: true)]
         [Notification(OperationType.UpdateOwner, "Regarding Record", 3, false, isHtml: true)]
-        public string? RegardingRecordDisplayLink { get; set; }
+        public string? RegardingRecordDisplayLink { get; set; } 
 
         [DataverseLink(
             srcName: WorkersCompensationClaimFields.StatusReason,
@@ -180,22 +172,24 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(EntityReference),
             trgName: null,
             trgType: null)]
-        public string? RegardingRecordName { get; set; }
+        public string? RegardingName { get; set; }
+
+        [DataverseReference(
+            targetEntity: EntityLogicalNames.SafetyIncident
+        )]
+        [DataverseLink(
+            srcName: WorkersCompensationClaimFields.Regarding,
+            srcType: typeof(EntityReference),
+            trgName: WorkersCompensationClaimFields.Regarding,
+            trgType: typeof(EntityReference))]
+        public Guid RegardingId { get; set; }
 
         [DataverseLink(
             srcName: WorkersCompensationClaimFields.Regarding,
             srcType: typeof(EntityReference),
             trgName: null,
             trgType: null)]
-        public Guid RegardingRecordId { get; set; }
-
-        [DataverseLink(
-            srcName: WorkersCompensationClaimFields.Regarding,
-            srcType: typeof(EntityReference),
-            trgName: null,
-            trgType: null)]
-        public EntityReference Regarding { get; set; }
-
+        public EntityReference? Regarding { get; set; }
         public override string LinkToRecord(
             IDataverseContext context,
             string entityLogicalName,
@@ -208,26 +202,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
                 entityId,
                 targetAppDisplayName);
         }
-
-        public string LinkToRegardingRecord(
-            IDataverseContext context)
-        {
-            var _activityLinkService = new ActivityLinkService();
-            var regardingRecordName = !string.IsNullOrWhiteSpace(RegardingRecordName) 
-                ? RegardingRecordName
-                : string.IsNullOrWhiteSpace(Regarding.Name)
-                    ? $"Link to Record"
-                    : Regarding.Name;
-
-            return _activityLinkService.CreateLinkHtml(
-                context,
-                RegardingRecordEntityLogicalName,
-                regardingRecordName,
-                RegardingRecordEntityId,                
-                RegardingRecordAppDisplayName
-            );
-        }
-
         public override string GenerateSummaryTable(
             IDataverseContext context,
             string entityLogicalName,
