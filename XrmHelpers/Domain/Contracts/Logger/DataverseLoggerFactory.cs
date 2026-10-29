@@ -7,14 +7,17 @@ namespace spgsWebTools.XrmHelpers
     {
         private readonly ITracingService _tracer;
         private readonly ILogger _telemetry;
+        private readonly ITelemetryRepository _telemetryRepository;
 
         public DataverseLoggerFactory(
             ITracingService tracer,
-            ILogger telemetry
+            ILogger telemetry,
+            ITelemetryRepository telemetryRepository
         )
         {
             _tracer = tracer;
             _telemetry = telemetry;
+            _telemetryRepository = telemetryRepository;
         }
 
         public IDataverseLogger Create<T>()
@@ -22,6 +25,7 @@ namespace spgsWebTools.XrmHelpers
             return new DataverseLogger(
                 _tracer,
                 _telemetry,
+                _telemetryRepository,
                 typeof(T).Name
             );
         }

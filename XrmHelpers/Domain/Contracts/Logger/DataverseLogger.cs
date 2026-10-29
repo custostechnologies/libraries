@@ -3,6 +3,7 @@ using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 public sealed class DataverseLogger : IDataverseLogger
 {
+    private readonly ITelemetryRepository _telemetryRepository;
     private readonly ITracingService _tracer;
     private readonly ILogger _telemetry;
     private readonly string _className;
@@ -10,9 +11,11 @@ public sealed class DataverseLogger : IDataverseLogger
     public DataverseLogger(
         ITracingService tracer,
         ILogger telemetry,
+        ITelemetryRepository telemetryRepository,
         string className)
     {
         _tracer = tracer;
+        _telemetryRepository = telemetryRepository;
         _telemetry = telemetry;
         _className = className;
     }
@@ -23,6 +26,7 @@ public sealed class DataverseLogger : IDataverseLogger
 
         _tracer.Trace(formatted);
         _telemetry.LogInformation(formatted);
+        _telemetryRepository.SaveLog(formatted);
     }
 
     public void WriteLog(Exception ex, string message)
@@ -30,6 +34,7 @@ public sealed class DataverseLogger : IDataverseLogger
         var formatted = $"[{_className}] {message}";
 
         _tracer.Trace($"{formatted}\n{ex}");
+        _telemetryRepository.SaveLog(formatted);
 
         _telemetry.LogError(
             new EventId(5000, "UnhandledException"),
@@ -60,6 +65,7 @@ public sealed class DataverseLogger : IDataverseLogger
 
             // Always write to plugin trace log
             _tracer.Trace(formattedMessage);
+            _telemetryRepository.SaveLog(formattedMessage);
 
             // Best-effort telemetry
             try

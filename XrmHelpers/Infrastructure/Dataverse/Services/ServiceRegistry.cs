@@ -28,7 +28,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
             try
             {
                 services.AddScoped<IDataverseLoggerFactory, DataverseLoggerFactory>();
-                
+                services.AddScoped<ITelemetryRepository, TelemetryRepository>();
                 services.AddScoped<IDataverseContext, DataverseContext>();
 
                 services.AddScoped<IValidationEngine, ValidationEngine>();
