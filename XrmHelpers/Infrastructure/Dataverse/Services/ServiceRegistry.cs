@@ -13,6 +13,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 using spgsWebTools.XrmHelpers.Domain.Contracts;
 using spgsWebTools.XrmHelpers.Domain.Services;
 using spgsWebTools.XrmHelpers.Domain.Dtos;
+using spgsWebTools.XrmHelpers.Infrastructure.Telemetry;
 using spgsWebTools.XrmHelpers.Infrastructure.Graph;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories;
@@ -27,7 +28,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
         {
             try
             {
+                Console.WriteLine("ENTERED BuildCoreXrmServices()");
                 services.AddScoped<IDataverseLoggerFactory, DataverseLoggerFactory>();
+
+                Console.WriteLine("REGISTERING ITelemetryRepository");
                 services.AddScoped<ITelemetryRepository, TelemetryRepository>();
                 services.AddScoped<IDataverseContext, DataverseContext>();
 

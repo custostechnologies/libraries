@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
-
+using spgsWebTools.XrmHelpers.Infrastructure.Telemetry;
 public sealed class DataverseLogger : IDataverseLogger
 {
     private readonly ITelemetryRepository _telemetryRepository;

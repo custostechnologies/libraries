@@ -1,5 +1,6 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
+using spgsWebTools.XrmHelpers.Infrastructure.Telemetry;
 
 namespace spgsWebTools.XrmHelpers
 {
