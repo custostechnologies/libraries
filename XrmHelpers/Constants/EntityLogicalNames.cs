@@ -27,7 +27,9 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string TemplateSnippetIntersect = "mthomas_templatesnippetintersect";
         public const string HTMLSnippet = "mthomas_htmlsnippet";
         public const string SafetyIncident = "cr2d7_safetyincident";
+        public const string SafetyIncidentManagement = "pgrowth_safetyincidentmanagement";
         public const string ChildProtectionConcern = "cr2d7_childprotectionconcern";
+        public const string ChildProtectionConcernManagement = "pgrowth_childprotectionconcernmanagement";
         public const string WorkersCompensationClaim = "pgrowth_workerscompensationclaim";
         public const string AutoNumberCounter = "pgrowth_autonumbercounter";
         public const string PayClaimForm = "pgrowth_payclaimform";

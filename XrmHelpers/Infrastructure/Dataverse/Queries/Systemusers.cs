@@ -4,6 +4,8 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Messages;
 
+using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Models;
+
 namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class Systemusers
@@ -145,7 +147,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return new EntityReference();
             }
         }
-        public Entity GetMetadataById(Guid systemuserid)
+        public User? GetMetadataById(Guid systemuserid)
         {
             _logger.WriteLog("Building RetrieveMetadata query expression on systemuser");
 
@@ -157,7 +159,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     "internalemailaddress",
                     "systemuserid",
                     "isdisabled",
-                    "domainname"
+                    "domainname",
+                    "fullname",
+                    "firstname",
+                    "lastname"
                 ),
                 Criteria =
                 {
@@ -180,21 +185,22 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
             if (results.Entities.Count > 0)
             {
-                _logger.WriteLog("SystemUserQueryService.RetrieveMetadata results.Entities[0]: {0}",
-                    JsonSerializer.Serialize(
-                        results.Entities[0],
-                        new JsonSerializerOptions
-                        {
-                            WriteIndented = true
-                        }
-                    )
-                );
-                return results.Entities[0];
+                var user = results.Entities[0];
+                var fullname = user.GetAttributeValue<string>("fullname");
+                var first = user.GetAttributeValue<string>("firstname");
+                var last = user.GetAttributeValue<string>("lastname");
+                var email = user.GetAttributeValue<string>("internalemailaddress");
+                return new User
+                {
+                    FirstName = first,
+                    LastName = last,
+                    FullName = fullname,
+                    Email = email
+                };
             }
             else
             {
-                _logger.WriteLog("No existing entities were found");
-                return new Entity();
+                return null;
             }
         }
         public UpsertResponse Upsert(string objectId, string upn)

@@ -56,7 +56,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 var appIdString = appId != Guid.Empty ? $"appid={appId}&" : "";
                 var link = $"{envUrl}main.aspx?{appIdString}pagetype=entityrecord&etn={entityLogicalName}&id={entityId}";
                 var encodedTitle = WebUtility.HtmlEncode(recordName);
-                return $"<a href='{link}'>{encodedTitle}</a>";
+                return $"<a href='{link}' style='color: blue; text-decoration: underline; font-weight: bold'>{encodedTitle}</a>";
             }
             catch (Exception ex)
             {
