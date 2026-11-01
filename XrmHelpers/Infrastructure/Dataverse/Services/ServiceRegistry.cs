@@ -51,6 +51,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<EmailTemplates>();
                 services.AddScoped<Themes>();
                 services.AddScoped<TemplateSnippetIntersects>();
+                services.AddScoped<HTMLSnippets>();
                 services.AddScoped<Systemusers>();
                 services.AddScoped<Teams>();
                 services.AddScoped<ProcessStageMetadata>();
