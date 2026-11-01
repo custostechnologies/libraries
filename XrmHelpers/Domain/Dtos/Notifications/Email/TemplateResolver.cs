@@ -14,6 +14,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly EmailTemplates _emailTemplateQuery;
         private readonly Themes _themeQuery;
         private readonly TemplateSnippetIntersects _intersectQuery;
+        private readonly HTMLSnippets _snippetQuery;
         private readonly IDataverseLogger _logger;
         private readonly FileDownloaderService _downloaderService;
         private static readonly List<EmailTemplate> EmailTemplates = new()
@@ -40,6 +41,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             EmailTemplates emailTemplateQuery,
             Themes themeQuery,
             TemplateSnippetIntersects intersectQuery,
+            HTMLSnippets snippetQuery,
             IDataverseLoggerFactory loggerFactory,
             FileDownloaderService downloaderService,
             IDataverseMapper<EmailTemplateDto> emailTemplateMapper,
@@ -51,6 +53,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _emailTemplateQuery = emailTemplateQuery;
             _themeQuery = themeQuery;
             _intersectQuery = intersectQuery;
+            _snippetQuery = snippetQuery;
             _downloaderService = downloaderService;
             _emailTemplateMapper = emailTemplateMapper;
             _themeMapper = themeMapper;
@@ -61,21 +64,20 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         }
         public NotificationTemplate Resolve(Type dtoType, OperationType operationType)
         {
-            _logger.WriteLog($"TemplateResolver.Resolve called with dtoType: ${dtoType} and operationType: {operationType}");
+            _logger.WriteLog($"TemplateResolver.Resolve called with dtoType: {dtoType} and operationType: {operationType}");
 
-            EmailTemplateDto? _emailTemplateDto = null;
-            ThemeDto? _themeDto = null;
-            List<TemplateSnippetIntersectDto>? _intersectDtos;
+            EmailTemplateDto? emailTemplateDto = null;
+            ThemeDto? themeDto = null;
+            List<TemplateSnippetIntersectDto>? intersectDtos = null;
 
             NotificationRequestDto requestDto = new NotificationRequestDto();
 
-            EntityCollection? _intersects;
-            Entity? _emailTemplate;
-            Entity? _theme;
-            byte[] _htmlTemplateBytes;
-            string _contentCardHtmlString = string.Empty;
-            string _inlineTableHtmlString = string.Empty;
-            string _singleButtonHtmlString = string.Empty;
+            EntityCollection? intersectEntities;
+            Entity? emailTemplate;
+            Entity? theme;
+            string contentCardHtmlString = string.Empty;
+            string inlineTableHtmlString = string.Empty;
+            string singleButtonHtmlString = string.Empty;
 
             string templateKey = string.Empty;
             string htmlContent = string.Empty;
@@ -83,6 +85,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             // retrieve email template
             _logger.WriteLog("Retrieving email template...");
             
+            // TODO: change to Dictionary to prevent LINEAR SEARCH EVER EXECUTION O(n)
             var template = EmailTemplates
                 .Find(
                     x => x.DtoType == dtoType && x.Operation == operationType
@@ -102,91 +105,96 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             // inject tags values based on incoming dto (regarding obj)
             _logger.WriteLog("Using _tagResolverEngine to inject dto values into tag list.");
-            
+
+            // TODO: move to GetTemplate() helper
             if (!string.IsNullOrWhiteSpace(templateKey))
             {
                 _logger.WriteLog("Retrieving emailTemplateDto...");
 
-                _emailTemplate = _emailTemplateQuery.GetEntityByKey(templateKey);
+                emailTemplate = _emailTemplateQuery.GetEntityByKey(templateKey);
 
-                if (_emailTemplate == null)
+                if (emailTemplate == null)
                 {
                     throw new Exception("Email template returned null.");
                 }
                 else
                 {
-                    _logger.WriteLog("Creating _emailTemplateDto...");
+                    _logger.WriteLog("Creating emailTemplateDto...");
 
-                    _emailTemplateDto = _emailTemplateMapper.MapToDto(_emailTemplate);
+                    emailTemplateDto = _emailTemplateMapper.MapToDto(emailTemplate);
                     // Retrieve HTML Template
-                    _logger.WriteLog($"Email template retrieved. Downloading HTML Template file attachment.");
 
-                    requestDto.RequestTitle = _emailTemplateDto.Name ?? "";
+                    _logger.WriteLog($"Email template retrieved. RETRIEVING INTERSECT WITH SEQ = -1 and downloading HTML Template file attachment.");
+
+                    requestDto.RequestTitle = emailTemplateDto.Name ?? "";
                     requestDto.EmailTemplate = new EntityReference(
                         EntityLogicalNames.EmailTemplate,
-                        _emailTemplate.Id
+                        emailTemplate.Id
                     );
-                    
-                    // ARGS TO NOTIFICATION PIPELINE CALL
 
-                    if (string.IsNullOrWhiteSpace(requestDto.CCString)) requestDto.CCString = _emailTemplateDto.CC;
-                    //requestDto.RegardingRecordId = dto.EntityId;
-                    //requestDto.CCString = _emailTemplateDto.CC;
-                    
+                    if (string.IsNullOrWhiteSpace(requestDto.CCString)) requestDto.CCString = emailTemplateDto.CC;
+
                     requestDto.Importance = 0;
-                    requestDto.Subject = _emailTemplateDto.Subject;
-                    requestDto.SendFrom = _emailTemplateDto.SendFrom;
-                    requestDto.NotificationType = Enums.NotificationType.Email;
+                    requestDto.Subject = emailTemplateDto.Subject;
+                    requestDto.SendFrom = emailTemplateDto.SendFrom;
+                    requestDto.NotificationType = NotificationType.Email;
 
-                    _htmlTemplateBytes = _downloaderService.Execute(
-                        new EntityReference(EntityLogicalNames.EmailTemplate, _emailTemplate.Id),
-                        EmailTemplateFields.HtmlTemplate
+                    var skeletonRef = _snippetQuery.GetSnippetRefBySeq(-1);
+                    if (skeletonRef == null) throw new InvalidPluginExecutionException($"Unable to retrieve skeleton HTMLSnippet.");
+
+                    var skeletonBytes = _downloaderService.Execute(
+                        skeletonRef,
+                        HTMLSnippetFields.HTMLFile
                     );
 
-                    htmlContent = Encoding.UTF8.GetString(_htmlTemplateBytes);
-
-                    _logger.WriteLog($"HTML template content retrieved...");
+                    // TODO: add version attribute to snippet table and print to help with debugging
+                    htmlContent = Encoding.UTF8.GetString(skeletonBytes);
+                    _logger.WriteLog($"HTML template skeleton retrieved...");
                 }
             }
-
+            
+            // TODO: move to GetTheme() helper
             #region /* RETRIEVE THEME */
             _logger.WriteLog($"Retrieving theme...");
-            if (_emailTemplateDto != null && _emailTemplateDto.Theme != null)
+            if (emailTemplateDto != null && emailTemplateDto.Theme != null)
             {
-                _logger.WriteLog($"_emailTemplateDto.Theme.Id: {_emailTemplateDto.Theme.Id}");
+                _logger.WriteLog($"emailTemplateDto.Theme.Id: {emailTemplateDto.Theme.Id}");
 
                 _logger.WriteLog($"Retrieving theme");
-                _theme = _themeQuery.GetThemeByRef(
+                theme = _themeQuery.GetThemeByRef(
                     new EntityReference(
                         EntityLogicalNames.Theme,
-                        _emailTemplateDto.Theme.Id
+                        emailTemplateDto.Theme.Id
                     )
                 );
 
-                if (_theme != null) _themeDto = _themeMapper.MapToDto(_theme);
+                if (theme != null) themeDto = _themeMapper.MapToDto(theme);
             }
             #endregion
 
+            // TODO: move to GetIntersects() helper
             #region /* RETRIEVE TEMPLATE-SNIPPET INTERSECTS */
             _logger.WriteLog($"Retrieving intersects.");
-            if (_emailTemplateDto != null)
+            if (emailTemplateDto != null)
             {
-                _intersects = _intersectQuery.GetIntersectsByTemplateRef(
+                intersectEntities = _intersectQuery.GetIntersectsByTemplateRef(
                     new EntityReference(
                         EntityLogicalNames.EmailTemplate,
-                        _emailTemplateDto.EmailTemplateId ?? Guid.Empty
+                        emailTemplateDto.EmailTemplateId ?? Guid.Empty
                     )
                 );
 
-                _intersectDtos = new List<TemplateSnippetIntersectDto>();
+                intersectDtos = new List<TemplateSnippetIntersectDto>();
 
-                if (_intersects.Entities.Count > 0)
+                // TODO: replace fragile name matching with OSV/Enum
+                if (intersectEntities.Entities.Count > 0)
                 {
-                    foreach (Entity entity in _intersects.Entities)
+                    foreach (Entity entity in intersectEntities.Entities)
                     {
                         var intersectDto = _intersectMapper.MapToDto(entity);
+                        var intersectName = intersectDto.Name ?? string.Empty;
 
-                        if (intersectDto != null) _intersectDtos.Add(intersectDto);
+                        if (intersectDto != null) intersectDtos.Add(intersectDto);
 
                         var snippetRef = intersectDto != null
                             ? intersectDto.RelatedHTMLSnippet
@@ -207,17 +215,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         {
                             continue;
                         }
-                        else if (intersectDto.Name.Contains("Content Card"))
+                        else if (intersectName.Contains("Content Card"))
                         {
-                            _contentCardHtmlString = Encoding.UTF8.GetString(snippetBytes);
+                            contentCardHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
-                        else if (intersectDto.Name.Contains("Table"))
+                        else if (intersectName.Contains("Table"))
                         {
-                            _inlineTableHtmlString = Encoding.UTF8.GetString(snippetBytes);
+                            inlineTableHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
-                        if (intersectDto.Name.Contains("Single Button"))
+                        if (intersectName.Contains("Single Button"))
                         {
-                            _singleButtonHtmlString = Encoding.UTF8.GetString(snippetBytes);
+                            singleButtonHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
                     }
                 }
@@ -226,12 +234,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             
             return new NotificationTemplate()
             {
-                EmailTemplate = _emailTemplateDto,
-                Theme = _themeDto,
+                EmailTemplate = emailTemplateDto,
+                Theme = themeDto,
                 HtmlTemplate = htmlContent,
-                ContentCardHtml = _contentCardHtmlString,
-                TableHtml = _inlineTableHtmlString,
-                ButtonHtml = _singleButtonHtmlString
+                ContentCardHtml = contentCardHtmlString,
+                TableHtml = inlineTableHtmlString,
+                ButtonHtml = singleButtonHtmlString
             };
         }
     }

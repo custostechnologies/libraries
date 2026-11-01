@@ -55,5 +55,43 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return null;
             }
         }
+        public EntityReference? GetSnippetRefBySeq(int seq)
+        {
+            _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME}");
+
+            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            {
+                TopCount = 1,
+                ColumnSet = new ColumnSet(HTMLSnippetFields.HTMLSnippetId, HTMLSnippetFields.Sequence),
+                Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                HTMLSnippetFields.Sequence,
+                                ConditionOperator.Equal,
+                                seq
+                            )
+                        }
+                    }
+            };
+
+            _logger.WriteLog($"Executing query expression on {ENTITY_LOGICAL_NAME}");
+
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
+
+            _logger.WriteLog("Finished executing query expression, interpreting results...");
+
+            if (results.Entities.Count > 0)
+            {
+                _logger.WriteLog($"{results.Entities.Count} entities returned. Returning results.Entities[0].");
+                return results.Entities[0].ToEntityReference();
+            }
+            else
+            {
+                _logger.WriteLog($"No matching {ENTITY_LOGICAL_NAME} entities were found");
+                return null;
+            }
+        }
     }
 }
