@@ -78,6 +78,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var title = _isDev
                 ? $"TEST {baseTitle}"
                 : baseTitle;
+                
             claimDto = new WorkersCompensationClaimDto
             {
                 StaffMemberName = staffMemberMetadata.Full,

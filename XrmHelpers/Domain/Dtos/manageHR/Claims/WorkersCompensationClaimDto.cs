@@ -18,6 +18,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string RegardingRecordAppDisplayName => "manageCompliance";
         public string RegardingRecordEntityLogicalName => EntityLogicalNames.SafetyIncident;
         public override string SourceEntityLogicalName => EntityLogicalNames.WorkersCompensationClaim;
+        public override string TargetEntityLogicalName => EntityLogicalNames.WorkersCompensationClaim;
 
         [IgnoreOnCreate]
         [DataverseLink(

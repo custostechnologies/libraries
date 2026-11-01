@@ -16,8 +16,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         protected NotifiableDto() : base() { }
         public virtual Guid EntityId { get; set; }
         public virtual string TargetAppDisplayName { get; set; } = string.Empty;
-        public virtual string _srcEntityName { get; set; } = string.Empty;
-        public virtual string _targetEntityName { get; set; } = string.Empty;
         public virtual string ValidationRuleSet { get; set; } = string.Empty;
         public virtual string SourceEntityLogicalName { get; set; } = string.Empty;
         public virtual string TargetEntityLogicalName { get; set; } = string.Empty;

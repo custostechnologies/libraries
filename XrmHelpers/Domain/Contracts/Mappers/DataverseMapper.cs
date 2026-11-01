@@ -227,8 +227,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 try
                 {
-                    object setValue;
-
                     var link = property.
                         GetCustomAttribute<DataverseLinkAttribute>();
 
@@ -237,16 +235,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     var value = property.GetValue(dto);
 
                     if (value == null) continue;
-                    if (link.TargetType == null) continue;
 
-                    var targetType = link.TargetType;
-                    var srcType = link.SourceType;
-                    var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-                    if (link.TargetLogicalName == null)
-                        continue;
-
-                    var targetAttribute = link.TargetLogicalName;
+                    if (string.IsNullOrWhiteSpace(link.TargetLogicalName)) continue;
 
                     var formatted = ValueFormatter.FormatForDataverse(
                         property,
@@ -255,17 +245,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     );
 
                     if (formatted == null) continue;
-                    setValue = formatted;
 
                     _logger.WriteLog(
-                        $"Attempting ChangeType." +
-                        $" Property={property.Name}" +
-                        $" ValueType={value.GetType().FullName}" +
-                        $" TargetType={targetType.FullName}"
+                        $"Property={property.Name} " +
+                        $"SourceType={value.GetType().Name} " +
+                        $"MappedType={formatted.GetType().Name}"
                     );
-                    setValue = Convert.ChangeType(value, targetType);
-
-                    entity[link.TargetLogicalName] = setValue;
+                    entity[link.TargetLogicalName] = formatted;
                 }
                 catch (Exception ex)
                 {
