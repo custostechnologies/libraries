@@ -227,8 +227,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             {
                 try
                 {
-                    var link = property.
-                        GetCustomAttribute<DataverseLinkAttribute>();
+                    var ignore = property.GetCustomAttribute<IgnoreOnCreateAttribute>();
+
+                    if (ignore != null) continue;
+                    
+                    var link = property.GetCustomAttribute<DataverseLinkAttribute>();
 
                     if (link == null) continue;
 

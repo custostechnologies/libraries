@@ -78,7 +78,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var title = _isDev
                 ? $"TEST {baseTitle}"
                 : baseTitle;
-                
+
             claimDto = new WorkersCompensationClaimDto
             {
                 StaffMemberName = staffMemberMetadata.Full,
@@ -87,10 +87,11 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                 RelatedUserName = staffMemberMetadata.User.Name,
                 StaffType = PersonType.StaffMember,
                 Regarding = new EntityReference(EntityLogicalNames.SafetyIncident, incident.Id),
+                RegardingId = incident.Id,
                 Subject = title
             };
 
-            _logger.WriteLog($"Mapping ClaimDto to TARGET for StaffMember: {claimDto.StaffMemberName}, RelatedUserId: {claimDto.RelatedUserId}, Regarding SafetyIncident ID: {incident.Id}");
+            _logger.WriteLog($"Mapping ClaimDto to TARGET for StaffMember: {claimDto.StaffMemberName}, RelatedUserId: {claimDto.RelatedUserId}, Regarding SafetyIncident ID (claimDto.Regarding.Id): {claimDto.Regarding.Id}");
             var claimEntity = _workersCompMapper.MapToTarget(claimDto);
 
             if (claimEntity == null)
@@ -101,10 +102,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var newOwnerTeamName = _envVarQuery.GetValue(_claimTargetTeamNameEnvVarName).Value ?? "Debugging Team";
 
             var newOwnerId = _teamsQuery.ResolveTeamIdByName(newOwnerTeamName);
+            _logger.WriteLog($"newOwnerId: {newOwnerId}");
             var newOwnerRef = new EntityReference("team", newOwnerId);
             claimEntity["ownerid"] = newOwnerRef;
 
             _logger.WriteLog("Creating new claim entity.");
+            _logger.WriteLog("LOGGING new entity before create.");
+            _logger.WriteLog(JsonSerializer.Serialize(claimEntity, new JsonSerializerOptions { WriteIndented = true }));
+
             var newId = _context.Runtime.UserService.Create(claimEntity);
             _logger.WriteLog($"Created new claim with ID: {newId}");
 

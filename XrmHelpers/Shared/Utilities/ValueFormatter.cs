@@ -71,21 +71,20 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
             }
 
             // Guid -> string
-            if (dtoType == typeof(Guid) &&
-                targetType == typeof(string))
+            if (dtoType == typeof(Guid) && targetType == typeof(string))
             {
                 return value.ToString();
             }
 
             // string -> Guid
-            if (dtoType == typeof(string) &&
-                targetType == typeof(Guid))
+            if (dtoType == typeof(string) && targetType == typeof(Guid))
             {
-                return Guid.TryParse(
-                    value.ToString(),
-                    out Guid result)
-                        ? result
-                        : Guid.Empty;
+                if (!Guid.TryParse(value.ToString(), out Guid result))
+                {
+                    throw new InvalidPluginExecutionException($"Guid parse error from {value}");
+                }
+
+                return result;
             }
 
             if (targetType.IsAssignableFrom(dtoType))
