@@ -114,7 +114,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: WorkersCompensationClaimFields.StaffType,
             trgType: typeof(OptionSetValue))]
-        public PersonType? StaffType { get; set; }
+        public PersonType StaffType { get; set; }
 
         [IgnoreSrcMapping]
         [DataverseLink(

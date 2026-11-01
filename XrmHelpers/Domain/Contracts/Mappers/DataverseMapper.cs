@@ -8,6 +8,7 @@ using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Resolvers;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
+using spgsWebTools.XrmHelpers.Shared.Utilities;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -187,7 +188,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         Nullable.GetUnderlyingType(property.PropertyType)
                         ?? property.PropertyType;
 
-                    object? value = ConvertJsonValue(
+                    object? value = ValueConverter.FromJsonValue(
                         jsonValue,
                         propertyType);
 
@@ -240,59 +241,29 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     var targetType = link.TargetType;
                     var srcType = link.SourceType;
-                    var dtoValueType = property.PropertyType;
+                    var dtoValueType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
                     if (link.TargetLogicalName == null)
                         continue;
 
                     var targetAttribute = link.TargetLogicalName;
 
-                    if (property.PropertyType.IsEnum)
-                    {
-                        setValue = setValue = new OptionSetValue(
-                            Convert.ToInt32(value)
-                        );
-                    }
-                    else if (dtoValueType == targetType)
-                    {
-                        setValue = value;
-                    }
-                    else if (targetType == typeof(OptionSetValue))
-                    {
-                        setValue = value;
-                    }
-                    else if (targetType == typeof(EntityReference) && dtoValueType == typeof(Guid))
-                    {
-                        var refAttr = property.GetCustomAttribute<DataverseReferenceAttribute>();
+                    var formatted = ValueFormatter.FormatForDataverse(
+                        property,
+                        value,
+                        link
+                    );
 
-                        if (refAttr == null) continue;
+                    if (formatted == null) continue;
+                    setValue = formatted;
 
-                        setValue = new EntityReference(
-                            refAttr.TargetEntity,
-                            (Guid)value
-                        );
-                    }
-                    else if (targetType == typeof(string) && dtoValueType == typeof(Guid))
-                    {
-                        setValue = value.ToString() ?? Guid.Empty.ToString();
-                    }
-                    else if (dtoValueType == typeof(string) && targetType == typeof(Guid))
-                    {
-                        //setValue = Guid.Parse(value.ToString());
-                        setValue = Guid.TryParse(value.ToString(), out Guid result)
-                            ? result
-                            : Guid.Empty;
-                    }
-                    else
-                    {
-                        _logger.WriteLog(
-                            $"Attempting ChangeType." +
-                            $" Property={property.Name}" +
-                            $" ValueType={value.GetType().FullName}" +
-                            $" TargetType={targetType.FullName}"
-                        );
-                        setValue = Convert.ChangeType(value, targetType);
-                    }
+                    _logger.WriteLog(
+                        $"Attempting ChangeType." +
+                        $" Property={property.Name}" +
+                        $" ValueType={value.GetType().FullName}" +
+                        $" TargetType={targetType.FullName}"
+                    );
+                    setValue = Convert.ChangeType(value, targetType);
 
                     entity[link.TargetLogicalName] = setValue;
                 }
@@ -361,11 +332,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     else if (value is OptionSetValue osv && dtoValueType.IsEnum)
                     {
-                        setValue = ToEnum(osv, dtoValueType);
+                        setValue = EnumExtensions.ToEnum(osv, dtoValueType);
                     }
                     else if (dtoValueType.IsEnum)
                     {
-                        setValue = ToOptionSet(value);
+                        setValue = ValueConverter.ToOptionSetValue((int)value);
                     }
                     else if (value is OptionSetValue optionSetValue && dtoValueType == typeof(int))
                     {
@@ -427,202 +398,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             if (value is AliasedValue alias) value = alias.Value;
 
             return value;
-        }
-        private object? ConvertJsonValue(
-            JsonElement element,
-            Type targetType)
-        {
-            if (element.ValueKind == JsonValueKind.Null)
-            {
-                return null;
-            }
-
-            if (targetType.IsEnum)
-            {
-                return Enum.ToObject(
-                    targetType,
-                    element.GetInt32());
-            }
-
-            if (targetType == typeof(string))
-            {
-                return element.GetString();
-            }
-
-            if (targetType == typeof(bool))
-            {
-                return element.GetBoolean();
-            }
-
-            if (targetType == typeof(int))
-            {
-                return element.GetInt32();
-            }
-
-            if (targetType == typeof(long))
-            {
-                return element.GetInt64();
-            }
-
-            if (targetType == typeof(decimal))
-            {
-                return element.GetDecimal();
-            }
-
-            if (targetType == typeof(double))
-            {
-                return element.GetDouble();
-            }
-
-            if (targetType == typeof(Guid))
-            {
-                return Guid.Parse(element.GetString()!);
-            }
-
-            if (targetType == typeof(DateTime))
-            {
-                return element.GetDateTime();
-            }
-
-            if (targetType == typeof(DateTimeOffset))
-            {
-                return element.GetDateTimeOffset();
-            }
-
-            if (targetType == typeof(List<int>))
-            {
-                return element
-                    .EnumerateArray()
-                    .Select(x => x.GetInt32())
-                    .ToList();
-            }
-
-            if (targetType.IsGenericType &&
-                targetType.GetGenericTypeDefinition() == typeof(List<>))
-            {
-                var itemType = targetType.GetGenericArguments()[0];
-
-                var list = (System.Collections.IList)
-                    Activator.CreateInstance(targetType)!;
-
-                foreach (var item in element.EnumerateArray())
-                {
-                    list.Add(
-                        ConvertJsonValue(item, itemType)
-                    );
-                }
-
-                return list;
-            }
-
-            return JsonSerializer.Deserialize(
-                element.GetRawText(),
-                targetType);
-        }
-        private static OptionSetValue ToOptionSet(object value)
-        {
-            return new OptionSetValue(Convert.ToInt32(value));
-        }
-        private static object ToEnum(OptionSetValue value, Type enumType)
-        {
-            return Enum.ToObject(enumType, value.Value);
-        }
-        private object? FormatForDataverse(
-            PropertyInfo prop,
-            object value,
-            DataverseLinkAttribute link
-        )
-        {
-            if (link.TargetType == null)
-                return null;
-
-            var dtoType =
-                Nullable.GetUnderlyingType(prop.PropertyType)
-                ?? prop.PropertyType;
-
-            var targetType =
-                Nullable.GetUnderlyingType(link.TargetType)
-                ?? link.TargetType;
-
-            // Enum -> OptionSetValue
-            if (dtoType.IsEnum &&
-                targetType == typeof(OptionSetValue))
-            {
-                return new OptionSetValue(
-                    Convert.ToInt32(value)
-                );
-            }
-
-            // Guid -> EntityReference
-            if (targetType == typeof(EntityReference))
-            {
-                return CreateEntityReference(
-                    prop,
-                    value);
-            }
-
-            // Guid -> string
-            if (dtoType == typeof(Guid) &&
-                targetType == typeof(string))
-            {
-                return value.ToString();
-            }
-
-            // string -> Guid
-            if (dtoType == typeof(string) &&
-                targetType == typeof(Guid))
-            {
-                return Guid.TryParse(
-                    value.ToString(),
-                    out Guid result)
-                        ? result
-                        : Guid.Empty;
-            }
-
-            if (targetType.IsAssignableFrom(dtoType))
-            {
-                return value;
-            }
-
-            return Convert.ChangeType(
-                value,
-                targetType);
-        }
-        private EntityReference? CreateEntityReference(
-    PropertyInfo property,
-    object value)
-        {
-            if (value is not Guid id)
-                return null;
-
-            var reference =
-                property.GetCustomAttribute<DataverseReferenceAttribute>();
-
-            if (reference == null)
-                return null;
-
-            return new EntityReference(
-                reference.TargetEntity,
-                id);
-        }
-    }
-    public static class EnumExtensions
-    {
-        public static OptionSetValue ToOptionSetValue<T>(
-            this T value)
-            where T : Enum
-        {
-            return new OptionSetValue(
-                Convert.ToInt32(value));
-        }
-
-        public static T ToEnum<T>(
-            this OptionSetValue value)
-            where T : Enum
-        {
-            return (T)Enum.ToObject(
-                typeof(T),
-                value.Value);
         }
     }
 }

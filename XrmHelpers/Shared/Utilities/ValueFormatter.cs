@@ -1,3 +1,7 @@
+using System.Reflection;
+using Microsoft.Xrm.Sdk;
+using spgsWebTools.XrmHelpers.Domain.Attributes;
+
 namespace spgsWebTools.XrmHelpers.Shared.Utilities
 {
     public static class ValueFormatter
@@ -31,6 +35,85 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
             }
 
             return value.ToString() ?? string.Empty;
+        }
+        public static object? FormatForDataverse(
+            PropertyInfo prop,
+            object value,
+            DataverseLinkAttribute link
+        )
+        {
+            if (link.TargetType == null)
+                return null;
+
+            var dtoType =
+                Nullable.GetUnderlyingType(prop.PropertyType)
+                ?? prop.PropertyType;
+
+            var targetType =
+                Nullable.GetUnderlyingType(link.TargetType)
+                ?? link.TargetType;
+
+            // Enum -> OptionSetValue
+            if (dtoType.IsEnum &&
+                targetType == typeof(OptionSetValue))
+            {
+                return new OptionSetValue(
+                    Convert.ToInt32(value)
+                );
+            }
+
+            // Guid -> EntityReference
+            if (targetType == typeof(EntityReference))
+            {
+                return CreateEntityReference(
+                    prop,
+                    value);
+            }
+
+            // Guid -> string
+            if (dtoType == typeof(Guid) &&
+                targetType == typeof(string))
+            {
+                return value.ToString();
+            }
+
+            // string -> Guid
+            if (dtoType == typeof(string) &&
+                targetType == typeof(Guid))
+            {
+                return Guid.TryParse(
+                    value.ToString(),
+                    out Guid result)
+                        ? result
+                        : Guid.Empty;
+            }
+
+            if (targetType.IsAssignableFrom(dtoType))
+            {
+                return value;
+            }
+
+            return Convert.ChangeType(
+                value,
+                targetType);
+        }
+        public static EntityReference? CreateEntityReference(
+            PropertyInfo property,
+            object value
+        )
+        {
+            if (value is not Guid id)
+                return null;
+
+            var reference =
+                property.GetCustomAttribute<DataverseReferenceAttribute>();
+
+            if (reference == null)
+                return null;
+
+            return new EntityReference(
+                reference.TargetEntity,
+                id);
         }
     }
 }
