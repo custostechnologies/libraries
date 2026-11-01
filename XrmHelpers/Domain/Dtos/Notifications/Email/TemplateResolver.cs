@@ -17,6 +17,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly HTMLSnippets _snippetQuery;
         private readonly IDataverseLogger _logger;
         private readonly FileDownloaderService _downloaderService;
+        private static string _cachedSkeleton = "";
         private static readonly List<EmailTemplate> EmailTemplates = new()
         {
             { new EmailTemplate(typeof(SafetyIncidentDto), OperationType.Create, "newSafetyIncident") },
@@ -115,7 +116,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 if (emailTemplate == null)
                 {
-                    throw new Exception("Email template returned null.");
+                    throw new InvalidPluginExecutionException("Email template returned null.");
                 }
                 else
                 {
@@ -139,16 +140,23 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     requestDto.SendFrom = emailTemplateDto.SendFrom;
                     requestDto.NotificationType = NotificationType.Email;
 
-                    var skeletonRef = _snippetQuery.GetSnippetRefBySeq(-1);
-                    if (skeletonRef == null) throw new InvalidPluginExecutionException($"Unable to retrieve skeleton HTMLSnippet.");
+                    if (string.IsNullOrWhiteSpace(_cachedSkeleton))
+                    {
+                        var skeletonRef = _snippetQuery.GetSnippetRefBySeq(-1);
+                        if (skeletonRef == null) throw new InvalidPluginExecutionException($"Unable to retrieve skeleton HTMLSnippet.");
 
-                    var skeletonBytes = _downloaderService.Execute(
-                        skeletonRef,
-                        HTMLSnippetFields.HTMLFile
-                    );
+                        var skeletonBytes = _downloaderService.Execute(
+                            skeletonRef,
+                            HTMLSnippetFields.HTMLFile
+                        );
 
-                    // TODO: add version attribute to snippet table and print to help with debugging
-                    htmlContent = Encoding.UTF8.GetString(skeletonBytes);
+                        // TODO: add version attribute to snippet table and print to help with debugging
+                        _cachedSkeleton = Encoding.UTF8.GetString(skeletonBytes);
+                        htmlContent = _cachedSkeleton;
+                    } else
+                    {
+                        htmlContent = _cachedSkeleton;
+                    }
                     _logger.WriteLog($"HTML template skeleton retrieved...");
                 }
             }
@@ -192,13 +200,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     foreach (Entity entity in intersectEntities.Entities)
                     {
                         var intersectDto = _intersectMapper.MapToDto(entity);
-                        var intersectName = intersectDto.Name ?? string.Empty;
+                        if (intersectDto == null) continue;
 
-                        if (intersectDto != null) intersectDtos.Add(intersectDto);
-
-                        var snippetRef = intersectDto != null
-                            ? intersectDto.RelatedHTMLSnippet
-                            : null;
+                        var intersectName = intersectDto.Name ?? string.Empty;  
+                        
+                        intersectDtos.Add(intersectDto);
+                        var snippetRef = intersectDto.RelatedHTMLSnippet;
 
                         if (snippetRef == null)
                         {
@@ -215,15 +222,15 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         {
                             continue;
                         }
-                        else if (intersectName.Contains("Content Card"))
+                        else if (intersectName.Contains("Content Card", StringComparison.OrdinalIgnoreCase))
                         {
                             contentCardHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
-                        else if (intersectName.Contains("Table"))
+                        else if (intersectName.Contains("Table", StringComparison.OrdinalIgnoreCase))
                         {
                             inlineTableHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
-                        if (intersectName.Contains("Single Button"))
+                        else if (intersectName.Contains("Single Button", StringComparison.OrdinalIgnoreCase))
                         {
                             singleButtonHtmlString = Encoding.UTF8.GetString(snippetBytes);
                         }
