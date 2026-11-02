@@ -62,6 +62,15 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
                 );
             }
 
+            if (value is Array array && array.GetType().GetElementType()?.IsEnum == true)
+            {
+                return new OptionSetValueCollection(
+                    array.Cast<Enum>()
+                        .Select(val => new OptionSetValue(Convert.ToInt32(val)))
+                        .ToList()
+                );
+            }
+
             // Guid -> EntityReference
             if (targetType == typeof(EntityReference))
             {
