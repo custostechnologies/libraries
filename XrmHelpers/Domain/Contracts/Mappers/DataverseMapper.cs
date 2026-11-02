@@ -364,6 +364,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                     }
 
                     property.SetValue(dto, setValue);
+                    _logger.WriteLog(
+                        $"Property={property.Name}, " +
+                        $"SetValueType={setValue.GetType().FullName}"
+                    );
 
                     // if IActivityDto
                     if (dto is IActivityDto activity)

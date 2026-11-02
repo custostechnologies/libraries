@@ -132,6 +132,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 {
                     str = $"<a href=\"{recordLink}\" target=\"_blank\">{prop.GetValue(this)}</a>";
                 }
+                else if (value is Array array && array.GetType().GetElementType()?.IsEnum == true)
+                {
+                    str = string.Join(", ", array.Cast<Enum>());
+                    Console.WriteLine($"In Array Branch, str: {str}");
+                }
                 else
                 {
                     str = WebUtility.HtmlEncode(value?.ToString() ?? "[NULL]");
@@ -141,7 +146,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                 hydratedTags.Add(new HydratedTag(
                     str, label, idx
                 ));
-
             }
 
             hydratedTags.Sort((a, b) => a.Index.CompareTo(b.Index));

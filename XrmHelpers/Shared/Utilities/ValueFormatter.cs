@@ -24,6 +24,21 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
                 return val.ToString("dd/MM/yyyy HH:mm");
             }
 
+            if (value is Array array &&
+            array.GetType().GetElementType()?.IsEnum == true)
+            {
+                return string.Join(
+                    ", ",
+                    array.Cast<Enum>()
+                        .Select(e => e.GetDescription())
+                );
+            }
+
+            if (value is Enum enumValue)
+            {
+                return enumValue.GetDescription();
+            }
+
             if (value is bool boolValue)
             {
                 return boolValue ? "Yes" : "No";

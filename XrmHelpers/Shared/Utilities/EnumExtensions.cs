@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 using Microsoft.Xrm.Sdk;
 
 namespace spgsWebTools.XrmHelpers.Shared.Utilities
@@ -26,6 +28,15 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
         )
         {
             return Enum.ToObject(enumType, value.Value);
+        }
+        public static string GetDescription(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = field?
+                .GetCustomAttributes(typeof(DescriptionAttribute), false)
+                .Cast<DescriptionAttribute>()
+                .FirstOrDefault();
+            return attribute?.Description ?? value.ToString();
         }
     }
 }
