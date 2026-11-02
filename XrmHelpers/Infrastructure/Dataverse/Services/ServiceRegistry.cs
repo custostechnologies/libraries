@@ -47,6 +47,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<CoreStaffMembers>();
                 services.AddScoped<EnvironmentVariableValues>();
                 services.AddScoped(typeof(INotificationService<>), typeof(NotificationService<>));
+                services.AddScoped<CoreStaffRetriever>();
 
                 // add query registrations
                 services.AddScoped<EmailTemplates>();

@@ -12,5 +12,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
             OperationType operationType,
             Entity notifiableEntity
         );
+        void Notify(
+            User user,
+            OperationType operationType,
+            Entity notifiableEntity
+        );
     }
 }

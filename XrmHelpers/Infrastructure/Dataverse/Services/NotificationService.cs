@@ -55,7 +55,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                 default:
                     throw new InvalidPluginExecutionException($"Unknown EntityReference LogicalName/Owner type: {ownerRef.LogicalName}");
             }
-            
+
             foreach (var recipient in recipients)
             {
                 _logger.WriteLog($"Calling BuildEmailNotification on _notificationPipeline for user (email: {recipient.Email}).");
@@ -67,6 +67,23 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
                     recipient.FirstName
                 );
             }
+        }
+        public void Notify(
+            User user,
+            OperationType operationType,
+            Entity notifiableEntity
+        )
+        {
+            _logger.WriteLog("USER is external or not found in Core Staff Members");
+
+            _logger.WriteLog($"Calling BuildEmailNotification on _notificationPipeline for user (email: {user.Email}).");
+            _pipeline.BuildEmailNotification(
+                notifiableEntity,
+                operationType,
+                user.Email,
+                null,
+                user.FirstName ?? user.FullName
+            );
         }
     }
 }

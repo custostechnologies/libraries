@@ -9,6 +9,7 @@ using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
 using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
 using spgsWebTools.XrmHelpers.Infrastructure.Services;
+using spgsWebTools.XrmHelpers.Shared.Validation;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -22,6 +23,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         private readonly IChangeDetectionService<TDto> _changeDetector;
         private readonly CoreStaffMembers _coreStaffMemberQuery;
         private readonly DigestQueryEngine<TDto> _digestQueryEngine;
+        private readonly CoreStaffRetriever _coreStaffRetriever;
         private readonly IStyleProvider _styleProvider;
         public NotificationPipeline(
             IDataverseContext context,
@@ -32,6 +34,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             IChangeDetectionService<TDto> changeDetector,
             CoreStaffMembers coreStaffMemberQuery,
             DigestQueryEngine<TDto> digestQueryEngine,
+            CoreStaffRetriever coreStaffRetriever,
             IStyleProvider styleProvider
         )
         {
@@ -42,6 +45,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             _changeDetector = changeDetector;
             _coreStaffMemberQuery = coreStaffMemberQuery;
             _digestQueryEngine = digestQueryEngine;
+            _coreStaffRetriever = coreStaffRetriever;
             _styleProvider = styleProvider;
             _logger = loggerFactory.Create<NotificationPipeline<TDto>>();
         }
@@ -71,7 +75,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                 if (recipients.Length == 1)
                 {
-                    var outcome = RetrieveCoreStaffMember(to);
+                    var outcome = _coreStaffRetriever.Retrieve(to);
                     if (outcome.resolved && outcome.coreStaffMember != null)
                     {
                         preferred = outcome.coreStaffMember.GetAttributeValue<string>(CoreStaffMemberFields.PreferredName) ?? fallbackName;
@@ -129,38 +133,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             return newIds;
         }
-        private (
-            bool resolved, 
-            Entity? coreStaffMember
-        ) RetrieveCoreStaffMember(string email)
-        {
-            if (string.IsNullOrWhiteSpace(email))
-            {
-                _logger.WriteLog("RetrieveUserPreferredName called with a null address. Falling back to default.");
-                return (false, null);
-            }
-
-            var domain = "@stpauls.nsw.edu.au";
-            var addr = new System.Net.Mail.MailAddress(email);
-            var valid = addr.Address.Equals(email, StringComparison.OrdinalIgnoreCase) && email.EndsWith(domain, StringComparison.OrdinalIgnoreCase);
-            
-            if (valid)
-            {
-                Entity staffMember = _coreStaffMemberQuery.GetEntityByOrgEmail(email);
-
-                if (staffMember.Id == Guid.Empty)
-                {
-                    _logger.WriteLog("Unable to find CoreStaffMember. Returning ");
-                    return (false, null);
-                }
-
-                _logger.WriteLog($"Resolved CoreStaffMember for address: {email}. Returning true and Entity");
-                return (true, staffMember);
-            } else
-            {
-                _logger.WriteLog("Invalid email (non-org). Falling back to default.");
-                return (false, null);
-            }
-        }
+        
     }
 }
