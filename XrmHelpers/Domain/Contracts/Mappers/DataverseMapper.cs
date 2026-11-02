@@ -318,14 +318,25 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                         else throw new InvalidOperationException($"Can't map EntityReference to {dtoValueType.Name} for property: {property.Name}");
                     }
+                    else if (value is OptionSetValueCollection options
+                        && property.PropertyType.IsArray
+                        && property.PropertyType.GetElementType().IsEnum)
+                    {
+                        var enumType = property.PropertyType.GetElementType();
+                        var array = Array.CreateInstance(enumType, options.Count);
+                        for (int i = 0; i < options.Count; i++)
+                        {
+                            array.SetValue(
+                                Enum.ToObject(enumType, options[i].Value),
+                                i
+                            );
+                        }
 
+                        setValue = array;
+                    }
                     else if (value is OptionSetValue osv && dtoValueType.IsEnum)
                     {
                         setValue = EnumExtensions.ToEnum(osv, dtoValueType);
-                    }
-                    else if (dtoValueType.IsEnum)
-                    {
-                        setValue = ValueConverter.ToOptionSetValue((int)value);
                     }
                     else if (value is OptionSetValue optionSetValue && dtoValueType == typeof(int))
                     {
@@ -361,11 +372,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                             ? activity.RegardingName
                             : string.IsNullOrWhiteSpace(activity.Regarding?.Name)
                                 ? "Link to Record"
-                                : activity.Regarding.Name;
+                                : activity.Regarding?.Name;
 
                         activity.RegardingRecordDisplayLink = _activityLinkService.CreateLinkHtml(
                             activity.RegardingRecordEntityLogicalName,
-                            regardingRecordName,
+                            regardingRecordName ?? "",
                             activity.RegardingId,
                             activity.RegardingRecordAppDisplayName
                         );
