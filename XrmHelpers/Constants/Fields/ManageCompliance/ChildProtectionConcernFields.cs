@@ -33,5 +33,6 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string SubmitterEmail = "cr2d7_submitteremail";
         public const string SubmitterName = "cr2d7_submittername";
         public const string TemporaryRecordId = "pgrowth_temporaryrecordid";
+        public const string CoreStudent = "pgrowth_corestudent";
     }
 }

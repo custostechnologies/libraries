@@ -71,6 +71,60 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw;
             }
         }
+        public Entity? GetNullableEntity(int studentId)
+        {
+            try
+            {
+                _logger.WriteLog($"Building GetEntityReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
+
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+                {
+                    TopCount = 1,
+                    ColumnSet = CoreStudentSchema.SyncColumns,
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                CoreStudentFields.StudentId,
+                                ConditionOperator.Equal,
+                                studentId
+                            )
+                        }
+                    }
+                };
+
+                _logger.WriteLog($"Executing GetEntityReferenceByStudentId query expression on {ENTITY_LOGICAL_NAME}");
+
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
+
+                _logger.WriteLog("Finished executing ExecuteAlternate query expression");
+
+                if (results.Entities.Count > 0)
+                {
+                    _logger.WriteLog($"ExecuteAlternate results.Entities[{JsonSerializer.Serialize(
+                            results.Entities[0],
+                            new JsonSerializerOptions
+                            {
+                                WriteIndented = true
+                            }
+                        )}"
+
+                    );
+                    return results.Entities[0];
+                }
+                else
+                {
+                    _logger.WriteLog("No existing CoreStudents were found");
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"CoreStudents.GetEntityByStudentId Exception: {ex}");
+                throw;
+            }
+        }
         public EntityReference GetReferenceByStudentId(int studentId)
         {
             try

@@ -19,21 +19,21 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public override string SourceEntityLogicalName => EntityLogicalNames.ChildProtectionConcern;
 
         [DataverseLink(
-            srcName: SynStaffMemberFields.ForcePlugin, 
-            srcType: typeof(DateTime?), 
-            trgName: null, 
+            srcName: SynStaffMemberFields.ForcePlugin,
+            srcType: typeof(DateTime?),
+            trgName: null,
             trgType: null)]
         public override DateTime? ForcePlugin { get; set; } = null;
 
         [IgnoreOnCreate]
         [DataverseLink(
-            srcName: ChildProtectionConcernFields.ChildProtectionConcernId, 
-            srcType: typeof(Guid), 
-            trgName: null, 
+            srcName: ChildProtectionConcernFields.ChildProtectionConcernId,
+            srcType: typeof(Guid),
+            trgName: null,
             trgType: null)]
         public Guid ChildProtectionConcernId { get; set; }
-        public override Guid EntityId { 
-            get => ChildProtectionConcernId; 
+        public override Guid EntityId {
+            get => ChildProtectionConcernId;
             set => ChildProtectionConcernId = value; }
         [DataverseLink(
             srcName: ChildProtectionConcernFields.AttachmentId,
@@ -41,7 +41,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public string? AttachmentId { get; set; }
-        
+
         [Notification(operationType: OperationType.Create, label: "Title", index: 0, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Title", index: 0, true)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Title", index: 0, true)]
@@ -209,6 +209,31 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public string? SubmitterName { get; set; }
+
+        [IgnoreOnCreate]
+        [DataverseLink(
+            srcName: ChildProtectionConcernFields.CoreStudent,
+            srcType: typeof(EntityReference),
+            trgName: null,
+            trgType: null)]
+        public EntityReference? Student { get; set; }
+
+        [DataverseReference(
+            targetEntity: EntityLogicalNames.CoreStudent
+        )]
+        [DataverseLink(
+            srcName: ChildProtectionConcernFields.CoreStudent,
+            srcType: typeof(EntityReference),
+            trgName: ChildProtectionConcernFields.CoreStudent,
+            trgType: typeof(EntityReference))]
+        public Guid CoreStudentId { get; set; }
+
+        [DataverseLink(
+            srcName: ChildProtectionConcernFields.CoreStudent,
+            srcType: typeof(EntityReference),
+            trgName: null,
+            trgType: null)]
+        public string? CoreStudentName { get; set; }
         public override string LinkToRecord(
             IDataverseContext context,
             string entityLogicalName,

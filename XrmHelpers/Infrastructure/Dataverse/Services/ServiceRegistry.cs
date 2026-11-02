@@ -57,6 +57,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<Systemusers>();
                 services.AddScoped<Teams>();
                 services.AddScoped<ProcessStageMetadata>();
+                services.AddScoped<ChildProtectionConcerns>();
+                services.AddScoped<CoreStudents>();
 
                 // add notification service registrations
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
