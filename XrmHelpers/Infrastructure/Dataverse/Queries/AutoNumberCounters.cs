@@ -48,20 +48,19 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 _logger.WriteLog("Executing retrieve request for current counter value and prefix.");
 
-                ExecuteTransactionResponse retrieveResponse = (ExecuteTransactionResponse)_context.Runtime.UserService.Execute(retrieveCounter);
+                RetrieveResponse response = (RetrieveResponse)_context.Runtime.UserService.Execute(retrieveCounter);
 
-                if (retrieveResponse.Responses.Count != 1)
+                if (response.Entity == null)
                 {
                     var invalidResponses = new Exception("None or multiple counter rows found.");
                     _logger.WriteLog(
                         invalidResponses,
-                        $"retrieveResponse on table: {tableLogicalName} for record with alternate key (counterKey) = {EntityLogicalNames.AutoNumberCounter} returned {retrieveResponse.Responses.Count} responses.");
+                        $"retrieveResponse on table: {tableLogicalName} for record with alternate key (counterKey) = {EntityLogicalNames.AutoNumberCounter} returned null");
                     throw invalidResponses;
                 }
 
                 _logger.WriteLog("Retrieve request complete.");
 
-                var response = (RetrieveResponse)retrieveResponse.Responses[0];
                 Entity counterUpdate = response.Entity;
 
                 int currentCounterValue = counterUpdate.GetAttributeValue<int>(AutoNumberCounterFields.Value);
