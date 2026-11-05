@@ -20,6 +20,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         }
         public string ReserveIndex(string tableLogicalName)
         {
+            // TODO: move counter record UPDATE to allow complete rollback upon exception
             try
             {
                 _logger.WriteLog("Executing ReserveIndex query expression on {0}", EntityLogicalNames.AutoNumberCounter);
