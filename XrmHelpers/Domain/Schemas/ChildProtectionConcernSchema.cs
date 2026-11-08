@@ -19,6 +19,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             ChildProtectionConcernFields.SubmitterName,
             ChildProtectionConcernFields.Status,
             ChildProtectionConcernFields.StatusReason,
+            ChildProtectionConcernFields.ChildProtectionConcernId,
             "ownerid"
         );
     }
