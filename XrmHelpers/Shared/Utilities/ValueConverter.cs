@@ -17,9 +17,48 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
 
             if (targetType.IsEnum)
             {
+                if (element.ValueKind == JsonValueKind.Object && element.TryGetProperty("value", out var valueProperty))
+                {
+                    return Enum.ToObject(
+                        targetType,
+                        valueProperty.GetInt32()
+                    );
+                }
+
                 return Enum.ToObject(
                     targetType,
                     element.GetInt32());
+            }
+
+            if (targetType.IsArray && element.ValueKind == JsonValueKind.Array)
+            {
+                var elementType = targetType.GetElementType();
+                if (elementType == null) return null;
+                var values = element
+                    .EnumerateArray()
+                    .Select(
+                        item =>
+                        {
+                            if (item.ValueKind == JsonValueKind.Object && item.TryGetProperty("value", out var valProp))
+                            {
+                                return FromJsonValue(valProp, elementType);
+                            }
+
+                            return FromJsonValue(item, elementType);
+                        }
+                    ).ToArray();
+
+                var array = Array.CreateInstance(
+                    elementType,
+                    values.Length
+                );
+
+                for (var i = 0; i < values.Length; i++)
+                {
+                    array.SetValue(values[i], i);
+                }
+
+                return array;
             }
 
             if (targetType == typeof(string))
