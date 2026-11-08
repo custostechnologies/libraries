@@ -72,6 +72,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(string))]
         public string? ConcernId { get; set; }
 
+        [EnumType(typeof(ConcernType))]
         [Notification(operationType: OperationType.UpdateOwner, label: "Concern Type(s)", index: 3, false)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Concern Type(s)", index: 3, false)]
         [DataverseLink(
@@ -88,6 +89,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(EntityReference))]
         public Guid? ContactId { get; set; }
 
+        [EnumType(typeof(ConcernType))]
         [DataverseLink(
             srcName: ChildProtectionConcernFields.ConcernType,
             srcType: typeof(OptionSetValue),
@@ -95,6 +97,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(OptionSetValue))]
         public ConcernType? ConcernType { get; set; }
 
+        [EnumType(typeof(ConcernFlag))]
         [DataverseLink(
             srcName: ChildProtectionConcernFields.Flag,
             srcType: typeof(OptionSetValue),
@@ -137,6 +140,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(string))]
         public string? ParentInformation { get; set; }
 
+        [EnumType(typeof(RecordSource))]
         [DataverseLink(
             srcName: ChildProtectionConcernFields.RecordSource,
             srcType: typeof(OptionSetValue),
@@ -172,6 +176,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(string))]
         public string? StudentDisability { get; set; }
 
+        [EnumType(typeof(StudentGender))]
         [DataverseLink(
             srcName: ChildProtectionConcernFields.StudentGender,
             srcType: typeof(OptionSetValue),
@@ -189,6 +194,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: typeof(string))]
         public string? StudentName { get; set; }
 
+        [EnumType(typeof(StudentType))]
         [Notification(operationType: OperationType.Create, label: "Student Type", index: 2, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Student Type", index: 2, false)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Student Type", index: 2, false)]

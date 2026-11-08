@@ -7,6 +7,7 @@ using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Resolvers;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
+using spgsWebTools.XrmHelpers.Shared.Utilities;
 
 namespace spgsWebTools.XrmHelpers.Domain.Contracts
 {
@@ -68,114 +69,33 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                         else throw new InvalidOperationException($"Can't map EntityReference to {dtoValueType.Name} for property: {property.Name}");
                     }
+                    else if (value is OptionSetValueCollection options
+                        && property.PropertyType.IsArray
+                        && property.PropertyType.GetElementType().IsEnum)
+                    {
+                        var enumType = property.PropertyType.GetElementType();
+                        var array = Array.CreateInstance(enumType, options.Count);
+                        for (int i = 0; i < options.Count; i++)
+                        {
+                            array.SetValue(
+                                Enum.ToObject(enumType, options[i].Value),
+                                i
+                            );
+                        }
 
+                        setValue = array;
+                    }
                     else if (value is OptionSetValue osv && dtoValueType.IsEnum)
                     {
-                        var optionValue = osv.Value;
-                        switch (dtoValueType.Name)
-                        {
-                            case "AdmittedToHospital":
-                                setValue = (AdmittedToHospital)optionValue;
-                                break;
-                            case "CustomIncidentStatus":
-                                setValue = (CustomIncidentStatus)optionValue;
-                                break;
-                            case "CustomIncidentStatusReason":
-                                setValue = (CustomIncidentStatusReason)optionValue;
-                                break;
-                            case "IncidentCategory":
-                                setValue = (IncidentCategory)optionValue;
-                                break;
-                            case "IncidentSeverity":
-                                setValue = (IncidentSeverity)optionValue;
-                                break;
-                            case "IncidentTimeframe":
-                                setValue = (IncidentTimeframe)optionValue;
-                                break;
-                            case "IncidentType":
-                                setValue = (IncidentType)optionValue;
-                                break;
-                            case "InjuredPersonType":
-                                setValue = (InjuredPersonType)optionValue;
-                                break;
-                            case "InjuryBodyPart":
-                                setValue = (InjuryBodyPart)optionValue;
-                                break;
-                            case "InjuryType":
-                                setValue = (InjuryType)optionValue;
-                                break;
-                            case "Location":
-                                setValue = (Location)optionValue;
-                                break;
-                            case "RecordSource":
-                                setValue = (RecordSource)optionValue;
-                                break;
-                            case "RelevantSport":
-                                setValue = (RelevantSport)optionValue;
-                                break;
-                            case "ResponsePriority":
-                                setValue = (ResponsePriority)optionValue;
-                                break;
-                            case "SubmitterPosition":
-                                setValue = (SubmitterPosition)optionValue;
-                                break;
-                            case "Campus":
-                                setValue = (Campus)optionValue;
-                                break;
-                            case "Gender":
-                                setValue = (Gender)optionValue;
-                                break;
-                            case "LinkType":
-                                setValue = (LinkType)optionValue;
-                                break;
-                            case "PayClaimFormStatusReason":
-                                setValue = (PayClaimFormStatusReason)optionValue;
-                                break;
-                            case "StudentType":
-                                setValue = (StudentType)optionValue;
-                                break;
-                            case "StudentGender":
-                                setValue = (StudentGender)optionValue;
-                                break;
-                            case "ConcernType":
-                                setValue = (ConcernType)optionValue;
-                                break;
-                            case "ConcernFlag":
-                                setValue = (ConcernFlag)optionValue;
-                                break;
-                            default:
-                                setValue = Enum.Parse(dtoValueType, optionValue.ToString());
-                                break;
-                        }
+                        setValue = EnumExtensions.ToEnum(osv, dtoValueType);
                     }
                     else if (dtoValueType.IsEnum)
                     {
-                        _logger.WriteLog($"Entered PropertyType.IsEnum with dtoValueType: {dtoValueType.Name}");
-
-                        switch (dtoValueType.Name)
-                        {
-                            case "Campus":
-                                setValue = CampusResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "House":
-                                setValue = HouseResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "Gender":
-                                setValue = GenderResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "Status":
-                                setValue = StatusResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "StatusReason":
-                                setValue = StatusReasonResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            case "PayClaimFormStatusReason":
-                                setValue = PayClaimFormStatusReasonResolver.ToEnum(value.ToString() ?? "");
-                                break;
-                            default:
-                                setValue = Enum.Parse(dtoValueType, value.ToString() ?? "");
-                                break;
-                        }
+                        setValue = Enum.Parse(
+                            dtoValueType,
+                            value.ToString() ?? "",
+                            ignoreCase: true
+                        );
                     }
 
                     else if (value is OptionSetValue optionSetValue && dtoValueType == typeof(int))
@@ -185,31 +105,13 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
                     else if (value is OptionSetValue opsetvalue && dtoValueType == typeof(string))
                     {
-                        if (property.Name == "LinkTypeName")
+                        var enumTypeAttribute = property.GetCustomAttribute<EnumTypeAttribute>();
+                        if (enumTypeAttribute != null)
                         {
-                            setValue = LinkTypeResolver.ToLabel(opsetvalue.Value);
+                            setValue = opsetvalue.ToDescription(enumTypeAttribute.EnumType);
                         }
-                        else if (property.Name == "PayClaimFormStatusReasonLabel")
-                        {
-                            setValue = PayClaimFormStatusReasonResolver.ToLabel(opsetvalue.Value);
-                        }
-                        else if (property.Name == "RespondentTypeLabel")
-                        {
-                            setValue = RespondentTypeResolver.ToLabel(opsetvalue.Value);
-                        }
-                        else if (property.Name == "FormTypeLabel")
-                        {
-                            setValue = FormTypeResolver.ToLabel(opsetvalue.Value);
-                        }
-                        else if (property.Name == "StatusLabel")
-                        {
-                            setValue = StatusResolver.ToLabel(opsetvalue.Value);
-                        }
-                        else
-                        {
-                            setValue = opsetvalue.Value.ToString();
-                        }
-                    }
+                        
+                        setValue = opsetvalue.ToDescription(dtoValueType);                }
 
                     else if (dtoValueType == typeof(Guid))
                     {
@@ -277,7 +179,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
                         Nullable.GetUnderlyingType(property.PropertyType)
                         ?? property.PropertyType;
 
-                    object? value = ConvertValue(jsonValue, targetType);
+                    object? value = ValueConverter.FromJsonValue(jsonValue, targetType);
 
                     if (value != null)
                     {
@@ -293,67 +195,6 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             }
 
             return dto;
-        }
-
-        private static object? ConvertValue(
-            JsonElement value,
-            Type targetType)
-        {
-            if (value.ValueKind == JsonValueKind.Null)
-                return null;
-
-            if (targetType == typeof(string))
-                return value.GetString();
-
-            if (targetType == typeof(Guid))
-                return Guid.Parse(value.GetString()!);
-
-            if (targetType == typeof(int))
-                return value.GetInt32();
-
-            if (targetType == typeof(decimal))
-                return value.GetDecimal();
-
-            if (targetType == typeof(double))
-                return value.GetDouble();
-
-            if (targetType == typeof(bool))
-                return value.GetBoolean();
-
-            if (targetType == typeof(DateTime))
-            {
-                return value.ValueKind switch
-                {
-                    JsonValueKind.String =>
-                        DateTime.Parse(value.GetString()!),
-
-                    JsonValueKind.Number =>
-                        DateTimeOffset
-                            .FromUnixTimeMilliseconds(value.GetInt64())
-                            .DateTime,
-
-                    _ => null
-                };
-            }
-
-            if (targetType.IsEnum)
-            {
-                if (value.ValueKind == JsonValueKind.Number)
-                {
-                    var enumValue = value.GetInt32();
-                    return Enum.ToObject(targetType, enumValue);
-                }
-
-                return Enum.Parse(
-                    targetType,
-                    value.GetString()!,
-                    true);
-            }
-
-            return JsonSerializer.Deserialize(
-                value.GetRawText(),
-                targetType
-            );
         }
     }
 }

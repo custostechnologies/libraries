@@ -149,7 +149,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public int? TaskCategory { get; set; }
-
+        
+        [EnumType(typeof(TaskType))]
         [Notification(
             operationType: OperationType.Create,
             label: "Task Type",
@@ -165,7 +166,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? TaskType { get; set; }
+        public TaskType? TaskType { get; set; }
 
         [Notification(
             operationType: OperationType.Create,

@@ -28,6 +28,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.ActionToPreventFutureInjuries, srcType: typeof(string), trgName: null, trgType: null)]
         public string? ActionToPreventFutureInjuries { get; set; }
 
+        [EnumType(typeof(AdmittedToHospital))]
         [DataverseLink(srcName: SafetyIncidentFields.AdmittedToHospital, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public AdmittedToHospital? AdmittedToHospital { get; set; }
 
@@ -43,6 +44,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.AutoGenTitle, srcType: typeof(string), trgName: null, trgType: null)]
         public string? AutoGenTitle { get; set; }
 
+        [EnumType(typeof(IncidentCampus))]
         [Notification(operationType: OperationType.Create, label: "Campus", index: 4, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Campus", index: 4, false)]
         [DataverseLink(srcName: SafetyIncidentFields.Campus, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
@@ -105,6 +107,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.ImmediateCorrectiveActionTaken, srcType: typeof(string), trgName: null, trgType: null)]
         public string? ImmediateCorrectiveActionTaken { get; set; }
 
+        [EnumType(typeof(IncidentCategory))]
         [Notification(operationType: OperationType.Create, label: "Incident Category", index: 3, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Category", index: 3, false)]
         [DataverseLink(srcName: SafetyIncidentFields.IncidentCategory, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
@@ -115,9 +118,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.DateTimeOfIncident, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public DateTime? DateTimeOfIncident { get; set; }
 
+        [EnumType(typeof(IncidentTimeframe))]
         [DataverseLink(srcName: SafetyIncidentFields.IncidentTimeframe, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public IncidentTimeframe? IncidentTimeframe { get; set; }
 
+        [EnumType(typeof(IncidentType))]
         [Notification(operationType: OperationType.Create, label: "Incident Type", index: 2, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Type", index: 2, false)]
         [Notification(operationType: OperationType.SummaryNotification, label: "Type", index: 4, false)]
@@ -127,6 +132,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.InjuredPersonEmailAddress, srcType: typeof(string), trgName: null, trgType: null)]
         public string? InjuredPersonEmailAddress { get; set; }
 
+        [EnumType(typeof(InjuryBodyPart))]
         [DataverseLink(srcName: SafetyIncidentFields.InjuryBodyPart, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public InjuryBodyPart? InjuryBodyPart { get; set; }
 
@@ -136,6 +142,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.IsARTWProgramRequired, srcType: typeof(bool?), trgName: null, trgType: null)]
         public bool? IsARTWProgramRequired { get; set; }
 
+        [EnumType(typeof(Location))]
         [Notification(operationType: OperationType.Create, label: "Location", index: 5, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Location", index: 5, false)]
         [DataverseLink(srcName: SafetyIncidentFields.Location, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
@@ -171,14 +178,17 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.RecordClosedOn, srcType: typeof(DateTime?), trgName: null, trgType: null)]
         public DateTime? RecordClosedOn { get; set; }
 
+        [EnumType(typeof(RecordSource))]
         [Notification(operationType: OperationType.Create, label: "Source", index: 11, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Source", index: 11, false)]
         [DataverseLink(srcName: SafetyIncidentFields.RecordSource, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public RecordSource? RecordSource { get; set; }
 
+        [EnumType(typeof(RelevantSport))]
         [DataverseLink(srcName: SafetyIncidentFields.RelevantSport, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public RelevantSport? RelevantSport { get; set; }
 
+        [EnumType(typeof(ResponsePriority))]
         [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10, false)]
         [DataverseLink(srcName: SafetyIncidentFields.ResponsePriority, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public ResponsePriority? ResponsePriority { get; set; }
@@ -188,7 +198,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(srcName: SafetyIncidentFields.SchoolNurseDetails, srcType: typeof(string), trgName: null, trgType: null)]
         public string? SchoolNurseDetails { get; set; }
-
+        
+        [EnumType(typeof(SeverityLevel))]
         [Notification(operationType: OperationType.UpdateOwner, label: "Severity Classification", index: 9, false)]
         [DataverseLink(srcName: SafetyIncidentFields.SeverityClassification, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public SeverityLevel? SeverityClassification { get; set; }
@@ -207,6 +218,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.SubmitterName, srcType: typeof(string), trgName: null, trgType: null)]
         public string? SubmitterName { get; set; }
 
+        [EnumType(typeof(SubmitterPosition))]
         [DataverseLink(srcName: SafetyIncidentFields.SubmitterPosition, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public SubmitterPosition? SubmitterPosition { get; set; }
 
@@ -228,9 +240,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.TemporaryRecordId, srcType: typeof(string), trgName: null, trgType: null)]
         public string? TemporaryRecordId { get; set; }
 
+        [EnumType(typeof(Term))]
         [DataverseLink(srcName: SafetyIncidentFields.Term, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public Term? Term { get; set; }
 
+        [EnumType(typeof(InjuryType))]
         [DataverseLink(srcName: SafetyIncidentFields.TypeOfInjury, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
         public InjuryType? TypeOfInjury { get; set; }
 
@@ -272,6 +286,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [DataverseLink(srcName: SafetyIncidentFields.WereThereAnyWitnesses, srcType: typeof(bool?), trgName: null, trgType: null)]
         public bool? WereThereAnyWitnesses { get; set; }
 
+        [EnumType(typeof(InjuredPersonType))]
         [Notification(operationType: OperationType.Create, label: "Who Was Injured?", index: 13, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Who Was Injured?", index: 13, false)]
         [DataverseLink(srcName: SafetyIncidentFields.WhoWasInjured, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]

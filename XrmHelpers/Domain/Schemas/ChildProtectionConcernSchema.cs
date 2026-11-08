@@ -13,7 +13,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             ChildProtectionConcernFields.AutoGenTitle,
             ChildProtectionConcernFields.StudentType,
             ChildProtectionConcernFields.StudentName,
-            ChildProtectionConcernFields.ConcernType,
+            ChildProtectionConcernFields.ConcernTypes,
             ChildProtectionConcernFields.Flag,
             ChildProtectionConcernFields.SubmitterEmail,
             ChildProtectionConcernFields.SubmitterName,

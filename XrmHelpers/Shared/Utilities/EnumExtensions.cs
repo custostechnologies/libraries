@@ -29,13 +29,31 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
         {
             return Enum.ToObject(enumType, value.Value);
         }
+        public static string ToDescription(
+            this OptionSetValue value, 
+            Type enumType
+        )
+        {
+            var enumValue = (Enum)Enum.ToObject(enumType, value);
+            return enumValue.GetDescription();
+        }
+        public static string ToDescription(
+            this int value,
+            Type enumType
+        )
+        {
+            var enumValue = (Enum)Enum.ToObject(enumType, value);
+            return enumValue.GetDescription();
+        }
         public static string GetDescription(this Enum value)
         {
             var field = value.GetType().GetField(value.ToString());
+
             var attribute = field?
                 .GetCustomAttributes(typeof(DescriptionAttribute), false)
                 .Cast<DescriptionAttribute>()
                 .FirstOrDefault();
+                
             return attribute?.Description ?? value.ToString();
         }
     }
