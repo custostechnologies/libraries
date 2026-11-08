@@ -19,10 +19,10 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         public override string SourceEntityLogicalName => EntityLogicalNames.ChildProtectionConcern;
         [DataverseLink(
-    srcName: SynStaffMemberFields.ForcePlugin,
-    srcType: typeof(DateTime?),
-    trgName: SynStaffMemberFields.ForcePlugin,
-    trgType: typeof(DateTime?))]
+            srcName: SynStaffMemberFields.ForcePlugin,
+            srcType: typeof(DateTime?),
+            trgName: SynStaffMemberFields.ForcePlugin,
+            trgType: typeof(DateTime?))]
         public override DateTime? ForcePlugin { get; set; } = null;
 
         [IgnoreOnCreate]
@@ -32,6 +32,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: null,
             trgType: null)]
         public Guid ChildProtectionConcernId { get; set; }
+        public override Guid EntityId { get => ChildProtectionConcernId; set => ChildProtectionConcernId = value; }
 
         [DataverseLink(
             srcName: ChildProtectionConcernFields.AttachmentId,
