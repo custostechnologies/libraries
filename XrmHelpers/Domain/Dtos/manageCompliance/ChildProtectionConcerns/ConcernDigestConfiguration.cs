@@ -8,7 +8,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public string Description => "Weekly Concern Summary";
         public IReadOnlyCollection<IDigestMetricProvider<ChildProtectionConcernDto>> Metrics =>
         [
-            new OpenRecordsMetricProvider<ChildProtectionConcernDto>()
+            new OpenRecordsMetricProvider<ChildProtectionConcernDto>(),
+            new ConcernStudentTypeMetricProvider<ChildProtectionConcernDto>()
         ];
     }
 }

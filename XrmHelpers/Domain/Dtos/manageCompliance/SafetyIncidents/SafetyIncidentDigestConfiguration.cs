@@ -8,7 +8,9 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         public string Description => "Weekly Incident Summary";
         public IReadOnlyCollection<IDigestMetricProvider<SafetyIncidentDto>> Metrics =>
         [
-            new OpenRecordsMetricProvider<SafetyIncidentDto>()
+            new OpenRecordsMetricProvider<SafetyIncidentDto>(),
+            new PersonTypeMetricProvider<SafetyIncidentDto>(),
+            new IncidentTypeMetricProvider<SafetyIncidentDto>()
         ];
     }
 }
