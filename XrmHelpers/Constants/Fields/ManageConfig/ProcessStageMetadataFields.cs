@@ -20,7 +20,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string ModifiedOn = "modifiedon";
 
         public const string Name = "pgrowth_name";
-
+        public const string StageIdx = "pgrowth_stageidx";
         public const string Owner = "ownerid";
         public const string OwningBusinessUnit = "owningbusinessunit";
         public const string OwningTeam = "owningteam";
