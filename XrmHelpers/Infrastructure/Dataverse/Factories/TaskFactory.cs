@@ -20,7 +20,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
         }
         public void Build(
             TaskBaseDto baseDto,
-            OrganizationRequestCollection organizationRequests
+            OrganizationRequestCollection organizationRequests,
+            EntityReference owner
         )
         {
             try
@@ -37,15 +38,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
                     RegardingLogicalName = baseDto.RegardingEntityLogicalName,
                     TaskType = baseDto.TaskType,
                     Priority = TaskPriority.Medium,
-                    DueDate = nextDueDate
-                    // owner
+                    DueDate = nextDueDate,
+                    Owner = owner
                 };
-
-                var baseUpdate = baseDto.GetReviewMetadataUpdate();
-                organizationRequests.Add(
-                    new UpdateRequest { Target = baseUpdate }
-                );
-                _logger.WriteLog($"Created base record update with logicalName = {baseUpdate.LogicalName} and id = {baseUpdate.Id} and added to EntityCollection");
 
                 var task = _dataverseMapper.MapToTarget(taskDto);
                 organizationRequests.Add(
