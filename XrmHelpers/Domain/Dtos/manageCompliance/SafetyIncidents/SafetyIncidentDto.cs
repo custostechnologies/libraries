@@ -417,11 +417,11 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [EnumType(typeof(RelevantSport))]
         [DataverseLink(
             srcName: SafetyIncidentFields.RelevantSport,
-            srcType: typeof(OptionSetValue),
+            srcType: typeof(OptionSetValueCollection),
             trgName: SafetyIncidentFields.RelevantSport,
-            trgType: typeof(OptionSetValue)
+            trgType: typeof(OptionSetValueCollection)
         )]
-        public RelevantSport? RelevantSport { get; set; }
+        public RelevantSport[]? RelevantSport { get; set; }
 
         [EnumType(typeof(ResponsePriority))]
         [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10, false)]
