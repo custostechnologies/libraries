@@ -60,6 +60,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 services.AddScoped<ChildProtectionConcerns>();
                 services.AddScoped<CoreStudents>();
                 services.AddScoped<AutoNumberCounters>();
+                services.AddScoped<ComplianceItems>();
 
                 // add notification service registrations
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
@@ -85,6 +86,9 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Services
                 // workers comp claim factory
                 services.AddScoped<WorkersCompFactory>();
                 services.AddScoped<IActivityLinkService, ActivityLinkService>();
+
+                // task factory
+                services.AddScoped<Dataverse.Factories.TaskFactory>();
 
                 // add mappers
                 services.AddTransient<SynJobPositionMapper>();
