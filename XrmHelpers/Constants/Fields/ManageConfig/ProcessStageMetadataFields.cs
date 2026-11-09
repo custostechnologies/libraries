@@ -18,7 +18,7 @@ namespace spgsWebTools.XrmHelpers.Constants
         public const string ModifiedBy = "modifiedby";
         public const string ModifiedByDelegate = "modifiedonbehalfby";
         public const string ModifiedOn = "modifiedon";
-
+        public const string ConditionExpression = "pgrowth_conditionexpression";
         public const string Name = "pgrowth_name";
         public const string StageIdx = "pgrowth_stageidx";
         public const string Owner = "ownerid";

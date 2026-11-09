@@ -5,6 +5,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
 using spgsWebTools.XrmHelpers.Constants;
+using spgsWebTools.XrmHelpers.Domain.Enums;
 using spgsWebTools.XrmHelpers.Domain.Schemas;
 using spgsWebTools.XrmHelpers.Shared.Utilities;
 
@@ -61,7 +62,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 throw new InvalidPluginExecutionException($"Unable to resolve Guid for Management Process Configuration record with key: {safeKey}");
             }
         }
-        public EntityReference GetStageRef(EntityReference parentRef, int stageIdx)
+        public EntityReference GetStageRef(EntityReference parentRef, string stageKey)
         {
             _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME}");
 
@@ -79,9 +80,13 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                                 parentRef.Id
                             ),
                             new ConditionExpression(
-                                ProcessStageMetadataFields.Index,
+                                ProcessStageMetadataFields.StageKey,
                                 ConditionOperator.Equal,
-                                stageIdx
+                                stageKey
+                            ),
+                            new ConditionExpression(
+                                ProcessStageMetadataFields.Status,
+                                (int)Status.Active
                             )
                         }
                     }
@@ -102,7 +107,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 throw new InvalidPluginExecutionException(
-                    $"Unable to resolve AssignedTeam for Process Stage with parent ID: {parentRef.Id}, stageIdx: {stageIdx}"
+                    $"Unable to resolve AssignedTeam for Process Stage with parent ID: {parentRef.Id}, stageKey: {stageKey}"
                 );
             }
         }
@@ -129,6 +134,36 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 var idx = stage.GetAttributeValue<string>("pgrowth_stageidx");
                 _logger.WriteLog($"Returning idx {idx} to caller");
                 return Guid.Parse(idx);
+            }
+        }
+        public Entity? GetProcessStageMetadata(EntityReference metadataStageRef)
+        {
+            _logger.WriteLog($"Retrieving GetProcessStageId from {ENTITY_LOGICAL_NAME}");
+
+            _logger.WriteLog($"metadataStageRef id: {metadataStageRef.Id}, logicalName: {metadataStageRef.LogicalName}");
+
+            var stage = _context.Runtime.UserService.Retrieve(
+                metadataStageRef.LogicalName,
+                metadataStageRef.Id,
+                new ColumnSet(
+                    ProcessStageMetadataFields.StageIdx,
+                    ProcessStageMetadataFields.StageKey,
+                    ProcessStageMetadataFields.ParentBusinessProcessFlow,
+                    ProcessStageMetadataFields.ConditionExpression,
+                    ProcessStageMetadataFields.Index
+                )
+            );
+
+            _logger.WriteLog("Finished retrieval, interpreting results...");
+
+            if (stage == null)
+            {
+                throw new InvalidPluginExecutionException($"Unable to retrieve metadata stage.");
+            }
+            else
+            {
+                _logger.WriteLog($"Returning stage entity with id {stage.Id} to caller");
+                return stage;
             }
         }
         public EntityReference GetAssignedTeam(EntityReference stageRef)
