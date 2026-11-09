@@ -15,7 +15,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
     {
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
-        private readonly string ENTITY_LOGICAL_NAME = "pgrowth_processstagemetadata";
+        private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.ProcessStageMetadata;
         public ProcessStageMetadata(IDataverseContext context, IDataverseLoggerFactory loggerFactory)
         {
             _context = context;
@@ -86,6 +86,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                             ),
                             new ConditionExpression(
                                 ProcessStageMetadataFields.Status,
+                                ConditionOperator.Equal,
                                 (int)Status.Active
                             )
                         }
@@ -164,6 +165,49 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             {
                 _logger.WriteLog($"Returning stage entity with id {stage.Id} to caller");
                 return stage;
+            }
+        }
+        public Entity? GetProcessStageMetadata(Guid processStageId)
+        {
+            _logger.WriteLog($"Retrieving GetProcessStageMetadata from {ENTITY_LOGICAL_NAME}");
+
+            _logger.WriteLog($"processStageId: {processStageId}");
+
+            QueryExpression query = new QueryExpression(EntityLogicalNames.ProcessStageMetadata)
+            {
+                TopCount = 1,
+                ColumnSet = new ColumnSet(
+                    ProcessStageMetadataFields.StageIdx,
+                    ProcessStageMetadataFields.StageKey,
+                    ProcessStageMetadataFields.ParentBusinessProcessFlow,
+                    ProcessStageMetadataFields.ConditionExpression,
+                    ProcessStageMetadataFields.Index
+                ),
+                Criteria =
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression(
+                            ProcessStageMetadataFields.StageIdx,
+                            ConditionOperator.Equal,
+                            processStageId.ToString()
+                        )
+                    }
+                }
+            };
+
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
+            _logger.WriteLog("Finished retrieval, interpreting results...");
+
+            if (results.Entities.Count == 0)
+            {
+                throw new InvalidPluginExecutionException($"Unable to retrieve metadata stage.");
+            }
+            else
+            {
+                var entity = results.Entities[0];
+                _logger.WriteLog($"Returning metadata for entity with id {entity.Id} to caller");
+                return entity;
             }
         }
         public EntityReference GetAssignedTeam(EntityReference stageRef)
