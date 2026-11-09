@@ -133,8 +133,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public string? InjuredPersonEmailAddress { get; set; }
 
         [EnumType(typeof(InjuryBodyPart))]
-        [DataverseLink(srcName: SafetyIncidentFields.InjuryBodyPart, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public InjuryBodyPart? InjuryBodyPart { get; set; }
+        [DataverseLink(
+            srcName: SafetyIncidentFields.InjuryBodyPart, 
+            srcType: typeof(OptionSetValueCollection), 
+            trgName: SafetyIncidentFields.InjuryBodyPart, 
+            trgType: typeof(OptionSetValueCollection))]
+        public InjuryBodyPart[]? InjuryBodyPart { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.InvestigationOfInjuryIncident, srcType: typeof(string), trgName: null, trgType: null)]
         public string? InvestigationOfInjuryIncident { get; set; }
@@ -245,8 +249,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         public Term? Term { get; set; }
 
         [EnumType(typeof(InjuryType))]
-        [DataverseLink(srcName: SafetyIncidentFields.TypeOfInjury, srcType: typeof(OptionSetValue), trgName: null, trgType: null)]
-        public InjuryType? TypeOfInjury { get; set; }
+        [DataverseLink(
+            srcName: SafetyIncidentFields.TypeOfInjury, 
+            srcType: typeof(OptionSetValueCollection), 
+            trgName: SafetyIncidentFields.TypeOfInjury, 
+            trgType: typeof(OptionSetValueCollection))]
+        public InjuryType[]? TypeOfInjury { get; set; }
 
         [DataverseLink(srcName: SafetyIncidentFields.WasAGovtAgencyNotified, srcType: typeof(bool?), trgName: null, trgType: null)]
         public bool? WasAGovtAgencyNotified { get; set; }
