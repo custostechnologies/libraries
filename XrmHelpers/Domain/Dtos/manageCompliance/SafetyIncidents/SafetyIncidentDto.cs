@@ -251,7 +251,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: SafetyIncidentFields.IncidentCategory,
             trgType: typeof(OptionSetValue)
         )]
-        public IncidentCategory? IncidentCategory { get; set; }
+        public IncidentCategory IncidentCategory { get; set; }
 
         [Notification(operationType: OperationType.Create, label: "Incident Date/Time", index: 1, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Incident Date/Time", index: 1, false)]
@@ -282,7 +282,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: SafetyIncidentFields.IncidentType,
             trgType: typeof(OptionSetValue)
         )]
-        public IncidentType? IncidentType { get; set; }
+        public IncidentType IncidentType { get; set; }
 
         [DataverseLink(
             srcName: SafetyIncidentFields.InjuredPersonEmailAddress,
@@ -431,7 +431,26 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: SafetyIncidentFields.ResponsePriority,
             trgType: typeof(OptionSetValue)
         )]
-        public ResponsePriority? ResponsePriority { get; set; }
+        public ResponsePriority IncidentResponsePriority
+        {
+            get
+            {
+                switch (SeverityClassification)
+                {
+                    case IncidentSeverity.Negligible:
+                    case IncidentSeverity.Low:
+                        return ResponsePriority.Routine;
+                    case IncidentSeverity.Medium:
+                        return ResponsePriority.Priority;
+                    case IncidentSeverity.High:
+                        return ResponsePriority.Urgent;
+                    case IncidentSeverity.Critical:
+                        return ResponsePriority.Immediate;
+                    default:
+                        return ResponsePriority.Routine;
+                }
+            }
+        }
 
         [DataverseLink(
             srcName: SafetyIncidentFields.SafetyManagerNotified,
@@ -457,7 +476,30 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgName: SafetyIncidentFields.SeverityClassification,
             trgType: typeof(OptionSetValue)
         )]
-        public SeverityLevel? SeverityClassification { get; set; }
+        public IncidentSeverity SeverityClassification
+        {
+            get
+            {
+                var output = IncidentExtensions.SeverityScore(
+                    IncidentType,
+                    AmbulanceCalled,
+                    AdmittedToHospital ?? Enums.AdmittedToHospital.No,
+                    DidInjuryResultInALossOfTime,
+                    IncidentCategory,
+                    InjuryBodyPart,
+                    TypeOfInjury
+                );
+
+                var score = output.severityScore;
+                var message = output.logMessage;
+
+                if (score < 3) return IncidentSeverity.Negligible;
+                else if (score >= 3 && score < 8 ) return IncidentSeverity.Low;
+                else if (score >= 8 && score < 12 ) return IncidentSeverity.Medium;
+                else if (score >= 12 && score < 15 ) return IncidentSeverity.High;
+                else return IncidentSeverity.Critical;
+            }
+        }
 
         [DataverseLink(
             srcName: SafetyIncidentFields.StatusV2,

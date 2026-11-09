@@ -2,6 +2,8 @@ using System.ComponentModel;
 
 using Microsoft.Xrm.Sdk;
 
+using spgsWebTools.XrmHelpers.Domain.Attributes;
+
 namespace spgsWebTools.XrmHelpers.Shared.Utilities
 {
     public static class EnumExtensions
@@ -55,6 +57,17 @@ namespace spgsWebTools.XrmHelpers.Shared.Utilities
                 .FirstOrDefault();
                 
             return attribute?.Description ?? value.ToString();
+        }
+        public static int GetSeverityFactor(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+
+            var attribute = field?
+                .GetCustomAttributes(typeof(SeverityFactorAttribute), false)
+                .Cast<SeverityFactorAttribute>()
+                .FirstOrDefault();
+                
+            return attribute?.Factor ?? 0;
         }
     }
 }

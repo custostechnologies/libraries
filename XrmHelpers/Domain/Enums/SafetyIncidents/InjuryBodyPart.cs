@@ -1,15 +1,20 @@
 using System.ComponentModel;
 
+using spgsWebTools.XrmHelpers.Domain.Attributes;
+
 namespace spgsWebTools.XrmHelpers.Domain.Enums
 {
     public enum InjuryBodyPart
     {
+        [SeverityFactor(5)]
         [Description("Head")]
         Head = 311940000,
         [Description("Scalp")]
         Scalp = 311940001,
         [Description("Ears")]
         Ears = 311940002,
+
+        [SeverityFactor(2)]
         [Description("Eyes")]
         Eyes = 311940003,
         [Description("Nose")]
@@ -19,6 +24,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Enums
         [Description("Teeth")]
         Teeth = 311940006,
         [Description("Tongue")]
+
+        [SeverityFactor(4)]
         Tongue = 311940007,
         [Description("Neck")]
         Neck = 311940008,
