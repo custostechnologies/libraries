@@ -65,6 +65,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         public EntityReference GetStageRef(EntityReference parentRef, string stageKey)
         {
             _logger.WriteLog($"Building query expression on {ENTITY_LOGICAL_NAME}");
+            _logger.WriteLog($"Executing GetStageRef with parentRef logicalName: {parentRef.LogicalName}, id: {parentRef.Id} and stageKey: {stageKey}");
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -213,6 +214,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
         public EntityReference GetAssignedTeam(EntityReference stageRef)
         {
             _logger.WriteLog($"Building GetAssignedTeam query expression on {ENTITY_LOGICAL_NAME}");
+            _logger.WriteLog($"stageRef logicalName: {stageRef.LogicalName}, id: {stageRef.Id}");
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -254,7 +256,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 throw new InvalidPluginExecutionException(
-                    $"Unable to resolve AssignedTeam for Process Stage with ID: {stageRef.Id}"
+                    $"Unable to resolve AssignedTeam for Process Stage with ID: {stageRef.Id}, query returned {results.Entities.Count} entities."
                 );
             }
         }
