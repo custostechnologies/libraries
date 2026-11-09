@@ -54,7 +54,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
 
         [DataverseLink(
             srcName: SafetyIncidentFields.AmbulanceCalled,
-            srcType: typeof(bool?),
+            srcType: typeof(bool),
             trgName: SafetyIncidentFields.AmbulanceCalled,
             trgType: typeof(bool)
         )]
@@ -426,31 +426,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [EnumType(typeof(ResponsePriority))]
         [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10, false)]
         [DataverseLink(
-            srcName: SafetyIncidentFields.ResponsePriority,
-            srcType: typeof(OptionSetValue),
+            srcName: null,
+            srcType: null,
             trgName: SafetyIncidentFields.ResponsePriority,
             trgType: typeof(OptionSetValue)
         )]
-        public ResponsePriority IncidentResponsePriority
-        {
-            get
-            {
-                switch (SeverityClassification)
-                {
-                    case IncidentSeverity.Negligible:
-                    case IncidentSeverity.Low:
-                        return ResponsePriority.Routine;
-                    case IncidentSeverity.Medium:
-                        return ResponsePriority.Priority;
-                    case IncidentSeverity.High:
-                        return ResponsePriority.Urgent;
-                    case IncidentSeverity.Critical:
-                        return ResponsePriority.Immediate;
-                    default:
-                        return ResponsePriority.Routine;
-                }
-            }
-        }
+        public ResponsePriority IncidentResponsePriority => DetermineResponsePriority();
 
         [DataverseLink(
             srcName: SafetyIncidentFields.SafetyManagerNotified,
@@ -471,35 +452,12 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
         [EnumType(typeof(SeverityLevel))]
         [Notification(operationType: OperationType.UpdateOwner, label: "Severity Classification", index: 9, false)]
         [DataverseLink(
-            srcName: SafetyIncidentFields.SeverityClassification,
-            srcType: typeof(OptionSetValue),
+            srcName: null,
+            srcType: null,
             trgName: SafetyIncidentFields.SeverityClassification,
             trgType: typeof(OptionSetValue)
         )]
-        public IncidentSeverity SeverityClassification
-        {
-            get
-            {
-                var output = IncidentExtensions.SeverityScore(
-                    IncidentType,
-                    AmbulanceCalled,
-                    AdmittedToHospital ?? Enums.AdmittedToHospital.No,
-                    DidInjuryResultInALossOfTime,
-                    IncidentCategory,
-                    InjuryBodyPart,
-                    TypeOfInjury
-                );
-
-                var score = output.severityScore;
-                var message = output.logMessage;
-
-                if (score < 3) return IncidentSeverity.Negligible;
-                else if (score >= 3 && score < 8 ) return IncidentSeverity.Low;
-                else if (score >= 8 && score < 12 ) return IncidentSeverity.Medium;
-                else if (score >= 12 && score < 15 ) return IncidentSeverity.High;
-                else return IncidentSeverity.Critical;
-            }
-        }
+        public IncidentSeverity SeverityClassification => DetermineIncidentSeverity();
 
         [DataverseLink(
             srcName: SafetyIncidentFields.StatusV2,
@@ -756,6 +714,44 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
                 entityLogicalName,
                 entityId,
                 targetAppDisplayName);
+        }
+        private ResponsePriority DetermineResponsePriority()
+        {
+            switch (SeverityClassification)
+            {
+                case IncidentSeverity.Negligible:
+                case IncidentSeverity.Low:
+                    return ResponsePriority.Routine;
+                case IncidentSeverity.Medium:
+                    return ResponsePriority.Priority;
+                case IncidentSeverity.High:
+                    return ResponsePriority.Urgent;
+                case IncidentSeverity.Critical:
+                    return ResponsePriority.Immediate;
+                default:
+                    return ResponsePriority.Routine;
+            }
+        }
+        private IncidentSeverity DetermineIncidentSeverity()
+        {
+            var output = IncidentExtensions.SeverityScore(
+                IncidentType,
+                AmbulanceCalled,
+                AdmittedToHospital ?? Enums.AdmittedToHospital.No,
+                DidInjuryResultInALossOfTime,
+                IncidentCategory,
+                InjuryBodyPart,
+                TypeOfInjury
+            );
+
+            var score = output.severityScore;
+            var message = output.logMessage;
+
+            if (score < 3) return IncidentSeverity.Negligible;
+            if (score < 8 ) return IncidentSeverity.Low;
+            if (score < 12 ) return IncidentSeverity.Medium;
+            if (score < 15 ) return IncidentSeverity.High;
+            return IncidentSeverity.Critical;
         }
     }
 }

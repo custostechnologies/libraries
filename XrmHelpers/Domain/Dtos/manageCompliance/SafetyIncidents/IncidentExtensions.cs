@@ -46,7 +46,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
                 }
             }
 
-            score =+ categoryFactor + bodyPartFactor + injuryTypeFactor; 
+            score += categoryFactor + bodyPartFactor + injuryTypeFactor; 
             var message = 
                 $"SeverityScore components: " + 
                 $"incidentType: {(incidentType == IncidentType.ResultingInInjury ? "+1" : "+0")}" +
