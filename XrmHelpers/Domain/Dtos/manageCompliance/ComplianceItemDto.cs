@@ -9,7 +9,7 @@ using spgsWebTools.XrmHelpers.Shared.Utilities;
 public class ComplianceItemDto : TaskBaseDto
 {
     public ComplianceItemDto() : base() { }
-    protected override string RegardingEntityLogicalName =>
+    public override string RegardingEntityLogicalName =>
         EntityLogicalNames.ComplianceItem;
     protected override string NextDueDateName =>
         ComplianceItemFields.NextDueDate;
@@ -17,7 +17,7 @@ public class ComplianceItemDto : TaskBaseDto
         ComplianceItemFields.NextReviewDate;
     protected override string PreviousReviewDateName =>
         ComplianceItemFields.PreviousReviewDate;
-    protected override TaskType TaskType =>
+    public override TaskType TaskType =>
         ChildTaskType ?? TaskType.ComplianceAction;
 
     [IgnoreOnCreate]
