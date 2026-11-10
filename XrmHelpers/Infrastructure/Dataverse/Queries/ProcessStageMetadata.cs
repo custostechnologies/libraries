@@ -152,7 +152,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     ProcessStageMetadataFields.StageKey,
                     ProcessStageMetadataFields.ParentBusinessProcessFlow,
                     ProcessStageMetadataFields.ConditionExpression,
-                    ProcessStageMetadataFields.Index
+                    ProcessStageMetadataFields.Index,
+                    ProcessStageMetadataFields.AssignedTeam
                 )
             );
 
@@ -182,7 +183,8 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                     ProcessStageMetadataFields.StageKey,
                     ProcessStageMetadataFields.ParentBusinessProcessFlow,
                     ProcessStageMetadataFields.ConditionExpression,
-                    ProcessStageMetadataFields.Index
+                    ProcessStageMetadataFields.Index,
+                    ProcessStageMetadataFields.AssignedTeam
                 ),
                 Criteria =
                 {
@@ -211,10 +213,10 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                 return entity;
             }
         }
-        public EntityReference GetAssignedTeam(EntityReference stageRef)
+        public EntityReference GetAssignedTeam(EntityReference processStageRef)
         {
-            _logger.WriteLog($"Building GetAssignedTeam query expression on {ENTITY_LOGICAL_NAME}");
-            _logger.WriteLog($"stageRef logicalName: {stageRef.LogicalName}, id: {stageRef.Id}");
+            _logger.WriteLog($"Building GetAssignedTeam query expression on {ENTITY_LOGICAL_NAME} using processStageRef");
+            _logger.WriteLog($"processStageRef logicalName: {processStageRef.LogicalName}, id: {processStageRef.Id}");
 
             var query = new QueryExpression(ENTITY_LOGICAL_NAME)
             {
@@ -227,7 +229,7 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
                             new ConditionExpression(
                                 ProcessStageMetadataFields.StageIdx,
                                 ConditionOperator.Equal,
-                                stageRef.Id.ToString()
+                                processStageRef.Id.ToString()
                             )
                         }
                     }
@@ -256,7 +258,56 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
             else
             {
                 throw new InvalidPluginExecutionException(
-                    $"Unable to resolve AssignedTeam for Process Stage with ID: {stageRef.Id}, query returned {results.Entities.Count} entities."
+                    $"Unable to resolve AssignedTeam for Process Stage with ID: {processStageRef.Id}, query returned {results.Entities.Count} entities."
+                );
+            }
+        }
+        public EntityReference GetAssignedTeam(Guid processStageMetadataId)
+        {
+            _logger.WriteLog($"Building GetAssignedTeam query expression on {ENTITY_LOGICAL_NAME}");
+            _logger.WriteLog($"processStageMetadataId: {processStageMetadataId}");
+
+            var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+            {
+                TopCount = 1,
+                ColumnSet = new ColumnSet(ProcessStageMetadataFields.ParentBusinessProcessFlow, ProcessStageMetadataFields.AssignedTeam),
+                Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                ProcessStageMetadataFields.ProcessStageMetadataId,
+                                ConditionOperator.Equal,
+                                processStageMetadataId
+                            )
+                        }
+                    }
+            };
+
+            _logger.WriteLog($"Executing query expression on {ENTITY_LOGICAL_NAME}");
+
+            var results = _context.Runtime.UserService.RetrieveMultiple(query);
+
+            _logger.WriteLog("Finished executing query expression, interpreting results...");
+
+            if (results.Entities.Count > 0)
+            {
+                _logger.WriteLog($"{results.Entities.Count} entities returned. Returning results.Entities[0].teamRef.");
+
+                var teamRef = results.Entities[0].GetAttributeValue<EntityReference>(ProcessStageMetadataFields.AssignedTeam);
+                if (teamRef == null)
+                {
+                    throw new InvalidPluginExecutionException(
+                        $"Process Stage Metadata record {results.Entities[0].Id} has no assigned team."
+                    );
+                }
+
+                return teamRef;
+            }
+            else
+            {
+                throw new InvalidPluginExecutionException(
+                    $"Unable to resolve AssignedTeam for Process Stage Metadata row with ID: {processStageMetadataId}, query returned {results.Entities.Count} entities."
                 );
             }
         }

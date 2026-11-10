@@ -16,6 +16,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Schemas
             SafetyIncidentFields.DateTimeOfIncident,
             SafetyIncidentFields.IncidentCategory,
             SafetyIncidentFields.IncidentTimeframe,
+            SafetyIncidentFields.SubmitterName,
+            SafetyIncidentFields.CommunityId,
             SafetyIncidentFields.NameOfInjuredPerson,
             SafetyIncidentFields.SubmitterEmail,
             SafetyIncidentFields.SubmitterPosition,
