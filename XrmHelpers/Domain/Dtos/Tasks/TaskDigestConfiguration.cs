@@ -10,7 +10,8 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
         [
             new OpenRecordsMetricProvider<TaskDto>(),
             new OverdueTaskMetricProvider<TaskDto>(),
-            new TaskTypeMetricProvider<TaskDto>()
+            new TaskTypeMetricProvider<TaskDto>(),
+            new TaskStatusReasonMetricProvider<TaskDto>()
         ];
     }
 }

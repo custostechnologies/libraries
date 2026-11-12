@@ -232,6 +232,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             trgType: null)]
         public EntityReference? Student { get; set; }
 
+        [IgnoreOnCreate]
         [DataverseReference(
             targetEntity: EntityLogicalNames.CoreStudent
         )]
@@ -240,7 +241,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(EntityReference),
             trgName: ChildProtectionConcernFields.CoreStudent,
             trgType: typeof(EntityReference))]
-        public Guid CoreStudentId { get; set; }
+        public Guid? CoreStudentId { get; set; }
 
         [DataverseLink(
             srcName: ChildProtectionConcernFields.CoreStudent,

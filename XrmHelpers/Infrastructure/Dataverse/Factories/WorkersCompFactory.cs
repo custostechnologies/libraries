@@ -57,14 +57,14 @@ namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
             var staffId = incidentDto.CommunityId;
             var staffEmail = incidentDto.InjuredPersonEmailAddress;
 
-            if (staffId == null && string.IsNullOrWhiteSpace(staffEmail))
+            if (staffId == 0 && string.IsNullOrWhiteSpace(staffEmail))
             {
                 throw new InvalidPluginExecutionException("StaffID and StaffEmail are null, unable to resolve staff member to create a claim.");
             }
 
             _logger.WriteLog($"Retrieving staff member metadata for StaffID: {staffId}, StaffEmail: {staffEmail}");
-            var staffMemberMetadata = staffId != null
-                ? _coreStaffMemberQuery.GetMetadataByStaffId((int)staffId)
+            var staffMemberMetadata = staffId != 0
+                ? _coreStaffMemberQuery.GetMetadataByStaffId(staffId)
                 : _coreStaffMemberQuery.GetMetadataByOrgEmail(staffEmail!);
 
             if (staffMemberMetadata == null || staffMemberMetadata.User == null)

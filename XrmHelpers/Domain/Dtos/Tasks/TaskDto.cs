@@ -119,7 +119,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: null,
             trgType: null)]
-        public int? StatusReason { get; set; }
+        public ActivityStatusReason? StatusReason { get; set; }
 
         [Notification(
             operationType: OperationType.UpdateOwner,

@@ -56,4 +56,38 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             return metrics;
         }
     }
+    public sealed class TaskStatusReasonMetricProvider<TDto> : IDigestMetricProvider<TDto> where TDto : TaskDto
+    {
+        public List<DigestMetric> BuildMetric(IReadOnlyCollection<TDto> records)
+        {
+            List<DigestMetric> metrics = new List<DigestMetric>();
+            var groups = records
+                .GroupBy(
+                    dto =>
+                    {
+                        if (dto.StatusReason != null)
+                        {
+                            return ((ActivityStatusReason)dto.StatusReason).ToString();
+                        } else
+                        {
+                            return Status.Active.ToString();
+                        }
+                    }
+                )
+                .ToList();
+
+            foreach (var group in groups)
+            {
+                metrics.Add(
+                    new DigestMetric
+                    {
+                        Label = $"Total for status '{group.Key}'",
+                        Value = group.Count().ToString()
+                    }
+                );
+            }
+
+            return metrics;
+        }
+    }
 }

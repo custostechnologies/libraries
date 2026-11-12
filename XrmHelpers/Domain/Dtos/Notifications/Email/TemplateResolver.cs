@@ -29,6 +29,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.CloseRecord, "closeChildProtectionConcern") },
             { new EmailTemplate(typeof(ChildProtectionConcernDto), OperationType.SummaryNotification, "childProtectionConcernDigest") },
             { new EmailTemplate(typeof(TaskDto), OperationType.UpdateOwner, "newTaskAssigned") },
+            { new EmailTemplate(typeof(TaskDto), OperationType.UpdateOwner, "newTaskAssigned") },
             { new EmailTemplate(typeof(TaskDto), OperationType.SummaryNotification, "taskDigest") },
             { new EmailTemplate(typeof(WorkersCompensationClaimDto), OperationType.UpdateOwner, "newWorkersCompensationClaimAssigned") },
         };
