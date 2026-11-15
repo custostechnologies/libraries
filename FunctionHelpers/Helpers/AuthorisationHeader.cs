@@ -4,7 +4,7 @@ using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Azure.Functions.Worker.Http;
 
-namespace custos.FunctionHelpers.Utilities
+namespace Custos.FunctionHelpers.Utilities
 {
     public static class AuthorisationHeader
     {

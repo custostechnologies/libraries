@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Serialisation;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Serialisation;
 
-namespace custos.XrmHelpers
+namespace Custos.XrmHelpers
 {
     public static class ServiceCollectionExtensions
     {

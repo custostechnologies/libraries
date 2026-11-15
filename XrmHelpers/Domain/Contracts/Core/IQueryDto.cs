@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Enums;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public interface IQueryDto
     {

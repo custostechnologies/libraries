@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     public class PayClaimFormDto : IValidationMetadata, IQueryDto
     {

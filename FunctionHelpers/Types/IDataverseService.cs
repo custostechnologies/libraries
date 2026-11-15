@@ -1,7 +1,7 @@
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 using Microsoft.PowerPlatform.Dataverse.Client;
 
-namespace custos.FunctionHelpers.Types
+namespace Custos.FunctionHelpers.Types
 {
     public interface IDataverseService
     {

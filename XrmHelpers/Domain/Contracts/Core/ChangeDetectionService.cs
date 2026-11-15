@@ -1,10 +1,10 @@
 using System.Reflection;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Services;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Services;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class ChangeDetectionService<TDto> : IChangeDetectionService<TDto> where TDto : IDto
     {

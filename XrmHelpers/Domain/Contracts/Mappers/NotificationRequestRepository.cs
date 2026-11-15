@@ -1,12 +1,12 @@
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
 using Microsoft.Xrm.Sdk;
 using System.Reflection;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationRequestRepository : INotificationRequestRepository
     {

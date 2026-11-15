@@ -1,8 +1,8 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.Infrastructure.Dataverse
+namespace Custos.Infrastructure.Dataverse
 {
     public class GetEnvironmentMetadata {
         public static Guid Id(IPluginExecutionContext context)

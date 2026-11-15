@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Shared.Hashing
+namespace Custos.XrmHelpers.Shared.Hashing
 {
     /// <summary>
     /// 

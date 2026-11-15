@@ -20,7 +20,7 @@
     <PackageReference Include="Microsoft.Identity.Client" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-    <!-- <PackageReference Include="custos.XrmHelpers" /> -->
+    <!-- <PackageReference Include="Custos.XrmHelpers" /> -->
   </ItemGroup>
 
   <ItemGroup>

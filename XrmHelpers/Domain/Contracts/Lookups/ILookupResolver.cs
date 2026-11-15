@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk.Query;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public interface ILookupResolver<TKey>
     {

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class LookupMetadataRequest
     {

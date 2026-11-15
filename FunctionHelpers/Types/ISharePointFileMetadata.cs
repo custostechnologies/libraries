@@ -1,6 +1,6 @@
 using System;
 
-namespace custos.FunctionHelpers.Types
+namespace Custos.FunctionHelpers.Types
 {
     interface ISharePointFileMetadata
     {

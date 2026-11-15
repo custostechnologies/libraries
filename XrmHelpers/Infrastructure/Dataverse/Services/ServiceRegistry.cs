@@ -4,21 +4,21 @@ using Microsoft.Xrm.Sdk.PluginTelemetry;
 using System;
 using System.Runtime.CompilerServices;
 using System.ServiceModel;
-using custos.XrmHelpers.Domain;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 using Microsoft.Extensions.DependencyInjection;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Services;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Infrastructure.Telemetry;
-using custos.XrmHelpers.Infrastructure.Graph;
-using custos.XrmHelpers.Infrastructure.Dataverse.Mappers;
-using custos.XrmHelpers.Infrastructure.Dataverse.Factories;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Services;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Infrastructure.Telemetry;
+using Custos.XrmHelpers.Infrastructure.Graph;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Mappers;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Factories;
 
-namespace custos.XrmHelpers.Infrastructure.Services
+namespace Custos.XrmHelpers.Infrastructure.Services
 {
     public static class ServiceRegistry
     {

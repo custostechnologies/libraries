@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SyncEventFactory
     {

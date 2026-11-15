@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
         /// <summary>
         /// 

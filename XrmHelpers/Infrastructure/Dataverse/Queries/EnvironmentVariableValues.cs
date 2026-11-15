@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Messages;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
 
     public class EnvironmentVariableValues

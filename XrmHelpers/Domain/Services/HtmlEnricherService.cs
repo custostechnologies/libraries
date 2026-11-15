@@ -1,14 +1,14 @@
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Shared.Hashing;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Shared.Hashing;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 using System;
 using System.Linq;
 using System.Reflection;
-using custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Domain.Dtos;
 
-namespace custos.XrmHelpers.Domain.Services
+namespace Custos.XrmHelpers.Domain.Services
 {
     public class HtmlEnricherService<TDto> : IHtmlEnricherService<TDto>
     {

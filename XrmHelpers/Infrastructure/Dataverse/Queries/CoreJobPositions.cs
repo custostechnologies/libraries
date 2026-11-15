@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Schemas;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Schemas;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class CoreJobPositions
     {

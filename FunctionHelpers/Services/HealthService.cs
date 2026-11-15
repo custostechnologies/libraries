@@ -1,16 +1,16 @@
 using Microsoft.Azure.Functions.Worker.Http;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 using Microsoft.Extensions.Logging;
-using custos.FunctionHelpers.Utilities;
-using custos.FunctionHelpers.Logging;
-using custos.FunctionHelpers.Types;
+using Custos.FunctionHelpers.Utilities;
+using Custos.FunctionHelpers.Logging;
+using Custos.FunctionHelpers.Types;
 using Microsoft.Extensions.Configuration;
 using Azure;
 using Azure.Core;
 using Azure.Security.KeyVault.Secrets;
 using System.Reflection;
 
-namespace custos.FunctionHelpers.Services
+namespace Custos.FunctionHelpers.Services
 {
     public class HealthService
     {

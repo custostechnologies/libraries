@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public class FileDownloaderService
     {

@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-namespace custos.FunctionHelpers.Logging
+namespace Custos.FunctionHelpers.Logging
 {
     public class AzureFxCustomLogger<T> : IFxCustomLogger, ILogger
     {

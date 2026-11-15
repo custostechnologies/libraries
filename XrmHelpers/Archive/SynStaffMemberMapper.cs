@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Contracts;
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStaffMemberMapper
     {

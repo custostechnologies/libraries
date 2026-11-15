@@ -1,8 +1,8 @@
 using System;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Enums;
 
-namespace custos.XrmHelpers.Domain.Attributes
+namespace Custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotificationAttribute : Attribute

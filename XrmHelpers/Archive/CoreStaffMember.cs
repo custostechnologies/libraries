@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Dtos
 {
     public class CoreStaffMember
     {

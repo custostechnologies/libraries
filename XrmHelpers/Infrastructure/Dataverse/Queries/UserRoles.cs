@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.NewUserSyncEvent.Queries
+namespace Custos.NewUserSyncEvent.Queries
 {
     public class CheckUserRoleQueryService
     {

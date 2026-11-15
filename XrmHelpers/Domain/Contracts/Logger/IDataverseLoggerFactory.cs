@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers
+namespace Custos.XrmHelpers
 {
     public interface IDataverseLoggerFactory
     {

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Infrastructure.Initialisers
+namespace Custos.XrmHelpers.Infrastructure.Initialisers
 {
     public class XrmServiceFactory
     {

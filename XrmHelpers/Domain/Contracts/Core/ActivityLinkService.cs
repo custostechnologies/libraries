@@ -3,9 +3,9 @@ using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Organization;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class ActivityLinkService : IActivityLinkService
     {

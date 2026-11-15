@@ -1,10 +1,10 @@
 
 using Microsoft.Xrm.Sdk;
 
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using custos.XrmHelpers.Shared.Validation;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Shared.Validation;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse
+namespace Custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class CoreStaffRetriever
     {

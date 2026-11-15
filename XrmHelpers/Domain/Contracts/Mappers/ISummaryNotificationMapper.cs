@@ -1,6 +1,6 @@
-using custos.XrmHelpers.Infrastructure.Services;
+using Custos.XrmHelpers.Infrastructure.Services;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public interface ISummaryNotificationMapper
     {

@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Domain.Attributes
+namespace Custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public class SeverityFactorAttribute: Attribute

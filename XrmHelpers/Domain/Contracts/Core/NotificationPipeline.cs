@@ -1,17 +1,17 @@
 using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
-using custos.XrmHelpers.Infrastructure.Services;
-using custos.XrmHelpers.Shared.Validation;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Infrastructure.Services;
+using Custos.XrmHelpers.Shared.Validation;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationPipeline<TDto> : INotificationPipeline<TDto> where TDto : IDto, new()
     {
@@ -110,7 +110,7 @@ namespace custos.XrmHelpers.Domain.Contracts
             var newIds = new List<Guid>();
             var digests = _digestQueryEngine.GetDigests(
                 $"Notification Digest for {targetEntity}",
-                "custos Overview",
+                "Custos Overview",
                 targetEntity,
                 columns
             );

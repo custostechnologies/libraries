@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using custos.XrmHelpers;
+using Custos.XrmHelpers;
 
-namespace custos.FunctionHelpers.Logging
+namespace Custos.FunctionHelpers.Logging
 {
     public class FunctionLoggerFactory : IDataverseLoggerFactory
     {

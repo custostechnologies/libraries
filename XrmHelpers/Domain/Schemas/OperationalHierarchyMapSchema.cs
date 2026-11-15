@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.XrmHelpers.Domain.Schemas
+namespace Custos.XrmHelpers.Domain.Schemas
 {
     /// <summary>
     /// Operational Hierarchy Map schema used for assignment change detection.

@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Shared.Utilities
+namespace Custos.XrmHelpers.Shared.Utilities
 {
     public class SafeString
     {

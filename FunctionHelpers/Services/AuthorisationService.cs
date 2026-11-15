@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using custos.FunctionHelpers.Types;
-using custos.FunctionHelpers.Services;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.FunctionHelpers.Types;
+using Custos.FunctionHelpers.Services;
+using Custos.XrmHelpers.Domain.Contracts;
 using System.Security.Claims;
 
-namespace custos.FunctionHelpers.Services
+namespace Custos.FunctionHelpers.Services
 {
     public class AuthorisationService : IAuthorisationService
     {

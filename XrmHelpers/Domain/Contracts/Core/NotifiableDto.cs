@@ -1,5 +1,5 @@
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Enums;
 using System.Text;
 using System.Reflection;
 using System.Net;
@@ -7,9 +7,9 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Organization;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class NotifiableDto<TDto> : INotifiableDto
     {

@@ -1,8 +1,8 @@
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 using System.Reflection;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class InjectionTagResolverEngine : IInjectionTagResolverEngine
     {

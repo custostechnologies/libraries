@@ -1,11 +1,11 @@
 using System.Net;
 
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
-using custos.XrmHelpers.Infrastructure.Services;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Infrastructure.Services;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationContextFactory : INotificationContextFactory
     {

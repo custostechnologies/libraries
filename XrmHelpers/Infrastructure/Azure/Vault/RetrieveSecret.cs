@@ -2,11 +2,11 @@
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
-namespace custos.XrmHelpers.Infrastructure.Azure.Vault
+namespace Custos.XrmHelpers.Infrastructure.Azure.Vault
 {
     public class RetrieveSecret
     {
-        private readonly string VAULT_NAME = "kvcustosdev";
+        private readonly string VAULT_NAME = "kvCustosdev";
         public async Task<SecretClient> GetSecretClient()
         {
             var kvUri = new Uri("https://" + VAULT_NAME + "vault.azure.net");

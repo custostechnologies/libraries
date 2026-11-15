@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 
-namespace custos.FunctionHelpers.Extensions
+namespace Custos.FunctionHelpers.Extensions
 {
     public static class EntityMapper
     {

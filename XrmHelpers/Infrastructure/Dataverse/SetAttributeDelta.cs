@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse
+namespace Custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class SetAttributeDelta
     {

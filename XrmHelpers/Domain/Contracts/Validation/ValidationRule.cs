@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public abstract class ValidationRule<T> : IValidationRule<T>
     {

@@ -1,13 +1,13 @@
 using Microsoft.VisualBasic;
 using Microsoft.Xrm.Sdk;
 
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     /// <summary>
     /// Dataverse Task notification DTO.

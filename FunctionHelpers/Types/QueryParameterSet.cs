@@ -1,4 +1,4 @@
-namespace custos.FunctionHelpers.Types
+namespace Custos.FunctionHelpers.Types
 {
     public class CustomQueryParameters
     {

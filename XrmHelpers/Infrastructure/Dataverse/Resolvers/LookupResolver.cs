@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse
+namespace Custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class LookupResolver<TKey> : ILookupResolver<TKey>
     {

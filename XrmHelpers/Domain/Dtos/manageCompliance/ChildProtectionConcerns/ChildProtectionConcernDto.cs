@@ -1,13 +1,13 @@
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     /// <summary>
     /// 

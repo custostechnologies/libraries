@@ -1,8 +1,8 @@
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Shared.Hashing;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Shared.Hashing;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Services
+namespace Custos.XrmHelpers.Domain.Services
 {
     public class HashService<TDto> : IHashService<TDto>
     {

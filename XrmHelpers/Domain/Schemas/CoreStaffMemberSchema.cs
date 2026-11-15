@@ -1,8 +1,8 @@
 using Microsoft.Xrm.Sdk.Query;
 using System.Collections.Generic;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.XrmHelpers.Domain.Schemas
+namespace Custos.XrmHelpers.Domain.Schemas
 {
     /// <summary>
     /// 

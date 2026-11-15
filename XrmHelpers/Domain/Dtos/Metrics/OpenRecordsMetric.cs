@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public sealed class OpenRecordsMetricProvider<TDto> : IDigestMetricProvider<TDto>
     {

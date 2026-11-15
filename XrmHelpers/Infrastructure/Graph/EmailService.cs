@@ -4,9 +4,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Infrastructure.Graph
+namespace Custos.XrmHelpers.Infrastructure.Graph
 {
     public class EmailService
     {

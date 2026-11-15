@@ -4,7 +4,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 
-namespace custos.XrmHelpers.Infrastructure.Azure.Vault
+namespace Custos.XrmHelpers.Infrastructure.Azure.Vault
 {
     public interface ISecretService
     {
@@ -16,8 +16,8 @@ namespace custos.XrmHelpers.Infrastructure.Azure.Vault
         private readonly SecretClient _secretClient;
         private readonly IConfiguration _config;
         private TokenCredential _credential;
-        private readonly string HOOK_SECRET_NAME = "custos-forcesyncuser-flow-trigger-endpoint";
-        private readonly string CLIENT_SECRET_NAME = "custos-powerplatform-serviceprincipal-client-secret";
+        private readonly string HOOK_SECRET_NAME = "Custos-forcesyncuser-flow-trigger-endpoint";
+        private readonly string CLIENT_SECRET_NAME = "Custos-powerplatform-serviceprincipal-client-secret";
         private async Task<string> GetSecretAsync(string secretName)
         {
             Console.WriteLine($"SecretService: retrieving {secretName}");

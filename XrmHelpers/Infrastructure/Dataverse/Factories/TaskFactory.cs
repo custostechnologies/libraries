@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Enums;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class TaskFactory
     {

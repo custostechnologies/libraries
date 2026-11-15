@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk.PluginTelemetry;
 
-namespace custos.XrmHelpers.Infrastructure.Telemetry
+namespace Custos.XrmHelpers.Infrastructure.Telemetry
 {
     public interface ITelemetryRepository
     {

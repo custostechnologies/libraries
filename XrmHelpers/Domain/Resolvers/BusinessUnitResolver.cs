@@ -1,6 +1,6 @@
 /*
 using Microsoft.Xrm.Sdk;
-namespace custos.XrmHelpers.Domain.Resolvers
+namespace Custos.XrmHelpers.Domain.Resolvers
 {
     public class BusinessUnitResovler
     {

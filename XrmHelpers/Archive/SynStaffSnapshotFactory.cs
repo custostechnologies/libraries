@@ -1,10 +1,10 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using Enums = custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Contracts;
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Enums = Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Contracts;
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStaffSnaphotFactory
     {

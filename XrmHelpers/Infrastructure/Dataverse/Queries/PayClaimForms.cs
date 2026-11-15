@@ -1,12 +1,12 @@
 using Microsoft.Extensions.Options;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Schemas;
-using Enums = custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse.Factories;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Schemas;
+using Enums = Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Factories;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class PayClaimForms
     {

@@ -2,16 +2,16 @@ using System;
 using System.Diagnostics.Contracts;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Contracts;
 using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 using System.IdentityModel.Tokens;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     /// <summary>
     /// 

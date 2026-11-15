@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class DeltaComparison<TDto>
     {

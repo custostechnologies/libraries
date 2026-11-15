@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>cc4b9a05-c60d-4e45-9702-d3bee8ebddc1</UserSecretsId>
-    <RootNamespace>custos</RootNamespace>
+    <RootNamespace>Custos</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

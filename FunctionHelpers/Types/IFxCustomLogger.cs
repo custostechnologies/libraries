@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
-namespace custos.FunctionHelpers.Logging
+namespace Custos.FunctionHelpers.Logging
 {
     public interface IFxCustomLogger : ILogger
     {

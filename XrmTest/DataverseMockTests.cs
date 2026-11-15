@@ -2,8 +2,8 @@
 using Microsoft.Xrm.Sdk;
 using Moq;
 using Xunit;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Constants;
 
 public class DataverseMockTests
 {

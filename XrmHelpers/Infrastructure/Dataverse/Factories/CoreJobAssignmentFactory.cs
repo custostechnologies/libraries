@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using Enums = custos.XrmHelpers.Domain.Enums;
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Enums = Custos.XrmHelpers.Domain.Enums;
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreJobAssignmentFactory
     {

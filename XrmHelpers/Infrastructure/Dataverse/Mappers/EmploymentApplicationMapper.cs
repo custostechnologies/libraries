@@ -1,7 +1,7 @@
 using System.Reflection;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public static class EmploymentApplicationMapper
     {

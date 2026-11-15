@@ -2,11 +2,11 @@ using Microsoft.Identity.Client;
 using Azure.Identity;
 using Azure.Core;
 using Microsoft.Extensions.Logging;
-using custos.FunctionHelpers.Types;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.FunctionHelpers.Types;
+using Custos.XrmHelpers.Domain.Contracts;
 using System.Diagnostics;
 
-namespace custos.FunctionHelpers.Services
+namespace Custos.FunctionHelpers.Services
 {
     public class DataverseTokenService : IDataverseTokenService
     {

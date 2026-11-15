@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Identity.Client;
-using custos.XrmHelpers.Infrastructure.Http;
+using Custos.XrmHelpers.Infrastructure.Http;
 
-namespace custos.Infrastructure.Auth
+namespace Custos.Infrastructure.Auth
 {
     public class RetrieveAccessToken
     {

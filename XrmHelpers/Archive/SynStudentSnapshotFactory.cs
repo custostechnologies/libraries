@@ -1,12 +1,12 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using custos.XrmHelpers.Domain.Enums;
-using Resolvers = custos.XrmHelpers.Domain.Resolvers;
-using custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Domain.Enums;
+using Resolvers = Custos.XrmHelpers.Domain.Resolvers;
+using Custos.XrmHelpers.Domain.Dtos;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStudentSnapshotFactory
     {

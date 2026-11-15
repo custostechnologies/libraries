@@ -1,6 +1,6 @@
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Domain.Services
+namespace Custos.XrmHelpers.Domain.Services
 {
     public class HashResult
     {

@@ -1,9 +1,9 @@
 /*
 using System;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class ReferenceHierarchyMapFactory
     {

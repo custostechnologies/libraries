@@ -1,11 +1,11 @@
 using System.Reflection;
-using custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Enums;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class EmploymentApplicationFactory
     {

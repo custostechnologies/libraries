@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.FunctionHelpers.Utilities
+namespace Custos.FunctionHelpers.Utilities
 {
     public static class UrlParameters
     {

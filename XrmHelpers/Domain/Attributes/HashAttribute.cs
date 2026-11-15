@@ -1,7 +1,7 @@
 using System;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.XrmHelpers.Domain.Attributes
+namespace Custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class HashAttribute : Attribute

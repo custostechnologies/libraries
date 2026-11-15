@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Shared.Utilities;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Shared.Utilities;
 
 public class ComplianceItemDto : TaskBaseDto
 {

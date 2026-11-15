@@ -1,7 +1,7 @@
 using System.Runtime.Versioning;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Serialisation
+namespace Custos.XrmHelpers.Serialisation
 {
     public class ValidationEngine<T> where T : IValidationMetadata
     {

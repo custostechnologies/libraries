@@ -1,8 +1,8 @@
 using System.ComponentModel;
 
-using custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Attributes;
 
-namespace custos.XrmHelpers.Domain.Enums
+namespace Custos.XrmHelpers.Domain.Enums
 {
     public enum InjuryBodyPart
     {

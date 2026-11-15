@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Dtos
 {
     public class CoreStudent
     {

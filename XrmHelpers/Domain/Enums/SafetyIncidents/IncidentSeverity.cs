@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace custos.XrmHelpers.Domain.Enums
+namespace Custos.XrmHelpers.Domain.Enums
 {
     public enum IncidentSeverity
     {

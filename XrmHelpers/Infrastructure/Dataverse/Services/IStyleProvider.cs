@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public interface IStyleProvider
     {

@@ -1,11 +1,11 @@
 using Microsoft.Xrm.Sdk;
 
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse.Models;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Models;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public class NotificationService<TDto> : INotificationService<TDto>
     {

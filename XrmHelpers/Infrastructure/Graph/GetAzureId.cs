@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using System.Net.Http;
 using System.Text.Json;
-using custos.XrmHelpers.Infrastructure.Http;
+using Custos.XrmHelpers.Infrastructure.Http;
 
-namespace custos.Infrastructure.Graph
+namespace Custos.Infrastructure.Graph
 {
     public class GetAzureId
     {

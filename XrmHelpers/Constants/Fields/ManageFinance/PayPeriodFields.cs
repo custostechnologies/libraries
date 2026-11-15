@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Constants
+namespace Custos.XrmHelpers.Constants
 {
     public static class PayPeriodFields
     {

@@ -1,8 +1,8 @@
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Dtos;
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationRequestFactory : INotificationRequestFactory
     {

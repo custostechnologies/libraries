@@ -1,8 +1,8 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
-using custos.XrmHelpers.Infrastructure.Telemetry;
+using Custos.XrmHelpers.Infrastructure.Telemetry;
 
-namespace custos.XrmHelpers
+namespace Custos.XrmHelpers
 {
     public sealed class DataverseLoggerFactory : IDataverseLoggerFactory
     {

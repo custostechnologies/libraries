@@ -1,6 +1,6 @@
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     public static class ConcernInjectionTags
     {

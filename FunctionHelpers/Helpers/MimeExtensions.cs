@@ -1,4 +1,4 @@
-namespace custos.FunctionHelpers.Helpers
+namespace Custos.FunctionHelpers.Helpers
 {
     public static class MimeExtensions
     {

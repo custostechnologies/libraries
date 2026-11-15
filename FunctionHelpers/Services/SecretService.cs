@@ -2,10 +2,10 @@ using Azure.Core;
 using Microsoft.Extensions.Logging;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
-using custos.FunctionHelpers.Types;
+using Custos.FunctionHelpers.Types;
 using System.Diagnostics;
 
-namespace custos.FunctionHelpers.Services
+namespace Custos.FunctionHelpers.Services
 {
     public class SecretService : ISecretService
     {

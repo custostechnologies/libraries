@@ -1,7 +1,7 @@
 using System.Reflection;
-using custos.FunctionHelpers.Implementations;
+using Custos.FunctionHelpers.Implementations;
 
-namespace custos.FunctionHelpers.Services
+namespace Custos.FunctionHelpers.Services
 {
     public class VersionService
     {

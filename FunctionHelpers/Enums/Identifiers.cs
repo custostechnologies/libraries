@@ -1,4 +1,4 @@
-namespace custos.FunctionHelpers.Enums
+namespace Custos.FunctionHelpers.Enums
 {
     public enum Identifiers
     {

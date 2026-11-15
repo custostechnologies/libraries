@@ -1,7 +1,7 @@
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Shared.Utilities;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Shared.Utilities;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     public static class IncidentExtensions
     {

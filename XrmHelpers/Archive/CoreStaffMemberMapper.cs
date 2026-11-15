@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Constants;
-using Enums = custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Constants;
+using Enums = Custos.XrmHelpers.Domain.Enums;
 using System.Text.Json;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class CoreStaffMemberMapper
     {

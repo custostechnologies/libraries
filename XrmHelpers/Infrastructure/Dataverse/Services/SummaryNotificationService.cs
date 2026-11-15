@@ -1,13 +1,13 @@
 using System.Text;
 using System.Net;
 using System.Reflection;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Shared.Utilities;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Shared.Utilities;
 
-namespace custos.XrmHelpers.Infrastructure.Services
+namespace Custos.XrmHelpers.Infrastructure.Services
 {
     public interface ISummaryField
     {

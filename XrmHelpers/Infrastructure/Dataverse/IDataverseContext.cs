@@ -1,6 +1,6 @@
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse
+namespace Custos.XrmHelpers.Infrastructure.Dataverse
 {
     public interface IDataverseContext
     {

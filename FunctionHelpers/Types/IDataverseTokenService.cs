@@ -1,7 +1,7 @@
-using custos.FunctionHelpers.Types;
+using Custos.FunctionHelpers.Types;
 using Azure.Core;
-using custos.XrmHelpers.Domain.Contracts;
-namespace custos.FunctionHelpers.Types
+using Custos.XrmHelpers.Domain.Contracts;
+namespace Custos.FunctionHelpers.Types
 {
     public interface IDataverseTokenService
     {

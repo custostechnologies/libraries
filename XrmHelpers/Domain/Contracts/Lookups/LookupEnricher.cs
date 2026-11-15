@@ -3,11 +3,11 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
-using custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Attributes;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class LookupEnricher<TDto> : ILookupEnricher<TDto> where TDto : IDto
     {

@@ -1,8 +1,8 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Attributes;
 
-namespace custos.XrmHelpers.Shared.Utilities
+namespace Custos.XrmHelpers.Shared.Utilities
 {
     public static class ValueFormatter
     {

@@ -1,8 +1,8 @@
 
 using System;
-using custos.FunctionHelpers.Types;
+using Custos.FunctionHelpers.Types;
 
-namespace custos.FunctionHelpers.Implementations
+namespace Custos.FunctionHelpers.Implementations
 {
     public class SharePointFileMetadata : ISharePointFileMetadata
     {

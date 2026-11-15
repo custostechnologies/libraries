@@ -1,7 +1,7 @@
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Dtos;
 
-namespace custos.XrmHelpers.Domain.Services
+namespace Custos.XrmHelpers.Domain.Services
 {
     public interface IHtmlEnricherService<TDto>
     {

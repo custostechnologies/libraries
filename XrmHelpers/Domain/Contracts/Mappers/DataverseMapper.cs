@@ -1,16 +1,16 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Infrastructure.Dataverse;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Resolvers;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Resolvers;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
-using custos.XrmHelpers.Shared.Utilities;
+using Custos.XrmHelpers.Shared.Utilities;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class DataverseMapper<TDto>
         : IDataverseMapper<TDto> where TDto : IDto, new()

@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class SyncPipeline<TDto> : ISyncPipeline<TDto> where TDto : IDto, new()
     {

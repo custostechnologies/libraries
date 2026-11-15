@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public interface IValidationRule<in T>
     {

@@ -1,12 +1,12 @@
 using System.Text;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public record EmailTemplate(Type DtoType, OperationType Operation, string TemplateKey);
     public class TemplateResolver : ITemplateResolver

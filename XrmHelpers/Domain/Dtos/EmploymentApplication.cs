@@ -1,11 +1,11 @@
 using System;
 using System.Xml.Serialization;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Attributes;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class EmploymentApplication
     {

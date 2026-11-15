@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Extensions.DependencyInjection;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class LookupEngine : ILookupEngine
     {

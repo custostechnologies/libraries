@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Infrastructure.Dataverse.Models;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Models;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public interface INotificationService<TDto>
     {

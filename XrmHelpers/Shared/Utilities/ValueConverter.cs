@@ -2,7 +2,7 @@ using System.Text.Json;
 
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Shared.Utilities
+namespace Custos.XrmHelpers.Shared.Utilities
 {
     public static class ValueConverter
     {

@@ -1,7 +1,7 @@
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Constants;
 
-namespace custos.XrmHelpers.Domain.Dtos
+namespace Custos.XrmHelpers.Domain.Dtos
 {
     // Rule 1: Ensure Given1 is not empty
     public class Given1NotEmptyRule : ValidationRule<StudentDto>

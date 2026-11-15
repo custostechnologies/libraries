@@ -1,11 +1,11 @@
 using System;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers.Constants;
-using Enums = custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Constants;
+using Enums = Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Contracts;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     /// <summary>
     /// 

@@ -2,6 +2,6 @@
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile Condition="'$(SIGNING_KEY_PATH)' != ''">$(SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
-    <AssemblyOriginatorKeyFile Condition="'$(SIGNING_KEY_PATH)' == ''">/home/$(USERNAME)/src/custos/custos-key.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile Condition="'$(SIGNING_KEY_PATH)' == ''">/home/$(USERNAME)/src/Custos/Custos-key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 </Project>

@@ -1,11 +1,11 @@
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Extensions.Logging;
-using custos.FunctionHelpers.Types;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.FunctionHelpers.Configuration;
+using Custos.FunctionHelpers.Types;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.FunctionHelpers.Configuration;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace custos.FunctionHelpers.Services
+namespace Custos.FunctionHelpers.Services
 {
     public class DataverseService : IDataverseService
     {

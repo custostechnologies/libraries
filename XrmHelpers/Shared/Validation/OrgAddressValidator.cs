@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Shared.Validation
+namespace Custos.XrmHelpers.Shared.Validation
 {
     public static class OrgAddressValidator
     {

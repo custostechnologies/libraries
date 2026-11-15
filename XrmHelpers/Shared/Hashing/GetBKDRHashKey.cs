@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Shared.Hashing
+namespace Custos.XrmHelpers.Shared.Hashing
 {
     public class GetBKDRHashKey
     {

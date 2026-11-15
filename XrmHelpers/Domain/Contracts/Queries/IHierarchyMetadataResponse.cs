@@ -1,6 +1,6 @@
-using custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Domain.Dtos;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public interface IHierarchyMetadataReponse
     {

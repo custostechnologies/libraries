@@ -1,6 +1,6 @@
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public class StyleProvider : IStyleProvider
     {

@@ -1,22 +1,22 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using custos.XrmHelpers;
-using custos.XrmHelpers.Infrastructure.Dataverse;
-using custos.XrmHelpers.Domain.Contracts;
-using custos.XrmHelpers.Domain.Dtos;
-using custos.XrmHelpers.Domain.Attributes;
-using custos.XrmHelpers.Domain.Enums;
-using custos.XrmHelpers.Domain.Resolvers;
-using custos.XrmHelpers.Constants;
+using Custos.XrmHelpers;
+using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Domain.Contracts;
+using Custos.XrmHelpers.Domain.Dtos;
+using Custos.XrmHelpers.Domain.Attributes;
+using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Domain.Resolvers;
+using Custos.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Query;
-using custos.XrmHelpers.Domain.Schemas;
+using Custos.XrmHelpers.Domain.Schemas;
 using System.Text.Json;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
 using System.Text;
-using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
-using custos.XrmHelpers.Infrastructure.Services;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Custos.XrmHelpers.Infrastructure.Services;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationMapper<TDto> : INotificationMapper<TDto> where TDto : INotifiableDto, new()
     {

@@ -5,7 +5,7 @@ using Microsoft.Xrm.Sdk;
 using System.Text.Json;
 using System.Net;
 
-namespace custos.XrmHelpers.Infrastructure.Http
+namespace Custos.XrmHelpers.Infrastructure.Http
 {
     public class AccessToken
     {

@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class CoreJobAssignment
     {

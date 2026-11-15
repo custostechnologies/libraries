@@ -3,7 +3,7 @@ using System.Diagnostics.Contracts;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Dtos
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Dtos
 {
         /// <summary>
         /// 

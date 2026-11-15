@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text;
-using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public class DigestDto<TDto>
     {

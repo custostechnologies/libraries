@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-using custos.XrmHelpers.Constants;
-using custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Enums;
 
-namespace custos.XrmHelpers.Domain.Contracts
+namespace Custos.XrmHelpers.Domain.Contracts
 {
     public interface INotificationPipeline<TDto>
     {

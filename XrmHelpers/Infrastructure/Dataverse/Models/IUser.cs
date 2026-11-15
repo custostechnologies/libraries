@@ -1,4 +1,4 @@
-namespace custos.XrmHelpers.Infrastructure.Dataverse.Models
+namespace Custos.XrmHelpers.Infrastructure.Dataverse.Models
 {
     public interface IUser
     {
