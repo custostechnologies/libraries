@@ -14,7 +14,7 @@ namespace Custos.XrmHelpers.Domain.Dtos
     public class SafetyIncidentDto : NotifiableDto<SafetyIncidentDto>, IValidationMetadata, IQueryDto
     {
         public SafetyIncidentDto() : base() { }
-        public override string TargetAppDisplayName => "manageCompliance";
+        public override string TargetAppDisplayName => "spgsWebTools";
         public override string SourceEntityLogicalName => EntityLogicalNames.SafetyIncident;
 
         [DataverseLink(

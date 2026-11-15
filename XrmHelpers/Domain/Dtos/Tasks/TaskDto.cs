@@ -16,7 +16,7 @@ namespace Custos.XrmHelpers.Domain.Dtos
     {
         public TaskDto() : base() { }
 
-        public override string TargetAppDisplayName => "manageCompliance";
+        public override string TargetAppDisplayName => "spgsWebTools";
 
         public override string SourceEntityLogicalName => EntityLogicalNames.Task;
 

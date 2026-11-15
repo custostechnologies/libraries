@@ -12,7 +12,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
     public class EmploymentApplicationDto
     : NotifiableDto<EmploymentApplicationDto>, IQueryDto
     {
-        public override string TargetAppDisplayName => "manageHR";
+        public override string TargetAppDisplayName => "spgsWebTools";
 
         public override string SourceEntityLogicalName =>
             EntityLogicalNames.EmploymentApplication;

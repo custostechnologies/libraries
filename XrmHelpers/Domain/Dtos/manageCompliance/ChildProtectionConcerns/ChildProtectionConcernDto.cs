@@ -15,7 +15,7 @@ namespace Custos.XrmHelpers.Domain.Dtos
     public class ChildProtectionConcernDto : NotifiableDto<ChildProtectionConcernDto>, IValidationMetadata, IQueryDto
     {
         public ChildProtectionConcernDto() : base() { }
-        public override string TargetAppDisplayName => "manageCompliance";
+        public override string TargetAppDisplayName => "spgsWebTools";
 
         public override string SourceEntityLogicalName => EntityLogicalNames.ChildProtectionConcern;
         [DataverseLink(

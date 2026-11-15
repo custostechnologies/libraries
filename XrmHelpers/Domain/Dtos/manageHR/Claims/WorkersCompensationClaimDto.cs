@@ -14,7 +14,7 @@ namespace Custos.XrmHelpers.Domain.Dtos
     {
         public WorkersCompensationClaimDto() : base() { }
 
-        public override string TargetAppDisplayName => "manageCompliance";
+        public override string TargetAppDisplayName => "spgsWebTools";
         public string RegardingRecordAppDisplayName => "manageCompliance";
         public string RegardingRecordEntityLogicalName => EntityLogicalNames.SafetyIncident;
         public override string SourceEntityLogicalName => EntityLogicalNames.WorkersCompensationClaim;

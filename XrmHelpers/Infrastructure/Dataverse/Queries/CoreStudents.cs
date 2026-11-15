@@ -9,6 +9,15 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class CoreStudents
     {
+        public class CoreStudentMetadata
+        {
+            public string First { get; set; } = string.Empty;
+            public string Last { get; set; } = string.Empty;
+            public string Full { get; set; } = string.Empty;
+            public int StudentId { get; set; }
+            public string Email { get; set; } = string.Empty;
+            public Guid CoreStudentId { get; set; }
+        }
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.CoreStudent;
@@ -176,6 +185,130 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
                     _logger.WriteLog("Inner Exception:");
                     _logger.WriteLog(ex.InnerException.ToString());
                 }
+                throw;
+            }
+        }
+        public CoreStudentMetadata GetMetadataByStudentId(int studentId)
+        {
+            try
+            {
+                _logger.WriteLog($"Building GetMetadataByStudentId query expression on {ENTITY_LOGICAL_NAME}");
+
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+                {
+                    TopCount = 1,
+                    ColumnSet = new ColumnSet(
+                        CoreStudentFields.StudentId,
+                        CoreStudentFields.DisplayName,
+                        CoreStudentFields.Given1,
+                        CoreStudentFields.Surname,
+                        CoreStudentFields.EmailAddress,
+                        CoreStudentFields.CoreStudentId
+                    ),
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                CoreStudentFields.StudentId,
+                                ConditionOperator.Equal,
+                                studentId
+                            )
+                        }
+                    }
+                };
+
+                _logger.WriteLog($"Executing {nameof(GetMetadataByStudentId)} query expression on {ENTITY_LOGICAL_NAME}");
+
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
+
+                _logger.WriteLog("Finished executing ExecuteAlternate CoreStaffMembers.GetReferenceByStaffId query expression");
+
+                if (results.Entities.Count > 0)
+                {
+                    _logger.WriteLog($"ExecuteAlternate {nameof(GetMetadataByStudentId)} results.Entities.Count: {results.Entities.Count}");
+
+                    var entity = results.Entities.First();
+
+                    return new CoreStudentMetadata
+                    {
+                        First = entity.GetAttributeValue<string>(CoreStudentFields.Given1),
+                        Last = entity.GetAttributeValue<string>(CoreStudentFields.Surname),
+                        Full = entity.GetAttributeValue<string>(CoreStudentFields.DisplayName),
+                        Email = entity.GetAttributeValue<string>(CoreStudentFields.EmailAddress),
+                        StudentId = entity.GetAttributeValue<int>(CoreStudentFields.StudentId),
+                        CoreStudentId = entity.GetAttributeValue<Guid>(CoreStudentFields.CoreStudentId)
+                    };
+                }
+                else
+                {
+                    throw new InvalidPluginExecutionException("No existing CoreStudents were found");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"{nameof(GetMetadataByStudentId)} Exception: ", ex);
+                throw;
+            }
+        }
+        public CoreStudentMetadata GetMetadataByOrgEmail(string email)
+        {
+            try
+            {
+                _logger.WriteLog($"Building GetMetadataByStudentId query expression on {ENTITY_LOGICAL_NAME}");
+
+                var query = new QueryExpression(ENTITY_LOGICAL_NAME)
+                {
+                    TopCount = 1,
+                    ColumnSet = new ColumnSet(
+                        CoreStudentFields.StudentId,
+                        CoreStudentFields.DisplayName,
+                        CoreStudentFields.Given1,
+                        CoreStudentFields.Surname,
+                        CoreStudentFields.EmailAddress,
+                        CoreStudentFields.CoreStudentId
+                    ),
+                    Criteria =
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression(
+                                CoreStudentFields.EmailAddress,
+                                ConditionOperator.Equal,
+                                email
+                            )
+                        }
+                    }
+                };
+
+                _logger.WriteLog($"Executing {nameof(GetMetadataByOrgEmail)} query expression on {ENTITY_LOGICAL_NAME}");
+
+                var results = _context.Runtime.UserService.RetrieveMultiple(query);
+
+                if (results.Entities.Count > 0)
+                {
+                    _logger.WriteLog($"ExecuteAlternate {nameof(GetMetadataByOrgEmail)} results.Entities.Count: {results.Entities.Count}");
+
+                    var entity = results.Entities.First();
+
+                    return new CoreStudentMetadata
+                    {
+                        First = entity.GetAttributeValue<string>(CoreStudentFields.Given1),
+                        Last = entity.GetAttributeValue<string>(CoreStudentFields.Surname),
+                        Full = entity.GetAttributeValue<string>(CoreStudentFields.DisplayName),
+                        Email = entity.GetAttributeValue<string>(CoreStudentFields.EmailAddress),
+                        StudentId = entity.GetAttributeValue<int>(CoreStudentFields.StudentId),
+                        CoreStudentId = entity.GetAttributeValue<Guid>(CoreStudentFields.CoreStudentId)
+                    };
+                }
+                else
+                {
+                    throw new InvalidPluginExecutionException("No existing CoreStudents were found");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.WriteLog($"{nameof(GetMetadataByOrgEmail)} Exception: ", ex);
                 throw;
             }
         }
