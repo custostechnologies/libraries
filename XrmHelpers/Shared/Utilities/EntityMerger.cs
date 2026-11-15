@@ -1,9 +1,10 @@
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Shared.Utilities
+namespace custos.XrmHelpers.Shared.Utilities
 {
     public static class EntityMerger
     {
+        // NOTE: This method will overwrite attributes in entity a with attributes from entity b if they have the same key.
         public static Entity Merge(Entity a, Entity b)
         {
             var merged = new Entity(a.LogicalName) { Id = a.Id };

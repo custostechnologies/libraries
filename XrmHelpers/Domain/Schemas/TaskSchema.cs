@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Domain.Schemas
+namespace custos.XrmHelpers.Domain.Schemas
 {
     /// <summary>
     /// Task schema used for digest and notification operations.

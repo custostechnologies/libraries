@@ -1,8 +1,8 @@
 using System.Text;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Telemetry
+namespace custos.XrmHelpers.Infrastructure.Telemetry
 {
     public class TelemetryRepository : ITelemetryRepository, IDisposable
     {

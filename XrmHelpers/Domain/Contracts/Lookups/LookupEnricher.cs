@@ -3,11 +3,11 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Attributes;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class LookupEnricher<TDto> : ILookupEnricher<TDto> where TDto : IDto
     {

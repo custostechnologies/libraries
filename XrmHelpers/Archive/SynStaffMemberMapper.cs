@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStaffMemberMapper
     {

@@ -1,8 +1,8 @@
 
 using System;
-using spgsWebTools.FunctionHelpers.Types;
+using custos.FunctionHelpers.Types;
 
-namespace spgsWebTools.FunctionHelpers.Implementations
+namespace custos.FunctionHelpers.Implementations
 {
     public class SharePointFileMetadata : ISharePointFileMetadata
     {

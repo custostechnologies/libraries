@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Initialisers
+namespace custos.XrmHelpers.Infrastructure.Initialisers
 {
     public class XrmOrganisationService
     {

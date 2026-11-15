@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
+namespace custos.XrmHelpers.Infrastructure.Dataverse
 {
     public interface IDataverseContext
     {

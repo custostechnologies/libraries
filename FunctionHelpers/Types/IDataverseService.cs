@@ -1,7 +1,7 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 using Microsoft.PowerPlatform.Dataverse.Client;
 
-namespace spgsWebTools.FunctionHelpers.Types
+namespace custos.FunctionHelpers.Types
 {
     public interface IDataverseService
     {

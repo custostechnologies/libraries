@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Shared.Hashing
+namespace custos.XrmHelpers.Shared.Hashing
 {
     /// <summary>
     /// 

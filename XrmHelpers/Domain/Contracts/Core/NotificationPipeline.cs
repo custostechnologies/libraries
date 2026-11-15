@@ -1,17 +1,17 @@
 using System.Text.RegularExpressions;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
-using spgsWebTools.XrmHelpers.Infrastructure.Services;
-using spgsWebTools.XrmHelpers.Shared.Validation;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Infrastructure.Services;
+using custos.XrmHelpers.Shared.Validation;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationPipeline<TDto> : INotificationPipeline<TDto> where TDto : IDto, new()
     {
@@ -110,7 +110,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
             var newIds = new List<Guid>();
             var digests = _digestQueryEngine.GetDigests(
                 $"Notification Digest for {targetEntity}",
-                "spgsWebTools Overview",
+                "custos Overview",
                 targetEntity,
                 columns
             );

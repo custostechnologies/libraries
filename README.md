@@ -236,7 +236,7 @@ dotnet run --project XrmTest/XrmTest.csproj
 The XrmHelpers test project can be run separately from its own directory:
 
 ```bash
-dotnet test XrmHelpers/Test/spgsWebTools.XrmHelpers.Test.csproj
+dotnet test XrmHelpers/Test/custos.XrmHelpers.Test.csproj
 ```
 
 The XrmTest project currently contains a console application rather than a conventional test suite. Its Program entry point sets up mocked IOrganizationService, IExecutionContext, and ITracingService instances, then exercises mapping, lookup enrichment, change detection, validation, and serialization components.
@@ -244,7 +244,7 @@ The XrmTest project currently contains a console application rather than a conve
 ## Project notes
 
 - Package versions are currently managed through the project files and the repository's NuGet configuration; no Directory.Packages.props file is present in this repository.
-- XrmHelpers is signed and packages as spgsWebTools.XrmHelpers.
+- XrmHelpers is signed and packages as custos.XrmHelpers.
 - FunctionHelpers targets Azure Functions-compatible .NET frameworks and uses Azure Identity, Azure Key Vault Secrets, Microsoft.Identity.Client, and the Microsoft Dataverse client.
 - Archive and legacy test code are retained for reference and are not the preferred path for new implementations.
 - The codebase is actively evolving; use the current interfaces and service registrations as the source of truth rather than copied legacy implementations.

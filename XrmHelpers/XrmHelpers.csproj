@@ -4,8 +4,8 @@
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>spgsWebTools</RootNamespace>
-    <packageId>spgsWebTools.XrmHelpers</packageId>
+    <RootNamespace>custos</RootNamespace>
+    <packageId>custos.XrmHelpers</packageId>
     <Version>1.0.6</Version>
     <Authors>Matthew Thomas</Authors>
     <Company>St. Paul's Grammar School</Company>

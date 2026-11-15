@@ -1,8 +1,8 @@
 using System;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Enums;
 
-namespace spgsWebTools.XrmHelpers.Domain.Attributes
+namespace custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = true)]
     public class NotificationAttribute : Attribute

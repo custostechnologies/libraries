@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class LookupError : ILookupError
     {

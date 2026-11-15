@@ -1,6 +1,6 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public interface IQueryMapper<TDto>
     {

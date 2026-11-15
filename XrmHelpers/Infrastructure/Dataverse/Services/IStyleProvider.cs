@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public interface IStyleProvider
     {

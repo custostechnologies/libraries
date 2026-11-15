@@ -1,5 +1,5 @@
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Enums;
 using System.Text;
 using System.Reflection;
 using System.Net;
@@ -7,9 +7,9 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Organization;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class NotifiableDto<TDto> : INotifiableDto
     {

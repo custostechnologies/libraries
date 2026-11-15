@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public abstract class TaskBaseDto
     {

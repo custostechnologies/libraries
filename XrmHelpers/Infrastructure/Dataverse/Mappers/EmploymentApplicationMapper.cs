@@ -1,7 +1,7 @@
 using System.Reflection;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public static class EmploymentApplicationMapper
     {

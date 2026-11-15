@@ -1,10 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Serialisation;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Resolvers;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Serialisation;
+using custos.XrmHelpers.Infrastructure.Dataverse.Resolvers;
 using System.Security.Cryptography;
 
 var services = new ServiceCollection();

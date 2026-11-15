@@ -1,6 +1,6 @@
 /*
 using Microsoft.Xrm.Sdk;
-namespace spgsWebTools.XrmHelpers.Domain.Resolvers
+namespace custos.XrmHelpers.Domain.Resolvers
 {
     public class BusinessUnitResovler
     {

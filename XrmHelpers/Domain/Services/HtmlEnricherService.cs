@@ -1,14 +1,14 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Shared.Hashing;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Shared.Hashing;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 using System;
 using System.Linq;
 using System.Reflection;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Dtos;
 
-namespace spgsWebTools.XrmHelpers.Domain.Services
+namespace custos.XrmHelpers.Domain.Services
 {
     public class HtmlEnricherService<TDto> : IHtmlEnricherService<TDto>
     {

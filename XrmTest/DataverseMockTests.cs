@@ -2,8 +2,8 @@
 using Microsoft.Xrm.Sdk;
 using Moq;
 using Xunit;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Constants;
 
 public class DataverseMockTests
 {

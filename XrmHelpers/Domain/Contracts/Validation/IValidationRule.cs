@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public interface IValidationRule<in T>
     {

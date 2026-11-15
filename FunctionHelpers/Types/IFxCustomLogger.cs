@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Logging;
 
-namespace spgsWebTools.FunctionHelpers.Logging
+namespace custos.FunctionHelpers.Logging
 {
     public interface IFxCustomLogger : ILogger
     {

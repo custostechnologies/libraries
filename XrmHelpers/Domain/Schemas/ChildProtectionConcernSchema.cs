@@ -1,8 +1,8 @@
 using Microsoft.Xrm.Sdk.Query;
 
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Domain.Schemas
+namespace custos.XrmHelpers.Domain.Schemas
 {
     /// <summary>
     /// Core Job Assignment schema used for synchronisation operations.

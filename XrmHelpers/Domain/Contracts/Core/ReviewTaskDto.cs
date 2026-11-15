@@ -1,12 +1,12 @@
 using Microsoft.Identity.Client;
 using Microsoft.Xrm.Sdk;
 
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class ReviewTaskDto : IDto
     {

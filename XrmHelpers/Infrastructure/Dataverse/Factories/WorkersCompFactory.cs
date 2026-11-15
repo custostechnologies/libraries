@@ -1,13 +1,13 @@
 using System.Reflection;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Enums;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Domain.Dtos;
 using System.Text.Json;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class WorkersCompFactory
     {

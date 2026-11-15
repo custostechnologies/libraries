@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Domain.Attributes
+namespace custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class DataverseLinkAttribute : Attribute

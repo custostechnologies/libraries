@@ -1,8 +1,8 @@
 using System.Net;
 using System.Text;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class DigestDto<TDto>
     {

@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Identity.Client;
-using spgsWebTools.XrmHelpers.Infrastructure.Http;
+using custos.XrmHelpers.Infrastructure.Http;
 
-namespace spgsWebTools.Infrastructure.Auth
+namespace custos.Infrastructure.Auth
 {
     public class RetrieveAccessToken
     {

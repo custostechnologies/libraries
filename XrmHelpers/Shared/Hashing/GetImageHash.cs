@@ -3,7 +3,7 @@ using Microsoft.Xrm.Sdk;
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace spgsWebTools.XrmHelpers.Shared.Hashing
+namespace custos.XrmHelpers.Shared.Hashing
 {
     public class ImageHashService
     {

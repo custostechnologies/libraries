@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using spgsWebTools.FunctionHelpers.Types;
-using spgsWebTools.FunctionHelpers.Services;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.FunctionHelpers.Types;
+using custos.FunctionHelpers.Services;
+using custos.XrmHelpers.Domain.Contracts;
 using System.Security.Claims;
 
-namespace spgsWebTools.FunctionHelpers.Services
+namespace custos.FunctionHelpers.Services
 {
     public class AuthorisationService : IAuthorisationService
     {

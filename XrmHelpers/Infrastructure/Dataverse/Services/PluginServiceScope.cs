@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public sealed class PluginServiceScope : IDisposable
     {

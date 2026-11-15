@@ -1,13 +1,13 @@
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
-using spgsWebTools.XrmHelpers.Infrastructure.Services;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Infrastructure.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class DigestQueryEngine<TDto>{
         private readonly IDataverseLogger _logger;

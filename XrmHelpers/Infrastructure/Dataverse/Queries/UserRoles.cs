@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.NewUserSyncEvent.Queries
+namespace custos.NewUserSyncEvent.Queries
 {
     public class CheckUserRoleQueryService
     {

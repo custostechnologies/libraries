@@ -2,11 +2,11 @@ using Microsoft.Identity.Client;
 using Azure.Identity;
 using Azure.Core;
 using Microsoft.Extensions.Logging;
-using spgsWebTools.FunctionHelpers.Types;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.FunctionHelpers.Types;
+using custos.XrmHelpers.Domain.Contracts;
 using System.Diagnostics;
 
-namespace spgsWebTools.FunctionHelpers.Services
+namespace custos.FunctionHelpers.Services
 {
     public class DataverseTokenService : IDataverseTokenService
     {

@@ -1,10 +1,10 @@
 using System;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Domain.Dtos
+namespace custos.XrmHelpers.Domain.Dtos
 {
     public class PayClaimItemDto : IQueryDto
     {

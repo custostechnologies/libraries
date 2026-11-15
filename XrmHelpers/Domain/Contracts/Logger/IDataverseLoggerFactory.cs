@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers
+namespace custos.XrmHelpers
 {
     public interface IDataverseLoggerFactory
     {

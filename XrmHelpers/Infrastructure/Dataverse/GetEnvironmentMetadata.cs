@@ -1,8 +1,8 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.Infrastructure.Dataverse
+namespace custos.Infrastructure.Dataverse
 {
     public class GetEnvironmentMetadata {
         public static Guid Id(IPluginExecutionContext context)

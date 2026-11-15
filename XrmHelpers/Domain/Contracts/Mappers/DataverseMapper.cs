@@ -1,16 +1,16 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Domain.Resolvers;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Resolvers;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
-using spgsWebTools.XrmHelpers.Shared.Utilities;
+using custos.XrmHelpers.Shared.Utilities;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class DataverseMapper<TDto>
         : IDataverseMapper<TDto> where TDto : IDto, new()

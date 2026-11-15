@@ -1,8 +1,8 @@
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Shared.Hashing;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Shared.Hashing;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Services
+namespace custos.XrmHelpers.Domain.Services
 {
     public class HashService<TDto> : IHashService<TDto>
     {

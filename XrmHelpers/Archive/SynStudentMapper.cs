@@ -1,8 +1,8 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Dtos;
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class SynStudentMapper
     {

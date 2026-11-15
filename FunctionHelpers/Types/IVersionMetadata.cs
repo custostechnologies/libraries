@@ -1,4 +1,4 @@
-namespace spgsWebTools.FunctionHelpers.Types
+namespace custos.FunctionHelpers.Types
 {
     interface IVersionMetadata
     {

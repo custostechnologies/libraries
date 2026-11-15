@@ -1,15 +1,15 @@
 using System;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Contracts;
 using Microsoft.Extensions.Options;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.Design;
 
-namespace spgsWebTools.XrmHelpers.Domain.Dtos
+namespace custos.XrmHelpers.Domain.Dtos
 {
     /// <summary>
     /// 

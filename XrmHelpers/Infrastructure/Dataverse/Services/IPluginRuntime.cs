@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public interface IPluginRuntime
     {

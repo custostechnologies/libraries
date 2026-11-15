@@ -1,13 +1,13 @@
 using Microsoft.VisualBasic;
 using Microsoft.Xrm.Sdk;
 
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Dtos
+namespace custos.XrmHelpers.Domain.Dtos
 {
     /// <summary>
     /// Dataverse Task notification DTO.

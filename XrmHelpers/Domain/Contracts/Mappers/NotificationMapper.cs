@@ -1,22 +1,22 @@
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Domain.Resolvers;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Resolvers;
+using custos.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Domain.Schemas;
+using custos.XrmHelpers.Domain.Schemas;
 using System.Text.Json;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
 using System.Text;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Infrastructure.Services;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Infrastructure.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationMapper<TDto> : INotificationMapper<TDto> where TDto : INotifiableDto, new()
     {

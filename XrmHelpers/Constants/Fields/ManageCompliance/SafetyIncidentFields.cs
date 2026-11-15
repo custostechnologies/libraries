@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Constants
+namespace custos.XrmHelpers.Constants
 {
     public static class SafetyIncidentFields
     {

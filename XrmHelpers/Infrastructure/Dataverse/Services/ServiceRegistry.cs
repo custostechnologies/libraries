@@ -4,21 +4,21 @@ using Microsoft.Xrm.Sdk.PluginTelemetry;
 using System;
 using System.Runtime.CompilerServices;
 using System.ServiceModel;
-using spgsWebTools.XrmHelpers.Domain;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 using Microsoft.Extensions.DependencyInjection;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Services;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Infrastructure.Telemetry;
-using spgsWebTools.XrmHelpers.Infrastructure.Graph;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Services;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Infrastructure.Telemetry;
+using custos.XrmHelpers.Infrastructure.Graph;
+using custos.XrmHelpers.Infrastructure.Dataverse.Mappers;
+using custos.XrmHelpers.Infrastructure.Dataverse.Factories;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Services
+namespace custos.XrmHelpers.Infrastructure.Services
 {
     public static class ServiceRegistry
     {

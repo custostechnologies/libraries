@@ -1,7 +1,7 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class CoreStaffCategories
     {

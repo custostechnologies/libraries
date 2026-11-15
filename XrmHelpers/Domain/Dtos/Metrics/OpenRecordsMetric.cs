@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public sealed class OpenRecordsMetricProvider<TDto> : IDigestMetricProvider<TDto>
     {

@@ -1,7 +1,7 @@
 using System.Runtime.Versioning;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Serialisation
+namespace custos.XrmHelpers.Serialisation
 {
     public class ValidationEngine<T> where T : IValidationMetadata
     {

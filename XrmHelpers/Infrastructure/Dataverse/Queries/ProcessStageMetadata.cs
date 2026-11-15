@@ -4,12 +4,12 @@ using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Domain.Schemas;
-using spgsWebTools.XrmHelpers.Shared.Utilities;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Schemas;
+using custos.XrmHelpers.Shared.Utilities;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class ProcessStageMetadata
     {

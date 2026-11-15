@@ -1,8 +1,8 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
-using spgsWebTools.XrmHelpers.Infrastructure.Telemetry;
+using custos.XrmHelpers.Infrastructure.Telemetry;
 
-namespace spgsWebTools.XrmHelpers
+namespace custos.XrmHelpers
 {
     public sealed class DataverseLoggerFactory : IDataverseLoggerFactory
     {

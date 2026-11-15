@@ -2,11 +2,11 @@ using System;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Messages;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     /// <summary>
     /// 

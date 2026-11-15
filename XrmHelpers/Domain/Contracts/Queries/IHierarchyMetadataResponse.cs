@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Dtos;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public interface IHierarchyMetadataReponse
     {

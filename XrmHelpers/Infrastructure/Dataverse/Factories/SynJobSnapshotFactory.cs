@@ -1,11 +1,11 @@
 using System;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Constants;
+using Enums = custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     /// <summary>
     /// 

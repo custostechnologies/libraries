@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class SyncPipeline<TDto> : ISyncPipeline<TDto> where TDto : IDto, new()
     {

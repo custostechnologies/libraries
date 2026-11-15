@@ -1,8 +1,8 @@
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Dtos;
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationRequestFactory : INotificationRequestFactory
     {

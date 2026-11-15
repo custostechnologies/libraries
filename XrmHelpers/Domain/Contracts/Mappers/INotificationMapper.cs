@@ -1,7 +1,7 @@
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Enums;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public interface INotificationMapper<TDto>
     {

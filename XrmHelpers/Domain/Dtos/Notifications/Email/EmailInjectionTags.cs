@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class EmailInjectionTags
     {

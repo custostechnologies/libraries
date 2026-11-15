@@ -2,9 +2,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
 
-using spgsWebTools.XrmHelpers.Infrastructure.Services;
+using custos.XrmHelpers.Infrastructure.Services;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public static class PluginServiceProvider
     {

@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.FunctionHelpers.Extensions
+namespace custos.FunctionHelpers.Extensions
 {
     public static class EntityMapper
     {

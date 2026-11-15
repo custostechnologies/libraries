@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Models
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Models
 {
     public interface ITeam
     {

@@ -3,11 +3,11 @@ using System.Xml.Serialization;
 
 using Microsoft.Xrm.Sdk;
 
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Attributes;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class EmploymentApplicationDto
     : NotifiableDto<EmploymentApplicationDto>, IQueryDto

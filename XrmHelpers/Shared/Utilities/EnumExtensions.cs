@@ -2,9 +2,9 @@ using System.ComponentModel;
 
 using Microsoft.Xrm.Sdk;
 
-using spgsWebTools.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Attributes;
 
-namespace spgsWebTools.XrmHelpers.Shared.Utilities
+namespace custos.XrmHelpers.Shared.Utilities
 {
     public static class EnumExtensions
     {

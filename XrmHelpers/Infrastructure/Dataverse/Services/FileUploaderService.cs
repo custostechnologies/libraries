@@ -4,7 +4,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Crm.Sdk.Messages;
 using System.Collections.Generic;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Services
 {
     public class FileUploaderService
     {

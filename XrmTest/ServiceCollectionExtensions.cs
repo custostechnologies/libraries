@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Serialisation;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Serialisation;
 
-namespace spgsWebTools.XrmHelpers
+namespace custos.XrmHelpers
 {
     public static class ServiceCollectionExtensions
     {

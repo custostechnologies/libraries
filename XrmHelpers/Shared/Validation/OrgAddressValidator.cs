@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Shared.Validation
+namespace custos.XrmHelpers.Shared.Validation
 {
     public static class OrgAddressValidator
     {

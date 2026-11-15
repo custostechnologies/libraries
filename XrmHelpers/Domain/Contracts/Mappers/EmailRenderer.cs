@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class EmailRenderer : IEmailRenderer
     {

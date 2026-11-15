@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Infrastructure.Services;
+using custos.XrmHelpers.Infrastructure.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public interface ISummaryNotificationMapper
     {

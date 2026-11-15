@@ -1,4 +1,4 @@
-namespace spgsWebTools.XrmHelpers.Shared.Utilities
+namespace custos.XrmHelpers.Shared.Utilities
 {
     public class SafeString
     {

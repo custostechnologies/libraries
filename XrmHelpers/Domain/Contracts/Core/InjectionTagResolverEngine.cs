@@ -1,8 +1,8 @@
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 using System.Reflection;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class InjectionTagResolverEngine : IInjectionTagResolverEngine
     {

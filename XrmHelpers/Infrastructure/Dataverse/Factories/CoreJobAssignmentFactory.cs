@@ -1,11 +1,11 @@
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using Enums = custos.XrmHelpers.Domain.Enums;
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class CoreJobAssignmentFactory
     {

@@ -3,9 +3,9 @@ using System.Text.Json;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk.Messages;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Models;
+using custos.XrmHelpers.Infrastructure.Dataverse.Models;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class Teams
     {

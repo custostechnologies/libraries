@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Domain.Dtos
+namespace custos.XrmHelpers.Domain.Dtos
 {
     public class StrictStudentRuleSet : IValidationRuleSetProvider<StudentDto>
     {

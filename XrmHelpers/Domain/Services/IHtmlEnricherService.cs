@@ -1,7 +1,7 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Dtos;
 
-namespace spgsWebTools.XrmHelpers.Domain.Services
+namespace custos.XrmHelpers.Domain.Services
 {
     public interface IHtmlEnricherService<TDto>
     {

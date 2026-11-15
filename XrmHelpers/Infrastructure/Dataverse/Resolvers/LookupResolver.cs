@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
+namespace custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class LookupResolver<TKey> : ILookupResolver<TKey>
     {

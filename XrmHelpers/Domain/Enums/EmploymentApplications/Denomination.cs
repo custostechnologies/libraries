@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace spgsWebTools.XrmHelpers.Domain.Enums
+namespace custos.XrmHelpers.Domain.Enums
 {
     public enum Denomination
     {

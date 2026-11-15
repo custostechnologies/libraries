@@ -1,12 +1,12 @@
 using System.Text;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public record EmailTemplate(Type DtoType, OperationType Operation, string TemplateKey);
     public class TemplateResolver : ITemplateResolver

@@ -2,7 +2,7 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace spgsWebTools.FunctionHelpers.Utilities
+namespace custos.FunctionHelpers.Utilities
 {
     public static class EntityQueries
     {

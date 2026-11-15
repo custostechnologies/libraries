@@ -1,14 +1,14 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Extensions.DependencyInjection;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Services;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Services;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain
+namespace custos.XrmHelpers.Domain
 {
     public static class ServiceRegistration
     {

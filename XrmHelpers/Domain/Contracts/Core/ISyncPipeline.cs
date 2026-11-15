@@ -1,6 +1,6 @@
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public interface ISyncPipeline<TDto>
     {

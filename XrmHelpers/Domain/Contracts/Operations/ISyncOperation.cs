@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Enums;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     interface ISyncOperation
     {

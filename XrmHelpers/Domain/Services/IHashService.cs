@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.XrmHelpers.Domain.Services
+namespace custos.XrmHelpers.Domain.Services
 {
     public class HashResult
     {

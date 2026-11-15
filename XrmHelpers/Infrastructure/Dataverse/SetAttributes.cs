@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
+namespace custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class SetAttributes
     {

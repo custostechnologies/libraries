@@ -2,7 +2,7 @@
   "emitFieldsClasses": true,
   "generateSdkMessages": false,
   "serviceContextName": "DataverseContext",
-  "namespace": "spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Models",
+  "namespace": "custos.XrmHelpers.Infrastructure.Dataverse.Models",
   "entityTypesFolder": "Entities",
   "messagesTypesFolder": "Messages",
   "optionSetsTypesFolder": "OptionSets",

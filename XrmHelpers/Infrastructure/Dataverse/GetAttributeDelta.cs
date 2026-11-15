@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xrm.Sdk;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
+namespace custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class GetAttributeDelta
     {

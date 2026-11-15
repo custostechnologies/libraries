@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace spgsWebTools.FunctionHelpers.Logging
+namespace custos.FunctionHelpers.Logging
 {
     public class FunctionLogger : IDataverseLogger
     {

@@ -1,6 +1,6 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 
-namespace spgsWebTools.FunctionHelpers.Types
+namespace custos.FunctionHelpers.Types
 {
     public interface IAuthorisationService
     {

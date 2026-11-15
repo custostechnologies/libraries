@@ -1,9 +1,9 @@
 using System.Text;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
-using spgsWebTools.XrmHelpers.Infrastructure.Services;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Infrastructure.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class TagResolver : ITagResolver
     {
@@ -83,7 +83,7 @@ namespace spgsWebTools.XrmHelpers.Domain.Contracts
 
             _tagResolverEngine.PopulateTag(
                 context.Dto, tags, "inHeaderLogoImageUrl",
-                "https://spgswebresources.blob.core.windows.net/assets/spgsWebTools_logo_noName_72ppi.png"
+                "https://spgswebresources.blob.core.windows.net/assets/custos_logo_noName_72ppi.png"
             );
 
             _tagResolverEngine.PopulateTag(

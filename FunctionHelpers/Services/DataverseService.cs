@@ -1,11 +1,11 @@
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Extensions.Logging;
-using spgsWebTools.FunctionHelpers.Types;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.FunctionHelpers.Configuration;
+using custos.FunctionHelpers.Types;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.FunctionHelpers.Configuration;
 using Microsoft.Xrm.Sdk.Query;
 
-namespace spgsWebTools.FunctionHelpers.Services
+namespace custos.FunctionHelpers.Services
 {
     public class DataverseService : IDataverseService
     {

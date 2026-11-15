@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 
-namespace spgsWebTools.FunctionHelpers.Logging
+namespace custos.FunctionHelpers.Logging
 {
     public class AzureFxCustomLogger<T> : IFxCustomLogger, ILogger
     {

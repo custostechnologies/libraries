@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
 using System.Net.Http;
 using System.Text.Json;
-using spgsWebTools.XrmHelpers.Infrastructure.Http;
+using custos.XrmHelpers.Infrastructure.Http;
 
-namespace spgsWebTools.Infrastructure.Graph
+namespace custos.Infrastructure.Graph
 {
     public class GetAzureId
     {

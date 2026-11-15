@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class DeltaComparison<TDto>
     {

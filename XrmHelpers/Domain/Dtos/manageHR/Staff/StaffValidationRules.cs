@@ -1,7 +1,7 @@
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Domain.Dtos
+namespace custos.XrmHelpers.Domain.Dtos
 {
     // Rule 1: Ensure Given1 is not empty
     public class Given1NotEmptyStaffRule : ValidationRule<StaffMemberDto>

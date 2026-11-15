@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Messages;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
 
     public class EnvironmentVariableValues

@@ -1,12 +1,12 @@
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
 using Microsoft.Xrm.Sdk;
 using System.Reflection;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class NotificationRequestRepository : INotificationRequestRepository
     {

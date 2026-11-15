@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.FunctionHelpers.Utilities
+namespace custos.FunctionHelpers.Utilities
 {
     public static class UrlParameters
     {

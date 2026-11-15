@@ -1,10 +1,10 @@
 
 using Microsoft.Xrm.Sdk;
 
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Shared.Validation;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Shared.Validation;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse
+namespace custos.XrmHelpers.Infrastructure.Dataverse
 {
     public class CoreStaffRetriever
     {

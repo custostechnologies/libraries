@@ -1,4 +1,4 @@
-namespace spgsWebTools.FunctionHelpers.Helpers
+namespace custos.FunctionHelpers.Helpers
 {
     public static class MimeExtensions
     {

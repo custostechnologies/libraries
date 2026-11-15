@@ -1,7 +1,7 @@
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Shared.Utilities;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Shared.Utilities;
 
-namespace spgsWebTools.XrmHelpers.Domain.Resolvers
+namespace custos.XrmHelpers.Domain.Resolvers
 {
     public class FormTypeResolver
     {

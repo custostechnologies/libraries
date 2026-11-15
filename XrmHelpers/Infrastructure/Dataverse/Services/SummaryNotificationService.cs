@@ -1,13 +1,13 @@
 using System.Text;
 using System.Net;
 using System.Reflection;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Services;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Shared.Utilities;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Infrastructure.Dataverse.Services;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Shared.Utilities;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Services
+namespace custos.XrmHelpers.Infrastructure.Services
 {
     public interface ISummaryField
     {

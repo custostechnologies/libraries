@@ -1,10 +1,10 @@
 using System.Reflection;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
-using spgsWebTools.XrmHelpers.Domain.Attributes;
-using spgsWebTools.XrmHelpers.Domain.Services;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Services;
 
-namespace spgsWebTools.XrmHelpers.Domain.Contracts
+namespace custos.XrmHelpers.Domain.Contracts
 {
     public class ChangeDetectionService<TDto> : IChangeDetectionService<TDto> where TDto : IDto
     {

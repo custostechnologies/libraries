@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Constants;
-using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Constants;
+using Enums = custos.XrmHelpers.Domain.Enums;
 using System.Text.Json;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Mappers
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Mappers
 {
     public class CoreStudentMapper
     {

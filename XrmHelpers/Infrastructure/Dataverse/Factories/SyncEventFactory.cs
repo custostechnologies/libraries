@@ -1,9 +1,9 @@
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using spgsWebTools.XrmHelpers;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SyncEventFactory
     {

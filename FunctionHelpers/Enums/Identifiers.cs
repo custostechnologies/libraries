@@ -1,4 +1,4 @@
-namespace spgsWebTools.FunctionHelpers.Enums
+namespace custos.FunctionHelpers.Enums
 {
     public enum Identifiers
     {

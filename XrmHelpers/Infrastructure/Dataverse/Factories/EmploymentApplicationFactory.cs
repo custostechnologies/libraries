@@ -1,11 +1,11 @@
 using System.Reflection;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Enums;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class EmploymentApplicationFactory
     {

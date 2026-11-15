@@ -1,10 +1,10 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-using spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Enums;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class TaskFactory
     {

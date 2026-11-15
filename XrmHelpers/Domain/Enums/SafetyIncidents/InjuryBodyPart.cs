@@ -1,8 +1,8 @@
 using System.ComponentModel;
 
-using spgsWebTools.XrmHelpers.Domain.Attributes;
+using custos.XrmHelpers.Domain.Attributes;
 
-namespace spgsWebTools.XrmHelpers.Domain.Enums
+namespace custos.XrmHelpers.Domain.Enums
 {
     public enum InjuryBodyPart
     {

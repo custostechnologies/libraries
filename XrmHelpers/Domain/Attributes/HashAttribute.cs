@@ -1,7 +1,7 @@
 using System;
-using spgsWebTools.XrmHelpers.Constants;
+using custos.XrmHelpers.Constants;
 
-namespace spgsWebTools.XrmHelpers.Domain.Attributes
+namespace custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
     public class HashAttribute : Attribute

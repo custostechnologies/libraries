@@ -1,16 +1,16 @@
 using Microsoft.Azure.Functions.Worker.Http;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
+using custos.XrmHelpers.Domain.Contracts;
 using Microsoft.Extensions.Logging;
-using spgsWebTools.FunctionHelpers.Utilities;
-using spgsWebTools.FunctionHelpers.Logging;
-using spgsWebTools.FunctionHelpers.Types;
+using custos.FunctionHelpers.Utilities;
+using custos.FunctionHelpers.Logging;
+using custos.FunctionHelpers.Types;
 using Microsoft.Extensions.Configuration;
 using Azure;
 using Azure.Core;
 using Azure.Security.KeyVault.Secrets;
 using System.Reflection;
 
-namespace spgsWebTools.FunctionHelpers.Services
+namespace custos.FunctionHelpers.Services
 {
     public class HealthService
     {

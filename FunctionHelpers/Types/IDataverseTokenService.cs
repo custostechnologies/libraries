@@ -1,7 +1,7 @@
-using spgsWebTools.FunctionHelpers.Types;
+using custos.FunctionHelpers.Types;
 using Azure.Core;
-using spgsWebTools.XrmHelpers.Domain.Contracts;
-namespace spgsWebTools.FunctionHelpers.Types
+using custos.XrmHelpers.Domain.Contracts;
+namespace custos.FunctionHelpers.Types
 {
     public interface IDataverseTokenService
     {

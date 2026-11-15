@@ -1,7 +1,7 @@
 using System.Reflection;
-using spgsWebTools.FunctionHelpers.Implementations;
+using custos.FunctionHelpers.Implementations;
 
-namespace spgsWebTools.FunctionHelpers.Services
+namespace custos.FunctionHelpers.Services
 {
     public class VersionService
     {

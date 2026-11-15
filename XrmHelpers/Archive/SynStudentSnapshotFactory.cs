@@ -1,12 +1,12 @@
 using System.Text.Json;
 using Microsoft.Xrm.Sdk;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries;
-using spgsWebTools.XrmHelpers.Domain.Enums;
-using Resolvers = spgsWebTools.XrmHelpers.Domain.Resolvers;
-using spgsWebTools.XrmHelpers.Domain.Dtos;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Infrastructure.Dataverse.Queries;
+using custos.XrmHelpers.Domain.Enums;
+using Resolvers = custos.XrmHelpers.Domain.Resolvers;
+using custos.XrmHelpers.Domain.Dtos;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Factories
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Factories
 {
     public class SynStudentSnapshotFactory
     {

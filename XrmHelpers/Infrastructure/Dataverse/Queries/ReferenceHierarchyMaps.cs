@@ -1,11 +1,11 @@
 using System.Security.Claims;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using spgsWebTools.XrmHelpers.Constants;
-using spgsWebTools.XrmHelpers.Domain.Schemas;
-using Enums = spgsWebTools.XrmHelpers.Domain.Enums;
+using custos.XrmHelpers.Constants;
+using custos.XrmHelpers.Domain.Schemas;
+using Enums = custos.XrmHelpers.Domain.Enums;
 
-namespace spgsWebTools.XrmHelpers.Infrastructure.Dataverse.Queries
+namespace custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
     public class ReferenceHierarchyMaps
     {

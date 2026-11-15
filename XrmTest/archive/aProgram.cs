@@ -4,7 +4,7 @@ using Microsoft.Identity.Client;
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Xrm.Sdk;
 using Newtonsoft.Json.Linq;
-using spgsWebTools.XrmHelpers.Infrastructure.Dataverse;
+using custos.XrmHelpers.Infrastructure.Dataverse;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.Json.Serialization;
