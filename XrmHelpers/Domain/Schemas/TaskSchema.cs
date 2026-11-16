@@ -19,7 +19,7 @@ namespace Custos.XrmHelpers.Domain.Schemas
             TaskFields.ScheduledDuration,
 
             // Progress / Status
-            TaskFields.Status,
+            TaskFields.ActivityStatus,
             TaskFields.StatusReason,
             TaskFields.PercentComplete,
             TaskFields.Priority,
