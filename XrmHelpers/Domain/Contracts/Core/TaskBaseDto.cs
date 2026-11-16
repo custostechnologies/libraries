@@ -1,11 +1,9 @@
 using Microsoft.Xrm.Sdk;
-
 using Custos.XrmHelpers.Domain.Enums;
-using Custos.XrmHelpers.Infrastructure.Dataverse;
 
 namespace Custos.XrmHelpers.Domain.Contracts
 {
-    public abstract class TaskBaseDto
+    public abstract class TaskBaseDto : IDto
     {
         protected TaskBaseDto() : base() { }
         public virtual Guid EntityId { get; set; }
@@ -13,6 +11,10 @@ namespace Custos.XrmHelpers.Domain.Contracts
         protected abstract string PreviousReviewDateName { get; }
         protected abstract string NextDueDateName { get; }
         protected abstract string NextReviewDateName { get; }
+        public virtual string SourceEntityLogicalName { get; set; } = string.Empty;
+        public virtual string TargetEntityLogicalName { get; set; } = string.Empty;
+        public virtual KeyAttributeCollection? KeyCollection { get; }
+        public virtual DateTime? ForcePlugin { get; set; } = null;
         public virtual string Subject { get; set; } = string.Empty;
         public virtual string? TaskDescription { get; set; } = string.Empty;
         public virtual int? ReviewCycle { get; set; }
