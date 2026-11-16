@@ -95,7 +95,7 @@ public class ComplianceItemDto : TaskBaseDto
 
     [DataverseLink(
         srcName: ComplianceItemFields.ResponsibleTeams,
-        srcType: typeof(string),
+        srcType: typeof(EntityReferenceCollection),
         trgName: ComplianceItemFields.ResponsibleTeams,
         trgType: typeof(string))]
     public string? ResponsibleTeams { get; set; }
@@ -182,8 +182,8 @@ public class ComplianceItemDto : TaskBaseDto
     {
         return base.CalculateNextDueDate(nextReviewDate);
     }
-    public override Entity GetReviewMetadataUpdate()
+    public override Entity GetReviewMetadataUpdate(DateTime nextReviewDate)
     {
-        return base.GetReviewMetadataUpdate();
+        return base.GetReviewMetadataUpdate(nextReviewDate);
     }
 }

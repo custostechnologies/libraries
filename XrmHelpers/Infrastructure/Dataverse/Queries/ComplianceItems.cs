@@ -83,10 +83,6 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
             catch (Exception ex)
             {
                 _logger.WriteLog("Exception in CoreDepartments.GetReferenceByCode: {0}", ex);
-                if (ex.InnerException != null)
-                {
-                    _logger.WriteLog("Inner Exception in CoreDepartments.GetReferenceByCode: {0}", ex.InnerException.Message);
-                }
                 throw;
             }
         }

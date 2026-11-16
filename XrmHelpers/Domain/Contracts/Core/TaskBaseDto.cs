@@ -22,16 +22,16 @@ namespace Custos.XrmHelpers.Domain.Contracts
         public abstract TaskType TaskType { get; }
         public virtual DateTime? NextReviewDate { get; set; }
         public virtual DateTime? NextDueDate { get; set; }
+
+        // TODO: set this when tasks are completed and item reverts to COMPLIANT
         public virtual DateTime? PreviousReviewDate { get; set; }
         public virtual bool RecurringSubTasks { get; set; }
-        public virtual Entity GetReviewMetadataUpdate()
+        public virtual Entity GetReviewMetadataUpdate(DateTime nextReviewDate)
         {
             var update = new Entity(
                 RegardingEntityLogicalName,
                 EntityId
             );
-
-            var nextReviewDate = CalculateNextReviewDate();
 
             update[PreviousReviewDateName] = NextReviewDate;
             update[NextReviewDateName] = nextReviewDate;
@@ -46,16 +46,21 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 throw new InvalidOperationException($"ReviewCycleUnits cannot be null");
             }
 
-            var date = NextReviewDate ?? DateTime.UtcNow;
+            var nextDate = (NextReviewDate ?? DateTime.UtcNow).Date;
             var period = ReviewCycle ?? 1;
+            var today = DateTime.UtcNow.Date;
 
-            return ReviewCycleUnits switch
+            while (nextDate <= today)
             {
-                ReviewCycleUnit.Days => date.AddDays(period),
-                ReviewCycleUnit.Months => date.AddMonths(period),
-                ReviewCycleUnit.Years => date.AddYears(period),
-                _ => date.AddDays(period)
-            };
+                nextDate = ReviewCycleUnits switch
+                {
+                    ReviewCycleUnit.Days => nextDate.AddDays(period),
+                    ReviewCycleUnit.Months => nextDate.AddMonths(period),
+                    ReviewCycleUnit.Years => nextDate.AddYears(period),
+                    _ => nextDate.AddDays(period)
+                };
+            }
+            return nextDate;
         }
         public virtual DateTime CalculateNextDueDate(DateTime nextReviewDate)
         {
