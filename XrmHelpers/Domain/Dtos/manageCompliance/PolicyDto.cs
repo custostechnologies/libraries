@@ -4,51 +4,52 @@ using Custos.XrmHelpers.Constants;
 using Custos.XrmHelpers.Domain.Attributes;
 using Custos.XrmHelpers.Domain.Contracts;
 using Custos.XrmHelpers.Domain.Enums;
-using Custos.XrmHelpers.Shared.Utilities;
 
 public class PolicyDto : TaskBaseDto, INotifiableDto
 {
     public PolicyDto() : base() { }
+
     public override string SourceEntityLogicalName =>
         EntityLogicalNames.Policy;
-    public override string TargetAppDisplayName => "spgsWebTools";
+
     public override string RegardingEntityLogicalName =>
         EntityLogicalNames.Policy;
-    protected override string NextDueDateName =>
-        PolicyFields.NextDueDate;
+
+    public override string TargetAppDisplayName =>
+        "spgsWebTools";
+
+    protected override string PreviousReviewDateName =>
+        PolicyFields.LastReviewDate;
+
     protected override string NextReviewDateName =>
         PolicyFields.NextReviewDate;
-    protected override string PreviousReviewDateName =>
-        PolicyFields.PreviousReviewDate;
+
+    protected override string NextDueDateName =>
+        PolicyFields.NextDueDate;
+
     public override TaskType TaskType =>
-        ChildTaskType ?? TaskType.PolicyReview;
+        TaskType.PolicyReview;
 
     [IgnoreOnCreate]
     [DataverseLink(
-        srcName: PolicyFields.ComplianceItemId,
+        srcName: PolicyFields.PolicyId,
         srcType: typeof(Guid),
         trgName: null,
         trgType: null)]
-    public Guid ComplianceItemId { get; set; }
+    public Guid PolicyId { get; set; }
+
     public override Guid EntityId
     {
-        get => ComplianceItemId;
-        set => ComplianceItemId = value;
+        get => PolicyId;
+        set => PolicyId = value;
     }
 
     [DataverseLink(
-        srcName: PolicyFields.Name,
+        srcName: PolicyFields.Title,
         srcType: typeof(string),
-        trgName: PolicyFields.Name,
+        trgName: PolicyFields.Title,
         trgType: typeof(string))]
     public string? Name { get; set; }
-
-    [DataverseLink(
-        srcName: PolicyFields.Key,
-        srcType: typeof(string),
-        trgName: PolicyFields.Key,
-        trgType: typeof(string))]
-    public string? Key { get; set; }
 
     [DataverseLink(
         srcName: PolicyFields.Description,
@@ -57,22 +58,20 @@ public class PolicyDto : TaskBaseDto, INotifiableDto
         trgType: typeof(string))]
     public string? Description { get; set; }
 
-    public override string Subject
-    {
-        get
-        {
-            var type = EnumExtensions.ToDescription(
-                (int)(ChildTaskType ?? TaskType.Other),
-                typeof(TaskType)
-            );
+    [DataverseLink(
+        srcName: PolicyFields.DescriptionOfResponsibility,
+        srcType: typeof(string),
+        trgName: PolicyFields.DescriptionOfResponsibility,
+        trgType: typeof(string))]
+    public string? DescriptionOfResponsibility { get; set; }
 
-            var subject = $"{type}: {Name}";
-            return subject;
-        }
-    }
+    public override string Subject =>
+        $"Policy Review: {Name}";
 
     public override string? TaskDescription =>
-        TaskSummary ?? Description ?? "See Regarding Record";
+        TaskSummary
+        ?? Description
+        ?? "See Regarding Record";
 
     [DataverseLink(
         srcName: PolicyFields.TaskSummary,
@@ -81,64 +80,108 @@ public class PolicyDto : TaskBaseDto, INotifiableDto
         trgType: typeof(string))]
     public override string? TaskSummary { get; set; }
 
-    [DataverseLink(
-        srcName: PolicyFields.TextSourceOfObligation,
-        srcType: typeof(string),
-        trgName: PolicyFields.TextSourceOfObligation,
-        trgType: typeof(string))]
-    public string? TextSourceOfObligation { get; set; }
-
-    [DataverseLink(
-        srcName: PolicyFields.TextPeopleResponsible,
-        srcType: typeof(string),
-        trgName: PolicyFields.TextPeopleResponsible,
-        trgType: typeof(string))]
-    public string? TextPeopleResponsible { get; set; }
-
-    [DataverseLink(
-        srcName: PolicyFields.ResponsibleTeams,
-        srcType: typeof(EntityReferenceCollection),
-        trgName: PolicyFields.ResponsibleTeams,
-        trgType: typeof(string))]
-    public string? ResponsibleTeams { get; set; }
-
-    [EnumType(typeof(ComplianceCategory))]
+    [EnumType(typeof(PolicyCategory))]
     [DataverseLink(
         srcName: PolicyFields.Category,
         srcType: typeof(OptionSetValue),
         trgName: PolicyFields.Category,
         trgType: typeof(OptionSetValue))]
-    public ComplianceCategory? Category { get; set; }
+    public PolicyCategory? Category { get; set; }
 
-    [EnumType(typeof(ComplianceSubCategory))]
+    [EnumType(typeof(PolicyType))]
     [DataverseLink(
-        srcName: PolicyFields.SubCategory,
+        srcName: PolicyFields.Type,
         srcType: typeof(OptionSetValue),
-        trgName: PolicyFields.SubCategory,
+        trgName: PolicyFields.Type,
         trgType: typeof(OptionSetValue))]
-    public ComplianceSubCategory? SubCategory { get; set; }
+    public PolicyType? Type { get; set; }
 
-    [EnumType(typeof(TaskType))]
     [DataverseLink(
-        srcName: PolicyFields.ChildTaskType,
+        srcName: PolicyFields.RecordType,
         srcType: typeof(OptionSetValue),
-        trgName: PolicyFields.ChildTaskType,
+        trgName: PolicyFields.RecordType,
         trgType: typeof(OptionSetValue))]
-    public TaskType? ChildTaskType { get; set; }
+    public int? RecordType { get; set; }
 
-    [EnumType(typeof(ComplianceFlag))]
     [DataverseLink(
-        srcName: PolicyFields.ComplianceFlag,
+        srcName: PolicyFields.Responsibility,
         srcType: typeof(OptionSetValue),
-        trgName: PolicyFields.ComplianceFlag,
+        trgName: PolicyFields.Responsibility,
         trgType: typeof(OptionSetValue))]
-    public ComplianceFlag? ComplianceFlag { get; set; }
+    public int? Responsibility { get; set; }
+
+    [DataverseReference(EntityLogicalNames.Responsibility)]
+    [DataverseLink(
+        srcName: PolicyFields.RelatedResponsibility,
+        srcType: typeof(EntityReference),
+        trgName: PolicyFields.RelatedResponsibility,
+        trgType: typeof(EntityReference))]
+    public Guid? RelatedResponsibilityId { get; set; }
+
+    [EnumType(typeof(PolicyLocation))]
+    [DataverseLink(
+        srcName: PolicyFields.Location,
+        srcType: typeof(OptionSetValue),
+        trgName: PolicyFields.Location,
+        trgType: typeof(OptionSetValue))]
+    public PolicyLocation? Location { get; set; }
+
+    [EnumType(typeof(Status))]
+    [DataverseLink(
+        srcName: PolicyFields.Status,
+        srcType: typeof(OptionSetValue),
+        trgName: PolicyFields.Status,
+        trgType: typeof(OptionSetValue))]
+    public Status? Status { get; set; }
+
+    [EnumType(typeof(PolicyStatusReason))]
+    [DataverseLink(
+        srcName: PolicyFields.StatusReason,
+        srcType: typeof(OptionSetValue),
+        trgName: PolicyFields.StatusReason,
+        trgType: typeof(OptionSetValue))]
+    public PolicyStatusReason? StatusReason { get; set; }
+
+    [DataverseLink(
+        srcName: PolicyFields.LongUrl,
+        srcType: typeof(string),
+        trgName: PolicyFields.LongUrl,
+        trgType: typeof(string))]
+    public string? LongUrl { get; set; }
+
+    [DataverseLink(
+        srcName: PolicyFields.ShortUrl,
+        srcType: typeof(string),
+        trgName: PolicyFields.ShortUrl,
+        trgType: typeof(string))]
+    public string? ShortUrl { get; set; }
+
+    [DataverseLink(
+        srcName: PolicyFields.MyStPaulsUrl,
+        srcType: typeof(string),
+        trgName: PolicyFields.MyStPaulsUrl,
+        trgType: typeof(string))]
+    public string? MyStPaulsUrl { get; set; }
+
+    [DataverseLink(
+        srcName: PolicyFields.HostedOnSchoolWebsite,
+        srcType: typeof(bool),
+        trgName: PolicyFields.HostedOnSchoolWebsite,
+        trgType: typeof(bool))]
+    public bool? HostedOnSchoolWebsite { get; set; }
+
+    [DataverseLink(
+        srcName: PolicyFields.LastApprovalDate,
+        srcType: typeof(DateTime?),
+        trgName: PolicyFields.LastApprovalDate,
+        trgType: typeof(DateTime?))]
+    public DateTime? LastApprovalDate { get; set; }
 
     [DataverseLink(
         srcName: PolicyFields.ReviewCycle,
-        srcType: typeof(int?),
+        srcType: typeof(int),
         trgName: PolicyFields.ReviewCycle,
-        trgType: typeof(int?))]
+        trgType: typeof(int))]
     public override int? ReviewCycle { get; set; }
 
     [EnumType(typeof(ReviewCycleUnit))]
@@ -164,27 +207,34 @@ public class PolicyDto : TaskBaseDto, INotifiableDto
     public override DateTime? NextDueDate { get; set; }
 
     [DataverseLink(
-        srcName: PolicyFields.PreviousReviewDate,
+        srcName: PolicyFields.LastReviewDate,
         srcType: typeof(DateTime?),
-        trgName: PolicyFields.PreviousReviewDate,
+        trgName: PolicyFields.LastReviewDate,
         trgType: typeof(DateTime?))]
     public override DateTime? PreviousReviewDate { get; set; }
 
     [DataverseLink(
         srcName: PolicyFields.RecurringSubTasks,
-        srcType: typeof(bool?),
+        srcType: typeof(bool),
         trgName: PolicyFields.RecurringSubTasks,
-        trgType: typeof(bool?))]
+        trgType: typeof(bool))]
     public override bool RecurringSubTasks { get; set; }
+
     public override DateTime CalculateNextReviewDate()
     {
         return base.CalculateNextReviewDate();
     }
-    public override DateTime CalculateNextDueDate(DateTime nextReviewDate)
+
+    public override DateTime CalculateNextDueDate(
+        DateTime nextReviewDate
+    )
     {
         return base.CalculateNextDueDate(nextReviewDate);
     }
-    public override Entity GetReviewMetadataUpdate(DateTime nextReviewDate)
+
+    public override Entity GetReviewMetadataUpdate(
+        DateTime nextReviewDate
+    )
     {
         return base.GetReviewMetadataUpdate(nextReviewDate);
     }

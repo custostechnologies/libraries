@@ -40,6 +40,7 @@ namespace Custos.XrmHelpers.Constants
         public const string Policy = "pgrowth_policy";
         public const string Risk = "pgrowth_risk";
         public const string Hazard = "pgrowth_hazard";
+        public const string Responsibility = "pgrowth_responsibility";
         public const string ProcessStageMetadata = "pgrowth_processstagemetadata";
     }
 }
