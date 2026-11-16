@@ -235,14 +235,14 @@ public class RiskDto : TaskBaseDto, INotifiableDto
         srcType: typeof(OptionSetValue),
         trgName: RiskFields.Status,
         trgType: typeof(OptionSetValue))]
-    public int? Status { get; set; }
+    public Status? Status { get; set; }
 
     [DataverseLink(
         srcName: RiskFields.StatusReason,
         srcType: typeof(OptionSetValue),
         trgName: RiskFields.StatusReason,
         trgType: typeof(OptionSetValue))]
-    public int? StatusReason { get; set; }
+    public RiskStatusReason? StatusReason { get; set; }
 
     public override DateTime CalculateNextReviewDate()
     {

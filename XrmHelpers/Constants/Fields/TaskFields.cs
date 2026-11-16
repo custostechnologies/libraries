@@ -22,7 +22,7 @@ namespace Custos.XrmHelpers.Constants
         public const string ActualDurationMinutes = "actualdurationminutes";
 
         // Status
-        public const string Status = "statecode";
+        public const string ActivityStatus = "statecode";
         public const string StatusReason = "statuscode";
         public const string PercentComplete = "percentcomplete";
 

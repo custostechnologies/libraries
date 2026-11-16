@@ -64,6 +64,7 @@ namespace Custos.XrmHelpers.Infrastructure.Services
                 services.AddScoped<Policies>();
                 services.AddScoped<Risks>();
                 services.AddScoped<Hazards>();
+                services.AddScoped<Tasks>();
 
                 // add notification service registrations
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
