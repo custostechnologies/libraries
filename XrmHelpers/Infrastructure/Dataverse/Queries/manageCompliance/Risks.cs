@@ -57,16 +57,23 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
                     ConditionOperator.NotNull
                 );
 
-                var ownerLink = query.AddLink(
+                var intersect = query.AddLink(
+                    "pgrowth_risk_team_nn",
+                    RiskFields.RiskId,
+                    RiskFields.RiskId,
+                    JoinOperator.Inner
+                );
+
+                var teamLink = intersect.AddLink(
                     "team",
-                    "ownerid",
+                    "teamid",
                     "teamid",
                     JoinOperator.Inner
                 );
 
-                ownerLink.EntityAlias = "assignedteam";
+                teamLink.EntityAlias = "assignedteam";
 
-                ownerLink.Columns = new ColumnSet(
+                teamLink.Columns = new ColumnSet(
                     "teamid",
                     "name"
                 );
