@@ -30,7 +30,6 @@ public class ComplianceItemDto : TaskBaseDto, INotifiableDto
         trgName: null,
         trgType: null)]
     public Guid ComplianceItemId { get; set; }
-
     public override Guid EntityId
     {
         get => ComplianceItemId;
@@ -80,7 +79,7 @@ public class ComplianceItemDto : TaskBaseDto, INotifiableDto
         srcType: typeof(string),
         trgName: ComplianceItemFields.TaskSummary,
         trgType: typeof(string))]
-    public string? TaskSummary { get; set; }
+    public override string? TaskSummary { get; set; }
 
     [DataverseLink(
         srcName: ComplianceItemFields.TextSourceOfObligation,

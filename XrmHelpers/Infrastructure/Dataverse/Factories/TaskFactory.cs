@@ -24,7 +24,7 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
             TaskBaseDto baseDto,
             OrganizationRequestCollection organizationRequests,
             EntityReference owner,
-            EntityReference regarding,
+            //EntityReference regarding,
             DateTime nextReviewDate
         )
         {
@@ -32,16 +32,17 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
             {
                 // TODO: implement task priorities
                 var nextDueDate = baseDto.CalculateNextDueDate(nextReviewDate);
-
+                var regardingRef = new EntityReference(
+                    baseDto.RegardingEntityLogicalName,
+                    baseDto.EntityId
+                );
                 var taskDto = new ReviewTaskDto()
                 {
-                    Description = baseDto.TaskDescription,
+                    Description = baseDto.TaskSummary,
                     Subject = baseDto.Subject,
-                    RegardingLogicalName = baseDto.RegardingEntityLogicalName,
-                    Regarding = regarding,
+                    Regarding = regardingRef,
                     TaskType = baseDto.TaskType,
                     Priority = TaskPriority.Medium,
-                    RegardingId = baseDto.EntityId,
                     DueDate = nextDueDate,
                     Owner = owner
                 };
@@ -50,6 +51,9 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
                 _logger.WriteLog($"taskLog: {taskLog}");
 
                 var task = _dataverseMapper.MapToTarget(taskDto);
+
+                var entityLog = JsonSerializer.Serialize(task, new JsonSerializerOptions{WriteIndented = true});
+                _logger.WriteLog($"entityLog: {entityLog}");
 
                 organizationRequests.Add(
                     new CreateRequest { Target = task }

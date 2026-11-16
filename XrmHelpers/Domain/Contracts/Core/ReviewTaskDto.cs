@@ -1,10 +1,8 @@
-using Microsoft.Identity.Client;
 using Microsoft.Xrm.Sdk;
 
 using Custos.XrmHelpers.Constants;
 using Custos.XrmHelpers.Domain.Attributes;
 using Custos.XrmHelpers.Domain.Enums;
-using Custos.XrmHelpers.Infrastructure.Dataverse;
 
 namespace Custos.XrmHelpers.Domain.Contracts
 {
@@ -17,12 +15,10 @@ namespace Custos.XrmHelpers.Domain.Contracts
             trgName: TaskFields.TaskId,
             trgType: typeof(Guid))]
         public Guid TaskId { get; set; }
-        public Guid RegardingId { get; set; }
-        public string RegardingLogicalName { get; set; } = string.Empty;
         public string SourceEntityLogicalName => EntityLogicalNames.Task;
         public string TargetEntityLogicalName => EntityLogicalNames.Task;
         public KeyAttributeCollection? KeyCollection { get; } = null;
-
+        
         [DataverseLink(
             srcName: null,
             srcType: null,

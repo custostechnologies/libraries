@@ -118,23 +118,35 @@ namespace Custos.XrmHelpers.Shared.Utilities
 
             return Convert.ChangeType(
                 value,
-                targetType);
+                targetType
+            );
         }
         public static EntityReference? CreateEntityReference(
             PropertyInfo property,
             object value
         )
         {
-            if (value is not Guid id) return null;
+            if (value is EntityReference entityRef) return entityRef;
 
-            var reference = property.GetCustomAttribute<DataverseReferenceAttribute>();
+            if (value is Guid id)
+            {
+                var reference = property.GetCustomAttribute<DataverseReferenceAttribute>();
 
-            if (reference == null) return null;
+                if (reference == null)
+                {
+                    throw new InvalidPluginExecutionException(
+                        $"Property '{property.Name}' is mapped to EntityReference " +
+                        $"but does not define DataverseReferenceAttribute."
+                    );
+                }
 
-            return new EntityReference(
-                reference.TargetEntity,
-                id
-            );
+                return new EntityReference(
+                    reference.TargetEntity,
+                    id
+                );
+            }
+
+            return null;
         }
     }
 }

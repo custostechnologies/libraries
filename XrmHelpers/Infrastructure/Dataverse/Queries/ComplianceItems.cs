@@ -31,6 +31,7 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
                         ComplianceItemFields.ChildTaskType,
                         ComplianceItemFields.ComplianceItemId,
                         ComplianceItemFields.Description,
+                        ComplianceItemFields.TaskSummary,
                         ComplianceItemFields.Name,
                         ComplianceItemFields.NextDueDate,
                         ComplianceItemFields.NextReviewDate,

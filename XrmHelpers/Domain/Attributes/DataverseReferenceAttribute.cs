@@ -5,14 +5,9 @@ namespace Custos.XrmHelpers.Domain.Attributes
     public class DataverseReferenceAttribute : Attribute
     {
         public string TargetEntity { get; }
-        //public bool? IsPolymorphic { get; }
-        public DataverseReferenceAttribute(
-            string targetEntity//,
-            //bool isPolymorphic = false
-        )
+        public DataverseReferenceAttribute(string targetEntity)
         {
             TargetEntity = targetEntity;
-            //IsPolymorphic = isPolymorphic;
         }
     }
 }

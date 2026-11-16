@@ -58,6 +58,16 @@ namespace Custos.XrmHelpers.Domain.Dtos
             trgType: null)]
         public string? Subject { get; set; }
 
+        [Notification(
+            operationType: OperationType.Create,
+            label: "Task Description",
+            index: 7,
+            isLink: false)]
+        [Notification(
+            operationType: OperationType.UpdateOwner,
+            label: "Task Description",
+            index: 7,
+            isLink: false)]
         [DataverseLink(
             srcName: TaskFields.Description,
             srcType: typeof(string),
@@ -168,16 +178,6 @@ namespace Custos.XrmHelpers.Domain.Dtos
             trgType: null)]
         public TaskType? TaskType { get; set; }
 
-        [Notification(
-            operationType: OperationType.Create,
-            label: "Compliance Flag",
-            index: 7,
-            isLink: false)]
-        [Notification(
-            operationType: OperationType.UpdateOwner,
-            label: "Compliance Flag",
-            index: 7,
-            isLink: false)]
         [DataverseLink(
             srcName: TaskCustomFields.ComplianceFlag,
             srcType: typeof(OptionSetValue),

@@ -17,6 +17,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
         public override DateTime? ForcePlugin { get; set; } = null;
         public virtual string Subject { get; set; } = string.Empty;
         public virtual string? TaskDescription { get; set; } = string.Empty;
+        public virtual string? TaskSummary { get; set; } = string.Empty;
         public virtual int? ReviewCycle { get; set; }
         public virtual ReviewCycleUnit? ReviewCycleUnits { get; set; }
         public abstract TaskType TaskType { get; }
