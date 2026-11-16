@@ -61,6 +61,9 @@ namespace Custos.XrmHelpers.Infrastructure.Services
                 services.AddScoped<CoreStudents>();
                 services.AddScoped<AutoNumberCounters>();
                 services.AddScoped<ComplianceItems>();
+                services.AddScoped<Policies>();
+                services.AddScoped<Risks>();
+                services.AddScoped<Hazards>();
 
                 // add notification service registrations
                 services.AddScoped(typeof(INotificationMapper<>), typeof(NotificationMapper<>));
