@@ -3,18 +3,18 @@ using Custos.XrmHelpers.Domain.Enums;
 
 namespace Custos.XrmHelpers.Domain.Contracts
 {
-    public abstract class TaskBaseDto : IDto
+    public abstract class TaskBaseDto : NotifiableDto<TaskBaseDto>
     {
         protected TaskBaseDto() : base() { }
-        public virtual Guid EntityId { get; set; }
+        public override Guid EntityId { get; set; }
         public abstract string RegardingEntityLogicalName { get; }
         protected abstract string PreviousReviewDateName { get; }
         protected abstract string NextDueDateName { get; }
         protected abstract string NextReviewDateName { get; }
-        public virtual string SourceEntityLogicalName { get; set; } = string.Empty;
-        public virtual string TargetEntityLogicalName { get; set; } = string.Empty;
-        public virtual KeyAttributeCollection? KeyCollection { get; }
-        public virtual DateTime? ForcePlugin { get; set; } = null;
+        public override string SourceEntityLogicalName { get; set; } = string.Empty;
+        public override string TargetEntityLogicalName { get; set; } = string.Empty;
+        public override KeyAttributeCollection? KeyCollection { get; }
+        public override DateTime? ForcePlugin { get; set; } = null;
         public virtual string Subject { get; set; } = string.Empty;
         public virtual string? TaskDescription { get; set; } = string.Empty;
         public virtual int? ReviewCycle { get; set; }

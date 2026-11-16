@@ -24,7 +24,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
         public virtual DateTime? ForcePlugin { get; set; } = null;
         public virtual List<DigestMetric> Metrics { get; } = [];
 
-        public virtual KeyAttributeCollection KeyCollection =>
+        public virtual KeyAttributeCollection? KeyCollection =>
             new KeyAttributeCollection { };
 
         public class HydratedTag

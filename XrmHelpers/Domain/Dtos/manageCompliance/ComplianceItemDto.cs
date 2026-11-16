@@ -6,9 +6,12 @@ using Custos.XrmHelpers.Domain.Contracts;
 using Custos.XrmHelpers.Domain.Enums;
 using Custos.XrmHelpers.Shared.Utilities;
 
-public class ComplianceItemDto : TaskBaseDto
+public class ComplianceItemDto : TaskBaseDto, INotifiableDto
 {
     public ComplianceItemDto() : base() { }
+    public override string SourceEntityLogicalName =>
+        EntityLogicalNames.ComplianceItem;
+    public override string TargetAppDisplayName => "spgsWebTools";
     public override string RegardingEntityLogicalName =>
         EntityLogicalNames.ComplianceItem;
     protected override string NextDueDateName =>

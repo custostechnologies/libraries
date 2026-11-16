@@ -28,10 +28,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
             srcType: null,
             trgName: TaskFields.Regarding,
             trgType: typeof(EntityReference))]
-        public EntityReference Regarding => new EntityReference(
-                RegardingLogicalName,
-                RegardingId
-            );
+        public EntityReference? Regarding { get; set; }
         public string TargetAppDisplayName { get; set; } = string.Empty;
 
         [DataverseLink(

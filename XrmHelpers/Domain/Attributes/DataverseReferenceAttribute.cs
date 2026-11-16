@@ -1,6 +1,3 @@
-using System;
-using Custos.XrmHelpers.Constants;
-
 namespace Custos.XrmHelpers.Domain.Attributes
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
@@ -8,11 +5,14 @@ namespace Custos.XrmHelpers.Domain.Attributes
     public class DataverseReferenceAttribute : Attribute
     {
         public string TargetEntity { get; }
+        //public bool? IsPolymorphic { get; }
         public DataverseReferenceAttribute(
-            string targetEntity
+            string targetEntity//,
+            //bool isPolymorphic = false
         )
         {
             TargetEntity = targetEntity;
+            //IsPolymorphic = isPolymorphic;
         }
     }
 }

@@ -125,18 +125,16 @@ namespace Custos.XrmHelpers.Shared.Utilities
             object value
         )
         {
-            if (value is not Guid id)
-                return null;
+            if (value is not Guid id) return null;
 
-            var reference =
-                property.GetCustomAttribute<DataverseReferenceAttribute>();
+            var reference = property.GetCustomAttribute<DataverseReferenceAttribute>();
 
-            if (reference == null)
-                return null;
+            if (reference == null) return null;
 
             return new EntityReference(
                 reference.TargetEntity,
-                id);
+                id
+            );
         }
     }
 }
