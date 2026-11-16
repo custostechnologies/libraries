@@ -2,10 +2,11 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
 using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
 
 namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-    public class Hazards
+    public class Hazards : IReviewQuery
     {
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.Hazard;
 
@@ -21,7 +22,7 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
             _logger = loggerFactory.Create<Hazards>();
         }
 
-        public EntityCollection GetHazardsPendingTaskAssignment()
+        public EntityCollection GetItemsPendingTaskAssignment()
         {
             try
             {

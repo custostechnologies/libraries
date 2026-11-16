@@ -2,11 +2,19 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
 using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
 
 namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-    public class ComplianceItems
+    public class ComplianceItems : IReviewQuery
     {
+        // TODO: Create query contract
+        /*
+            public interface IReviewableEntityQuery
+            {
+                EntityCollection GetItemsPendingTaskAssignment();
+            }
+        */
         private readonly string ENTITY_LOGICAL_NAME = "pgrowth_complianceitem";
         private readonly IDataverseContext _context;
         private readonly IDataverseLogger _logger;

@@ -2,10 +2,11 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
 using Custos.XrmHelpers.Constants;
+using Custos.XrmHelpers.Domain.Contracts;
 
 namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-    public class Risks
+    public class Risks : IReviewQuery
     {
         private readonly string ENTITY_LOGICAL_NAME = EntityLogicalNames.Risk;
 
