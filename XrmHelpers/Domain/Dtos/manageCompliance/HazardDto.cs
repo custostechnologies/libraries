@@ -213,9 +213,10 @@ public class HazardDto : TaskBaseDto, INotifiableDto
     }
 
     public override Entity GetReviewMetadataUpdate(
-        DateTime nextReviewDate
+        DateTime nextReviewDate,
+        OptionSetValue updatedStatusReason
     )
     {
-        return base.GetReviewMetadataUpdate(nextReviewDate);
+        return base.GetReviewMetadataUpdate(nextReviewDate, updatedStatusReason);
     }
 }

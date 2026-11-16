@@ -184,8 +184,11 @@ public class ComplianceItemDto : TaskBaseDto, INotifiableDto
     {
         return base.CalculateNextDueDate(nextReviewDate);
     }
-    public override Entity GetReviewMetadataUpdate(DateTime nextReviewDate)
+    public override Entity GetReviewMetadataUpdate(
+        DateTime nextReviewDate,
+        OptionSetValue updatedStatusReason
+    )
     {
-        return base.GetReviewMetadataUpdate(nextReviewDate);
+        return base.GetReviewMetadataUpdate(nextReviewDate, updatedStatusReason);
     }
 }
