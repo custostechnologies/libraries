@@ -27,7 +27,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
         // TODO: set this when tasks are completed and item reverts to COMPLIANT
         public virtual DateTime? PreviousReviewDate { get; set; }
         public virtual bool RecurringSubTasks { get; set; }
-        public virtual Entity GetReviewMetadataUpdate(DateTime nextReviewDate)
+        public virtual Entity GetReviewMetadataUpdate(DateTime nextReviewDate, OptionSetValue updatedStatusReason)
         {
             var update = new Entity(
                 RegardingEntityLogicalName,
@@ -37,6 +37,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
             update[PreviousReviewDateName] = NextReviewDate;
             update[NextReviewDateName] = nextReviewDate;
             update[NextDueDateName] = CalculateNextDueDate(nextReviewDate);
+            update["statuscode"] = updatedStatusReason;
 
             return update;
         }
