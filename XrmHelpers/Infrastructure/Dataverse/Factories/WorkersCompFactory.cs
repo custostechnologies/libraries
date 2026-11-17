@@ -99,7 +99,7 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Factories
                 throw new InvalidPluginExecutionException("Unable to map ClaimDto to Entity.");
             }
 
-            var newOwnerTeamName = _envVarQuery.GetValue(_claimTargetTeamNameEnvVarName).Value ?? "Debugging Team";
+            var newOwnerTeamName = _envVarQuery.GetValue<string>(_claimTargetTeamNameEnvVarName).Value ?? "Debugging Team";
 
             var newOwnerId = _teamsQuery.ResolveTeamIdByName(newOwnerTeamName);
             _logger.WriteLog($"newOwnerId: {newOwnerId}");

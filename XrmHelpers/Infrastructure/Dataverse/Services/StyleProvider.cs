@@ -20,11 +20,11 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
 
             try
             {
-                InlineTableStyle = environmentVariableValues.GetValue(InlineTableStyleSchema).Value ?? DefaultInlineTableStyle;
-                TableBodyRowEven = environmentVariableValues.GetValue(TableBodyRowEvenSchema).Value?? DefaultTableBodyRowEven;
-                TableBodyRowOdd = environmentVariableValues.GetValue(TableBodyRowOddSchema).Value?? DefaultTableBodyRowOdd;
-                TableHeadColumn = environmentVariableValues.GetValue(TableHeadColumnSchema).Value ?? DefaultTableHeadColumn;
-                TableRowData = environmentVariableValues.GetValue(TableRowDataSchema).Value ?? DefaultTableRowData;
+                InlineTableStyle = environmentVariableValues.GetValue<string>(InlineTableStyleSchema).Value ?? DefaultInlineTableStyle;
+                TableBodyRowEven = environmentVariableValues.GetValue<string>(TableBodyRowEvenSchema).Value?? DefaultTableBodyRowEven;
+                TableBodyRowOdd = environmentVariableValues.GetValue<string>(TableBodyRowOddSchema).Value?? DefaultTableBodyRowOdd;
+                TableHeadColumn = environmentVariableValues.GetValue<string>(TableHeadColumnSchema).Value ?? DefaultTableHeadColumn;
+                TableRowData = environmentVariableValues.GetValue<string>(TableRowDataSchema).Value ?? DefaultTableRowData;
                 LinkStyle = DefaultLinkStyle;
             }
             catch (Exception ex)
