@@ -1,5 +1,5 @@
 using System.ComponentModel;
-
+using System.Reflection;
 using Microsoft.Xrm.Sdk;
 
 using Custos.XrmHelpers.Domain.Attributes;
@@ -68,6 +68,27 @@ namespace Custos.XrmHelpers.Shared.Utilities
                 .FirstOrDefault();
                 
             return attribute?.Factor ?? 0;
+        }
+        public static string? GetColour<T>(T value)
+            where T : Enum
+        {
+            return typeof(T)
+                .GetField(value.ToString())
+                ?.GetCustomAttribute<EnumColourAttribute>()
+                ?.HexCode;
+        }
+        public static string BuildBadgeHtml(Enum value)
+        {
+            return $@"
+                <span style=""display:inline-block;
+                padding:4px 10px;
+                border-radius:4px;
+                background-color:{GetColour(value)};
+                color:#FFFFFF;
+                font-weight:600;
+                font-size:12px;"">
+                    {GetDescription(value)}
+                </span>";
         }
     }
 }
