@@ -5,6 +5,7 @@ using Custos.XrmHelpers.Constants;
 using Custos.XrmHelpers.Domain.Enums;
 using Custos.XrmHelpers.Domain.Contracts;
 using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Shared.Utilities;
 
 namespace Custos.XrmHelpers.Domain.Dtos
 {
@@ -424,7 +425,6 @@ namespace Custos.XrmHelpers.Domain.Dtos
         public RelevantSport[]? RelevantSport { get; set; }
 
         [EnumType(typeof(ResponsePriority))]
-        [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10, false)]
         [DataverseLink(
             srcName: null,
             srcType: null,
@@ -432,6 +432,10 @@ namespace Custos.XrmHelpers.Domain.Dtos
             trgType: typeof(OptionSetValue)
         )]
         public ResponsePriority IncidentResponsePriority => DetermineResponsePriority();
+
+        [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10, false, true)]
+        [Notification(operationType: OperationType.SummaryNotification, label: "Priority", index: 5, false, true)]
+        public string ResponsePriorityHtml => EnumExtensions.BuildBadgeHtml(IncidentResponsePriority);
 
         [DataverseLink(
             srcName: SafetyIncidentFields.SafetyManagerNotified,
@@ -450,7 +454,6 @@ namespace Custos.XrmHelpers.Domain.Dtos
         public string? SchoolNurseDetails { get; set; }
         
         [EnumType(typeof(SeverityLevel))]
-        [Notification(operationType: OperationType.UpdateOwner, label: "Severity Classification", index: 9, false)]
         [DataverseLink(
             srcName: null,
             srcType: null,
@@ -458,6 +461,10 @@ namespace Custos.XrmHelpers.Domain.Dtos
             trgType: typeof(OptionSetValue)
         )]
         public IncidentSeverity SeverityClassification => DetermineIncidentSeverity();
+
+        [Notification(operationType: OperationType.UpdateOwner, label: "Severity Classification", index: 9, false, true)]
+        [Notification(operationType: OperationType.SummaryNotification, label: "Severity", index: 6, false, true)]
+        public string SeverityClassificationHtml => EnumExtensions.BuildBadgeHtml(SeverityClassification);
 
         [DataverseLink(
             srcName: SafetyIncidentFields.StatusV2,
@@ -652,6 +659,14 @@ namespace Custos.XrmHelpers.Domain.Dtos
             trgType: typeof(bool?)
         )]
         public bool? WasThereAnyPropertyDamage { get; set; }
+
+        [DataverseLink(
+            srcName: SafetyIncidentFields.MuteStageTeamAssignments,
+            srcType: typeof(bool?),
+            trgName: SafetyIncidentFields.MuteStageTeamAssignments,
+            trgType: typeof(bool?)
+        )]
+        public bool? MuteStageTeamAssignments { get; set; }
 
         [DataverseLink(
             srcName: SafetyIncidentFields.WereThereAnyWitnesses,

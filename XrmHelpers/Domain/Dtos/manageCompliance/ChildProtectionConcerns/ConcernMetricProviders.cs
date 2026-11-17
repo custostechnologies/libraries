@@ -1,5 +1,6 @@
 using Custos.XrmHelpers.Domain.Dtos;
 using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Shared.Utilities;
 
 namespace Custos.XrmHelpers.Domain.Contracts
 {
@@ -8,18 +9,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
         public List<DigestMetric> BuildMetric(IReadOnlyCollection<TDto> records)
         {
             var grouped = records
-                .GroupBy(
-                    record =>
-                    {
-                        if (record.StudentType != null)
-                        {
-                            return ((StudentType)record.StudentType).ToString();
-                        } else
-                        {
-                            return "Unknown";
-                        }
-                    }
-                );
+                .GroupBy(record => record.StudentType)
+                .ToList();
 
             List<DigestMetric> metrics = new ();
 
@@ -27,7 +18,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
             {
                 metrics.Add(new DigestMetric
                 {
-                    Label = $"Total for `{group.Key}`",
+                    Label = $"Total for `{EnumExtensions.GetDescription(group.Key)}`",
                     Value = group.Count().ToString()
                 });
             }

@@ -203,7 +203,7 @@ namespace Custos.XrmHelpers.Domain.Dtos
             srcType: typeof(OptionSetValue),
             trgName: ChildProtectionConcernFields.StudentType,
             trgType: typeof(OptionSetValue))]
-        public StudentType? StudentType { get; set; }
+        public StudentType StudentType { get; set; }
 
         [Notification(operationType: OperationType.Create, label: "Submitter Name", index: 3, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Submitter Name", index: 4, false)]
