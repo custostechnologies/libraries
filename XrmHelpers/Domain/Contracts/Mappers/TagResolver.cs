@@ -81,14 +81,14 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 context.RecipientName
             );
 
-            var footerAssetUrl = _environmentVariableQuery.GetValue(FOOTER_ASSET_VAR_NAME)?.Value ?? "";
+            var footerAssetUrl = _environmentVariableQuery.GetValue<string>(FOOTER_ASSET_VAR_NAME)?.Value ?? "";
 
             resolverEngine.PopulateTag(
                 context.Dto, tags, "inFooterImageUrl",
                 footerAssetUrl
             );
 
-            var bannerAssetUrl = _environmentVariableQuery.GetValue(BANNER_ASSET_VAR_NAME)?.Value ?? "";
+            var bannerAssetUrl = _environmentVariableQuery.GetValue<string>(BANNER_ASSET_VAR_NAME)?.Value ?? "";
 
             resolverEngine.PopulateTag(
                 context.Dto, tags, "inHeaderLogoImageUrl",

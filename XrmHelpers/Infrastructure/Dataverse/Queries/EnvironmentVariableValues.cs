@@ -3,10 +3,10 @@ using Microsoft.Xrm.Sdk.Query;
 using Custos.XrmHelpers.Domain.Contracts;
 using Custos.XrmHelpers.Constants;
 using Microsoft.Xrm.Sdk.Messages;
+using Custos.XrmHelpers.Shared.Utilities;
 
 namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 {
-
     public class EnvironmentVariableValues
     {
         private readonly IDataverseLogger _logger;
@@ -19,13 +19,10 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
             _logger = loggerFactory.Create<EnvironmentVariableValues>();
             _context = context;
         }
-        public EnvironmentVariable<string> GetValue(string schemaName)
+        public EnvironmentVariable<T> GetValue<T>(string schemaName)
         {
             try
             {
-                string value = "";
-                string dValue = "";
-
                 _logger.WriteLog($"Entered EnvironmentVariableValues.GetValue with schemaName: {schemaName}");
 
                 var query = new QueryExpression(EntityLogicalNames.EnvironmentVariableDefinition)
@@ -60,29 +57,35 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
 
                 EntityCollection results = _context.Runtime.UserService.RetrieveMultiple(query);
 
+                string? value = null;
+                string? defaultValue = null;
+
                 if (results.Entities.Count > 0)
                 {
                     _logger.WriteLog($"EnvironmentVariableValues.GetValue query returned results.Entities.Count: {results.Entities.Count}");
 
                     Entity envVar = results.Entities[0];
-                    value = envVar.GetAttributeValue<AliasedValue>("value.value")?.Value?.ToString() ?? "";
 
-                    dValue = envVar.GetAttributeValue<string>("defaultvalue");
+                    value = envVar.GetAttributeValue<AliasedValue>("value.value")?.Value?.ToString();
+                    defaultValue = envVar.GetAttributeValue<string>("defaultvalue");
 
-                    _logger.WriteLog($"value set to: {value}");
+                    _logger.WriteLog($"Resolved envVar {schemaName} to value = {value} and default = {defaultValue}");
                 }
 
-                return new EnvironmentVariable<string>()
+                string? raw = string.IsNullOrWhiteSpace(value) ? defaultValue : value;
+
+                return new EnvironmentVariable<T>()
                 {
                     SchemaName = schemaName,
-                    Value = value ?? dValue
+                    Value = ValueConverter.ConvertToType<T>(raw)
                 };
             }
             catch (Exception ex)
             {
-                _logger.WriteLog($"Exception encountered in EnvironmentVariableValues.GetValue(). Exiting. Exception Message: {ex}");
+                _logger.WriteLog($"Exception encountered in EnvironmentVariableValues.GetValue<{typeof(T).Name}>(). Exiting. Exception Message: {ex}");
                 throw;
             }
         }
+        
     }
 }

@@ -140,5 +140,84 @@ namespace Custos.XrmHelpers.Shared.Utilities
         {
             return new OptionSetValue(enumValue);
         }
+        public static T? ConvertToType<T>(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return default;
+            }
+
+            Type targetType = Nullable.GetUnderlyingType(typeof(T))
+                ?? typeof(T);
+
+            if (targetType == typeof(string))
+            {
+                return (T)(object)value;
+            }
+
+            if (targetType == typeof(bool))
+            {
+                if (bool.TryParse(value, out bool boolValue))
+                {
+                    return (T)(object)boolValue;
+                }
+
+                throw new InvalidPluginExecutionException(
+                    $"Unable to convert '{value}' to bool."
+                );
+            }
+
+            if (targetType == typeof(decimal))
+            {
+                if (
+                    decimal.TryParse(
+                        value,
+                        System.Globalization.NumberStyles.Any,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out decimal decimalValue
+                    )
+                )
+                {
+                    return (T)(object)decimalValue;
+                }
+
+                throw new InvalidPluginExecutionException(
+                    $"Unable to convert '{value}' to decimal."
+                );
+            }
+
+            if (targetType == typeof(int))
+            {
+                if (int.TryParse(value, out int intValue))
+                {
+                    return (T)(object)intValue;
+                }
+
+                throw new InvalidPluginExecutionException(
+                    $"Unable to convert '{value}' to int."
+                );
+            }
+
+            if (targetType == typeof(double))
+            {
+                if (
+                    double.TryParse(
+                        value,
+                        System.Globalization.NumberStyles.Any,
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        out double doubleValue
+                    )
+                )
+                {
+                    return (T)(object)doubleValue;
+                }
+            }
+
+            return (T)Convert.ChangeType(
+                value,
+                targetType,
+                System.Globalization.CultureInfo.InvariantCulture
+            );
+        }
     }
 }
