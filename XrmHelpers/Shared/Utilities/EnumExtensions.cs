@@ -69,25 +69,46 @@ namespace Custos.XrmHelpers.Shared.Utilities
                 
             return attribute?.Factor ?? 0;
         }
-        public static string? GetColour<T>(T value)
-            where T : Enum
+        public static string GetColour(this Enum value)
         {
-            return typeof(T)
-                .GetField(value.ToString())
-                ?.GetCustomAttribute<EnumColourAttribute>()
-                ?.HexCode;
+            var field = value
+                .GetType()
+                .GetField(value.ToString());
+
+            if (field == null)
+            {
+                throw new InvalidPluginExecutionException(
+                    $"Unable to resolve field '{value}' on enum '{value.GetType().Name}'"
+                );
+            }
+            
+            var attribute = field?
+                .GetCustomAttributes(
+                    typeof(EnumColourAttribute),
+                    false)
+                .OfType<EnumColourAttribute>()
+                .FirstOrDefault();
+
+            if (attribute == null)
+            {
+                throw new InvalidPluginExecutionException(
+                    $"EnumColourAttribute missing for '{value.GetType().Name}.{value}'"
+                );
+            }
+            
+            return attribute.HexCode;
         }
-        public static string BuildBadgeHtml(Enum value)
+        public static string BuildBadgeHtml(this Enum value)
         {
             return $@"
                 <span style=""display:inline-block;
                 padding:4px 10px;
                 border-radius:4px;
-                background-color:{GetColour(value)};
+                background-color:{value.GetColour()};
                 color:#FFFFFF;
                 font-weight:600;
                 font-size:12px;"">
-                    {GetDescription(value)}
+                    {value.GetDescription()}
                 </span>";
         }
     }

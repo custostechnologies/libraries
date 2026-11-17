@@ -24,6 +24,8 @@ namespace Custos.XrmHelpers.Domain.Schemas
             SafetyIncidentFields.SafetyIncidentId,
             SafetyIncidentFields.Status,
             SafetyIncidentFields.StatusReason,
+            SafetyIncidentFields.ResponsePriority,
+            SafetyIncidentFields.SeverityClassification,
             "ownerid"
         );
     }
