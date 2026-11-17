@@ -49,7 +49,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             NotificationContext context,
             OperationType type, 
             string recipientEmail, 
-            string recipientName
+            string recipientName,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             if (context == null) throw new InvalidOperationException("NotificationContext cannot be NULL");
@@ -57,6 +58,27 @@ namespace Custos.XrmHelpers.Domain.Contracts
 
             var template = _templateResolver.Resolve(context.Dto.GetType(), type);
             var tags = _tagResolver.BuildTags(context, template);
+            if (customTags != null)
+            {
+                foreach (var customTag in customTags)
+                {
+                    var existingTag = tags.FirstOrDefault(tag => tag.InjectionToken == customTag.Key);
+                    if (existingTag != null)
+                    {
+                        existingTag.Value = customTag.Value;
+                    }
+                    else
+                    {
+                        tags.Add(new ContextInjectionTag
+                        {
+                            InjectionToken = customTag.Key,
+                            ContextKey = customTag.Key,
+                            Value = customTag.Value
+                        });
+                    }
+                }
+            }
+
             var html = _renderer.Render(template, tags);
 
             if (template.EmailTemplate == null) throw new Exception("Email Template was resolved to NULL.");
@@ -78,7 +100,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             OperationType type,
             string recipientEmail,
             string recipientName,
-            string cc
+            string cc,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             var context = _contextFactory.Create(
@@ -93,7 +116,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 context, 
                 type, 
                 recipientEmail, 
-                recipientName
+                recipientName,
+                customTags
             );
 
             return _requestRepo.SaveRequest(notification.request, notification.html);
@@ -104,7 +128,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             string recipientEmail,
             string recipientName,
             string cc,
-            string? metricsTableHtml
+            string? metricsTableHtml,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             var context = _contextFactory.CreateSummary(
@@ -135,7 +160,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 finalContext, 
                 type, 
                 recipientEmail, 
-                recipientName
+                recipientName,
+                customTags
             );
 
             return _requestRepo.SaveRequest(notification.request, notification.html);

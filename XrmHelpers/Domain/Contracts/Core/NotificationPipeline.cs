@@ -54,7 +54,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             OperationType type, 
             string to, 
             string? cc, 
-            string fallbackName
+            string fallbackName,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             TDto dto;
@@ -89,7 +90,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
                     type, 
                     to, 
                     preferred, 
-                    cc ?? ""
+                    cc ?? "",
+                    customTags
                 );
 
                 _logger.WriteLog($"Mapped to NotificationRequest and new Entity created with id: {newId}");
@@ -104,7 +106,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
         public List<Guid> BuildDigestEmailNotification(
             string targetEntity,
             OperationType type,
-            ColumnSet columns
+            ColumnSet columns,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             var newIds = new List<Guid>();
@@ -126,7 +129,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
                         element.to,
                         element.digest.Name,
                         "my.workflows@stpauls.nsw.edu.au",
-                        metricsTable
+                        metricsTable,
+                        customTags
                     )
                 );
             }

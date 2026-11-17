@@ -13,12 +13,14 @@ namespace Custos.XrmHelpers.Domain.Contracts
             OperationType type, 
             string to, 
             string? cc, 
-            string fallbackName
+            string fallbackName,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
         List<Guid> BuildDigestEmailNotification(
             string targetEntity,
             OperationType type,
-            ColumnSet columns
+            ColumnSet columns,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
     }
 }

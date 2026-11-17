@@ -38,7 +38,8 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
         public void Notify(
             EntityReference ownerRef,
             OperationType operationType,
-            Entity notifiableEntity
+            Entity notifiableEntity,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             _logger.WriteLog("Resolving recipients");
@@ -64,14 +65,16 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
                     operationType,
                     recipient.Email,
                     null,
-                    recipient.FirstName
+                    recipient.FirstName,
+                    customTags
                 );
             }
         }
         public void Notify(
             User user,
             OperationType operationType,
-            Entity notifiableEntity
+            Entity notifiableEntity,
+            IReadOnlyDictionary<string, string?>? customTags = null
         )
         {
             _logger.WriteLog("USER is external or not found in Core Staff Members");
@@ -82,7 +85,8 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
                 operationType,
                 user.Email,
                 null,
-                user.FirstName ?? user.FullName
+                user.FirstName ?? user.FullName,
+                customTags
             );
         }
     }

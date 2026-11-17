@@ -10,7 +10,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             OperationType type, 
             string recipientEmail, 
             string recipientName,
-            string cc
+            string cc,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
         Guid CreateSummaryNotification(
             IReadOnlyCollection<TDto> dtos,
@@ -18,7 +19,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             string recipientEmail, 
             string recipientName,
             string cc,
-            string? metricsTableHtml
+            string? metricsTableHtml,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
         (
             string html, 
@@ -27,7 +29,8 @@ namespace Custos.XrmHelpers.Domain.Contracts
             NotificationContext context, 
             OperationType type, 
             string recipientEmail, 
-            string recipientName
+            string recipientName,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
     }
 }

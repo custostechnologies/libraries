@@ -10,12 +10,14 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Services
         void Notify(
             EntityReference ownerRef,
             OperationType operationType,
-            Entity notifiableEntity
+            Entity notifiableEntity,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
         void Notify(
             User user,
             OperationType operationType,
-            Entity notifiableEntity
+            Entity notifiableEntity,
+            IReadOnlyDictionary<string, string?>? customTags = null
         );
     }
 }
