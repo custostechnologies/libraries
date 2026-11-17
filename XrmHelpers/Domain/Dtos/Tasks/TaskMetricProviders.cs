@@ -1,5 +1,6 @@
 using Custos.XrmHelpers.Domain.Dtos;
 using Custos.XrmHelpers.Domain.Enums;
+using Custos.XrmHelpers.Shared.Utilities;
 
 namespace Custos.XrmHelpers.Domain.Contracts
 {
@@ -29,16 +30,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
             List<DigestMetric> metrics = new List<DigestMetric>();
             var groups = records
                 .GroupBy(
-                    dto =>
-                    {
-                        if (dto.TaskType != null)
-                        {
-                            return ((TaskType)dto.TaskType).ToString();
-                        } else
-                        {
-                            return TaskType.Other.ToString();
-                        }
-                    }
+                    dto => dto.TaskType ?? TaskType.Other
                 )
                 .ToList();
 
@@ -47,7 +39,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 metrics.Add(
                     new DigestMetric
                     {
-                        Label = $"Total for '{group.Key}'",
+                        Label = $"Total for '{EnumExtensions.GetDescription(group.Key)}'",
                         Value = group.Count().ToString()
                     }
                 );
@@ -62,18 +54,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
         {
             List<DigestMetric> metrics = new List<DigestMetric>();
             var groups = records
-                .GroupBy(
-                    dto =>
-                    {
-                        if (dto.StatusReason != null)
-                        {
-                            return ((ActivityStatusReason)dto.StatusReason).ToString();
-                        } else
-                        {
-                            return Status.Active.ToString();
-                        }
-                    }
-                )
+                .GroupBy(dto => dto.StatusReason ?? ActivityStatusReason.InProgress)
                 .ToList();
 
             foreach (var group in groups)
@@ -81,7 +62,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 metrics.Add(
                     new DigestMetric
                     {
-                        Label = $"Total for status '{group.Key}'",
+                        Label = $"Total for status '{EnumExtensions.GetDescription(group.Key)}'",
                         Value = group.Count().ToString()
                     }
                 );
