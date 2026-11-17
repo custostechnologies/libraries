@@ -144,6 +144,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
 
                     if (string.IsNullOrWhiteSpace(_cachedSkeleton))
                     {
+                        _logger.WriteLog($"Cached skeleton is EMPTY, calling user service to retrieve it");
                         var skeletonRef = _snippetQuery.GetSnippetRefBySeq(-1);
                         if (skeletonRef == null) throw new InvalidPluginExecutionException($"Unable to retrieve skeleton HTMLSnippet.");
 
@@ -157,6 +158,7 @@ namespace Custos.XrmHelpers.Domain.Contracts
                         htmlContent = _cachedSkeleton;
                     } else
                     {
+                        _logger.WriteLog($"Cached skeleton is not-empty, resolving from cached value");
                         htmlContent = _cachedSkeleton;
                     }
                     _logger.WriteLog($"HTML template skeleton retrieved...");
