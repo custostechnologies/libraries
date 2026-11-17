@@ -15,8 +15,9 @@ namespace Custos.XrmHelpers.Constants
         public const string DaysInHospitalTxt = "pgrowth_daysinhospitaltxt";
         public const string DaysOpen = "cr2d7_daysopen";
         public const string DaysOpenInt = "pgrowth_daysopenint";
-        public const string DetailsOfGovernmentAgencyNotification = "cr2d7_detailsofgovernmentagencynotification";
         public const string DetailsOfInjury = "cr2d7_detailsofinjury";
+        public const string DetailsOfGovernmentAgencyNotification = "cr2d7_detailsofgovernmentagencynotification";
+        public const string MuteStageTeamAssignments = "pgrowth_mutestageteamassignments";
         public const string DetailsOfInsurerNotification = "cr2d7_detailsofinsurernotification";
         public const string DetailsOfOtherMedicalTreatment = "cr2d7_detailsofothermedicaltreatment";
 
