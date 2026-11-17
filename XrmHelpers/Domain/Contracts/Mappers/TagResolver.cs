@@ -1,5 +1,7 @@
+using System.Net;
 using System.Text;
 using Custos.XrmHelpers.Infrastructure.Dataverse;
+using Custos.XrmHelpers.Infrastructure.Dataverse.Queries;
 using Custos.XrmHelpers.Infrastructure.Dataverse.Services;
 using Custos.XrmHelpers.Infrastructure.Services;
 
@@ -9,13 +11,18 @@ namespace Custos.XrmHelpers.Domain.Contracts
     {
         private readonly IDataverseLogger _logger;
         private readonly IDataverseContext _context;
+        private readonly EnvironmentVariableValues _environmentVariableQuery;
+        private const string BANNER_ASSET_VAR_NAME = "mthomas_envVar_emailBannerAsset_url";
+        private const string FOOTER_ASSET_VAR_NAME = "mthomas_envVar_emailFooterAsset_url";
         public TagResolver(
             IDataverseLoggerFactory loggerFactory,
-            IDataverseContext context
+            IDataverseContext context,
+            EnvironmentVariableValues environmentVariableQuery
         )
         {
             _context = context;
             _logger = loggerFactory.Create<TagResolver>();
+            _environmentVariableQuery = environmentVariableQuery;
         }
         public List<IInjectionTag> BuildTags(
             NotificationContext context,
@@ -25,82 +32,84 @@ namespace Custos.XrmHelpers.Domain.Contracts
             List<IInjectionTag> tags = new EmailInjectionTags().Tags;
             _logger.WriteLog($"Constructed tags list, tags.Count: {tags.Count}");
 
-            InjectionTagResolverEngine _resolverEngine = new InjectionTagResolverEngine();
+            InjectionTagResolverEngine resolverEngine = new InjectionTagResolverEngine();
             // populate tags from emailTemplate
                 if (template.Theme != null)
                 {
-                    _resolverEngine.PopulateDataverseTags(
+                    resolverEngine.PopulateDataverseTags(
                         template.Theme,
                         tags
                     );
                 }
 
-            InjectionTagResolverEngine _tagResolverEngine = new InjectionTagResolverEngine();
-
             // populate tags from emailTemplate
             if (template.EmailTemplate != null)
             {
-                _tagResolverEngine.PopulateDataverseTags(
+                resolverEngine.PopulateDataverseTags(
                     template.EmailTemplate,
                     tags
                 );
             }
 
-            _tagResolverEngine.PopulateDataverseTags(context.Dto, tags);
+            resolverEngine.PopulateDataverseTags(context.Dto, tags);
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, 
                 tags, 
                 "inButtonTargetUrl", 
-                context.ButtonUrl ?? "https://www.google.com"
+                context.ButtonUrl ?? ""
             );
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, 
                 tags, 
                 "inButtonText", 
                 context.ButtonText
             );
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, 
                 tags, 
                 "inHelpMeLinkUrl", 
                 context.Dto != null ? context.Dto.HelpMeLink : ""
             );
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, 
                 tags, 
                 "inReceiverFirstName", 
                 context.RecipientName
             );
 
-            _tagResolverEngine.PopulateTag(
+            var footerAssetUrl = _environmentVariableQuery.GetValue(FOOTER_ASSET_VAR_NAME)?.Value ?? "";
+
+            resolverEngine.PopulateTag(
                 context.Dto, tags, "inFooterImageUrl",
-                "https://spgswebresources.blob.core.windows.net/assets/crest_main_20260217.png"
+                footerAssetUrl
             );
 
-            _tagResolverEngine.PopulateTag(
+            var bannerAssetUrl = _environmentVariableQuery.GetValue(BANNER_ASSET_VAR_NAME)?.Value ?? "";
+
+            resolverEngine.PopulateTag(
                 context.Dto, tags, "inHeaderLogoImageUrl",
-                "https://spgswebresources.blob.core.windows.net/assets/Custos_logo_noName_72ppi.png"
+                bannerAssetUrl
             );
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, tags, "inCorrelationId",
                 _context.Runtime.ExecutionContext.CorrelationId.ToString()
             );
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto,
                 tags,
                 "inTableHtmlString",
                 context.Table
             );
 
-            var contentCardStringBuilder = new StringBuilder(template.ContentCardHtml);
-            var inlineTableStringBuilder = new StringBuilder(template.TableHtml);
-            var singleButtonStringBuilder = new StringBuilder(template.ButtonHtml);
+            var contentCardStringBuilder = new StringBuilder(template.ContentCardHtml ?? "");
+            var inlineTableStringBuilder = new StringBuilder(template.TableHtml ?? "");
+            var singleButtonStringBuilder = new StringBuilder(template.ButtonHtml ?? "");
 
             foreach (var tag in tags)
             {
@@ -112,9 +121,26 @@ namespace Custos.XrmHelpers.Domain.Contracts
                     "}}"
                 );
 
-                contentCardStringBuilder.Replace(adjustedTag, tag.Value.ToString());
-                inlineTableStringBuilder.Replace(adjustedTag, tag.Value.ToString());
-                singleButtonStringBuilder.Replace(adjustedTag, tag.Value.ToString());
+                string safeValue;
+
+                switch (tag.InjectionToken)
+                {
+                    case "inTableHtmlString":
+                        safeValue = tag.Value?.ToString() ?? "";
+                        break;
+
+                    case "inEmailContentHtml":
+                        safeValue = tag.Value?.ToString() ?? "";
+                        break;
+
+                    default:
+                        safeValue = WebUtility.HtmlEncode(tag.Value?.ToString() ?? "");
+                        break;
+                }
+
+                contentCardStringBuilder.Replace(adjustedTag, safeValue);
+                inlineTableStringBuilder.Replace(adjustedTag, safeValue);
+                singleButtonStringBuilder.Replace(adjustedTag, safeValue);
             }
 
             var emailContentHtml = $@"
@@ -123,12 +149,12 @@ namespace Custos.XrmHelpers.Domain.Contracts
                 {singleButtonStringBuilder}
             ";
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, tags, "inEmailContentHtml",
                 emailContentHtml
             );
 
-            _tagResolverEngine.PopulateTag(
+            resolverEngine.PopulateTag(
                 context.Dto, 
                 tags, 
                 "inEnvId", 
