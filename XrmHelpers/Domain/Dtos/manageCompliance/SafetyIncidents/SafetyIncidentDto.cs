@@ -71,7 +71,6 @@ namespace Custos.XrmHelpers.Domain.Dtos
 
         [Notification(operationType: OperationType.Create, label: "Title", index: 0, false)]
         [Notification(operationType: OperationType.UpdateOwner, label: "Title", index: 0, true)]
-        [Notification(operationType: OperationType.SummaryNotification, label: "Title", index: 0, true)]
         [DataverseLink(
             srcName: SafetyIncidentFields.AutoGenTitle,
             srcType: typeof(string),
@@ -79,6 +78,15 @@ namespace Custos.XrmHelpers.Domain.Dtos
             trgType: typeof(string)
         )]
         public string? AutoGenTitle { get; set; }
+
+        [Notification(operationType: OperationType.SummaryNotification, label: "Title", index: 0, true, true)]
+        public string SummaryTitleHtml =>
+            string.Join(
+                "<br/>",
+                System.Net.WebUtility.HtmlEncode(AutoGenTitle ?? string.Empty),
+                SeverityClassificationHtml,
+                ResponsePriorityHtml
+            );
 
         [EnumType(typeof(IncidentCampus))]
         [Notification(operationType: OperationType.Create, label: "Campus", index: 4, false)]
@@ -434,7 +442,6 @@ namespace Custos.XrmHelpers.Domain.Dtos
         public ResponsePriority IncidentResponsePriority => DetermineResponsePriority();
 
         [Notification(operationType: OperationType.UpdateOwner, label: "Response Priority", index: 10, false, true)]
-        [Notification(operationType: OperationType.SummaryNotification, label: "Priority", index: 5, false, true)]
         public string ResponsePriorityHtml => EnumExtensions.BuildBadgeHtml(IncidentResponsePriority);
 
         [DataverseLink(
@@ -463,7 +470,6 @@ namespace Custos.XrmHelpers.Domain.Dtos
         public IncidentSeverity SeverityClassification => DetermineIncidentSeverity();
 
         [Notification(operationType: OperationType.UpdateOwner, label: "Severity Classification", index: 9, false, true)]
-        [Notification(operationType: OperationType.SummaryNotification, label: "Severity", index: 6, false, true)]
         public string SeverityClassificationHtml => EnumExtensions.BuildBadgeHtml(SeverityClassification);
 
         [DataverseLink(
