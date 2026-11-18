@@ -10,6 +10,8 @@ namespace Custos.XrmHelpers.Constants
         public const string CreatedOn = "createdon";
 
         public const string End = "pgrowth_end";
+        public const string SkipCondition = "pgrowth_skipcondition";
+        public const string SkipOffset = "pgrowth_skipoffset";
 
         public const string ImportSequenceNumber = "importsequencenumber";
 

@@ -182,7 +182,8 @@ namespace Custos.XrmHelpers.Infrastructure.Dataverse.Queries
                     ProcessStageMetadataFields.StageIdx,
                     ProcessStageMetadataFields.StageKey,
                     ProcessStageMetadataFields.ParentBusinessProcessFlow,
-                    ProcessStageMetadataFields.ConditionExpression,
+                    ProcessStageMetadataFields.SkipCondition,
+                    ProcessStageMetadataFields.SkipOffset,
                     ProcessStageMetadataFields.Index,
                     ProcessStageMetadataFields.AssignedTeam
                 ),
